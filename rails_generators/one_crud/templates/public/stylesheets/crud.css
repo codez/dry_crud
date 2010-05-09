@@ -1,0 +1,16 @@
+.labeled {
+
+}
+
+tr.even {
+	background-color: #DDD;
+}
+
+tr.odd { 
+	background-color: #EEE;
+}
+
+table.list {}
+
+/* div rendered if no entries available for list */
+div.list {}

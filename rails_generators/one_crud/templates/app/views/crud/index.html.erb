@@ -1,0 +1,18 @@
+<h1>Listing cruds</h1>
+
+<table>
+  <tr>
+  </tr>
+
+<% @cruds.each do |crud| %>
+  <tr>
+    <td><%= link_to 'Show', crud %></td>
+    <td><%= link_to 'Edit', edit_crud_path(crud) %></td>
+    <td><%= link_to 'Destroy', crud, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New crud', new_crud_path %>

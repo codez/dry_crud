@@ -1,0 +1,12 @@
+<h1>Editing crud</h1>
+
+<% form_for(@crud) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @crud %> |
+<%= link_to 'Back', cruds_path %>
