@@ -1,85 +1,130 @@
+# CrudController is an abstract controller providing basic CRUD actions.
+# Several protected helper methods are there to be (optionally) overriden by subclasses.
 class CrudController < ApplicationController
-  # GET /cruds
-  # GET /cruds.xml
+            
+  include CrudCallbacks
+  include RenderGeneric    
+       
+  verify :method => :post,   :only => :create,  :redirect_to => { :action => 'index' }  
+  verify :method => :put,    :only => :update,  :redirect_to => { :action => 'index' }  
+  verify :method => :delete, :only => :destroy, :redirect_to => { :action => 'index' }  
+          
+  before_filter :build_entry, :only => [:new, :create]
+  before_filter :set_entry,   :only => [:show, :edit, :update, :remove, :destroy]
+
+  helper_method :model_class, :models_label, :full_entry_label
+  
+  hide_action :model_class, :models_label, :full_entry_label
+    
+  ##############  ACTIONS  ############################################
+    
+  # GET /entries
+  # GET /entries.xml
   def index
-    @cruds = Crud.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @cruds }
-    end
+    @entries = model_class.find :all, fetch_all_options
+	respond_with @entries
   end
 
-  # GET /cruds/1
-  # GET /cruds/1.xml
+  # GET /entries/1
+  # GET /entries/1.xml
   def show
-    @crud = Crud.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @crud }
-    end
+  	respond_with @entry
   end
 
-  # GET /cruds/new
-  # GET /cruds/new.xml
+  # GET /entries/new
+  # GET /entries/new.xml
   def new
-    @crud = Crud.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @crud }
-    end
+  	respond_with @entry
   end
-
-  # GET /cruds/1/edit
+  
+  # GET /entries/1/edit
   def edit
-    @crud = Crud.find(params[:id])
   end
 
-  # POST /cruds
-  # POST /cruds.xml
+  # POST /entries
+  # POST /entries.xml
   def create
-    @crud = Crud.new(params[:crud])
-
     respond_to do |format|
-      if @crud.save
-        flash[:notice] = 'Crud was successfully created.'
-        format.html { redirect_to(@crud) }
-        format.xml  { render :xml => @crud, :status => :created, :location => @crud }
+      if with_callbacks(:create) { save_entry } 
+        flash[:notice] = "#{full_entry_label} was successfully created."
+        format.html { redirect_to(@entry) }
+        format.xml  { render :xml => @entry, :status => :created, :location => @entry }
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @crud.errors, :status => :unprocessable_entity }
+        format_error(format, 'new')
       end
     end
   end
 
-  # PUT /cruds/1
-  # PUT /cruds/1.xml
+  # PUT /entries/1
+  # PUT /entries/1.xml
   def update
-    @crud = Crud.find(params[:id])
-
+    @entry.attributes = params[:entry]
+    
     respond_to do |format|
-      if @crud.update_attributes(params[:crud])
-        flash[:notice] = 'Crud was successfully updated.'
-        format.html { redirect_to(@crud) }
+      if with_callbacks(:update) { save_entry }
+        flash[:notice] = "#{full_entry_label} was successfully updated."
+        format.html { redirect_to(@entry) }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @crud.errors, :status => :unprocessable_entity }
+        format_error(format, 'edit')
       end
-    end
   end
 
-  # DELETE /cruds/1
-  # DELETE /cruds/1.xml
+  # DELETE /entries/1
+  # DELETE /entries/1.xml
   def destroy
-    @crud = Crud.find(params[:id])
-    @crud.destroy
-
     respond_to do |format|
-      format.html { redirect_to(cruds_url) }
-      format.xml  { head :ok }
+      if with_callbacks(:destroy) { @entry.destroy }
+        flash[:notice] = "#{full_entry_label} was successfully removed."
+
+        format.html { redirect_to(:action => 'index') }
+        format.xml  { head :ok }
+      else
+        format_error(format, 'show')
+      end
+  end
+  
+  protected 
+	
+  #############  CUSTOMIZABLE HELPER METHODS  ##############################
+	
+  def respond_with(object)
+    respond_to do |format|
+      format.html # #{action}.html.erb
+      format.xml  { render :xml => object }
     end
+  end
+    
+  def format_error(format, render_action)
+      format.html { render_generic :action => render_action }
+      format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
+  end
+	
+  def build_entry        
+	@entry = model_class.new(params[:entry])
+  end
+	
+  def set_entry
+	@entry = model_class.find(params[:id])
+  end
+	
+  def model_class
+	controller_name.classify.constantize
+  end
+		
+  def models_label
+	controller_name.humanize.titleize
+  end        
+	
+  def full_entry_label        
+	"#{models_label.singularize} #{@entry.label}"
+  end    
+	
+  def save_entry       
+	with_callbacks(:save) {	@entry.save }
+  end   
+			
+  def fetch_all_options
+    {}
   end
 end

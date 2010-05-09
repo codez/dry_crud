@@ -1,8 +1,8 @@
 require 'test_helper'
 
-class StandardWidgetHelperTest < ActionView::TestCase
+class StandardHelperTest < ActionView::TestCase
 
-	include StandardWidgetHelper
+	include StandardHelper
 	
 	test "labeled text" do
 		result = labeled("label") { "value" }

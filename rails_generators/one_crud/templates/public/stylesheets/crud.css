@@ -14,3 +14,15 @@ table.list {}
 
 /* div rendered if no entries available for list */
 div.list {}
+
+.right_align {
+	text-align: right;
+}
+
+.center_align {
+	text-align: center;
+}
+
+.attributes {}
+
+#crud_notice

@@ -1,3 +1,9 @@
+<% @title = full_entry_label -%>
 
-<%= link_to 'Edit', edit_crud_path(@crud) %> |
-<%= link_to 'Back', cruds_path %>
+<%= render_generic :partial => 'attrs' %>
+
+<br/>
+
+<%= link_action_index %>
+<%= link_action_edit(@entry) %>
+<%= link_action_delete(@entry) %>

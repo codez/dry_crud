@@ -1,12 +1,6 @@
-<h1>Editing crud</h1>
+<% @title = "Edit #{full_entry_label}" -%>
 
-<% form_for(@crud) do |f| %>
-  <%= f.error_messages %>
+<%= render_generic :partial => 'form' %>
 
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
-
-<%= link_to 'Show', @crud %> |
-<%= link_to 'Back', cruds_path %>
+<%= link_action_show @entry %>
+<%= link_action_destroy @entry %>
