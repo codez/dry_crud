@@ -5,9 +5,10 @@ class CrudController < ApplicationController
   include CrudCallbacks
   include RenderGeneric    
   
-  verify :method => :post,   :only => :create,  :redirect_to => { :action => 'index' }  
-  verify :method => :put,    :only => :update,  :redirect_to => { :action => 'index' }  
-  verify :method => :delete, :only => :destroy, :redirect_to => { :action => 'index' }  
+  verify :params => :id, :only => :show, :redirect_to => { :action => 'index' }
+  verify :method => :post, :only => :create,  :redirect_to => { :action => 'index' }  
+  verify :method => [:put, :post], :params => :id, :only => :update,  :redirect_to => { :action => 'index' }  
+  verify :method => [:delete, :post], :params => :id, :only => :destroy, :redirect_to => { :action => 'index' }  
   
   before_filter :build_entry, :only => [:new, :create]
   before_filter :set_entry,   :only => [:show, :edit, :update, :remove, :destroy]
@@ -58,7 +59,7 @@ class CrudController < ApplicationController
   # PUT /entries/1
   # PUT /entries/1.xml
   def update
-    @entry.attributes = params[:entry]
+    @entry.attributes = params[model_identifier]
     
     respond_to do |format|
       if with_callbacks(:update) { save_entry }
@@ -103,11 +104,15 @@ class CrudController < ApplicationController
   end
   
   def build_entry        
-    @entry = model_class.new(params[:entry])
+    @entry = model_class.new(params[model_identifier])
   end
   
   def set_entry
     @entry = model_class.find(params[:id])
+  end
+  
+  def model_identifier
+    controller_name.singularize.to_sym
   end
   
   def model_class

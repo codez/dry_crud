@@ -8,12 +8,6 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
     DEFAULT_INPUT_OPTIONS = { }
 
-    def initialize(*args)
-        super *args
-        # TODO handle object_name correctly for non-crud views
-        @object_name = :entry
-    end
-    
     def labeled_field(attr, html_options = {})
         labeled(attr, input_field(attr, html_options))
     end
