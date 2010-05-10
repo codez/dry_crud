@@ -14,7 +14,7 @@ desc "Run all tests"
 task :test => ['test:generate'] do
 	Rake::TestTask.new do |test| 
 		test.libs << "test" 
-		test.test_files = Dir[ "test/unit/*_test.rb" ] 
+		test.test_files = Dir[ "test/test_app/test/**/*_test.rb" ] 
 		test.verbose = true
 	end
 end

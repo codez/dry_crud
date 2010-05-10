@@ -1,6 +1,10 @@
 class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
     include StandardHelper
+    
+    attr_reader :template 
+    
+    delegate :concat, :content_tag, :render, :to => :template
 
     DEFAULT_INPUT_OPTIONS = { }
 
@@ -48,13 +52,4 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
         collection_select(attr, models, :id, :label, { :include_blank => "Please select" }, html_options)
     end
 
-    private
-    
-    def concat(e)
-        @template.concat(e)
-    end
-
-    def content_tag(name, content_or_options_with_block = nil, options = nil, escape = true, &block)
-        @template.content_tag(name, content_or_options_with_block, options, escape, &block)
-    end
 end

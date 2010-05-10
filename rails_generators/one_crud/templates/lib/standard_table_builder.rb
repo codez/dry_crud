@@ -1,13 +1,21 @@
 class StandardTableBuilder
 	attr_reader :entries, :cols, :template
 	
-	delegate :content_tag, :tr_alt, :format_attr, :to => :template
+  include StandardHelper
+  
+	delegate :content_tag, :cycle, :h, :to => :template
 
 	def initialize(entries, template)
 		@entries = entries
 		@template = template
 		@cols = []
-	end
+  end
+
+  def self.table(entries, template)
+    t = new(entries, template)
+    yield t
+    t.to_html    
+  end
 
 	def col(header = '', html_options = {}, &block)
 		@cols << Col.new(header, html_options, @template, block)
@@ -21,28 +29,28 @@ class StandardTableBuilder
 	
 	def align_class(attr)
 		case column_type(entries.first.class, attr)
-			when :integer, :float then 'right_align'
-			when :boolean	      then 'center_align'
+			when :integer, :float, :decimal then 'right_align'
+			when :boolean	 then 'center_align'
 			else nil
 		end
 	end
 	
-	def to_html(template)
+	def to_html
 		content_tag :table, :class => 'list' do
-			html_header
-			table.entries.each { |e| html_row(e) }
+			[html_header] + 
+			entries.collect { |e| html_row(e) }
 		end
 	end
 	
 	def html_header
 		content_tag :tr do
-			cols.each { |c| c.html_header }
+			cols.collect { |c| c.html_header }
 		end
-	end
-	
+  end
+
 	def html_row(entry)
 		tr_alt do
-			cols.each do { |c| c.html_cell(entry) }
+			cols.collect { |c| c.html_cell(entry) }
 		end
 	end
 	
@@ -62,5 +70,6 @@ class StandardTableBuilder
 			content_tag :td, content(entry), html_options
 		end
 
-	end
+  end
+
 end

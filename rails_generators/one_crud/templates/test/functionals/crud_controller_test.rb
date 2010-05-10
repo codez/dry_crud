@@ -1,8 +1,6 @@
 require 'test_helper'
-require 'authlogic/test_case'
 
 # AR keeps printing annoying schema statements
-#$stdout = StringIO.new
 
 class TestModel < ActiveRecord::Base
     default_scope :order => 'name'
@@ -27,13 +25,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :test_models
 end
 
-
-
 class CrudControllerTest < ActionController::TestCase
     
     attr_accessor :models
-    
-    setup :activate_authlogic
     
     tests TestModelsController
 
@@ -41,7 +35,6 @@ class CrudControllerTest < ActionController::TestCase
     def setup
         super
         setup_db        
-        login_as('root')
         self.models = []
         models << TestModel.create!(:name => 'aaa', :value => 1)
         models << TestModel.create!(:name => 'bbb', :value => 2)
@@ -56,11 +49,13 @@ class CrudControllerTest < ActionController::TestCase
     end
 
     def setup_db    
-        ActiveRecord::Schema.define(:version => 1) do
-            create_table :test_models do |t|
-                t.column :name, :string
-                t.column :value, :float
-            end
+        silence_stream(STDOUT) do
+          ActiveRecord::Schema.define(:version => 1) do
+              create_table :test_models do |t|
+                  t.column :name, :string
+                  t.column :value, :float
+              end
+          end
         end
     end
     
@@ -74,6 +69,7 @@ class CrudControllerTest < ActionController::TestCase
         assert_equal 6, TestModel.count
         assert_equal TestModelsController, @controller.class
         assert_recognizes({:controller => 'test_models', :action => 'index'}, '/test_models')
+        assert_recognizes({:controller => 'test_models', :action => 'show', :id => '1'}, '/test_models/1')
     end
         
     test "index" do
@@ -112,9 +108,9 @@ class CrudControllerTest < ActionController::TestCase
     
     test "update" do
         assert_no_difference('TestModel.count') do
-            post :update, :id => models[0].id, :entry => {:name => 'gugu', :value => 2}
+            put :update, :id => models[0].id, :entry => {:name => 'gugu', :value => 2}
         end
-        assert_redirected_to :controller => :test_models, :action => 'show', :id => models[0].id
+        assert_redirected_to test_model_url(models[0].id)
         assert_equal 'gugu', assigns(:entry).name
     end
                   
@@ -129,7 +125,7 @@ class CrudControllerTest < ActionController::TestCase
         assert_difference('TestModel.count') do
             post :create, :entry => {:name => 'gugu', :value => 2}
         end
-        assert_redirected_to :controller => :test_models, :action => 'show', :id => assigns(:entry).id
+        assert_redirected_to test_model_url(assigns(:entry).id)
         assert ! assigns(:entry).new_record?
         assert_equal 'gugu', assigns(:entry).name
     end
@@ -146,7 +142,7 @@ class CrudControllerTest < ActionController::TestCase
     
     test "delete" do
         assert_difference('TestModel.count', -1) do
-            post :destroy, :id => models[0].id
+            delete :destroy, :id => models[0].id
         end
         assert_redirected_to :controller => :test_models, :action => 'index'
     end
