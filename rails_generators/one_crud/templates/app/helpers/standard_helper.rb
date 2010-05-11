@@ -129,7 +129,7 @@ module StandardHelper
         concat form.labeled_fields(*attrs)
       end
       
-      concat labeled("", form.submit("Save"))
+      concat labeled("&nbsp;", form.submit("Save"))
     end
   end
   
@@ -170,8 +170,8 @@ module StandardHelper
     link_action 'Add', :action => 'new'
   end
   
-  def link_action(label, *args)
-    link_to("[#{label}]", *args)
+  def link_action(label, options = {}, html_options = {})
+    link_to("[#{label}]", options, {:class => 'action'}.merge(html_options))
   end
   
 end

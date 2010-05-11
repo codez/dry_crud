@@ -30,7 +30,6 @@ div.list {}
 
 .labeled {
 	vertical-align: top;
-	
 	margin: 1pt;
 }
 
@@ -38,7 +37,7 @@ div.list {}
 	font-style: italic;
 	width: 120pt;
 	padding-right: 5pt;
-	display: inline-block;
+	float: left;
 }
 
 .labeled .value {
@@ -47,7 +46,42 @@ div.list {}
 
 .attributes {}
 
-.flash_notice {
+a.action {
+	color: red;
+	text-decoration: none;
+}
+
+a:hover.action {
+	text-decoration: underline;
+}
+
+a:visited.action {
+	color: red;
+}
+
+#flash_notice {
 	color: #663333;
+}
+
+div.errorExplanation {
+	border: solid 1px #999999;
+	margin: 10pt;
+	padding: 5pt;
+	background-color: #FFBBBB;
+}
+
+.errorExplanation h2 {
+	font-size: 12pt;
+	margin-top: 0pt;
+}
+
+.errorExplanation ul {
+	margin-bottom: 5pt;
+}
+
+div.fieldWithErrors {
+	background-color: #FFBBBB;
+	display: inline-block;
+	padding: 2px;
 }
 

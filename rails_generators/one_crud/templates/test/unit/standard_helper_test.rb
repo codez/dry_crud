@@ -11,13 +11,13 @@ class StandardHelperTest < ActionView::TestCase
 	test "labeled text as block" do
 		result = labeled("label") { "value" }
 		
-		assert_dom_equal "<div class='labeled'><span class='caption'>label</span><span class='value'>value</span></div>", result
+		assert_dom_equal "<div class='labeled'><div class='caption'>label</div><div class='value'>value&nbsp;</div></div>", result
   end
 
   test "labeled text as content" do
     result = labeled("label", "value")
     
-    assert_dom_equal "<div class='labeled'><span class='caption'>label</span><span class='value'  >value</span></div>", result
+    assert_dom_equal "<div class='labeled'><div class='caption'>label</div><div class='value'>value&nbsp;</div></div>", result
   end
   
 	test "alternate row" do
