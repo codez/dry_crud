@@ -1,5 +1,10 @@
-.labeled {
+body, div, p, td, th {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 11pt;
+}
 
+td {
+	vertical-align: top;
 }
 
 tr.even {
@@ -23,6 +28,26 @@ div.list {}
 	text-align: center;
 }
 
+.labeled {
+	vertical-align: top;
+	
+	margin: 1pt;
+}
+
+.labeled .caption {
+	font-style: italic;
+	width: 120pt;
+	padding-right: 5pt;
+	display: inline-block;
+}
+
+.labeled .value {
+	
+}
+
 .attributes {}
 
-#crud_notice
+.flash_notice {
+	color: #663333;
+}
+

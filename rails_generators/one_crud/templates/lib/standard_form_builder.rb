@@ -9,7 +9,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     DEFAULT_INPUT_OPTIONS = { }
 
     def labeled_field(attr, html_options = {})
-        labeled(attr, input_field(attr, html_options))
+        labeled(captionize(attr), input_field(attr, html_options))
     end
     
     def labeled_fields(*attrs)

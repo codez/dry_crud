@@ -1,9 +1,9 @@
 class StandardTableBuilder
 	attr_reader :entries, :cols, :template
-	
-  include StandardHelper
   
-	delegate :content_tag, :cycle, :h, :simple_format, :to => :template
+  # Delegate called methods to template.
+  # including StandardHelper would lead to problems with indirectly called methods.
+	delegate :content_tag, :format_attr, :column_type, :captionize, :tr_alt, :to => :template
 
 	def initialize(entries, template)
 		@entries = entries
@@ -23,7 +23,7 @@ class StandardTableBuilder
 	
 	def attrs(*attrs)
 		attrs.each do |a|
-			col(a.to_s.humanize.titleize, :class => align_class(a)) { |e| format_attr(e, a) }
+			col(captionize(a), :class => align_class(a)) { |e| format_attr(e, a) }
 		end
 	end	
 	

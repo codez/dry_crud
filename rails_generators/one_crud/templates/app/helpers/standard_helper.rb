@@ -88,14 +88,18 @@ module StandardHelper
   
   # Renders an arbitrary content with the given label. Used for uniform presentation.
   def labeled(label, content = nil, &block)
-    block = lambda { content } unless block_given?
-    render :layout => 'standard/labeled', :locals => {:caption => label},  &block
+    content = capture(&block) if block_given?
+    render :partial => 'standard/labeled', :locals => { :label => label, :content => content}
+  end
+  
+  def captionize(text)
+    text.to_s.humanize.titleize
   end
   
   # renders a list of attributes, optionally surrounded with a div.
   def render_attrs(obj, attrs, div = true)
     html = attrs.collect do |a| 
-      labeled(a.to_s.humanize.titleize, format_attr(obj, a))
+      labeled(captionize(a), format_attr(obj, a))
     end.join
     
     if div
@@ -125,7 +129,7 @@ module StandardHelper
         concat form.labeled_fields(*attrs)
       end
       
-      concat form.submit("Save")
+      concat labeled("", form.submit("Save"))
     end
   end
   

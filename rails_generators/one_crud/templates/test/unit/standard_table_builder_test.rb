@@ -11,11 +11,14 @@ class StandardTableBuilderTest < ActionView::TestCase
     @table = StandardTableBuilder.new(["foo", "bahr"], self)
   end
   
+  def format_size(obj)
+    "#{obj.size} chars"
+  end
+  
   test "html header" do
-    dom = <<-FIN
-      <tr><th>Upcase</th><th>Size</th></tr>
-    FIN
     table.attrs :upcase, :size
+    
+    dom = '<tr><th>Upcase</th><th>Size</th></tr>'
     
     assert_dom_equal dom, table.html_header
   end
@@ -23,9 +26,7 @@ class StandardTableBuilderTest < ActionView::TestCase
   test "single attr row" do
     table.attrs :upcase, :size
     
-    dom = <<-FIN
-      <tr class="even"><td>FOO</td><td>3</td></tr>
-    FIN
+    dom = '<tr class="even"><td>FOO</td><td>3 chars</td></tr>'
     
     assert_dom_equal dom, table.html_row("foo")
   end
@@ -33,9 +34,7 @@ class StandardTableBuilderTest < ActionView::TestCase
   test "custom row" do
     table.col("Header", :class => 'hula') {|e| "Weights #{e.size} kg" }
         
-    dom = <<-FIN
-      <tr class="even"><td class='hula'>Weights 3 kg</td></tr>
-    FIN
+    dom = '<tr class="even"><td class="hula">Weights 3 kg</td></tr>'
     
     assert_dom_equal dom, table.html_row("foo")
   end
@@ -48,13 +47,20 @@ class StandardTableBuilderTest < ActionView::TestCase
     assert_equal "FOO", col.content("foo")
     assert_equal "<td>FOO</td>", col.html_cell("foo")
   end
+  
+  test "attr col content with custom format_size method" do
+    table.attrs :size
+    col = table.cols.first
+    
+    assert_equal "4 chars", col.content("abcd")
+  end
 	
 	test "two x two table" do
 		dom = <<-FIN
 			<table class="list">
 			<tr><th>Upcase</th><th>Size</th></tr>
-			<tr class="even"><td>FOO</td><td>3</td></tr>
-			<tr class="odd"><td>BAHR</td><td>4</td></tr>
+			<tr class="even"><td>FOO</td><td>3 chars</td></tr>
+			<tr class="odd"><td>BAHR</td><td>4 chars</td></tr>
 			</table>
 		FIN
     
@@ -70,13 +76,13 @@ class StandardTableBuilderTest < ActionView::TestCase
 			<tr class="even">
 				<td class='left'><a href='/'>foo</a></td>
 				<td>FOO</td>
-				<td>3</td>
+				<td>3 chars</td>
 				<td>Never foo</td>
 			</tr>
 			<tr class="odd">
 				<td class='left'><a href='/'>bahr</a></td>
 				<td>BAHR</td>
-				<td>4</td>
+				<td>4 chars</td>
 				<td>Never bahr</td>
 			</tr>
 			</table>

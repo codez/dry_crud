@@ -4,16 +4,20 @@ class StandardHelperTest < ActionView::TestCase
 
 	include StandardHelper
 	
+  def format_size(obj)
+    "#{f(obj.size)} chars"
+  end
+  
 	test "labeled text as block" do
 		result = labeled("label") { "value" }
 		
-		assert_dom_equal "<div class='labeled'><label>label</label><span>value</span></div>", result
+		assert_dom_equal "<div class='labeled'><span class='caption'>label</span><span class='value'>value</span></div>", result
   end
 
   test "labeled text as content" do
     result = labeled("label", "value")
     
-    assert_dom_equal "<div class='labeled'><label>label</label><span>value</span></div>", result
+    assert_dom_equal "<div class='labeled'><span class='caption'>label</span><span class='value'  >value</span></div>", result
   end
   
 	test "alternate row" do
@@ -46,8 +50,16 @@ class StandardHelperTest < ActionView::TestCase
 	
 	test "format Strings" do
 		assert_equal "blah blah", f("blah blah")
-		assert_equal "&lt;injection&gt;", f("<injection>")
-	end
+ 		assert_equal "&lt;injection&gt;", f("<injection>")
+  end
+
+  test "format attr with fallthrough to f" do
+    assert_equal "12.23", format_attr("12.23424", :to_f)
+  end
+  
+  test "format attr with custom format_size method" do
+    assert_equal "4 chars", format_attr("abcd", :size)
+  end
 	
 	test "empty table should render message" do
 		assert_dom_equal "<div class='list'>#{NO_LIST_ENTRIES_MESSAGE}</div>", table([]) { }
