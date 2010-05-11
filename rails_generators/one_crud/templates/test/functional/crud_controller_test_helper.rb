@@ -6,8 +6,6 @@ module CrudControllerTestHelper
     assert_response :success
     assert_template 'index'
     assert_not_nil assigns(:entries)
-    assert_equal 6, assigns(:entries).size
-    assert_equal models.sort_by {|a| a.name }, assigns(:entries)
   end
   
   def test_index_xml

@@ -50,11 +50,9 @@ class CrudControllerTest < ActionController::TestCase
   
   def setup_db    
     silence_stream(STDOUT) do
-      ActiveRecord::Schema.define(:version => 1) do
-        create_table :test_models do |t|
+        ActiveRecord::Base.connection.create_table :test_models do |t|
           t.column :name, :string
           t.column :value, :float
-        end
       end
     end
   end

@@ -1,0 +1,4 @@
+class CitiesController < CrudController
+  
+  
+end

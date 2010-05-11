@@ -4,11 +4,9 @@ module StandardHelper
   CONFIRM_DELETE_MESSAGE  = 'Do you really want to delete this entry?'
   
   ################  FORMATTING HELPERS  ##################################
-  
-  # Class attribute to define associations that should not get automatically linked.
-  def included(base)
-    base.cattr_accessor :no_assoc_links
-  end
+
+  # Define an array of associations symbols that should not get automatically linked.
+  #def no_assoc_links = [:city]
   
   # Formats a single value
   def f(value)
@@ -18,6 +16,7 @@ module StandardHelper
 			when Date	  then value.strftime
       when true   then 'yes'
       when false  then 'no'
+      when ActiveRecord::Base then h value.label
     else h value.to_s
     end
   end
@@ -38,9 +37,10 @@ module StandardHelper
   end
   
   # Formats an active record association
-  def format_assoc(object, assoc)
+  def format_assoc(obj, assoc)
     if assoc_val = obj.send(assoc.name)
-      if no_assoc_links.include?(assoc.name.to_sym) || 
+      if respond_to?(:no_assoc_links) && 
+        no_assoc_links.to_a.include?(assoc.name.to_sym) || 
         !respond_to?("#{assoc_val.class.name.underscore}_path".to_sym)
         h assoc_val.label 
       else
@@ -59,7 +59,7 @@ module StandardHelper
     return "" if val.nil?
     case column_type(obj.class, attr)
       when :time then val.strftime("%H:%M")
-      when :date then val.to_date.f
+      when :date then val.to_date.to_s
       when :text then simple_format(h(val))
     else f(val)
     end

@@ -14,9 +14,7 @@ class CrudController < ApplicationController
   before_filter :set_entry,   :only => [:show, :edit, :update, :remove, :destroy]
   
   helper_method :model_class, :models_label, :full_entry_label
-  
-  hide_action :model_class, :models_label, :full_entry_label
-  
+   
   ##############  ACTIONS  ############################################
   
   # GET /entries
@@ -45,14 +43,11 @@ class CrudController < ApplicationController
   # POST /entries
   # POST /entries.xml
   def create
-    respond_to do |format|
-      if with_callbacks(:create) { save_entry } 
-        flash[:notice] = "#{full_entry_label} was successfully created."
-        format.html { redirect_to(@entry) }
-        format.xml  { render :xml => @entry, :status => :created, :location => @entry }
-      else
-        format_error(format, 'new')
-      end
+    created = with_callbacks(:create) { save_entry } 
+    
+    respond_processed(created, 'created', 'new') do |format|
+      format.html { redirect_to(@entry) }
+      format.xml  { render :xml => @entry, :status => :created, :location => @entry }
     end
   end
   
@@ -60,30 +55,22 @@ class CrudController < ApplicationController
   # PUT /entries/1.xml
   def update
     @entry.attributes = params[model_identifier]
+    updated = with_callbacks(:update) { save_entry }
     
-    respond_to do |format|
-      if with_callbacks(:update) { save_entry }
-        flash[:notice] = "#{full_entry_label} was successfully updated."
-        format.html { redirect_to(@entry) }
-        format.xml  { head :ok }
-      else
-        format_error(format, 'edit')
-      end
+    respond_processed(updated, 'updated', 'edit') do |format|
+      format.html { redirect_to(@entry) }
+      format.xml  { head :ok }
     end
   end
   
   # DELETE /entries/1
   # DELETE /entries/1.xml
   def destroy
-    respond_to do |format|
-      if with_callbacks(:destroy) { @entry.destroy }
-        flash[:notice] = "#{full_entry_label} was successfully removed."
-        
-        format.html { redirect_to(:action => 'index') }
-        format.xml  { head :ok }
-      else
-        format_error(format, 'show')
-      end
+    destroyed = with_callbacks(:destroy) { @entry.destroy }
+    
+    respond_processed(destroyed, 'destroyed', 'show') do |format|
+      format.html { redirect_to(:action => 'index') }
+      format.xml  { head :ok }
     end
   end
   
@@ -98,9 +85,16 @@ class CrudController < ApplicationController
     end
   end
   
-  def format_error(format, render_action)
-    format.html { render_generic :action => render_action }
-    format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
+  def respond_processed(success, operation, failed_action)
+    respond_to do |format|
+      if success
+        flash[:notice] = "#{full_entry_label} was successfully #{operation}."
+        yield format
+      else 
+        format.html { render_generic :action => failed_action }
+        format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
+      end
+    end
   end
   
   def build_entry        
@@ -124,7 +118,7 @@ class CrudController < ApplicationController
   end        
   
   def full_entry_label        
-	"#{models_label.singularize} #{@entry.label}"
+	  "#{models_label.singularize} '#{@entry.label}'"
   end    
   
   def save_entry       

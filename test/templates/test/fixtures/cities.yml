@@ -1,0 +1,11 @@
+bern:
+    name: Bern
+    country_code: CH
+    
+ny:
+    name: New York
+    country_code: USA
+    
+rj:
+    name: Rio de Janeiro
+    country_code: BR

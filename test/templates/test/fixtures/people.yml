@@ -1,0 +1,14 @@
+john:
+    name: John Doe
+    children: 0
+    income: 300.20
+    birthdate: 1972-04-04
+    city: ny
+    remarks: Bla Bla\nBla Bla
+    
+jack:
+    name: Jack Black
+    children: 2
+    income: 123.4567
+    birthdate: 1980-09-12
+    city: bern

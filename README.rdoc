@@ -1,0 +1,8 @@
+
+It's yours!
+
+Whitebox
+
+CRUD Views, not only controller
+
+plugin agnostic

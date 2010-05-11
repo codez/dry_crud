@@ -13,7 +13,7 @@ task :default => :test
 desc "Run all tests"
 task :test => ['test:generate'] do
 	Rake::TestTask.new do |test| 
-		test.libs << "test" 
+		test.libs << "test/test_app/test" 
 		test.test_files = Dir[ "test/test_app/test/**/*_test.rb" ] 
 		test.verbose = true
 	end
@@ -28,20 +28,29 @@ namespace :test do
 	end
 	
 	desc "Run the crud generator for the test application"
-	task :generate => ['generate:app', :environment] do
+	task :generate => ['app:init', :environment] do
 		require 'rails_generator'
 		require File.join(GENERATOR_ROOT, 'one_crud_generator')
 
 		Rails::Generator::Spec.new('one_crud', GENERATOR_ROOT, :RubyGems).klass.new([], :collision => :force).command(:create).invoke!
 	end
 	
-	namespace :generate do
+  
+	namespace :app do
 		desc "Generate a rails test application"
-		task :app do
+		task :generate do
 			unless File.exist?(TEST_APP_ROOT)
 				sh "rails #{TEST_APP_ROOT}"
 			end
-		end
+	  end
+   
+    task :init => :generate do
+      FileUtils.cp_r(File.join(File.dirname(__FILE__), 'test', 'templates', '.'), TEST_APP_ROOT)
+      FileUtils.cd(TEST_APP_ROOT) do
+        sh "rake db:migrate"
+      end
+    end
+  
 	end
 	
 end

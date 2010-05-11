@@ -41,9 +41,9 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
     def belongs_to_field(attr, html_options = {})
         assoc = belongs_to_association(@object, attr)
-        models = assoc.klass.find(:all, :conditions => assoc.options[:conditions],
-        								:order => assoc.options[:order])
-        collection_select(attr, models, :id, :label, { :include_blank => "Please select" }, html_options)
+        list = assoc.klass.find(:all, :conditions => assoc.options[:conditions],
+        							                 	:order => assoc.options[:order])
+        collection_select(attr, list, :id, :label, { :include_blank => "Please select" }, html_options)
     end
 
 end

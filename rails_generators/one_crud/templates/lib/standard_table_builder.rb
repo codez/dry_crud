@@ -3,7 +3,7 @@ class StandardTableBuilder
 	
   include StandardHelper
   
-	delegate :content_tag, :cycle, :h, :to => :template
+	delegate :content_tag, :cycle, :h, :simple_format, :to => :template
 
 	def initialize(entries, template)
 		@entries = entries
