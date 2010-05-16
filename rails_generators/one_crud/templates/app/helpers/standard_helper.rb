@@ -13,7 +13,8 @@ module StandardHelper
     case value
       when Fixnum then value.to_s
       when Float  then "%.2f" % value
-			when Date	  then value.strftime
+			when Date	  then value.to_s
+      when Time   then value.strftime("%H:%M")   
       when true   then 'yes'
       when false  then 'no'
       when ActiveRecord::Base then h value.label
@@ -92,11 +93,13 @@ module StandardHelper
     render :partial => 'standard/labeled', :locals => { :label => label, :content => content}
   end
   
+  # Transform the given text into a form as used by labels or table headers.
   def captionize(text)
     text.to_s.humanize.titleize
   end
   
-  # renders a list of attributes, optionally surrounded with a div.
+  # Renders a list of attributes with label and value for a given object. 
+  # Optionally surrounded with a div.
   def render_attrs(obj, attrs, div = true)
     html = attrs.collect do |a| 
       labeled(captionize(a), format_attr(obj, a))
@@ -109,6 +112,8 @@ module StandardHelper
     end
   end
   
+  # Renders a table for the given entries as defined by the following block.
+  # If entries are empty, an appropriate message is rendered.
   def table(entries, &block)
     if entries.present?
       StandardTableBuilder.table(entries, self, &block)
@@ -138,17 +143,18 @@ module StandardHelper
     content_tag(:tr, :class => cycle("even", "odd", :name => "row_class"), &block)
   end
   
-  # Intermediate method to use the render_generic module. 
+  # Intermediate method to use the RenderInheritable module. 
   # Because ActionView has a different :render method than ActionController, 
-  # this method provides an entry point to use render_generic from views.
-  # Strictly, this method would belong into a render_generic helper.
-  def render_generic(options)                
-    render_generic_partial_options(options) if options[:partial]  
+  # this method provides an entry point to use render_inheritable from views.
+  # Strictly, this method would belong into a render_inheritable helper.
+  def render_inheritable(options)                
+    inheritable_partial_options(options) if options[:partial]  
     render options
   end   
  
   
-  ######## ACTION LINKS ######################################################
+  ######## ACTION LINKS ###################################################### :nodoc:
+  
   
   def link_action_show(entry)
     link_action 'Show', entry

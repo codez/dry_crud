@@ -1,3 +1,10 @@
+# A simple helper class to easily define a table listing several rows of the same data type.
+#
+# Example Usage:
+#   StandardTableBuilder.table(entries, template) do |t|
+#     t.col('My Header', :class => 'css') {|e| link_to 'Show', e }
+#     t.attrs :name, :city
+#   end
 class StandardTableBuilder
 	attr_reader :entries, :cols, :template
   
@@ -11,37 +18,51 @@ class StandardTableBuilder
 		@cols = []
   end
 
+  # Convenience method to directly generate a table. Renders a row for each entry in entries.
+  # Takes a block that gets the table object as parameter for configuration.
+  # Returns the generated html for the table.
   def self.table(entries, template)
     t = new(entries, template)
     yield t
     t.to_html    
   end
 
+  # Define a column for the table with the given header, the html_options used for
+  # each td and a block rendering the contents of a cell for the current entry.
+  # The columns appear in the order they are defined.
 	def col(header = '', html_options = {}, &block)
 		@cols << Col.new(header, html_options, @template, block)
 	end
 	
+  # Convenience method to add one or more attribute columns.
+  # The attribute name will become the header, the cells will contain
+  # the formatted attribute value for the current entry.
 	def attrs(*attrs)
 		attrs.each do |a|
 			col(captionize(a), :class => align_class(a)) { |e| format_attr(e, a) }
 		end
 	end	
 	
-	def align_class(attr)
-		case column_type(entries.first.class, attr)
-			when :integer, :float, :decimal then 'right_align'
-			when :boolean	 then 'center_align'
-			else nil
-		end
-	end
-	
+  # Renders the table as HTML.
 	def to_html
 		content_tag :table, :class => 'list' do
 			[html_header] + 
 			entries.collect { |e| html_row(e) }
 		end
 	end
-	
+    
+  # Returns css classes used for alignment of the cell data.
+  # Based on the column type of the attribute.
+  def align_class(attr)
+    case column_type(entries.first.class, attr)
+      when :integer, :float, :decimal then 'right_align'
+      when :boolean  then 'center_align'
+      else nil
+    end
+  end
+  
+  private 
+  
 	def html_header
 		content_tag :tr do
 			cols.collect { |c| c.html_header }
@@ -54,7 +75,8 @@ class StandardTableBuilder
 		end
 	end
 	
-	class Col < Struct.new(:header, :html_options, :template, :block)
+  # Helper class to store column information.
+	class Col < Struct.new(:header, :html_options, :template, :block) #:nodoc:
 	
 		delegate :content_tag, :to => :template
 	

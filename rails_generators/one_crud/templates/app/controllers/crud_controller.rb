@@ -3,7 +3,7 @@
 class CrudController < ApplicationController
   
   include CrudCallbacks
-  include RenderGeneric    
+  include RenderInheritable 
   
   verify :params => :id, :only => :show, :redirect_to => { :action => 'index' }
   verify :method => :post, :only => :create,  :redirect_to => { :action => 'index' }  
@@ -80,7 +80,7 @@ class CrudController < ApplicationController
   
   def respond_with(object)
     respond_to do |format|
-      format.html { render_generic :action => action_name }
+      format.html { render_inheritable :action => action_name }
       format.xml  { render :xml => object }
     end
   end
@@ -91,7 +91,7 @@ class CrudController < ApplicationController
         flash[:notice] = "#{full_entry_label} was successfully #{operation}."
         yield format
       else 
-        format.html { render_generic :action => failed_action }
+        format.html { render_inheritable :action => failed_action }
         format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
       end
     end
@@ -106,15 +106,15 @@ class CrudController < ApplicationController
   end
   
   def model_identifier
-    controller_name.singularize.to_sym
+    @model_identifier ||= controller_name.singularize.to_sym
   end
   
   def model_class
-    controller_name.classify.constantize
+    @model_class ||= controller_name.classify.constantize
   end
   
   def models_label
-    controller_name.humanize.titleize
+    @models_label ||= controller_name.humanize.titleize
   end        
   
   def full_entry_label        

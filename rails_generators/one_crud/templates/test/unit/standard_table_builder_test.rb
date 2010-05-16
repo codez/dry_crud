@@ -20,7 +20,7 @@ class StandardTableBuilderTest < ActionView::TestCase
     
     dom = '<tr><th>Upcase</th><th>Size</th></tr>'
     
-    assert_dom_equal dom, table.html_header
+    assert_dom_equal dom, table.send(:html_header)
   end
 
   test "single attr row" do
@@ -28,7 +28,7 @@ class StandardTableBuilderTest < ActionView::TestCase
     
     dom = '<tr class="even"><td>FOO</td><td>3 chars</td></tr>'
     
-    assert_dom_equal dom, table.html_row("foo")
+    assert_dom_equal dom, table.send(:html_row, "foo")
   end
   
   test "custom row" do
@@ -36,7 +36,7 @@ class StandardTableBuilderTest < ActionView::TestCase
         
     dom = '<tr class="even"><td class="hula">Weights 3 kg</td></tr>'
     
-    assert_dom_equal dom, table.html_row("foo")
+    assert_dom_equal dom, table.send(:html_row, "foo")
   end
   
   test "attr col output" do

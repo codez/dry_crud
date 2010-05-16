@@ -9,7 +9,8 @@ class CreatePeopleAndCities < ActiveRecord::Migration
       t.string :name, :null => false
       t.integer :children
       t.integer :city_id
-      t.float :income
+      t.float :rating
+      t.decimal :income, :precision => 14, :scale => 2
       t.date :birthdate
       t.text :remarks
     end

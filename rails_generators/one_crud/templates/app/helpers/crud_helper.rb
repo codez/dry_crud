@@ -23,7 +23,8 @@ module CrudHelper
     form(@entry, attrs, &block)
   end
   
-  
+  # The default attributes to use in attrs, list and form partials.
+  # These are all defined attributes except certain special ones like 'id'.
   def default_attrs	
     attrs = model_class.column_names.collect(&:to_sym)
     [:id].each {|a| attrs.delete(a) }

@@ -1,7 +1,7 @@
 require 'test_helper'
 require File.join(File.dirname(__FILE__), 'crud_controller_test_helper')
 
-class TestModel < ActiveRecord::Base
+class TestModel < ActiveRecord::Base #:nodoc:
   default_scope :order => 'name'
   
   def label
@@ -9,7 +9,7 @@ class TestModel < ActiveRecord::Base
   end
 end
 
-class TestModelsController < CrudController
+class TestModelsController < CrudController #:nodoc:
   before_create :handle_name
   
   def handle_name
