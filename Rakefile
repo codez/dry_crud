@@ -67,7 +67,6 @@ task :install => [:package] do
 	sh %{#{sudo} #{gem} install --no-ri pkg/dry_crud-#{File.read('VERSION').strip}}
 end
 
-
 # :package task
 Rake::GemPackageTask.new(DRY_CRUD_GEMSPEC) do |pkg|
 	if Rake.application.top_level_tasks.include?('release')

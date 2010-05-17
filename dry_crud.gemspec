@@ -24,7 +24,7 @@ END
 		list.include('REVISION')
 	end.to_a 
 	spec.files = FileList['rails_generators/**/*', 'test/templates/**/*', 'Rakefile'].to_a + readmes 
-	spec.homepage = 'http://codez.ch/drycrud'
+	spec.homepage = 'http://codez.ch/dry_crud'
 	spec.has_rdoc = true 
 	spec.extra_rdoc_files = readmes 
 	spec.rdoc_options += [
