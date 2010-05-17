@@ -1,30 +1,29 @@
 require 'rubygems' 
 require 'rake'
+require 'date'
 
 DRY_CRUD_GEMSPEC = Gem::Specification.new do |spec| 
-	spec.name = 'dry_crud' 
-	spec.summary = "Generates a generic and extendable controller with create, read, update and delete (CRUD) actions for Rails."
+	spec.name    = 'dry_crud' 
 	spec.version = File.read('VERSION').strip
-	spec.author = 'Pascal Zumkehr'
-	spec.email = 'spam@codez.ch' 
+	spec.date    = Date.today.to_s
+	
+	spec.author   = 'Pascal Zumkehr'
+	spec.email    = 'spam@codez.ch' 
+	spec.homepage = 'http://codez.ch/dry_crud'
+		
+	spec.summary = "Generates DRY but extendable CRUD controller for Rails applications."
 	spec.description = <<-END
-Generates a generic and extendable controller with create, read, update and delete (CRUD) actions for Rails.
+Generates a generic and extendable controller with create, read, 
+update and delete (CRUD) actions for Rails.
 END
-
-  spec.require_path = 'rails_generators'
-
-	# We need the revision file to exist, 
-	# so we just create it if it doesn't. 
-	# It'll usually just get overwritten, though. 
-	File.open('REVISION', 'w') { |f| f.puts "(unknown)" } unless File.exist?('REVISION') 
 
 	readmes = FileList.new('*') do |list|
 		list.exclude(/(^|[^.a-z])[a-z]+/) 
 		list.exclude('TODO') 
-		list.include('REVISION')
 	end.to_a 
 	spec.files = FileList['rails_generators/**/*', 'test/templates/**/*', 'Rakefile'].to_a + readmes 
-	spec.homepage = 'http://codez.ch/dry_crud'
+    spec.require_path = 'rails_generators'
+    
 	spec.has_rdoc = true 
 	spec.extra_rdoc_files = readmes 
 	spec.rdoc_options += [

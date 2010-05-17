@@ -50,9 +50,7 @@ namespace :test do
         sh "rake db:migrate db:test:prepare"
       end
     end
-  
 	end
-	
 end
 
 desc "Clean up all generated resources"
