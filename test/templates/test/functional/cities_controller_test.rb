@@ -17,6 +17,11 @@ class CitiesControllerTest < ActionController::TestCase
     assert_equal City.all(:order => 'country_code, name'), assigns(:entries)
   end
   
+  def test_show
+    get :show, :id => test_entry.id
+    assert_redirected_to_index
+  end
+  
   protected   
   
   def test_entry

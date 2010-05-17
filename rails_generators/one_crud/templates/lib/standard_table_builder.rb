@@ -39,7 +39,7 @@ class StandardTableBuilder
   # the formatted attribute value for the current entry.
 	def attrs(*attrs)
 		attrs.each do |a|
-			col(captionize(a), :class => align_class(a)) { |e| format_attr(e, a) }
+			col(captionize(a, entry_class), :class => align_class(a)) { |e| format_attr(e, a) }
 		end
 	end	
 	
@@ -54,7 +54,7 @@ class StandardTableBuilder
   # Returns css classes used for alignment of the cell data.
   # Based on the column type of the attribute.
   def align_class(attr)
-    case column_type(entries.first.class, attr)
+    case column_type(entry_class, attr)
       when :integer, :float, :decimal then 'right_align'
       when :boolean  then 'center_align'
       else nil
@@ -73,7 +73,11 @@ class StandardTableBuilder
 		tr_alt do
 			cols.collect { |c| c.html_cell(entry) }
 		end
-	end
+  end
+
+  def entry_class
+    entries.first.class
+  end
 	
   # Helper class to store column information.
 	class Col < Struct.new(:header, :html_options, :template, :block) #:nodoc:

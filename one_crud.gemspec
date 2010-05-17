@@ -21,8 +21,7 @@ END
 		list.exclude('TODO') 
 		list.include('REVISION')
 	end.to_a 
-	spec.files = FileList['rails_generators/**/*', 'test/**/*',
- 'Rakefile'].to_a + readmes 
+	spec.files = FileList['rails_generators/**/*', 'test/templates/**/*', 'Rakefile'].to_a + readmes 
 	#spec.executables = ['haml', 'html2haml', 'sass', 'css2sass'] 
 	#spec.homepage = 'http://haml.hamptoncatlin.com/'
 	spec.has_rdoc = true 

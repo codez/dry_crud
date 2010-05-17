@@ -68,6 +68,12 @@ class StandardHelperTest < ActionView::TestCase
   test "non empty table should render table" do
     assert_match(/^\<table.*\<\/table\>$/, table(['foo', 'bar']) {|t| t.attrs :size, :upcase })
   end
+  
+  test "captionize" do
+    assert_equal "Camel Case", captionize(:camel_case)
+    assert_equal "All Upper Case", captionize("all upper case")
+    assert_equal "With Object", captionize("With object", Object.new)
+  end
 	
 
 end

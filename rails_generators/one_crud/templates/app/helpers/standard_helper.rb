@@ -88,21 +88,27 @@ module StandardHelper
   
   
   # Renders an arbitrary content with the given label. Used for uniform presentation.
+  # Without block, this may be used in the form <%= labeled(...) %>, with like <% labeled(..) do %>
   def labeled(label, content = nil, &block)
     content = capture(&block) if block_given?
-    render :partial => 'standard/labeled', :locals => { :label => label, :content => content}
+    html = render(:partial => 'standard/labeled', :locals => { :label => label, :content => content})
+    block_given? ? concat(html) : html  
   end
   
   # Transform the given text into a form as used by labels or table headers.
-  def captionize(text)
-    text.to_s.humanize.titleize
+  def captionize(text, clazz = nil)
+    if clazz.respond_to?(:human_attribute_name)
+      clazz.human_attribute_name text
+    else
+      text.to_s.humanize.titleize      
+    end
   end
   
   # Renders a list of attributes with label and value for a given object. 
   # Optionally surrounded with a div.
   def render_attrs(obj, attrs, div = true)
     html = attrs.collect do |a| 
-      labeled(captionize(a), format_attr(obj, a))
+      labeled(captionize(a, obj.class), format_attr(obj, a))
     end.join
     
     if div
@@ -155,27 +161,33 @@ module StandardHelper
   
   ######## ACTION LINKS ###################################################### :nodoc:
   
-  
-  def link_action_show(entry)
-    link_action 'Show', entry
+  # Standard link action to the show page of a given record.
+  def link_action_show(record)
+    link_action 'Show', record
   end
   
-  def link_action_edit(entry)
-    link_action 'Edit', edit_polymorphic_path(entry)
+  # Standard link action to the edit page of a given record.
+  def link_action_edit(record)
+    link_action 'Edit', edit_polymorphic_path(record)
   end
   
-  def link_action_delete(entry)
-    link_action 'Delete', entry, :confirm => CONFIRM_DELETE_MESSAGE, :method => :delete
+  # Standard link action to the destroy action of a given record.
+  def link_action_destroy(record)
+    link_action 'Delete', record, :confirm => CONFIRM_DELETE_MESSAGE, :method => :delete
   end
   
-  def link_action_index
-    link_action 'List', :action => 'index'
+  # Standard link action to the list page.
+  def link_action_index(url_options = {:action => 'index'})
+    link_action 'List', url_options
   end
   
-  def link_action_add
-    link_action 'Add', :action => 'new'
+  # Standard link action to the new page.
+  def link_action_add(url_options = {:action => 'new'})
+    link_action 'Add', url_options
   end
   
+  # A generic helper method to create action links.
+  # These link may be styled to look like buttons, for example.
   def link_action(label, options = {}, html_options = {})
     link_to("[#{label}]", options, {:class => 'action'}.merge(html_options))
   end

@@ -1,0 +1,6 @@
+<% crud_form do |f| -%>
+	<%= f.labeled_fields :name %>
+	<% labeled(f.label(:country_code)) do %>
+		<%= f.collection_select(:country_code, ['BR', 'CH', 'DE', 'GB', 'JP', 'USA'], :to_s, :to_s, { :include_blank => "Please select" })%>
+	<% end -%>
+<% end -%>

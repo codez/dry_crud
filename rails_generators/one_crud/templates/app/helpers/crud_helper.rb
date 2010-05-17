@@ -34,7 +34,7 @@ module CrudHelper
   def add_list_actions(table)
     table.col { |e| link_action_show(e) }
     table.col { |e| link_action_edit(e) }
-    table.col { |e| link_action_delete(e) }
+    table.col { |e| link_action_destroy(e) }
   end
   
 end
