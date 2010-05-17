@@ -1,4 +1,4 @@
-class OneCrudGenerator < Rails::Generator::Base
+class DryCrudGenerator < Rails::Generator::Base
 	
 	def manifest
 		record do |m|

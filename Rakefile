@@ -3,10 +3,10 @@ require "rake/testtask"
 require 'rake/gempackagetask' 
 require 'rake/rdoctask' 
 
-load	'one_crud.gemspec'
+load	'dry_crud.gemspec'
 
 TEST_APP_ROOT  = File.join(File.dirname(__FILE__), 'test', 'test_app')
-GENERATOR_ROOT = File.join(File.dirname(__FILE__), 'rails_generators', 'one_crud')
+GENERATOR_ROOT = File.join(File.dirname(__FILE__), 'rails_generators', 'dry_crud')
 
 task :default => :test
 
@@ -35,12 +35,12 @@ namespace :test do
 			end
 	  end
       
-    desc "Run the crud generator for the test application"
+    desc "Run the dry_crud generator for the test application"
     task :generate_crud => [:create, :environment] do
       require 'rails_generator'
-      require File.join(GENERATOR_ROOT, 'one_crud_generator')
+      require File.join(GENERATOR_ROOT, 'dry_crud_generator')
     
-      Rails::Generator::Spec.new('one_crud', GENERATOR_ROOT, :RubyGems).klass.new([], :collision => :force).command(:create).invoke!
+      Rails::Generator::Spec.new('dry_crud', GENERATOR_ROOT, :RubyGems).klass.new([], :collision => :force).command(:create).invoke!
     end
    
     desc "Initializes the test application with a couple of classes"
@@ -60,16 +60,16 @@ task :clobber do
 	FileUtils.rm_rf(TEST_APP_ROOT)
 end
 
-desc "Install one crud as a gem." 
+desc "Install dry_crud as a local gem." 
 task :install => [:package] do
 	sudo = RUBY_PLATFORM =~ /win32/ ? '' : 'sudo' 
 	gem = RUBY_PLATFORM =~ /java/ ? 'jgem' : 'gem' 
-	sh %{#{sudo} #{gem} install --no-ri pkg/one_crud-#{File.read('VERSION').strip}}
+	sh %{#{sudo} #{gem} install --no-ri pkg/dry_crud-#{File.read('VERSION').strip}}
 end
 
 
 # :package task
-Rake::GemPackageTask.new(ONE_CRUD_GEMSPEC) do |pkg|
+Rake::GemPackageTask.new(DRY_CRUD_GEMSPEC) do |pkg|
 	if Rake.application.top_level_tasks.include?('release')
 		pkg.need_tar_gz = true 
 		pkg.need_tar_bz2 = true 
@@ -79,7 +79,7 @@ end
 
 # :rdoc task
 Rake::RDocTask.new do |rdoc| 
-	rdoc.title	= 'One Crud' 
+	rdoc.title	= 'Dry Crud' 
 	rdoc.options << '--line-numbers' << '--inline-source'
 	rdoc.rdoc_files.include(*FileList.new('*') do |list|
 		list.exclude(/(^|[^.a-z])[a-z]+/)

@@ -1,6 +1,0 @@
-
-Thank you for using one_crud. Feel free to adapt all classes to your needs.
-To use a standard formatting throught your application, add 
-	helper :standard
- to your ApplicationController. To get uniform CRUD functionallity, just 
- subclass your controller from CrudController.

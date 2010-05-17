@@ -1,8 +1,8 @@
 require 'rubygems' 
 require 'rake'
 
-ONE_CRUD_GEMSPEC = Gem::Specification.new do |spec| 
-	spec.name = 'one_crud' 
+DRY_CRUD_GEMSPEC = Gem::Specification.new do |spec| 
+	spec.name = 'dry_crud' 
 	spec.summary = "Generates a generic and extendable controller with create, read, update and delete (CRUD) actions for Rails."
 	spec.version = File.read('VERSION').strip
 	spec.author = 'Pascal Zumkehr'
@@ -24,10 +24,10 @@ END
 		list.include('REVISION')
 	end.to_a 
 	spec.files = FileList['rails_generators/**/*', 'test/templates/**/*', 'Rakefile'].to_a + readmes 
-	#spec.homepage = 'http://haml.hamptoncatlin.com/'
+	spec.homepage = 'http://codez.ch/drycrud'
 	spec.has_rdoc = true 
 	spec.extra_rdoc_files = readmes 
 	spec.rdoc_options += [
-'--title', 'One Crud', '--main', 'README.rdoc', '--line-numbers', '--inline-source'
+'--title', 'Dry Crud', '--main', 'README.rdoc', '--line-numbers', '--inline-source'
 ] 
 end
