@@ -1,3 +1,15 @@
+= Dry Crud
+
+Generates simple and extendable controller, views and helpers that support you to DRY up the CRUD code in your Rails applications. First, you need to install the gem with
+
+  gem install dry_crud
+
+Then simply run the following generator in your Rails app to get the goodies:
+
+  script/generate dry_crud
+  
+  
+== Overview
 
 It's yours!
 
@@ -6,3 +18,46 @@ Whitebox
 CRUD Views, not only controller
 
 plugin agnostic
+
+== Generated Files
+
+controller/crud_controller.rb:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses.
+
+lib/standard_table_builder.rb:: A simple helper to easily define tables listing several rows of the same data type.
+
+lib/standard_form_builder.rb:: A form builder that automatically selects the corresponding input element for ActiveRecord attributes. Input elements are rendered with a corresponding label by default.
+
+lib/render_inheritable.rb:: Allows one to render inheritable views and partials. If no view file is found for the current controller, the corresponding file is looked up in its superclass hierarchy.
+
+lib/crud_callbacks.rb:: Defines before and after callback hooks for create, update, save and destroy. When to execute the callbacks is in the responsibility of the clients of this module. This module is used in the CrudController to provide callbacks.
+
+helpers/standard_helper.rb:: A view helper to standartize often used functions like formatting, tables, forms or action links. This helper is ideally defined in the ApplicationController.
+
+helpers/crud_helper.rb::
+
+views/crud/index.html.erb::
+
+views/crud/_list.html.erb::
+
+views/crud/show.html.erb::
+
+views/crud/_attrs.html.erb::
+
+views/crud/new.html.erb::
+
+views/crud/edit.html.erb::
+
+views/crud/_form.html.erb::
+
+views/standard/_labeled.html.erb::
+
+views/layouts/crud.html.erb:: A simple layout showing how to use the +@title+ and +flash+. Most probably you want to include this in your application.html.erb or adapt this main crud templates, so you wont need this file.
+
+test/functionals/crud_controller_test_helper.rb::
+
+test/several other:: To start from when you are going to adapt your CRUD code.
+
+public/stylesheets/crud.css::
+
+== Examples
+

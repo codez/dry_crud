@@ -1,4 +1,6 @@
-# CrudController is an abstract controller providing basic CRUD actions.
+# Abstract controller providing basic CRUD actions.
+# This implementation mainly follows the one of the Rails scaffolding
+# controller. Some enhancements were made to ease extendability.
 # Several protected helper methods are there to be (optionally) overriden by subclasses.
 class CrudController < ApplicationController
   

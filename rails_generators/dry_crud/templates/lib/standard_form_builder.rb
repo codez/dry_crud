@@ -1,5 +1,5 @@
 # A form builder that automatically selects the corresponding input element
-# for ActiveRecord attributes. Input elements are rendered with a corresponding
+# for ActiveRecord attributes. Input elements are rendered with a corresponding
 # label by default.
 class StandardFormBuilder < ActionView::Helpers::FormBuilder
   

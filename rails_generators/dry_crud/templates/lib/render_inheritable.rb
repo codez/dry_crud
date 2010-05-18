@@ -1,6 +1,7 @@
-# Include this module in a controller with subclasses to get inheritable templates and partials.
-# If the view file is not found for the current subclass, the corresponding file from the superclass
-# is used.
+# Allows one to render inheritable views and partials.
+# If no view file is found for the current controller, the corresponding file
+# is looked up in its superclass hierarchy. This module must only be
+# included in the root controller of the desired lookup hierarchy.
 # 
 # By default, this module only supports direct inheritance over one level. By overriding
 # the method lookup_path, you may define a custom lookup path. By providing an object
@@ -31,7 +32,8 @@ module RenderInheritable
        
     # Renders an action or a partial considering the lookup path. The
     # :action or :partial file is looked up and the most specific one found
-    # will get rendered.
+    # will get rendered. The options are directly passed to the original
+    # render method.
     def render_inheritable(options)         
         if options[:action]
             inheritable_template_options(options)
@@ -96,12 +98,22 @@ module RenderInheritable
     # May be dynamic dependening on the passed 'with' argument. Does not contain
     # the inheritable_root_folder.
     def lookup_path(with = nil)
-        [controller_path]
+    	path = []
+    	current = controller
+    	while !inheritable_root?(current.controller_path)
+    		path << current.controller_path
+    		current = current.superclass
+    	end
+    	path
     end
     
     # Lookup path with inheritable_root_folder appended.
     def complete_lookup_path(with = nil)
         lookup_path(with) + [inheritable_root_folder]
     end        
+    
+    def inheritable_root?(folder)
+    	folder == inheritable_root_folder || folder == 'application'
+    end
 
 end

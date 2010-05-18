@@ -1,3 +1,6 @@
+# A view helper to standartize often used functions like formatting, 
+# tables, forms or action links. This helper is ideally defined in the 
+# ApplicationController.
 module StandardHelper
   
   NO_LIST_ENTRIES_MESSAGE = "No entries available"

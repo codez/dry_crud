@@ -11,10 +11,9 @@ DRY_CRUD_GEMSPEC = Gem::Specification.new do |spec|
 	spec.email    = 'spam@codez.ch' 
 	spec.homepage = 'http://codez.ch/dry_crud'
 		
-	spec.summary = "Generates DRY but extendable CRUD controller for Rails applications."
+	spec.summary = "Generates DRY but extendable CRUD controller, views and helpers for Rails applications"
 	spec.description = <<-END
-Generates a generic and extendable controller with create, read, 
-update and delete (CRUD) actions for Rails.
+Generates DRY but extendable CRUD controller, views and helpers for Rails applications
 END
 
 	readmes = FileList.new('*') do |list|

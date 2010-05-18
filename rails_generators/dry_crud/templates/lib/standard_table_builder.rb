@@ -1,4 +1,4 @@
-# A simple helper class to easily define a table listing several rows of the same data type.
+# A simple helper to easily define tables listing several rows of the same data type.
 #
 # Example Usage:
 #   StandardTableBuilder.table(entries, template) do |t|
