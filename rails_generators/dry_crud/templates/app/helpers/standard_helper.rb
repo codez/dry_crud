@@ -71,10 +71,15 @@ module StandardHelper
   
   # Returns the ActiveRecord column type or nil.
   def column_type(clazz, attr)
+    column_property(clazz, attr, :type)
+  end
+  
+  # Returns an ActiveRecord column property for the passed attr or nil
+  def column_property(clazz, attr, property)
     if clazz.respond_to?(:columns_hash)
       column = clazz.columns_hash[attr.to_s]
-      column ? column.type : nil
-    end    
+      column.try(property)
+    end  
   end
   
   # Returns the :belongs_to association for the given attribute or nil if there is none.
@@ -140,7 +145,7 @@ module StandardHelper
       if block_given? 
         yield(form)
       else
-        concat form.labeled_fields(*attrs)
+        concat form.labeled_input_fields(*attrs)
       end
       
       concat labeled("&nbsp;", form.submit("Save"))

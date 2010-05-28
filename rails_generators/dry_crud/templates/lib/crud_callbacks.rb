@@ -6,9 +6,9 @@ module CrudCallbacks
       base.send :include, ActiveSupport::Callbacks
     
       base.define_callbacks :before_create, :after_create, 
-      						:before_update, :after_update, 
-      						:before_save, :after_save, 
-      						:before_destroy, :after_destroy
+      						          :before_update, :after_update, 
+      						          :before_save, :after_save, 
+      						          :before_destroy, :after_destroy
     end
       
     # Helper method the run the given block in between the before and after

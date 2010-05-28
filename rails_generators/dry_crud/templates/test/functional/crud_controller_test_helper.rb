@@ -1,4 +1,7 @@
-
+# A module to include into your functional tests for your crud controller subclasses.
+# Simply implement the two methods :test_entry and :test_entry_attrs to test the basic
+# crud functionality. Override the test methods if you changed the behaviour in your subclass
+# controller.
 module CrudControllerTestHelper 
     
   def test_index
@@ -53,12 +56,10 @@ module CrudControllerTestHelper
     end
     assert_redirected_to assigns(:entry)
     assert ! assigns(:entry).new_record?
-    test_entry_attrs.each do |key, value|
-      assert_equal value, assigns(:entry).send(key)
-    end
+    assert_test_attrs_equal
   end
   
-  def test_create_with_wrong_method_redirects
+  def test_create_with_wrong_http_method_redirects
     get :create, model_identifier => test_entry_attrs
     assert_redirected_to_index
     
@@ -94,13 +95,11 @@ module CrudControllerTestHelper
     assert_no_difference("#{model_class.name}.count") do
       put :update, :id => test_entry.id, model_identifier => test_entry_attrs
     end
-    assert_redirected_to test_entry
-    test_entry_attrs.each do |key, value|
-      assert_equal value, assigns(:entry).send(key)
-    end
+    assert_test_attrs_equal
+    assert_redirected_to assigns(:entry)
   end
     
-  def test_update_with_wrong_method_redirects
+  def test_update_with_wrong_http_method_redirects
     get :update, :id => test_entry.id, model_identifier => test_entry_attrs
     assert_redirected_to_index
     
@@ -123,7 +122,7 @@ module CrudControllerTestHelper
     assert_redirected_to_index
   end
   
-  def test_delete_with_wrong_method
+  def test_delete_with_wrong_http_method_redirects
     get :destroy, :id => test_entry.id
     assert_redirected_to_index
     
@@ -143,6 +142,13 @@ module CrudControllerTestHelper
   
   def assert_redirected_to_index
     assert_redirected_to :action => 'index'
+  end
+  
+  def assert_test_attrs_equal
+    test_entry_attrs.each do |key, value|
+      actual = assigns(:entry).send(key)
+      assert_equal value, actual, "#{key} is expected to be <#{value.inspect}>, got <#{actual.inspect}>"
+    end
   end
   
   def model_class

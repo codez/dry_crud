@@ -98,13 +98,17 @@ module RenderInheritable
     # May be dynamic dependening on the passed 'with' argument. Does not contain
     # the inheritable_root_folder.
     def lookup_path(with = nil)
-    	path = []
-    	current = controller
-    	while !inheritable_root?(current.controller_path)
-    		path << current.controller_path
-    		current = current.superclass
-    	end
-    	path
+    	inheritance_lookup_path
+    end
+   
+    def inheritance_lookup_path
+      path = []
+      current = self.class
+      while !inheritable_root?(current.controller_path)
+        path << current.controller_path
+        current = current.superclass
+      end
+      path
     end
     
     # Lookup path with inheritable_root_folder appended.
