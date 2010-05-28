@@ -31,6 +31,7 @@ module CrudTestHelper
     silence_stream(STDOUT) do
         ActiveRecord::Base.connection.create_table :crud_test_models, :force => true do |t|
           t.string  :name, :null => false, :limit => 50
+          t.string  :whatever
           t.integer :children
           t.integer :companion_id
           t.float   :rating
@@ -38,6 +39,8 @@ module CrudTestHelper
           t.date    :birthdate
           t.boolean :human, :default => true
           t.text    :remarks
+          
+          t.timestamps
       end
     end
   end

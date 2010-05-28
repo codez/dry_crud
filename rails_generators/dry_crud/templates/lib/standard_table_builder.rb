@@ -10,7 +10,8 @@ class StandardTableBuilder
   
   # Delegate called methods to template.
   # including StandardHelper would lead to problems with indirectly called methods.
-	delegate :content_tag, :format_attr, :column_type, :captionize, :tr_alt, :to => :template
+	delegate :content_tag, :format_attr, :column_type, :belongs_to_association, 
+           :captionize, :tr_alt, :to => :template
 
 	def initialize(entries, template)
 		@entries = entries
@@ -55,9 +56,10 @@ class StandardTableBuilder
   # Based on the column type of the attribute.
   def align_class(attr)
     case column_type(entry_class, attr)
-      when :integer, :float, :decimal then 'right_align'
-      when :boolean  then 'center_align'
-      else nil
+      when :integer, :float, :decimal 
+        'right_align' unless belongs_to_association(entries.first, attr)
+      when :boolean  
+        'center_align'
     end
   end
   

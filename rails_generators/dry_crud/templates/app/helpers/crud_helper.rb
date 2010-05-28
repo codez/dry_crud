@@ -13,8 +13,9 @@ module CrudHelper
     end
   end
   
-  # Renders a generic form for all given attributes using CrudFormBuilder.
-  # If a block is given, a custom form may be rendered.
+  # Renders a generic form for the current entry with :default_attrs or the 
+  # given attribute array, using the StandardFormBuilder.
+  # If a block is given, a custom form may be rendered and attrs is ignored.
   def crud_form(attrs = nil, options = {}, &block)
     unless attrs
       attrs = default_attrs
@@ -24,10 +25,10 @@ module CrudHelper
   end
   
   # The default attributes to use in attrs, list and form partials.
-  # These are all defined attributes except certain special ones like 'id'.
+  # These are all defined attributes except certain special ones like 'id' or 'position'.
   def default_attrs	
     attrs = model_class.column_names.collect(&:to_sym)
-    [:id].each {|a| attrs.delete(a) }
+    [:id, :position].each {|a| attrs.delete(a) }
     attrs
   end
   

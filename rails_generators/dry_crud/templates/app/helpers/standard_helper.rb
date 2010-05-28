@@ -8,7 +8,7 @@ module StandardHelper
   
   ################  FORMATTING HELPERS  ##################################
 
-  # Define an array of associations symbols that should not get automatically linked.
+  # Define an array of associations symbols in your helper that should not get automatically linked.
   #def no_assoc_links = [:city]
   
   # Formats a single value
@@ -43,16 +43,17 @@ module StandardHelper
   # Formats an active record association
   def format_assoc(obj, assoc)
     if assoc_val = obj.send(assoc.name)
-      if respond_to?(:no_assoc_links) && 
-        no_assoc_links.to_a.include?(assoc.name.to_sym) || 
-        !respond_to?("#{assoc_val.class.name.underscore}_path".to_sym)
-        h assoc_val.label 
-      else
-        link_to(h(assoc_val.label), assoc_val)
-      end
+      link_to_unless(no_assoc_link?(assoc), h(assoc_val.label), assoc_val)
     else
 			'(none)'
     end
+  end
+  
+  # Returns true if no link should be created when formatting the given association.
+  def no_assoc_link?(assoc)
+    (respond_to?(:no_assoc_links) &&
+     no_assoc_links.to_a.include?(assoc.name.to_sym)) || 
+    !respond_to?("#{assoc.klass.name.underscore}_path".to_sym)
   end
   
   # Formats an arbitrary attribute of the given object depending on its data type.
@@ -137,7 +138,9 @@ module StandardHelper
   end
   
   # Renders a generic form for all given attributes using StandardFormBuilder.
-  # If a block is given, a custom form may be rendered.
+  # If a block is given, a custom form may be rendered and attrs is ignored.
+  # The form is always directly printed into the erb, so the call must
+  # go within a normal <% form(...) %> section, not in a <%= output section
   def form(object, attrs = [], options = {})
     form_for(object, {:builder => StandardFormBuilder}.merge(options)) do |form|
       concat form.error_messages

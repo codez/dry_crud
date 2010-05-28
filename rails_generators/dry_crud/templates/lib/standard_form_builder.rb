@@ -14,7 +14,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   
   # Render multiple input fields together with a label for the given attributes.
   def labeled_input_fields(*attrs)
-    attrs.collect {|a| labeled_input_field(a) }.join
+    attrs.collect {|a| labeled_input_field(a) }.join("\n")
   end
   
   # Render a standartized label.
@@ -31,25 +31,21 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   # Use additional html_options for the input element.
   def input_field(attr, html_options = {})
     type = column_type(@object.class, attr)
-    case type
-      when :text
-        text_area(attr, html_options)
-      when :integer
-        if belongs_to_association(@object, attr)
-          belongs_to_field(attr, html_options)
-        else
-          integer_field(attr, html_options)
-        end
+    if type == :text
+      text_area(attr, html_options)
+    elsif type == :integer && belongs_to_association(@object, attr)
+      belongs_to_field(attr, html_options)
+    else
+      custom_field_method = :"#{type}_field"
+      if respond_to?(custom_field_method)
+        send(custom_field_method, attr, html_options)
       else
-        custom_field_method = :"#{type}_field"
-        if respond_to?(custom_field_method)
-          send(custom_field_method, attr, html_options)
-        else
-          text_field(attr, html_options)
-        end
+        text_field(attr, html_options)
+      end
     end
   end
   
+  # Render a standard string field with column contraints.
   def string_field(attr, html_options = {})
     limit = column_property(@object.class, attr, :limit)
     html_options = {:maxlength => limit}.merge(html_options) if limit

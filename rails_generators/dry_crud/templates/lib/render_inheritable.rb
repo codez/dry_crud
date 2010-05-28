@@ -101,6 +101,7 @@ module RenderInheritable
     	inheritance_lookup_path
     end
    
+    # The inheritance path of controllers that is used as default lookup path.
     def inheritance_lookup_path
       path = []
       current = self.class
