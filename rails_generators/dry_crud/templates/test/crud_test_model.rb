@@ -9,14 +9,38 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
 end
 
 class CrudTestModelsController < CrudController #:nodoc:
+  HANDLE_PREFIX = 'handle_'
+  
   before_create :handle_name
   
+  attr_reader :called_callbacks
+  
+  private
+  
+  # custom callback
   def handle_name
     if @entry.name == 'illegal'
       flash[:error] = "illegal name"
       return false
     end
   end
+  
+  [:create, :update, :save, :destroy].each do |a|
+    callback = "before_#{a.to_s}"
+    send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
+    callback = "after_#{a.to_s}"
+    send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
+  end
+  
+  def method_missing(sym, *args)
+    called_callback(sym.to_s[HANDLE_PREFIX.size..-1].to_sym) if sym.to_s.starts_with?(HANDLE_PREFIX)
+  end
+  
+  def called_callback(callback)
+    @called_callbacks ||= []
+    @called_callbacks << callback
+  end
+  
 end
 
 ActionController::Routing::Routes.draw do |map|

@@ -26,6 +26,21 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_equal assigns(:entries).sort_by {|a| a.name }, assigns(:entries)
   end
   
+  def test_create
+    super
+    assert_equal [:before_create, :before_save, :after_save, :after_create], @controller.called_callbacks
+  end
+  
+  def test_update
+    super
+    assert_equal [:before_update, :before_save, :after_save, :after_update], @controller.called_callbacks
+  end
+  
+  def test_destroy
+    super
+    assert_equal [:before_destroy, :after_destroy], @controller.called_callbacks
+  end
+  
   def test_create_with_before_callback
     assert_no_difference("#{model_class.name}.count") do
       post :create, :crud_test_model => {:name => 'illegal', :children => 2}
@@ -34,7 +49,9 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert assigns(:entry).new_record?
     assert flash[:error].present?
     assert_equal 'illegal', assigns(:entry).name
+    assert_nil @controller.called_callbacks
   end
+  
   
   protected 
   

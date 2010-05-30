@@ -1,7 +1,13 @@
 
-Thank you for using dry_crud. Feel free to adapt all classes to your needs.
-To use a standard formatting throught your application, add 
-	helper :standard
-to your ApplicationController. To get uniform CRUD functionallity, just 
-subclass your controllers from CrudController. Stay DRY!
+Thank you for using dry_crud. Feel free to adapt all generated classes to 
+your needs. To integrate dry_crud into your code, only a few additions are 
+required:
+
+ * To use a standard formatting, tables and forms throught your application, 
+   add 'helper :standard' to your ApplicationController. 
+ * To get uniform CRUD functionallity, just subclass your controllers from 
+   CrudController. 
+ * Add a :label method to your models for a human-friendly representation.
+
+Kepp stuff DRY!
  

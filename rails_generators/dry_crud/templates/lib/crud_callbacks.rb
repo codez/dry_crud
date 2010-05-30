@@ -5,9 +5,9 @@ module CrudCallbacks
     def self.included(base)
       base.send :include, ActiveSupport::Callbacks
     
-      base.define_callbacks :before_create, :after_create, 
-      						          :before_update, :after_update, 
-      						          :before_save, :after_save, 
+      base.define_callbacks :before_create,  :after_create, 
+      						          :before_update,  :after_update, 
+      						          :before_save,    :after_save, 
       						          :before_destroy, :after_destroy
     end
       

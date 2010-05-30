@@ -1,6 +1,6 @@
 # A view helper to standartize often used functions like formatting, 
 # tables, forms or action links. This helper is ideally defined in the 
-# ApplicationController.
+# ApplicationController.
 module StandardHelper
   
   NO_LIST_ENTRIES_MESSAGE = "No entries available"
@@ -20,8 +20,8 @@ module StandardHelper
       when Time   then value.strftime("%H:%M")   
       when true   then 'yes'
       when false  then 'no'
-      when ActiveRecord::Base then h value.label
-    else h value.to_s
+    else 
+      value.respond_to?(:label) ? h(value.label) : h(value.to_s)
     end
   end
   
@@ -100,7 +100,7 @@ module StandardHelper
   # Without block, this may be used in the form <%= labeled(...) %>, with like <% labeled(..) do %>
   def labeled(label, content = nil, &block)
     content = capture(&block) if block_given?
-    html = render(:partial => 'standard/labeled', :locals => { :label => label, :content => content})
+    html = render(:partial => 'shared/labeled', :locals => { :label => label, :content => content})
     block_given? ? concat(html) : html  
   end
   
@@ -172,27 +172,27 @@ module StandardHelper
   
   ######## ACTION LINKS ###################################################### :nodoc:
   
-  # Standard link action to the show page of a given record.
+  # Standard link action to the show page of a given record.
   def link_action_show(record)
     link_action 'Show', record
   end
   
-  # Standard link action to the edit page of a given record.
+  # Standard link action to the edit page of a given record.
   def link_action_edit(record)
     link_action 'Edit', edit_polymorphic_path(record)
   end
   
-  # Standard link action to the destroy action of a given record.
+  # Standard link action to the destroy action of a given record.
   def link_action_destroy(record)
     link_action 'Delete', record, :confirm => CONFIRM_DELETE_MESSAGE, :method => :delete
   end
   
-  # Standard link action to the list page.
+  # Standard link action to the list page.
   def link_action_index(url_options = {:action => 'index'})
     link_action 'List', url_options
   end
   
-  # Standard link action to the new page.
+  # Standard link action to the new page.
   def link_action_add(url_options = {:action => 'new'})
     link_action 'Add', url_options
   end

@@ -7,6 +7,8 @@ class CrudController < ApplicationController
   include CrudCallbacks
   include RenderInheritable 
   
+  delegate :model_class, :model_identifier, :models_label, :to => 'self.class'  
+
   # Verify that required :id param is present and only allow good http methods.
   verify :params => :id, :only => :show, :redirect_to => { :action => 'index' }
   verify :method => :post, :only => :create,  :redirect_to => { :action => 'index' }  
@@ -15,7 +17,7 @@ class CrudController < ApplicationController
   
   # Set up entry object to use in the various actions.
   before_filter :build_entry, :only => [:new, :create]
-  before_filter :set_entry,   :only => [:show, :edit, :update, :remove, :destroy]
+  before_filter :set_entry,   :only => [:show, :edit, :update, :destroy]
   
   helper_method :model_class, :models_label, :full_entry_label
    
@@ -121,22 +123,7 @@ class CrudController < ApplicationController
   # Sets an existing model entry from the given id.
   def set_entry
     @entry = model_class.find(params[:id])
-  end
-  
-  # The identifier of the model, i.e., the symbol of the singularized controller_name.
-  def model_identifier
-    @model_identifier ||= controller_name.singularize.to_sym
-  end
-  
-  # The ActiveRecord class of the model.
-  def model_class
-    @model_class ||= controller_name.classify.constantize
-  end
-  
-  # A human readable plural name of the model.
-  def models_label
-    @models_label ||= model_class.human_name.pluralize
-  end        
+  end     
   
   # A label for the current entry, including the model name.
   def full_entry_label        
@@ -151,6 +138,24 @@ class CrudController < ApplicationController
   # Find options used in the index action.
   def find_all_options
     {}
+  end
+  
+  class << self
+    # The ActiveRecord class of the model.
+    def model_class
+      @model_class ||= controller_name.classify.constantize
+    end
+    
+    # The identifier of the model used for form parameters.
+    # I.e., the symbol of the underscored model name.
+    def model_identifier
+      @model_identifier ||= model_class.name.underscore.to_sym
+    end
+    
+    # A human readable plural name of the model.
+    def models_label
+      @models_label ||= model_class.human_name.pluralize
+    end   
   end
   
 end

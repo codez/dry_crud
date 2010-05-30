@@ -1,4 +1,4 @@
-= Dry Crud
+= DRY CRUD
 
 Generates simple and extendable controller, views and helpers that support you to DRY up the CRUD code in your Rails applications. First, you need to install the gem with
 
@@ -8,56 +8,117 @@ Then simply run the following generator in your Rails app to get the goodies:
 
   script/generate dry_crud
   
+To integrate dry_crud into your code, only a few additions are required:
+
+* To use a standard formatting, tables and forms throughout your application, add 'helper :standard' to your ApplicationController. 
+* To get uniform CRUD functionallity, just subclass your controllers from CrudController. 
+* Add a :label method to your models for a human-friendly representation.
+  
+Keep stuff DRY!
   
 == Overview
 
-It's yours!
+In most Rails applications, you have some models that require basic CRUD (create, read, update, delete) functionality. There are various possibilities like Rails scaffolding, {Active Scaffold}[http://activescaffold.com/] or {Dry Scalffold}[http://github.com/grimen/dry_scaffold]. Still, various parts in your application remain duplicated. While you might pull up common methods into a superclass controller, most views still contain very similar code.
 
-Whitebox
+Enter DRY CRUD.
 
-CRUD Views, not only controller
+The main idea of DRY CRUD is to <b>concentrate basic functionality</b> of your application, like CRUD actions, uniform formatting, forms and tables into <b>specifically extendable units</b>. It generates various foundation classes that you are free to <b>adapt to your application's needs</b>. For each model, you then may <b>transparently customize arbitrary parts</b> or <b>fallback to the general behaviour by default</b>. This applies not only for the <b>controller</b>, but also for the <b>view templates</b> and helpers.
 
-plugin agnostic
+TODO: Inhertiable Views
+
+DRY CRUD is a Rails generator. All code resides in your application and is open for you to inspect and to extend. You may pick whatever you consider useful or adapt what is not sufficient. The generated code is all yours! There are no runtime dependencies to the dry_crud gem.
+
+DRY CRUD does not depend on any plugins, but easily allows you to integrate them in order to unify the behaviour of your CRUD controllers. 
+
+== Examples
+
+=== Controller with CRUD functionality
+
+Say you want to manage a Person model. Create the following controller and add a :label method to your model for a human-friendly representation used in page titles:
+
+  class PeopleController < CrudController
+  end
+  
+That's it. You have an overview of all people, detail pages and forms to edit and create persons. Oh, and of course, you may delete persons as well. By default, all attributes are displayed and formatted according to their column type whereever they appear.
+
+Well, maybe there are certain attributes you do not want to display in the people list, or others that are not editable. No problem, simply create a <tt>list</tt> partial in <tt>app/views/people/_list.html.erb</tt> to customize this:
+
+  <%= crud_table [:lastname, :firstname, :city] %>
+
+This only displays these tree attributes in the table. All other templates, as well as the main index view, fallback to the ones in <tt>app/views/crud</tt>.
+
+Next, let's adapt a part of the general behaviour used in all CRUD controllers. As an example, we include pagination with will_paginate[http://wiki.github.com/mislav/will_paginate/] in all our overview tables: 
+
+In <tt>app/controllers/crud_controller.rb</tt>, change the index action to
+
+  def index
+    @entries = model_class.paginate({:page => params[:page]}.merge(find_all_options)) 
+    respond_with @entries   
+  end
+	
+In <tt>app/views/crud/index.html.erb</tt>, add the following line for the pagination links:
+   <%= will_paginate @entries %>
+   
+And we are done again. All our controllers inheriting from CrudController, including above PeopleController, now have paginated index views. Because our customization for the people table is in the seperate <tt>_list</tt> partial, no further modifications are required. 
+
+=== Simple Table Definition
+
+=== StandardFormBuilder
+
 
 == Generated Files
 
-controller/crud_controller.rb:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses.
+All generated files are supposed to provide a reasonable foundation for the CRUD functionality. As they are part of your code, you are encouraged to adapt them to fit the needs of your application.
+
+=== Controller:
+
+controller/crud_controller.rb:: Abstract controller providing basic CRUD actions in a RESTful way. This implementation mainly follows the one of the Rails scaffolding controller. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses.
+
+=== Helpers:
+
+helpers/standard_helper.rb:: A view helper to standartize often used functions like formatting, tables, forms or action links. This helper is ideally defined in the ApplicationController. It is required to use the StandardTableBuilder and the StandardFormBuilder.
+
+helpers/crud_helper.rb:: A small helper for CrudController to render tables and forms with a default set of attributes.
+
+=== Views:
+
+views/crud/index.html.erb:: The index view displaying a table with all entries and an action link to add new ones.
+
+views/crud/_list.html.erb:: A partial defining the table in the index view. To change the displayed attributes in your CRUD model, just create an own _list.html.erb in your models view directory.
+
+views/crud/show.html.erb:: The show view displaying all the attributes of one entry and the various actions to perform on it.
+
+views/crud/_attrs.html.erb:: A partial defining the attributes to be displayed in the show view. 
+
+views/crud/new.html.erb:: The view to create a new entry.
+
+views/crud/edit.html.erb:: The view to edit an existing entry.
+
+views/crud/_form.html.erb:: The form used to create and edit entries. If you would like to customize this form for various models, just create an own _form.html.erb in your models view directory.
+
+views/shared/_labeled.html.erb:: Partial to define the layout for an arbitrary value with a label.
+
+views/layouts/crud.html.erb:: A simple layout showing how to use the @title and +flash+. Most probably you want to include this in your application.html.erb or adapt this main crud templates, so you wont need this file.
+
+public/stylesheets/crud.css:: A simple CSS with all the classes and ids used in the crud code. 
+
+=== Lib:
 
 lib/standard_table_builder.rb:: A simple helper to easily define tables listing several rows of the same data type.
 
-lib/standard_form_builder.rb:: A form builder that automatically selects the corresponding input element for ActiveRecord attributes. Input elements are rendered with a corresponding label by default.
+lib/standard_form_builder.rb:: A form builder that automatically selects the corresponding input element for ActiveRecord columns. Input elements are rendered with a corresponding label by default.
 
-lib/render_inheritable.rb:: Allows one to render inheritable views and partials. If no view file is found for the current controller, the corresponding file is looked up in its superclass hierarchy.
+lib/render_inheritable.rb:: Allows one to render inheritable views and partials. If no view file is found for the current controller, the corresponding file is looked up in its superclass hierarchy. Thus, only views or partials that look differently have to be overwritten.
 
 lib/crud_callbacks.rb:: Defines before and after callback hooks for create, update, save and destroy. When to execute the callbacks is in the responsibility of the clients of this module. This module is used in the CrudController to provide callbacks.
 
-helpers/standard_helper.rb:: A view helper to standartize often used functions like formatting, tables, forms or action links. This helper is ideally defined in the ApplicationController.
+=== Tests:
 
-helpers/crud_helper.rb::
+test/crud_test_model.rb:: A dummy model to run CRUD tests against.
 
-views/crud/index.html.erb::
-
-views/crud/_list.html.erb::
-
-views/crud/show.html.erb::
-
-views/crud/_attrs.html.erb::
-
-views/crud/new.html.erb::
-
-views/crud/edit.html.erb::
-
-views/crud/_form.html.erb::
-
-views/standard/_labeled.html.erb::
-
-views/layouts/crud.html.erb:: A simple layout showing how to use the +@title+ and +flash+. Most probably you want to include this in your application.html.erb or adapt this main crud templates, so you wont need this file.
-
-test/functionals/crud_controller_test_helper.rb::
+test/functionals/crud_controller_test_helper.rb:: A module to include into your functional tests for your crud controller subclasses. Provides a handfull of CRUD functionality tests.
 
 test/several other:: To start from when you are going to adapt your CRUD code.
 
-public/stylesheets/crud.css::
 
-== Examples
 

@@ -115,14 +115,14 @@ module CrudControllerTestHelper
     assert_equal "", @response.body.strip
   end
 
-  def test_delete
+  def test_destroy
     assert_difference("#{model_class.name}.count", -1) do
       delete :destroy, :id => test_entry.id
     end
     assert_redirected_to_index
   end
   
-  def test_delete_with_wrong_http_method_redirects
+  def test_destroy_with_wrong_http_method_redirects
     get :destroy, :id => test_entry.id
     assert_redirected_to_index
     
@@ -130,7 +130,7 @@ module CrudControllerTestHelper
     assert_redirected_to_index
   end
   
-  def test_delete_xml
+  def test_destroy_xml
     assert_difference("#{model_class.name}.count", -1) do
       delete :destroy, :id => test_entry.id, :format => 'xml'
     end
