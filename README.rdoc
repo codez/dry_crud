@@ -23,14 +23,14 @@ In most Rails applications, you have some models that require basic CRUD (create
 Enter DRY CRUD.
 
 <b>
-The main idea of DRY CRUD is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. It generates various foundation classes that you are free to adapt to your application's needs. For each model, you then may transparently customize arbitrary parts or just fallback to the general behaviour. This applies not only for the controller, but also for the view templates and helpers.
+The main idea of DRY CRUD is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. DRY CRUD generates various foundation classes that you may freely adapt to your application's needs. For each model, you may transparently customize arbitrary parts or just fallback to the general behaviour. This applies not only for controllers, but also for view templates and helpers.
 </b>
 
 A core element of DRY CRUD is the RenderInheritable module. This gives you inheritable views and partials. In the default case, a template is searched in the current controller's view folder. If it is not found there, the template with the same name from the superclass controller is used. This lookup path might be customized as well.
 
-DRY CRUD is a Rails generator. All code resides in your application and is open for you to inspect and to extend. You may pick whatever you consider useful or adapt what is not sufficient. The generated code is all yours! There are no runtime dependencies to the dry_crud gem. Also, DRY CRUD does not want to provide a maximum of functionality that requires a lot of configuration, but rather a clean and lightweight foundation to build your application's requirements upon. This is why DRY CRUD comes as a generator and not as a Rails plugin.
+DRY CRUD is a Rails generator. All code resides in your application and is open for you to inspect and to extend. You may pick whatever you consider useful or adapt what is not sufficient. There are no runtime dependencies to the dry_crud gem. Also, DRY CRUD does not want to provide a maximum of functionality that requires a lot of configuration, but rather a clean and lightweight foundation to build your application's requirements upon. This is why DRY CRUD comes as a generator and not as a Rails plugin.
 
-DRY CRUD does not depend on any other plugins, but easily allows you to integrate them in order to unify the behaviour of your CRUD controllers.
+DRY CRUD does not depend on any other plugins, but easily allows you to integrate them in order to unify the behaviour of your CRUD controllers. You might even use the plugins mentioned above to adapt your generated CrudController base class.
 
 See the Examples section for some use cases and the Generated Files section below for details on the single classes and templates.
 
@@ -84,7 +84,7 @@ And we are done again. All our controllers inheriting from CrudController, inclu
 
 Sometimes, the default formatting provided by :format_attr will not be sufficient. We have a boolean column <tt>sex</tt> in our model, but would like to display 'male' or 'female' for it (instead of 'no' or 'yes', which is a bit cryptic). Just define a method in your view helper starting with <tt>format_</tt>, followed by the attribute name:
 
-<tt>app/helpers/people.rb</tt>:
+In <tt>app/helpers/people.rb</tt>:
   def format_sex(person)
     person.sex ? 'female' : 'male'
   end
@@ -152,7 +152,7 @@ Of course, custom input fields may be defined as well:
 
 == Generated Files
 
-All generated files are supposed to provide a reasonable foundation for the CRUD functionality. As they are part of your code, you are encouraged to adapt them to fit the needs of your application.
+All generated files are supposed to provide a reasonable foundation for the CRUD functionality. You are encouraged to adapt them to fit the needs of your application. They're yours!
 
 === Controller:
 
@@ -200,9 +200,9 @@ lib/crud_callbacks.rb:: Defines before and after callback hooks for create, upda
 
 test/crud_test_model.rb:: A dummy model to run CRUD tests against.
 
-test/functionals/crud_controller_test_helper.rb:: A module to include into your functional tests for your crud controller subclasses. Provides a handfull of CRUD functionality tests.
+test/functionals/crud_controller_test_helper.rb:: A module to include into your functional tests for your crud controller subclasses. Contains a handfull of CRUD functionality tests for the provided implementation. 
 
-test/several other:: To start from when you are going to adapt your CRUD code.
+test/several other tests:: Testing the provided implementation and a great base to test your adaptions of the CRUD code.
 
 
 
