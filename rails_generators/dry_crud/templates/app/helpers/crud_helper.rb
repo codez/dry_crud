@@ -1,3 +1,6 @@
+# Extension of StandardHelper functionality to provide a set of default 
+# attributes for the current model to be used in tables and forms. This helper
+# is included in CrudController.
 module CrudHelper
   
   # Create a table of the @entries variable with the default or 
@@ -11,6 +14,13 @@ module CrudHelper
         add_list_actions(t)
       end
     end
+  end
+  
+  # Adds a set of standard action link column (show, edit, destroy) to the given table.
+  def add_list_actions(table)
+    table.col { |e| link_action_show(e) }
+    table.col { |e| link_action_edit(e) }
+    table.col { |e| link_action_destroy(e) }
   end
   
   # Renders a generic form for the current entry with :default_attrs or the 
@@ -30,12 +40,6 @@ module CrudHelper
     attrs = model_class.column_names.collect(&:to_sym)
     [:id, :position].each {|a| attrs.delete(a) }
     attrs
-  end
-  
-  def add_list_actions(table)
-    table.col { |e| link_action_show(e) }
-    table.col { |e| link_action_edit(e) }
-    table.col { |e| link_action_destroy(e) }
   end
   
 end

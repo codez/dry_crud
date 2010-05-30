@@ -47,10 +47,13 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :crud_test_models
 end
 
+# A simple test helper to prepare the test database with a CrudTestModel model.
 module CrudTestHelper
 
   protected 
   
+  # Sets up the test database with a crud_test_models table.
+  # Look at the source to view the column definition.
   def setup_db    
     silence_stream(STDOUT) do
         ActiveRecord::Base.connection.create_table :crud_test_models, :force => true do |t|
@@ -69,16 +72,19 @@ module CrudTestHelper
     end
   end
   
+  # Removes the crud_test_models table from the database.
   def reset_db
     [:crud_test_models].each do |table|            
       ActiveRecord::Base.connection.drop_table(table) rescue nil
     end
   end
   
+  # Creates 6 dummy entries for the crud_test_models table.
   def create_test_data
     (1..6).inject(nil) {|prev, i| create(i, prev) }
   end
   
+  # Fixture-style accessor method to get CrudTestModel instances by name
   def crud_test_models(name)
     CrudTestModel.find_by_name(name.to_s)
   end

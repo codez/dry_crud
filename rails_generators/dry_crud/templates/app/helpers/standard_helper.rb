@@ -14,7 +14,7 @@ module StandardHelper
   # Formats a single value
   def f(value)
     case value
-      when Fixnum then value.to_s
+      when Fixnum then number_with_delimiter(value)
       when Float  then "%.2f" % value
 			when Date	  then value.to_s
       when Time   then value.strftime("%H:%M")   
@@ -138,7 +138,10 @@ module StandardHelper
   end
   
   # Renders a generic form for all given attributes using StandardFormBuilder.
-  # If a block is given, a custom form may be rendered and attrs is ignored.
+  # Before the input fields, the error messages are rendered, if present.
+  # The form is rendered with a basic save button.
+  # If a block is given, custom input fields may be rendered and attrs is ignored.
+  #
   # The form is always directly printed into the erb, so the call must
   # go within a normal <% form(...) %> section, not in a <%= output section
   def form(object, attrs = [], options = {})

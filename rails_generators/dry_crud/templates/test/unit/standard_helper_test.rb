@@ -31,6 +31,7 @@ class StandardHelperTest < ActionView::TestCase
 	test "format Fixnums" do
 		assert_equal "0", f(0)
 		assert_equal "10", f(10)
+    assert_equal "10,000,000", f(10000000)    
 	end
 	
 	test "format Floats" do

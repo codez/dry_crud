@@ -96,7 +96,8 @@ module RenderInheritable
     
     # An array of controller names / folders, ordered from most specific to most general.
     # May be dynamic dependening on the passed 'with' argument. Does not contain
-    # the inheritable_root_folder.
+    # the inheritable_root_folder. 
+    # You may override this method in an own controller to customize the lookup path.
     def lookup_path(with = nil)
     	inheritance_lookup_path
     end

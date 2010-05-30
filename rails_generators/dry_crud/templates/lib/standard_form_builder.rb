@@ -9,7 +9,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   
   attr_reader :template 
   
-  delegate :belongs_to_association, :column_type, :column_property, :labeled, :captionize, 
+  delegate :belongs_to_association, :column_type, :column_property, :captionize, 
            :to => :template
   
   # Render multiple input fields together with a label for the given attributes.
@@ -101,11 +101,16 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     collection_select(attr, list, :id, :label, { :include_blank => BLANK_SELECT_LABEL }, html_options)
   end
   
+  # Render a label for the given attribute with the passed field html section.
+  def labeled(attr, field_html = nil, &block)
+    template.labeled(label(attr), field_html, &block)
+  end
+  
   # Dispatch methods starting with 'labeled_' to render a label and the corresponding 
   # input field. E.g. labeled_boolean_field(:checked, {:class => 'bold'})
   def method_missing(name, *args)
     if field_method = labeled_field_method?(name)
-      labeled(label(args.first), send(field_method, *args))
+      labeled(args.first, send(field_method, *args))
     else     
       super(name, *args)
     end
