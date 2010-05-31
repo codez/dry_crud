@@ -7,7 +7,7 @@ Generates simple and extendable controller, views and helpers that support you t
 Then simply run the following generator in your Rails app to get the goodies:
 
   script/generate dry_crud
-  
+
 To integrate dry_crud into your code, only a few additions are required:
 
 * To use a standard formatting, tables and forms throughout your application, add 'helper :standard' to your ApplicationController. 
@@ -15,7 +15,7 @@ To integrate dry_crud into your code, only a few additions are required:
 * Add a :label method to your models for a human-friendly representation.
   
 Stay DRY!
-  
+
 == Overview
 
 In most Rails applications, you have some models that require basic CRUD (create, read, update, delete) functionality. There are various possibilities like Rails scaffolding, {Active Scaffold}[http://activescaffold.com/] or {Dry Scalffold}[http://github.com/grimen/dry_scaffold]. Still, various parts in your application remain duplicated. While you might pull up common methods into a common superclass controller, most views still contain very similar code.
@@ -43,14 +43,14 @@ Say you want to manage a Person model. Create the following controller and add a
 <tt>app/controllers/people_controller.rb</tt>:
   class PeopleController < CrudController
   end
-  
+
 <tt>app/models/person.rb</tt>:
   class Person
     def label
       "#{lastname} #{firstname}"
     end
   end
-  
+
 That's it. You have an overview of all people, detail pages and forms to edit and create persons. Oh, and of course, you may delete persons as well. By default, all attributes are displayed and formatted according to their column type whereever they appear. This holds for the input fields as well.
 
 
@@ -73,10 +73,10 @@ In <tt>app/controllers/crud_controller.rb</tt>, change the index action to
     @entries = model_class.paginate({:page => params[:page]}.merge(find_all_options)) 
     respond_with @entries   
   end
-	
+
 In <tt>app/views/crud/index.html.erb</tt>, add the following line for the pagination links:
    <%= will_paginate @entries %>
-   
+
 And we are done again. All our controllers inheriting from CrudController, including above PeopleController, now have paginated index views. Because our customization for the people table is in the seperate <tt>_list</tt> partial, no further modifications are required. 
 
 
@@ -88,7 +88,7 @@ In <tt>app/helpers/people.rb</tt>:
   def format_sex(person)
     person.sex ? 'female' : 'male'
   end
-  
+
 By the way: The method :f in StandardHelper uniformly formats arbitrary values according to their class.  
 
 
@@ -110,7 +110,7 @@ In <tt>app/controllers/people_controller.rb</tt>:
       false
     end
   end
- 
+
 
 === Standard Tables and Forms
 
@@ -122,7 +122,7 @@ This is the code to define a table with some attribue columns for a list of same
   <%= table(@people) do |t|
         t.attrs :lastname, :firstname
       end %>
-	    
+
 If entries is empty, a basic 'No entries available' message is rendered instead of the table.
 
 To render custom columns, use the :col method:
@@ -138,7 +138,7 @@ To render custom columns, use the :col method:
 Forms work very similar. In the most simple case, you just have to specify which attributes of a model to create input fields for, and you get a complete form with error messages, labeled input fields according the column types and a save button:
 
   <% form(@person, [:firstname, :lastname, :age, :city] -%>
-  
+
 Of course, custom input fields may be defined as well:
   <% form(@person, [], :url => {:action => 'custom_update', :id => @person.id}) do |f| -%>
     <%= f.labeled_input_fields :firstname, :lastname %>
