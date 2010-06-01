@@ -120,11 +120,7 @@ module StandardHelper
       labeled(captionize(a, obj.class), format_attr(obj, a))
     end.join
     
-    if div
-      content_tag(:div, html, :class => 'attributes')
-    else
-      html
-    end
+    div ? content_tag(:div, html, :class => 'attributes') : html
   end
   
   # Renders a table for the given entries as defined by the following block.
