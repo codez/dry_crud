@@ -2,7 +2,7 @@ require 'rubygems'
 require "rake/testtask"
 require 'rake/gempackagetask' 
 require 'rake/rdoctask' 
-require 'sdoc'
+sdoc = (require 'sdoc' || true) rescue false
 
 load	'dry_crud.gemspec'
 
@@ -78,8 +78,11 @@ end
 # :rdoc task
 Rake::RDocTask.new do |rdoc| 
 	rdoc.title	= 'Dry Crud' 
-	rdoc.options << '--line-numbers' << '--inline-source' << '--fmt' << 'shtml' 
-  rdoc.template = 'direct'
+	rdoc.options << '--line-numbers' << '--inline-source'
+  if sdoc
+    rdoc.options << '--fmt' << 'shtml'
+    rdoc.template = 'direct'
+  end
 	rdoc.rdoc_files.include(*FileList.new('*') do |list|
 		list.exclude(/(^|[^.a-z])[a-z]+/)
 		list.exclude('TODO') 
