@@ -188,19 +188,19 @@ public/stylesheets/crud.css:: A simple CSS with all the classes and ids used in 
 
 === Lib:
 
-lib/standard_table_builder.rb:: A simple helper to easily define tables listing several rows of the same data type.
+{lib/standard_table_builder.rb}[http://codez.ch/dry_crud/?q=StandardTableBuilder]:: A simple helper to easily define tables listing several rows of the same data type.
 
-lib/standard_form_builder.rb:: A form builder that automatically selects the corresponding input element for ActiveRecord columns. Input elements are rendered with a corresponding label by default.
+{lib/standard_form_builder.rb}[http://codez.ch/dry_crud/?q=StandardFormBuilder]:: A form builder that automatically selects the corresponding input element for ActiveRecord columns. Input elements are rendered with a corresponding label by default.
 
-lib/render_inheritable.rb:: Allows one to render inheritable views and partials. If no view file is found for the current controller, the corresponding file is looked up in its superclass hierarchy. Thus, only views or partials that look differently have to be overwritten.
+{lib/render_inheritable.rb}[http://codez.ch/dry_crud/?q=RenderInheritable]:: Allows one to render inheritable views and partials. If no view file is found for the current controller, the corresponding file is looked up in its superclass hierarchy. Thus, only views or partials that look differently have to be overwritten.
 
-lib/crud_callbacks.rb:: Defines before and after callback hooks for create, update, save and destroy. When to execute the callbacks is in the responsibility of the clients of this module. This module is used in the CrudController to provide callbacks.
+{lib/crud_callbacks.rb}[http://codez.ch/dry_crud/?q=CrudCallbacks]:: Defines before and after callback hooks for create, update, save and destroy. When to execute the callbacks is in the responsibility of the clients of this module. This module is used in the CrudController to provide callbacks.
 
 === Tests:
 
 test/crud_test_model.rb:: A dummy model to run CRUD tests against.
 
-test/functionals/crud_controller_test_helper.rb:: A module to include into your functional tests for your crud controller subclasses. Contains a handfull of CRUD functionality tests for the provided implementation. 
+{test/functionals/crud_controller_test_helper.rb}[http://codez.ch/dry_crud/?q=CrudControllerTestHelper]:: A module to include into your functional tests for your crud controller subclasses. Contains a handfull of CRUD functionality tests for the provided implementation. 
 
 test/several other tests:: Testing the provided implementation and a great base to test your adaptions of the CRUD code.
 
