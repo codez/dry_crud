@@ -60,8 +60,8 @@ module RenderInheritable
     module ClassMethods
         # Performs a lookup for the given filename and returns the most specific
         # folder that contains the file.
-        def find_inheritable_file(filename, format = :html, with = nil)          
-          find_inheritable_artifact(with) do |folder|
+        def find_inheritable_file(filename, format = :html, with = nil)  
+          inheritable_cache[format.to_sym][filename][with] ||= find_inheritable_artifact(with) do |folder|
             view_paths.find_template("#{folder}/#{filename}", format).present? rescue false
           end
         end
@@ -98,6 +98,10 @@ module RenderInheritable
             path << path.last.superclass
           end
           path.collect(&:controller_path)
+        end
+      
+        def inheritable_cache
+          @inheritable_cache ||= Hash.new {|h, k| h[k] = Hash.new {|h, k| h[k] = Hash.new } }
         end
     end
 

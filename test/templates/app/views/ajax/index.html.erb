@@ -1,0 +1,9 @@
+<% @title = "Listing #{models_label}" -%>
+
+<%= render_inheritable :partial => 'list' %>
+
+<br/>
+
+<%= link_action_add %>
+<%= link_to_remote 'Ajahx', :url => {:action => 'ajax'}, :method => :get %>
+<div id="response"></div>

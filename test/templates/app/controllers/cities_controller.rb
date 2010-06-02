@@ -1,4 +1,4 @@
-class CitiesController < CrudController
+class CitiesController < AjaxController
   
   def show
     respond_to do |format|

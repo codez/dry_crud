@@ -54,6 +54,8 @@ class RenderInheritableTest < ActiveSupport::TestCase
     teardown
     @controller = ChildrenController.new
     @grand_controller = GrandChildrenController.new
+    ChildrenController.inheritable_cache.clear
+    GrandChildrenController.inheritable_cache.clear
   end
   
   def teardown
@@ -118,6 +120,9 @@ class RenderInheritableTest < ActiveSupport::TestCase
        
     assert_equal 'root', ChildrenController.send(:find_inheritable_file, '_grandchild', :js)
     assert_equal 'grand_children', GrandChildrenController.send(:find_inheritable_file, '_grandchild', :js)
+        
+    assert_equal({:js => { '_grandchild' => {nil => 'root'}}}, ChildrenController.inheritable_cache)
+    assert_equal({:js => { '_grandchild' => {nil => 'grand_children'}}}, GrandChildrenController.inheritable_cache)
   end
   
   test "find inheritable file for xml format" do
@@ -135,7 +140,18 @@ class RenderInheritableTest < ActiveSupport::TestCase
     
     assert_equal 'children', ChildrenController.send(:find_inheritable_file, 'all')
     assert_equal 'grand_children', GrandChildrenController.send(:find_inheritable_file, 'all')
+    
+    assert_equal({:html => { 'all' => {nil => 'children'}}}, ChildrenController.inheritable_cache)
+    assert_equal({:html => { 'all' => {nil => 'grand_children'}}}, GrandChildrenController.inheritable_cache)
+    
+    assert_equal 'children', ChildrenController.send(:find_inheritable_file, 'all')
+    assert_equal 'grand_children', GrandChildrenController.send(:find_inheritable_file, 'all')
+    
+    assert_equal({:html => { 'all' => {nil => 'children'}}}, ChildrenController.inheritable_cache)
+    assert_equal({:html => { 'all' => {nil => 'grand_children'}}}, GrandChildrenController.inheritable_cache)    
   end
+  
+  
 
   private
   
