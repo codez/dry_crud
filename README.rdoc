@@ -156,13 +156,13 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 === Controller:
 
-controller/crud_controller.rb:: Abstract controller providing basic CRUD actions in a RESTful way. This implementation mainly follows the one of the Rails scaffolding controller. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses.
+{controller/crud_controller.rb}[http://codez.ch/dry_crud/?q=CrudController]:: Abstract controller providing basic CRUD actions in a RESTful way. This implementation mainly follows the one of the Rails scaffolding controller. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses.
 
 === Helpers:
 
-helpers/standard_helper.rb:: A view helper to standartize often used functions like formatting, tables, forms or action links. This helper is ideally defined in the ApplicationController. It is required to use the StandardTableBuilder and the StandardFormBuilder.
+{helpers/standard_helper.rb}[http://codez.ch/dry_crud/?q=StandardHelper]:: A view helper to standartize often used functions like formatting, tables, forms or action links. This helper is ideally defined in the ApplicationController. It is required to use the StandardTableBuilder and the StandardFormBuilder.
 
-helpers/crud_helper.rb:: A small helper for CrudController to render tables and forms with a default set of attributes.
+{helpers/crud_helper.rb}[http://codez.ch/dry_crud/?q=CrudHelper]:: A small helper for CrudController to render tables and forms with a default set of attributes.
 
 === Views:
 
