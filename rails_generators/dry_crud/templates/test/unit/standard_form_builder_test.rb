@@ -42,6 +42,27 @@ class StandardFormBuilderTest < ActionView::TestCase
     assert_equal form.belongs_to_field(:companion_id), form.input_field(:companion_id)
   end
   
+  test "belongs_to_field has all options by default" do
+    f = form.belongs_to_field(:companion_id)
+    assert_match /(\<option .*?){7}/m, f
+    assert_no_match /(\<option .*?){8}/m, f
+  end
+    
+  test "belongs_to_field with :list option" do
+    list = CrudTestModel.all
+    f = form.belongs_to_field(:companion_id, :list => [list.first, list.second])
+    assert_match /(\<option .*?){3}/m, f
+    assert_no_match /(\<option .*?){4}/m, f
+  end
+  
+  test "belongs_to_field with instance variable" do
+    list = CrudTestModel.all
+    @companions = [list.first, list.second]
+    f = form.belongs_to_field(:companion_id)
+    assert_match /(\<option .*?){3}/m, f
+    assert_no_match /(\<option .*?){4}/m, f
+  end
+  
   test "string_field sets maxlength attribute if limit" do
     assert_match /maxlength="50"/, form.string_field(:name)
   end

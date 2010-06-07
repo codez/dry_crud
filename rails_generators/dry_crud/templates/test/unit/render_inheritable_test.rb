@@ -77,15 +77,6 @@ class RenderInheritableTest < ActiveSupport::TestCase
     assert_equal 'root', ChildrenController.send(:inheritable_controller)
     assert_equal 'root', GrandChildrenController.send(:inheritable_controller)
   end
-  
-  test "inheritable controller with routes finds self" do
-    ActionController::Routing.use_controllers! ['children', 'grand_children']
-    
-    assert_equal 'children', ChildrenController.send(:inheritable_controller)
-    assert_equal 'grand_children', GrandChildrenController.send(:inheritable_controller)
-    
-    ActionController::Routing::Routes.reload!
-  end
     
   test "find non-existing inheritable file" do
     assert_nil ChildrenController.send(:find_inheritable_file, 'foo')

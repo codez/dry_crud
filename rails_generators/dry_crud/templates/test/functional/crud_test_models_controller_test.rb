@@ -18,12 +18,18 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_equal CrudTestModelsController, @controller.class
     assert_recognizes({:controller => 'crud_test_models', :action => 'index'}, '/crud_test_models')
     assert_recognizes({:controller => 'crud_test_models', :action => 'show', :id => '1'}, '/crud_test_models/1')
+    assert_equal %w(index show new create edit update destroy).to_set, CrudTestModelsController.send(:action_methods)
   end
   
   def test_index
     super
     assert_equal 6, assigns(:entries).size
     assert_equal assigns(:entries).sort_by {|a| a.name }, assigns(:entries)
+  end
+  
+  def test_new
+    super
+    assert assigns(:companions)
   end
   
   def test_create
@@ -47,9 +53,26 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     end
     assert_template 'new'
     assert assigns(:entry).new_record?
+    assert assigns(:companions)
     assert flash[:error].present?
     assert_equal 'illegal', assigns(:entry).name
     assert_nil @controller.called_callbacks
+  end
+    
+  def test_create_with_before_callback_redirect
+    @controller.should_redirect = true
+    assert_no_difference("#{model_class.name}.count") do
+      post :create, :crud_test_model => {:name => 'illegal', :children => 2}
+    end
+    assert_redirected_to :action => 'index'
+    assert_nil @controller.called_callbacks
+  end
+  
+  def test_new_with_before_render_callback_redirect_does_not_set_companions
+    @controller.should_redirect = true
+    get :new
+    assert_redirected_to :action => 'index'
+    assert_nil assigns(:companions)
   end
   
   

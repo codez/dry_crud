@@ -1,8 +1,13 @@
 require 'test_helper'
+require 'crud_test_model'
 
 class StandardHelperTest < ActionView::TestCase
 
 	include StandardHelper
+  include CrudTestHelper
+  
+  setup :reset_db, :setup_db, :create_test_data
+  teardown :reset_db
 	
   def format_size(obj)
     "#{f(obj.size)} chars"
@@ -76,5 +81,54 @@ class StandardHelperTest < ActionView::TestCase
     assert_equal "With Object", captionize("With object", Object.new)
   end
 	
-
+  test "standard form for existing entry" do
+    e = crud_test_models('AAAAA')
+    f = capture { standard_form(e, [:name, :children, :birthdate, :human], :class => 'special') }
+    
+    assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
+    assert_match /input .*?name="_method" .*?type="hidden" .*?value="put"/, f
+    assert_match /input .*?name="crud_test_model\[name\]" .*?type="text" .*?value="AAAAA"/, f
+    assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
+    assert_match /option selected="selected" value="1910">1910<\/option>/, f
+    assert_match /option selected="selected" value="1">January<\/option>/, f
+    assert_match /option selected="selected" value="1">1<\/option>/, f
+    assert_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=\"1\"/, f
+    assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
+    assert_match /input .*?type="submit" .*?value="Save"/, f
+  end
+  
+  test "standard form for new entry" do
+    e = CrudTestModel.new
+    f = capture { standard_form(e, [:name, :children, :birthdate, :human], :class => 'special') }
+    
+    assert_match /form .*?action="\/crud_test_models" .*?method="post"/, f
+    assert_match /input .*?name="crud_test_model\[name\]" .*?type="text"/, f
+    assert_no_match /input .*?name="crud_test_model\[name\]" .*?type="text" .*?value=/, f
+    assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
+    assert_match /input .*?name="crud_test_model\[children\]" .*?type="text"/, f
+    assert_no_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=/, f
+    assert_match /input .*?type="submit" .*?value="Save"/, f
+  end
+  
+  
+  test "standard form with errors" do
+    e = crud_test_models('AAAAA')
+    e.name = nil
+    assert !e.valid?
+   
+    f = capture { standard_form(e, [:name, :children, :birthdate, :human], :class => 'special') }
+    
+    assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
+    assert_match /input .*?name="_method" .*?type="hidden" .*?value="put"/, f
+    assert_match /div class="errorExplanation"/, f
+    assert_match /div class="fieldWithErrors"\>.*?\<input .*?name="crud_test_model\[name\]" .*?type="text"/, f
+    assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
+    assert_match /option selected="selected" value="1910">1910<\/option>/, f
+    assert_match /option selected="selected" value="1">January<\/option>/, f
+    assert_match /option selected="selected" value="1">1<\/option>/, f
+    assert_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=\"1\"/, f
+    assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
+    assert_match /input .*?type="submit" .*?value="Save"/, f
+  end
+  
 end

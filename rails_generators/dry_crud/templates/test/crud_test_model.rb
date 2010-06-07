@@ -1,4 +1,6 @@
 class CrudTestModel < ActiveRecord::Base #:nodoc:
+  validates_presence_of :name
+  
   default_scope :order => 'name'
   
   belongs_to :companion, :class_name => 'CrudTestModel'
@@ -11,9 +13,16 @@ end
 class CrudTestModelsController < CrudController #:nodoc:
   HANDLE_PREFIX = 'handle_'
   
+  before_create :possibly_redirect
   before_create :handle_name
   
+  before_render_new :possibly_redirect
+  before_render_new :set_companions
+  
   attr_reader :called_callbacks
+  attr_accessor :should_redirect
+  
+  hide_action :called_callbacks, :should_redirect, :should_redirect=
   
   private
   
@@ -34,6 +43,15 @@ class CrudTestModelsController < CrudController #:nodoc:
   
   def method_missing(sym, *args)
     called_callback(sym.to_s[HANDLE_PREFIX.size..-1].to_sym) if sym.to_s.starts_with?(HANDLE_PREFIX)
+  end
+  
+  def possibly_redirect
+    redirect_to :action => 'index' if should_redirect && !performed?
+    !should_redirect
+  end
+  
+  def set_companions
+    @companions = CrudTestModel.all :conditions => {:human => true}
   end
   
   def called_callback(callback)
@@ -98,7 +116,7 @@ module CrudTestHelper
                           :companion => companion,
                           :rating => "#{index}.#{index}".to_f, 
                           :income => 10000000 * index + 0.1 * index, 
-                          :birthdate => '#{index}-#{index}-#{1900 + 10 * index}', 
+                          :birthdate => "#{1900 + 10 * index}-#{index}-#{index}", 
                           :human => index % 2 == 0,
                           :remarks => "#{c} #{c} #{c}\n" * 3)
   end

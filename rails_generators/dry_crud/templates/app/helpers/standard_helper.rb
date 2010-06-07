@@ -140,7 +140,7 @@ module StandardHelper
   #
   # The form is always directly printed into the erb, so the call must
   # go within a normal <% form(...) %> section, not in a <%= output section
-  def form(object, attrs = [], options = {})
+  def standard_form(object, attrs = [], options = {})
     form_for(object, {:builder => StandardFormBuilder}.merge(options)) do |form|
       concat form.error_messages
       

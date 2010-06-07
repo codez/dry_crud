@@ -20,6 +20,9 @@ class CrudController < ApplicationController
   before_filter :set_entry,   :only => [:show, :edit, :update, :destroy]
   
   helper_method :model_class, :models_label, :full_entry_label
+  
+  hide_action :model_class, :models_label, :model_identifier, :run_callbacks, :inheritable_root_controller
+  
    
   ##############  ACTIONS  ############################################
   
@@ -48,6 +51,7 @@ class CrudController < ApplicationController
   # Display a form to edit an exisiting entry of this model.
   #   GET /entries/1/edit
   def edit
+    render_with_callback :edit
   end
   
   # Create a new entry of this model from the passed params.
@@ -57,7 +61,7 @@ class CrudController < ApplicationController
     created = with_callbacks(:create) { save_entry } 
     
     respond_processed(created, 'created', 'new') do |format|
-      format.html { redirect_to(@entry) }
+      format.html { redirect_to_show }
       format.xml  { render :xml => @entry, :status => :created, :location => @entry }
     end
   end
@@ -70,7 +74,7 @@ class CrudController < ApplicationController
     updated = with_callbacks(:update) { save_entry }
     
     respond_processed(updated, 'updated', 'edit') do |format|
-      format.html { redirect_to(@entry) }
+      format.html { redirect_to_show }
       format.xml  { head :ok }
     end
   end
@@ -82,7 +86,7 @@ class CrudController < ApplicationController
     destroyed = with_callbacks(:destroy) { @entry.destroy }
     
     respond_processed(destroyed, 'destroyed', 'show') do |format|
-      format.html { redirect_to(:action => 'index') }
+      format.html { redirect_to_index }
       format.xml  { head :ok }
     end
   end
@@ -94,7 +98,7 @@ class CrudController < ApplicationController
   # Convenience method to respond to various formats with the given object.
   def respond_with(object)
     respond_to do |format|
-      format.html { render_inheritable :action => action_name }
+      format.html { render_with_callback action_name }
       format.xml  { render :xml => object }
     end
   end
@@ -109,7 +113,7 @@ class CrudController < ApplicationController
         flash[:notice] = "#{full_entry_label} was successfully #{operation}."
         yield format
       else 
-        format.html { render_inheritable :action => failed_action }
+        format.html { render_with_callback failed_action }
         format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
       end
     end
@@ -130,15 +134,32 @@ class CrudController < ApplicationController
 	  "#{models_label.singularize} '#{@entry.label}'"
   end    
   
-  # Saves the current entry with callbacks.
-  def save_entry       
-    with_callbacks(:save) {	@entry.save }
-  end   
-  
   # Find options used in the index action.
   def find_all_options
     {}
   end
+  
+  # Redirects to the show action of a single entry.
+  def redirect_to_show
+    redirect_to @entry
+  end
+  
+  # Redirects to the main action of this controller.
+  def redirect_to_index
+    redirect_to :action => 'index'
+  end
+   
+  # Helper method to run before_render callbacks and render the action.
+  # If a callback renders or redirects, the action is not rendered.
+  def render_with_callback(action)
+    callbacks("before_render_#{action}".to_sym)
+    render_inheritable :action => action unless performed?
+  end
+  
+  # Saves the current entry with callbacks.
+  def save_entry       
+    with_callbacks(:save) { @entry.save }
+  end   
   
   class << self
     # The ActiveRecord class of the model.

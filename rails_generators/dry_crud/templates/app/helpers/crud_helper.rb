@@ -31,7 +31,7 @@ module CrudHelper
       attrs = default_attrs
       [:created_at, :updated_at].each {|a| attrs.delete(a) }
     end		
-    form(@entry, attrs, &block)
+    standard_form(@entry, attrs, &block)
   end
   
   # The default attributes to use in attrs, list and form partials.

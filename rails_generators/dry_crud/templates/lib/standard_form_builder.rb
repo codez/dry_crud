@@ -94,11 +94,19 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   
   # Render a select element for a :belongs_to association defined by attr.
   # Use additional html_options for the select element.
+  # To pass a custom element list, specify the list with the :list key or
+  # define an instance variable with the pluralized name of the association.
   def belongs_to_field(attr, html_options = {})
-    assoc = belongs_to_association(@object, attr)
-    list = assoc.klass.find(:all, :conditions => assoc.options[:conditions],
-        							            :order => assoc.options[:order])
-    collection_select(attr, list, :id, :label, { :include_blank => BLANK_SELECT_LABEL }, html_options)
+    list = html_options.delete(:list) 
+    unless list
+      assoc = belongs_to_association(@object, attr)
+      list = @template.send(:instance_variable_get, :"@#{assoc.name.to_s.pluralize}")
+      unless list
+        list = assoc.klass.find(:all, :conditions => assoc.options[:conditions],
+                               :order => assoc.options[:order])
+      end
+    end
+    collection_select(attr, list, :id, :label, { :prompt => BLANK_SELECT_LABEL }, html_options)
   end
   
   # Render a label for the given attribute with the passed field html section.
