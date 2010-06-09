@@ -152,7 +152,7 @@ class CrudController < ApplicationController
   # Helper method to run before_render callbacks and render the action.
   # If a callback renders or redirects, the action is not rendered.
   def render_with_callback(action)
-    callbacks("before_render_#{action}".to_sym)
+    render_callbacks(action)
     render_inheritable :action => action unless performed?
   end
   

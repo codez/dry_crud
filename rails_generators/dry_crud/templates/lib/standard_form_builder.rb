@@ -9,7 +9,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   
   attr_reader :template 
   
-  delegate :belongs_to_association, :column_type, :column_property, :captionize, 
+  delegate :association, :belongs_to_association, :column_type, :column_property, :captionize, 
            :to => :template
   
   # Render multiple input fields together with a label for the given attributes.
@@ -30,10 +30,10 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   # The input field is chosen based on the ActiveRecord column type.
   # Use additional html_options for the input element.
   def input_field(attr, html_options = {})
-    type = column_type(@object.class, attr)
+    type = column_type(@object, attr)
     if type == :text
       text_area(attr, html_options)
-    elsif type == :integer && belongs_to_association(@object, attr)
+    elsif belongs_to_association?(attr, type)
       belongs_to_field(attr, html_options)
     else
       custom_field_method = :"#{type}_field"
@@ -45,13 +45,6 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
   
-  # Render a standard string field with column contraints.
-  def string_field(attr, html_options = {})
-    limit = column_property(@object.class, attr, :limit)
-    html_options = {:maxlength => limit}.merge(html_options) if limit
-    text_field(attr, html_options)
-  end
-  
   # Render a standard text field.
   def text_field(attr, html_options = {})
     super(attr, {:size => 30}.merge(html_options))
@@ -60,6 +53,13 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   # Render a standard text area.
   def text_area(attr, html_options = {})
     super(attr, {:rows => 5, :cols => 30}.merge(html_options))
+  end
+  
+  # Render a standard string field with column contraints.
+  def string_field(attr, html_options = {})
+    limit = column_property(@object, attr, :limit)
+    html_options = {:maxlength => limit}.merge(html_options) if limit
+    text_field(attr, html_options)
   end
   
   # Render a standard number field.
@@ -97,16 +97,12 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   # To pass a custom element list, specify the list with the :list key or
   # define an instance variable with the pluralized name of the association.
   def belongs_to_field(attr, html_options = {})
-    list = html_options.delete(:list) 
-    unless list
-      assoc = belongs_to_association(@object, attr)
-      list = @template.send(:instance_variable_get, :"@#{assoc.name.to_s.pluralize}")
-      unless list
-        list = assoc.klass.find(:all, :conditions => assoc.options[:conditions],
-                               :order => assoc.options[:order])
-      end
+    list = association_entries(attr, html_options)
+    if list.present?
+      collection_select(attr, list, :id, :label, { :prompt => BLANK_SELECT_LABEL }, html_options)
+    else
+      '(none available)'
     end
-    collection_select(attr, list, :id, :label, { :prompt => BLANK_SELECT_LABEL }, html_options)
   end
   
   # Render a label for the given attribute with the passed field html section.
@@ -128,7 +124,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     labeled_field_method?(name).present? || super(name)
   end
   
-  private
+  protected
   
   def labeled_field_method?(name)
     prefix = 'labeled_'
@@ -138,4 +134,28 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
   
+  def belongs_to_association?(attr, type)
+    if type == :integer || type == nil
+      assoc = belongs_to_association(@object, attr)
+      assoc.present? && assoc.options[:polymorphic].nil?
+    else
+      false
+    end
+  end
+  
+  # Returns the list of association entries, either from options[:list],
+  # the instance variable with the pluralized association name or all
+  # entries of the association klass.
+  def association_entries(attr, options)
+    list = options.delete(:list) 
+    unless list
+      assoc = association(@object, attr)
+      list = @template.send(:instance_variable_get, :"@#{assoc.name.to_s.pluralize}")
+      unless list
+        list = assoc.klass.find(:all, :conditions => assoc.options[:conditions],
+                               :order => assoc.options[:order])
+      end
+    end
+    list
+  end
 end

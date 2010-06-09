@@ -17,6 +17,7 @@ module RenderInheritable
     controller_class.send(:class_variable_set, :@@inheritable_root_controller, controller_class)
     controller_class.cattr_reader :inheritable_root_controller
     
+    controller_class.helper ViewHelper
     controller_class.helper_method :inheritable_partial_options
   end    
   
@@ -103,6 +104,15 @@ module RenderInheritable
     def inheritable_cache #:nodoc:
       @inheritable_cache ||= Hash.new {|h, k| h[k] = Hash.new {|h, k| h[k] = Hash.new } }
     end
+  end
+  
+  module ViewHelper
+    # Because ActionView has a different :render method than ActionController, 
+    # this method provides an entry point to use render_inheritable from views.
+    def render_inheritable(options)                
+      inheritable_partial_options(options) if options[:partial]  
+      render options
+    end   
   end
   
 end

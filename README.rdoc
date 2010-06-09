@@ -182,7 +182,7 @@ views/crud/_form.html.erb:: The form used to create and edit entries. If you wou
 
 views/shared/_labeled.html.erb:: Partial to define the layout for an arbitrary value with a label.
 
-views/layouts/crud.html.erb:: A simple layout showing how to use the @title and +flash+. Most probably you want to include this in your application.html.erb or adapt this main crud templates, so you wont need this file.
+views/layouts/crud.html.erb:: An example layout showing how to use the @title and +flash+. Most probably you want to include this in your application.html.erb or adapt this main crud templates, so you wont need this file.
 
 public/stylesheets/crud.css:: A simple CSS with all the classes and ids used in the crud code. 
 

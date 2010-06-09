@@ -1,4 +1,5 @@
 <div class="labeled">
-	<div class="caption"><%= label %></div>
-	<div class="value"><%= content %>&nbsp;<%-# empty div may disturb css layouting %></div>
+	<%-# presence is Rails 2.3.8 for label.present? ? label : StandardHelper::EMPTY_STRING -%>
+	<div class="caption"><%= label.presence || StandardHelper::EMPTY_STRING %></div>
+	<div class="value"><%= content.presence || StandardHelper::EMPTY_STRING %></div>
 </div>

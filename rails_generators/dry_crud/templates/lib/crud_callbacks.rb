@@ -1,5 +1,20 @@
 # Defines before and after callback hooks for render, create, update, save and destroy.
 # When to execute the callbacks is in the responsibility of the clients of this module.
+#
+# The following callbacks may be defined:
+# * before_create
+# * after_create
+# * before_update
+# * after_update
+# * before_save
+# * after_save
+# * before_destroy
+# * after_destroy
+# * before_render_index
+# * before_render_show
+# * before_render_new
+# * before_render_edit
+#
 module CrudCallbacks
   
   def self.included(base)
@@ -25,6 +40,12 @@ module CrudCallbacks
       callbacks("after_#{kind}".to_sym)
     end
     result
+  end
+  
+  def render_callbacks(action)
+    run_callbacks("before_render_#{action}".to_sym) do |result, object| 
+      result == false || object.performed?
+    end
   end
   
   def callbacks(kind)

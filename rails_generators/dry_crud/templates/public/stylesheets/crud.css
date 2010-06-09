@@ -41,7 +41,11 @@ div.list {}
 }
 
 .labeled .value {
-	
+	margin-left: 125pt;
+}
+
+.labeled .value p {
+	margin: 0px;
 }
 
 .attributes {}

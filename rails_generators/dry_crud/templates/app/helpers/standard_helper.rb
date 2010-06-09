@@ -6,6 +6,10 @@ module StandardHelper
   NO_LIST_ENTRIES_MESSAGE = "No entries available"
   CONFIRM_DELETE_MESSAGE  = 'Do you really want to delete this entry?'
   
+  FLOAT_FORMAT = "%.2f"
+  TIME_FORMAT  = "%H:%M"
+  EMPTY_STRING = "&nbsp;"   # non-breaking space asserts better css styling.
+  
   ################  FORMATTING HELPERS  ##################################
 
   # Define an array of associations symbols in your helper that should not get automatically linked.
@@ -15,11 +19,12 @@ module StandardHelper
   def f(value)
     case value
       when Fixnum then number_with_delimiter(value)
-      when Float  then "%.2f" % value
+      when Float  then FLOAT_FORMAT % value
 			when Date	  then value.to_s
-      when Time   then value.strftime("%H:%M")   
+      when Time   then value.strftime(TIME_FORMAT)   
       when true   then 'yes'
       when false  then 'no'
+      when nil    then EMPTY_STRING
     else 
       value.respond_to?(:label) ? h(value.label) : h(value.to_s)
     end
@@ -51,8 +56,7 @@ module StandardHelper
   
   # Returns true if no link should be created when formatting the given association.
   def no_assoc_link?(assoc)
-    (respond_to?(:no_assoc_links) &&
-     no_assoc_links.to_a.include?(assoc.name.to_sym)) || 
+    (respond_to?(:no_assoc_links) && no_assoc_links.to_a.include?(assoc.name.to_sym)) || 
     !respond_to?("#{assoc.klass.name.underscore}_path".to_sym)
   end
   
@@ -61,34 +65,43 @@ module StandardHelper
   # that have no own object class.
   def format_type(obj, attr)
     val = obj.send(attr)
-    return "" if val.nil?
-    case column_type(obj.class, attr)
-      when :time then val.strftime("%H:%M")
-      when :date then val.to_date.to_s
-      when :text then simple_format(h(val))
+    return EMPTY_STRING if val.nil?
+    case column_type(obj, attr)
+      when :time    then val.strftime(TIME_FORMAT)
+      when :date    then val.to_date.to_s
+      when :text    then simple_format(h(val))
+      when :decimal then f(val.to_s.to_f)
     else f(val)
     end
   end
   
   # Returns the ActiveRecord column type or nil.
-  def column_type(clazz, attr)
-    column_property(clazz, attr, :type)
+  def column_type(obj, attr)
+    column_property(obj, attr, :type)
   end
   
   # Returns an ActiveRecord column property for the passed attr or nil
-  def column_property(clazz, attr, property)
-    if clazz.respond_to?(:columns_hash)
-      column = clazz.columns_hash[attr.to_s]
+  def column_property(obj, attr, property)
+    if obj.respond_to?(:column_for_attribute)
+      column = obj.column_for_attribute(attr)
       column.try(property)
     end  
   end
   
   # Returns the :belongs_to association for the given attribute or nil if there is none.
   def belongs_to_association(obj, attr)
-    if attr.to_s =~ /_id$/ && obj.class.respond_to?(:reflect_on_all_associations)
-      obj.class.reflect_on_all_associations(:belongs_to).find do |a| 
-        a.primary_key_name == attr.to_s && !a.options[:polymorphic]
-      end
+    if assoc = association(obj, attr)
+      assoc if assoc.macro == :belongs_to
+    end
+  end
+  
+  # Returns the association proxy for the given attribute. The attr parameter
+  # may be the _id column or the association name. Returns nil if no association
+  # was found.
+  def association(obj, attr)
+    if obj.class.respond_to?(:reflect_on_association)
+      assoc = attr.to_s =~ /_id$/ ? attr.to_s[0..-4].to_sym : attr
+      obj.class.reflect_on_association(assoc)
     end
   end
   
@@ -107,7 +120,7 @@ module StandardHelper
   # Transform the given text into a form as used by labels or table headers.
   def captionize(text, clazz = nil)
     if clazz.respond_to?(:human_attribute_name)
-      clazz.human_attribute_name text
+      clazz.human_attribute_name(text)
     else
       text.to_s.humanize.titleize      
     end
@@ -150,7 +163,7 @@ module StandardHelper
         concat form.labeled_input_fields(*attrs)
       end
       
-      concat labeled("&nbsp;", form.submit("Save"))
+      concat labeled(EMPTY_STRING, form.submit("Save"))
     end
   end
   
@@ -158,15 +171,6 @@ module StandardHelper
   def tr_alt(&block)
     content_tag(:tr, :class => cycle("even", "odd", :name => "row_class"), &block)
   end
-  
-  # Intermediate method to use the RenderInheritable module. 
-  # Because ActionView has a different :render method than ActionController, 
-  # this method provides an entry point to use render_inheritable from views.
-  # Strictly, this method would belong into a render_inheritable helper.
-  def render_inheritable(options)                
-    inheritable_partial_options(options) if options[:partial]  
-    render options
-  end   
  
   
   ######## ACTION LINKS ###################################################### :nodoc:

@@ -16,13 +16,19 @@ class StandardHelperTest < ActionView::TestCase
 	test "labeled text as block" do
 		result = labeled("label") { "value" }
 		
-		assert_dom_equal "<div class='labeled'><div class='caption'>label</div><div class='value'>value&nbsp;</div></div>", result
+		assert_dom_equal "<div class='labeled'><div class='caption'>label</div><div class='value'>value</div></div>", result
+  end
+
+  test "labeled text empty" do
+    result = labeled("label", "")
+    
+    assert_dom_equal "<div class='labeled'><div class='caption'>label</div><div class='value'>#{EMPTY_STRING}</div></div>", result
   end
 
   test "labeled text as content" do
     result = labeled("label", "value")
     
-    assert_dom_equal "<div class='labeled'><div class='caption'>label</div><div class='value'>value&nbsp;</div></div>", result
+    assert_dom_equal "<div class='labeled'><div class='caption'>label</div><div class='value'>value</div></div>", result
   end
   
 	test "alternate row" do
@@ -51,7 +57,7 @@ class StandardHelperTest < ActionView::TestCase
 	end
 	
 	test "format nil" do
-		assert_equal "", f(nil)
+		assert_equal EMPTY_STRING, f(nil)
 	end
 	
 	test "format Strings" do
@@ -66,7 +72,51 @@ class StandardHelperTest < ActionView::TestCase
   test "format attr with custom format_size method" do
     assert_equal "4 chars", format_attr("abcd", :size)
   end
+  
+  test "column types" do
+    m = crud_test_models(:AAAAA)
+    assert_equal :string, column_type(m, :name)
+    assert_equal :integer, column_type(m, :children)
+    assert_equal :integer, column_type(m, :companion_id)
+    assert_equal nil, column_type(m, :companion)
+    assert_equal :float, column_type(m, :rating)
+    assert_equal :decimal, column_type(m, :income)
+    assert_equal :date, column_type(m, :birthdate)
+    assert_equal :boolean, column_type(m, :human)
+    assert_equal :text, column_type(m, :remarks)
+  end
+  
+  test "format integer column" do
+    m = crud_test_models(:AAAAA)
+    assert_equal '1', format_type(m, :children)
+    
+    m.children = 10000
+    assert_equal '10,000', format_type(m, :children)
+  end
+  
+  test "format float column" do
+    m = crud_test_models(:AAAAA)
+    assert_equal '1.10', format_type(m, :rating)
+    
+    m.rating = 3.145
+    assert_equal '3.15', format_type(m, :rating)
+  end
 	
+  test "format decimal column" do
+    m = crud_test_models(:AAAAA)
+    assert_equal '10000000.10', format_type(m, :income)
+  end
+  
+  test "format date column" do
+    m = crud_test_models(:AAAAA)
+    assert_equal '1910-01-01', format_type(m, :birthdate)
+  end
+  
+  test "format text column" do
+    m = crud_test_models(:AAAAA)
+    assert_equal "<p>AAAAA AAAAA AAAAA\n<br />AAAAA AAAAA AAAAA\n<br />AAAAA AAAAA AAAAA\n</p>", format_type(m, :remarks)
+  end
+  
 	test "empty table should render message" do
 		assert_dom_equal "<div class='list'>#{NO_LIST_ENTRIES_MESSAGE}</div>", table([]) { }
 	end	
@@ -109,7 +159,6 @@ class StandardHelperTest < ActionView::TestCase
     assert_no_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=/, f
     assert_match /input .*?type="submit" .*?value="Save"/, f
   end
-  
   
   test "standard form with errors" do
     e = crud_test_models('AAAAA')
