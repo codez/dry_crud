@@ -1,6 +1,6 @@
 = DRY CRUD
 
-Generates simple and extendable controller, views and helpers that support you to DRY up the CRUD code in your Rails applications. First, you need to install the gem with
+Generates simple and extendable controller, views and helpers that support you to DRY up the CRUD code in your Rails project. Start with these elements and build a clean base to efficiently develop your application upon. First, you need to install the gem with
 
   gem install dry_crud
 
@@ -13,8 +13,6 @@ To integrate dry_crud into your code, only a few additions are required:
 * To use a standard formatting, tables and forms throughout your application, add 'helper :standard' to your ApplicationController. 
 * To get uniform CRUD functionallity, just subclass your controllers from CrudController. 
 * Add a :label method to your models for a human-friendly representation.
-  
-Stay DRY!
 
 == Overview
 
@@ -26,11 +24,13 @@ Enter DRY CRUD.
 The main idea of DRY CRUD is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. DRY CRUD generates various foundation classes that you may freely adapt to your application's needs. For each model, you may transparently customize arbitrary parts or just fallback to the general behaviour. This applies not only for controllers, but also for view templates and helpers.
 </b>
 
-A core element of DRY CRUD is the RenderInheritable module. This gives you inheritable views and partials. In the default case, a template is searched in the current controller's view folder. If it is not found there, the template with the same name from the superclass controller is used. This lookup path might be customized as well.
+A core element of DRY CRUD is the RenderInheritable module. This gives you inheritable views and partials. In the default case, a template is searched in the current controller's view folder. If it is not found there, the template with the same name in the view folder of the superclass controller is used. This lookup path might be customized as well.
 
-DRY CRUD is a Rails generator. All code resides in your application and is open for you to inspect and to extend. You may pick whatever you consider useful or adapt what is not sufficient. There are no runtime dependencies to the dry_crud gem. Also, DRY CRUD does not want to provide a maximum of functionality that requires a lot of configuration, but rather a clean and lightweight foundation to build your application's requirements upon. This is why DRY CRUD comes as a generator and not as a Rails plugin.
+DRY CRUD is a Rails generator. All code resides in your application and is open for you to inspect and to extend. You may pick whatever you consider useful or adapt what is not sufficient. Even if you do not require any CRUD functionality, you might find some helpers simplifying your work. There are no runtime dependencies to the dry_crud gem. Having said this, DRY CRUD does not want to provide a maximum of functionality that requires a lot of configuration, but rather a clean and lightweight foundation to build your application's requirements upon. This is why DRY CRUD comes as a generator and not as a Rails plugin.
 
-DRY CRUD does not depend on any other plugins, but easily allows you to integrate them in order to unify the behaviour of your CRUD controllers. You might even use the plugins mentioned above to adapt your generated CrudController base class.
+DRY CRUD does not depend on any other plugins, but easily allows you to integrate them in order to unify the behaviour of your CRUD controllers. You might even use the plugins mentioned above to adapt your generated CrudController base class. All classes come with thorough tests that provide you with a solid foundation for implementing your own adaptions.
+
+The gem was developped with Rails 2.3.8, we plan to reach a fully compatible version 1.0 when Rails 3 has come out.
 
 See the Examples section for some use cases and the Generated Files section below for details on the single classes and templates.
 
@@ -180,7 +180,7 @@ views/crud/edit.html.erb:: The view to edit an existing entry.
 
 views/crud/_form.html.erb:: The form used to create and edit entries. If you would like to customize this form for various models, just create an own _form.html.erb in your models view directory.
 
-views/shared/_labeled.html.erb:: Partial to define the layout for an arbitrary value with a label.
+views/shared/_labeled.html.erb:: Partial to define the layout for an arbitrary content with a label.
 
 views/layouts/crud.html.erb:: An example layout showing how to use the @title and +flash+. Most probably you want to include this in your application.html.erb or adapt this main crud templates, so you wont need this file.
 
@@ -200,7 +200,7 @@ public/stylesheets/crud.css:: A simple CSS with all the classes and ids used in 
 
 test/crud_test_model.rb:: A dummy model to run CRUD tests against.
 
-{test/functionals/crud_controller_test_helper.rb}[http://codez.ch/dry_crud/?q=CrudControllerTestHelper]:: A module to include into your functional tests for your crud controller subclasses. Contains a handfull of CRUD functionality tests for the provided implementation. 
+{test/functionals/crud_controller_test_helper.rb}[http://codez.ch/dry_crud/?q=CrudControllerTestHelper]:: A module to include into the functional tests for your CrudController subclasses. Contains a handfull of CRUD functionality tests for the provided implementation. So for each new crud controller, you get 20 tests for free.
 
 test/several other tests:: Testing the provided implementation and a great base to test your adaptions of the CRUD code.
 

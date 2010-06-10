@@ -63,6 +63,14 @@ class StandardFormBuilderTest < ActionView::TestCase
     assert_no_match /(\<option .*?){4}/m, f
   end
   
+  test "belongs_to_field with empty list" do
+    @companions = []
+    f = form.belongs_to_field(:companion_id)
+    assert_match /none available/m, f
+    assert_no_match /(\<option .*?)/m, f
+  end
+  
+  
   test "string_field sets maxlength attribute if limit" do
     assert_match /maxlength="50"/, form.string_field(:name)
   end

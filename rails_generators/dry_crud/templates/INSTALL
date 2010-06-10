@@ -9,5 +9,5 @@ required:
    CrudController. 
  * Add a :label method to your models for a human-friendly representation.
 
-Stay DRY!
+Enjoy dry_crud and stay DRY!
  
