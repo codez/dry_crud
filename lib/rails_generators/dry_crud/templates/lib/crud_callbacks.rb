@@ -25,7 +25,8 @@ module CrudCallbacks
                                 :render_show, 
                                 :render_new, 
                                 :render_edit, 
-                                :only => :before
+                                :only => :before,
+                                :terminator => "result == false || object.performed?"
   end
   
   protected
@@ -37,9 +38,7 @@ module CrudCallbacks
   end
   
   def render_callbacks(action)
-    run_callbacks(:"before_render_#{action}") do |result, object| 
-      result == false || object.performed?
-    end
+    run_callbacks(:"render_#{action}")
   end
   
 end

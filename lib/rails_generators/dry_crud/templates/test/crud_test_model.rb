@@ -10,8 +10,6 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   end
 end
 
-puts "loading test model"
-
 class CrudTestModelsController < CrudController #:nodoc:
   HANDLE_PREFIX = 'handle_'
   
@@ -43,6 +41,11 @@ class CrudTestModelsController < CrudController #:nodoc:
     send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
   end
   
+  [:index, :show, :new, :edit].each do |a|
+    callback = "before_render_#{a.to_s}"
+    send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
+  end
+  
   def method_missing(sym, *args)
     called_callback(sym.to_s[HANDLE_PREFIX.size..-1].to_sym) if sym.to_s.starts_with?(HANDLE_PREFIX)
   end
@@ -63,9 +66,10 @@ class CrudTestModelsController < CrudController #:nodoc:
   
 end
 
-ActionController::Routing::Routes.draw do |map|
-  map.resources :crud_test_models
-end
+# FIXME: add test routes without losing the other ones
+#TestApp::Application.routes.draw do
+#  resources :crud_test_models
+#end
 
 # A simple test helper to prepare the test database with a CrudTestModel model.
 module CrudTestHelper

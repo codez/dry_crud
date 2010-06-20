@@ -4,8 +4,6 @@
 # Several protected helper methods are there to be (optionally) overriden by subclasses.
 class CrudController < ApplicationController
   
-  puts 'loading crud controller'
-  
   include CrudCallbacks
   include RenderInheritable 
   

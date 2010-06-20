@@ -1,8 +1,9 @@
-TestApp::Application.routes.draw do |map|
+TestApp::Application.routes.draw do
   
   resources :cities do
       get :ajax, :on => :collection
   end  
+  
   resources :people do
       get :ajax, :on => :collection
   end
