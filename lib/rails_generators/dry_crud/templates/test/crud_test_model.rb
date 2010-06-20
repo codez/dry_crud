@@ -10,6 +10,8 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   end
 end
 
+puts "loading test model"
+
 class CrudTestModelsController < CrudController #:nodoc:
   HANDLE_PREFIX = 'handle_'
   

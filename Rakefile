@@ -7,7 +7,7 @@ sdoc = (require 'sdoc' || true) rescue false
 load	'dry_crud.gemspec'
 
 TEST_APP_ROOT  = File.join(File.dirname(__FILE__), 'test', 'test_app')
-GENERATOR_ROOT = File.join(File.dirname(__FILE__), 'rails_generators', 'dry_crud')
+GENERATOR_ROOT = File.join(File.dirname(__FILE__), 'lib', 'rails_generators', 'dry_crud')
 
 task :default => :test
 
@@ -32,16 +32,16 @@ namespace :test do
 		desc "Create a rails test application"
 		task :create do
 			unless File.exist?(TEST_APP_ROOT)
-				sh "rails #{TEST_APP_ROOT}"
+				sh "rails _3.0.0.beta4_ new #{TEST_APP_ROOT}"
 			end
 	  end
       
     desc "Run the dry_crud generator for the test application"
     task :generate_crud => [:create, :environment] do
-      require 'rails_generator'
       require File.join(GENERATOR_ROOT, 'dry_crud_generator')
     
-      Rails::Generator::Spec.new('dry_crud', GENERATOR_ROOT, :RubyGems).klass.new([], :collision => :force).command(:create).invoke!
+      #Rails::Generator::Spec.new('dry_crud', GENERATOR_ROOT, :RubyGems).klass.new([], :collision => :force).command(:create).invoke!
+      DryCrudGenerator.new('', {:force => true}, :destination_root => TEST_APP_ROOT).invoke
     end
    
     desc "Initializes the test application with a couple of classes"

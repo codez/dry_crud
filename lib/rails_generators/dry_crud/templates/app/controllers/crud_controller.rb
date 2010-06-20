@@ -4,16 +4,18 @@
 # Several protected helper methods are there to be (optionally) overriden by subclasses.
 class CrudController < ApplicationController
   
+  puts 'loading crud controller'
+  
   include CrudCallbacks
   include RenderInheritable 
   
   delegate :model_class, :model_identifier, :models_label, :to => 'self.class'  
 
   # Verify that required :id param is present and only allow good http methods.
-  verify :params => :id, :only => :show, :redirect_to => { :action => 'index' }
-  verify :method => :post, :only => :create,  :redirect_to => { :action => 'index' }  
-  verify :method => [:put, :post], :params => :id, :only => :update,  :redirect_to => { :action => 'index' }  
-  verify :method => [:delete, :post], :params => :id, :only => :destroy, :redirect_to => { :action => 'index' }  
+  #verify :params => :id, :only => :show, :redirect_to => { :action => 'index' }
+  #verify :method => :post, :only => :create,  :redirect_to => { :action => 'index' }  
+  #verify :method => [:put, :post], :params => :id, :only => :update,  :redirect_to => { :action => 'index' }  
+  #verify :method => [:delete, :post], :params => :id, :only => :destroy, :redirect_to => { :action => 'index' }  
   
   # Set up entry object to use in the various actions.
   before_filter :build_entry, :only => [:new, :create]
