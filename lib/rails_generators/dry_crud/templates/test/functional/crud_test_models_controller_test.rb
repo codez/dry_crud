@@ -9,16 +9,18 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   
   attr_accessor :models
   
-  setup :reset_db, :setup_db, :create_test_data
+  setup :reset_db, :setup_db, :create_test_data, :special_routing
   
   teardown :reset_db
+
   
   def test_setup
     assert_equal 6, CrudTestModel.count
     assert_equal CrudTestModelsController, @controller.class
     assert_recognizes({:controller => 'crud_test_models', :action => 'index'}, '/crud_test_models')
     assert_recognizes({:controller => 'crud_test_models', :action => 'show', :id => '1'}, '/crud_test_models/1')
-    assert_equal %w(index show new create edit update destroy).to_set, CrudTestModelsController.send(:action_methods)
+    # no need to hide actions for pure restful controllers
+    #assert_equal %w(index show new create edit update destroy).to_set, CrudTestModelsController.send(:action_methods)
   end
   
   def test_index
@@ -75,8 +77,19 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_nil assigns(:companions)
   end
   
-  
   protected 
+  
+  def special_routing
+    @routes = ActionDispatch::Routing::RouteSet.new
+    _routes = @routes
+    
+    @controller.singleton_class.send(:include, _routes.url_helpers)
+    @controller.view_context_class = Class.new(@controller.view_context_class) do
+      include _routes.url_helpers
+    end
+    
+    @routes.draw { |map| map.resources :crud_test_models }
+  end
   
   def test_entry
     crud_test_models(:AAAAA)

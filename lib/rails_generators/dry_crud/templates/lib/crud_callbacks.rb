@@ -26,7 +26,7 @@ module CrudCallbacks
                                 :render_new, 
                                 :render_edit, 
                                 :only => :before,
-                                :terminator => "result == false || object.performed?"
+                                :terminator => "result == false || performed?"
   end
   
   protected

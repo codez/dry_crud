@@ -8,71 +8,44 @@
 # for the 'with' parameter, this path may even be dynamic.
 module RenderInheritable
   
-  protected
-  
-  # Add inheritable_root_path method to includer
+  # Add inheritable_root_path method to including controller.
   def self.included(controller_class)
     controller_class.send(:extend, ClassMethods)
     
     controller_class.send(:class_variable_set, :@@inheritable_root_controller, controller_class)
     controller_class.cattr_reader :inheritable_root_controller
-    
-    controller_class.helper ViewHelper
-    controller_class.helper_method :inheritable_partial_options
   end    
   
-  # Method from ActionController::Base overriden, so render_inheritable will be 
-  # called if the action does not call render explicitly.   
-  def default_render
-    render_inheritable :action => action_name
+  # Performs a lookup for the given filename and returns the most specific
+  # folder that contains the file.
+  def find_inheritable_template_folder(name, partial = false)
+    self.class.find_inheritable_template_folder(view_context, name, partial, formats, template_lookup_param)
   end
   
-  # Renders an action or a partial considering the lookup path. Templates
-  # specified in the :action or :partial options are looked up and the most 
-  # specific one found will get rendered. The options are directly passed to 
-  # the original render method.
-  def render_inheritable(options)         
-    if options[:action]
-      inheritable_template_options(options)
-    elsif options[:partial]
-      inheritable_partial_options(options)
-    end
-    render options
-  end
-  
-  # Replaces the :template option with the file found in the lookup.
-  def inheritable_template_options(options)
-    file = options.delete(:action)
-    inheritable_file_options(options, :template, file)
-  end
-  
-  # Replaces the :partial option with the file found in the lookup.
-  def inheritable_partial_options(options)
-    inheritable_file_options(options, :partial, options[:partial])
-  end
-  
-  def inheritable_file_options(options, key, file) #:nodoc:
-    with = options.delete(:with)
-    filename = (key == :partial) ? "_#{file}" : file
-    folder = self.class.find_inheritable_file(filename, default_template_format, with)        
-    options[key] = folder.present? ? "#{folder}/#{file}" : file
+  # Override this method to specify a dynamic parameter used in the lookup path.
+  # For the default inheritance lookup, this parameter is not needed.
+  def template_lookup_param
+    nil
   end
   
   module ClassMethods
     # Performs a lookup for the given filename and returns the most specific
     # folder that contains the file.
-    def find_inheritable_file(filename, format = :html, with = nil)  
-      inheritable_cache[format.to_sym][filename][with] ||= find_inheritable_artifact(with) do |folder|
-        view_paths.find_template("#{folder}/#{filename}", format).present? rescue false
+    def find_inheritable_template_folder(view_context, name, partial, formats, param = nil)  
+      find_inheritable_template_folder_cached(view_context, name, partial, formats, param) do
+        find_inheritable_artifact(param) do |folder|
+          view_context.template_exists?(name, folder, partial)
+        end
       end
     end
     
     # Performs a lookup for a controller and returns the name of the most specific one found.
-    # This method is primarly usefull when given a 'with' argument, that is used
-    # in a custom lookup_path. 
-    def inheritable_controller(with = nil)
-      c = find_inheritable_artifact(with) do |folder|
-        ActionController::Routing.possible_controllers.any? { |c| c == folder }
+    # This method is primarly usefull when given a 'param' argument that is used
+    # in a custom #template_lookup_path. In this case, no controller class would need to 
+    # exist to render templates from corresponding view folders.
+    def inheritable_controller(param = nil)
+      c = find_inheritable_artifact(param) do |folder|
+        ActionController::Base.subclasses.any? { |c| c.constantize.controller_path == folder }
       end
       c || inheritable_root_controller.controller_path
     end
@@ -80,15 +53,15 @@ module RenderInheritable
     # Runs through the lookup path and yields each folder to the passed block.
     # If the block returns true, this folder is returned and no further lookup
     # happens. If no folder is found, the nil is returned.
-    def find_inheritable_artifact(with = nil)
-      lookup_path(with).each { |folder| return folder if yield(folder) }
+    def find_inheritable_artifact(param = nil)
+      template_lookup_path(param).each { |folder| return folder if yield(folder) }
       nil
     end
     
     # An array of controller names / folders, ordered from most specific to most general.
-    # May be dynamic dependening on the passed 'with' argument. 
-    # You may override this method in an own controller to customize the lookup path.
-    def lookup_path(with = nil)
+    # May be dynamic dependening on the passed 'param' argument. 
+    # You may override this method in an own controller to customize the lookup path.
+    def template_lookup_path(param = nil)
       inheritance_lookup_path
     end
     
@@ -101,18 +74,78 @@ module RenderInheritable
       path.collect(&:controller_path)
     end
     
-    def inheritable_cache #:nodoc:
-      @inheritable_cache ||= Hash.new {|h, k| h[k] = Hash.new {|h, k| h[k] = Hash.new } }
+    # Override view context class to includes the render inheritable modules.
+    def view_context_class
+      @view_context_class ||= begin
+        Class.new(super) do
+          include RenderInheritable::View
+        end
+      end
     end
+    
+    private
+    
+    # Performs a lookup for a template folder using the cache.
+    def find_inheritable_template_folder_cached(view_context, name, partial, formats, param = nil)
+      prefix = inheritable_cache_get(formats, name, partial, param)
+      return prefix if prefix
+      
+      prefix = yield
+      
+      if prefix
+        template = view_context.find_template_without_lookup(name, prefix, partial)
+        inheritable_cache_set(template.formats, name, partial, param, prefix)
+      end
+      prefix
+    end
+    
+    # A simple template lookup cache for each controller.
+    def inheritable_cache #:nodoc:
+      # do not store keys on each access, only return default structure
+      @inheritable_cache ||= Hash.new do |h1, k1| 
+        Hash.new do |h2, k2| 
+          Hash.new do |h3, k3| 
+            Hash.new 
+          end
+        end
+      end
+    end
+    
+    # Gets the prefix from the cache. Returns nil if it's not there yet.
+    def inheritable_cache_get(formats, name, partial, param)
+      prefixes = formats.collect { |format| inheritable_cache[format.to_sym][partial][name][param] }
+      prefixes.compact!
+      prefixes.empty? ?  nil : prefixes.first
+    end
+    
+    # Stores the found prefix in the cache.
+    def inheritable_cache_set(formats, name, partial, param, prefix)
+      formats.each do |format|
+        # assign hash default values to respective key 
+        inheritable_cache[format.to_sym] = hf = inheritable_cache[format.to_sym]
+        hf[partial] = hp = hf[partial]
+        hp[name] = hn = hp[name]
+        # finally store prefix in the deepest hash
+        hn[param] = prefix
+      end
+    end
+    
   end
   
-  module ViewHelper
-    # Because ActionView has a different :render method than ActionController, 
-    # this method provides an entry point to use render_inheritable from views.
-    def render_inheritable(options)                
-      inheritable_partial_options(options) if options[:partial]  
-      render options
-    end   
+  # Extend ActionView so templates are looked up on a find_template call.
+  module View
+    def self.included(base)
+      base.send :alias_method_chain, :find_template, :lookup
+    end
+    
+    # Perform a template lookup if the prefix corresponds to the current controller's path.
+    def find_template_with_lookup(name, prefix = nil, partial = false)
+      if prefix == controller_path
+        folder = controller.find_inheritable_template_folder(name, partial)
+        prefix = folder if folder
+      end
+      find_template_without_lookup(name, prefix, partial)
+    end
   end
   
 end

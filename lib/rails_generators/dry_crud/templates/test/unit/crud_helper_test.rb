@@ -15,7 +15,11 @@ class CrudHelperTest < ActionView::TestCase
   
   test "standard crud table" do
     @entries = CrudTestModel.all
-    t = crud_table
+    
+    t = with_test_routing do 
+      crud_table
+    end
+    
     assert_match /(<tr.+?<\/tr>){7}/m, t
     assert_match /(<th.+?<\/th>){14}/m, t
     assert_match /(<a href.+?<\/a>.*?){18}/m, t
@@ -23,10 +27,14 @@ class CrudHelperTest < ActionView::TestCase
     
   test "custom crud table" do
     @entries = CrudTestModel.all
-    t = crud_table do |t|
-      t.attrs :name, :children, :companion_id
-      t.col("head") {|e| content_tag :span, e.income.to_s }
+    
+    t = with_test_routing do
+      crud_table do |t|
+        t.attrs :name, :children, :companion_id
+        t.col("head") {|e| content_tag :span, e.income.to_s }
+      end
     end
+    
     assert_match /(<tr.+?<\/tr>){7}/m, t
     assert_match /(<th.+?<\/th>){4}/m, t
     assert_match /(<span>.+?<\/span>.*?){6}/m, t
@@ -35,7 +43,9 @@ class CrudHelperTest < ActionView::TestCase
   
   test "crud form" do
     @entry = CrudTestModel.first
-    f = capture { crud_form }
+    f = with_test_routing do
+      capture { crud_form }
+    end
     
     assert_match /form .*?action="\/crud_test_models\/#{@entry.id}"/, f
     assert_match /input .*?name="crud_test_model\[name\]" .*?type="text"/, f
@@ -53,5 +63,13 @@ class CrudHelperTest < ActionView::TestCase
     assert_equal [:name, :whatever, :children, :companion_id, :rating, :income, 
                   :birthdate, :human, :remarks, :created_at, :updated_at], default_attrs
   end
+    
+  private
   
+  def with_test_routing
+    with_routing do |set|
+      set.draw {|map| map.resources :crud_test_models }
+      yield
+    end
+  end
 end

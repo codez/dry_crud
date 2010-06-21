@@ -66,11 +66,6 @@ class CrudTestModelsController < CrudController #:nodoc:
   
 end
 
-# FIXME: add test routes without losing the other ones
-#TestApp::Application.routes.draw do
-#  resources :crud_test_models
-#end
-
 # A simple test helper to prepare the test database with a CrudTestModel model.
 module CrudTestHelper
 

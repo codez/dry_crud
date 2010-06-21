@@ -133,8 +133,10 @@ class StandardHelperTest < ActionView::TestCase
 	
   test "standard form for existing entry" do
     e = crud_test_models('AAAAA')
-    f = capture { standard_form(e, [:name, :children, :birthdate, :human], :class => 'special') }
-    
+    f = with_test_routing do 
+      f = capture { standard_form(e, [:name, :children, :birthdate, :human], :class => 'special') }
+    end
+  
     assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
     assert_match /input .*?name="_method" .*?type="hidden" .*?value="put"/, f
     assert_match /input .*?name="crud_test_model\[name\]" .*?type="text" .*?value="AAAAA"/, f
@@ -149,8 +151,10 @@ class StandardHelperTest < ActionView::TestCase
   
   test "standard form for new entry" do
     e = CrudTestModel.new
-    f = capture { standard_form(e, [:name, :children, :birthdate, :human], :class => 'special') }
-    
+    f = with_test_routing do 
+      f = capture { standard_form(e, [:name, :children, :birthdate, :human], :class => 'special') }
+    end
+  
     assert_match /form .*?action="\/crud_test_models" .*?method="post"/, f
     assert_match /input .*?name="crud_test_model\[name\]" .*?type="text"/, f
     assert_no_match /input .*?name="crud_test_model\[name\]" .*?type="text" .*?value=/, f
@@ -164,9 +168,11 @@ class StandardHelperTest < ActionView::TestCase
     e = crud_test_models('AAAAA')
     e.name = nil
     assert !e.valid?
-   
-    f = capture { standard_form(e, [:name, :children, :birthdate, :human], :class => 'special') }
     
+    f = with_test_routing do 
+      f = capture { standard_form(e, [:name, :children, :birthdate, :human], :class => 'special') }
+    end
+  
     assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
     assert_match /input .*?name="_method" .*?type="hidden" .*?value="put"/, f
     assert_match /div class="errorExplanation"/, f
@@ -178,6 +184,15 @@ class StandardHelperTest < ActionView::TestCase
     assert_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=\"1\"/, f
     assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
     assert_match /input .*?type="submit" .*?value="Save"/, f
+  end
+  
+  private
+  
+  def with_test_routing
+    with_routing do |set|
+      set.draw {|map| map.resources :crud_test_models }
+      yield
+    end
   end
   
 end

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-TEST_VIEW_PATH = File.join(RAILS_ROOT, 'test', 'test_views')
+TEST_VIEW_PATH = File.join(Rails.root, 'test', 'test_views')
 
 class RootController < ActionController::Base
   include RenderInheritable
@@ -54,8 +54,8 @@ class RenderInheritableTest < ActiveSupport::TestCase
     teardown
     @controller = ChildrenController.new
     @grand_controller = GrandChildrenController.new
-    ChildrenController.inheritable_cache.clear
-    GrandChildrenController.inheritable_cache.clear
+    ChildrenController.send(:inheritable_cache).clear
+    GrandChildrenController.send(:inheritable_cache).clear
   end
   
   def teardown
@@ -69,59 +69,59 @@ class RenderInheritableTest < ActiveSupport::TestCase
   end
 
   test "lookup path" do
-    assert_equal ['children', 'root'], ChildrenController.send(:lookup_path)
-    assert_equal ['grand_children', 'children', 'root'], GrandChildrenController.send(:lookup_path)
+    assert_equal ['children', 'root'], ChildrenController.send(:inheritance_lookup_path)
+    assert_equal ['grand_children', 'children', 'root'], GrandChildrenController.send(:inheritance_lookup_path)
   end
   
-  test "inheritable controller without routes finds root" do
-    assert_equal 'root', ChildrenController.send(:inheritable_controller)
-    assert_equal 'root', GrandChildrenController.send(:inheritable_controller)
+  test "inheritable controller finds controller instance" do
+    assert_equal 'children', ChildrenController.send(:inheritable_controller)
+    assert_equal 'grand_children', GrandChildrenController.send(:inheritable_controller)
   end
     
   test "find non-existing inheritable file" do
-    assert_nil ChildrenController.send(:find_inheritable_file, 'foo')
+    assert_nil @controller.send(:find_inheritable_template_folder, 'foo')
   end
   
   test "find inheritable file not overwritten" do
     touch("root/root.html.erb")
     
-    assert_equal 'root', ChildrenController.send(:find_inheritable_file, 'root')
-    assert_equal 'root', GrandChildrenController.send(:find_inheritable_file, 'root')
+    assert_equal 'root', @controller.send(:find_inheritable_template_folder, 'root')
+    assert_equal 'root', @grand_controller.send(:find_inheritable_template_folder, 'root')
   end
   
   test "find inheritable file partially overwritten" do
     touch("root/child.html.erb")
     touch("children/child.html.erb")
     
-    assert_equal 'children', ChildrenController.send(:find_inheritable_file, 'child')
-    assert_equal 'children', GrandChildrenController.send(:find_inheritable_file, 'child')
+    assert_equal 'children', @controller.send(:find_inheritable_template_folder, 'child')
+    assert_equal 'children', @grand_controller.send(:find_inheritable_template_folder, 'child')
   end
   
   test "find inheritable file partially overwritten with gaps" do
     touch("root/grandchild.html.erb")
     touch("grand_children/grandchild.rhtml")
     
-    assert_equal 'root', ChildrenController.send(:find_inheritable_file, 'grandchild')
-    assert_equal 'grand_children', GrandChildrenController.send(:find_inheritable_file, 'grandchild')
+    assert_equal 'root', @controller.send(:find_inheritable_template_folder, 'grandchild')
+    assert_equal 'grand_children', @grand_controller.send(:find_inheritable_template_folder, 'grandchild')
   end
     
   test "find inheritable file for js format" do
     touch("root/_grandchild.js.rjs")
     touch("grand_children/_grandchild.js.rjs")
        
-    assert_equal 'root', ChildrenController.send(:find_inheritable_file, '_grandchild', :js)
-    assert_equal 'grand_children', GrandChildrenController.send(:find_inheritable_file, '_grandchild', :js)
+    assert_equal 'root', @controller.send(:find_inheritable_template_folder, 'grandchild', true)
+    assert_equal 'grand_children', @grand_controller.send(:find_inheritable_template_folder, 'grandchild', true)
         
-    assert_equal({:js => { '_grandchild' => {nil => 'root'}}}, ChildrenController.inheritable_cache)
-    assert_equal({:js => { '_grandchild' => {nil => 'grand_children'}}}, GrandChildrenController.inheritable_cache)
+    assert_equal({:js => { true => {'grandchild' => {nil => 'root'}}}}, ChildrenController.send(:inheritable_cache))
+    assert_equal({:js => { true => {'grandchild' => {nil => 'grand_children'}}}}, GrandChildrenController.send(:inheritable_cache))
   end
   
   test "find inheritable file for xml format" do
     touch("root/_grandchild.xml.builder")
     touch("grand_children/_grandchild.xml.builder")
     
-    assert_equal 'root', ChildrenController.send(:find_inheritable_file, '_grandchild', :xml)
-    assert_equal 'grand_children', GrandChildrenController.send(:find_inheritable_file, '_grandchild', :xml)
+    assert_equal 'root', @controller.send(:find_inheritable_template_folder, 'grandchild', true)
+    assert_equal 'grand_children', @grand_controller.send(:find_inheritable_template_folder, 'grandchild', true)
   end
   
   test "find inheritable file all overwritten" do
@@ -129,33 +129,25 @@ class RenderInheritableTest < ActiveSupport::TestCase
     touch("children/all.rhtml")
     touch("grand_children/all.html.erb")
     
-    assert_equal 'children', ChildrenController.send(:find_inheritable_file, 'all')
-    assert_equal 'grand_children', GrandChildrenController.send(:find_inheritable_file, 'all')
+    assert_equal 'children', @controller.send(:find_inheritable_template_folder, 'all')
+    assert_equal 'grand_children', @grand_controller.send(:find_inheritable_template_folder, 'all')
     
-    assert_equal({:html => { 'all' => {nil => 'children'}}}, ChildrenController.inheritable_cache)
-    assert_equal({:html => { 'all' => {nil => 'grand_children'}}}, GrandChildrenController.inheritable_cache)
+    assert_equal({:html => { false => { 'all' => {nil => 'children'}}}}, ChildrenController.send(:inheritable_cache))
+    assert_equal({:html => { false => { 'all' => {nil => 'grand_children'}}}}, GrandChildrenController.send(:inheritable_cache))
     
-    assert_equal 'children', ChildrenController.send(:find_inheritable_file, 'all')
-    assert_equal 'grand_children', GrandChildrenController.send(:find_inheritable_file, 'all')
+    assert_equal 'children', @controller.send(:find_inheritable_template_folder, 'all')
+    assert_equal 'grand_children', @grand_controller.send(:find_inheritable_template_folder, 'all')
     
-    assert_equal({:html => { 'all' => {nil => 'children'}}}, ChildrenController.inheritable_cache)
-    assert_equal({:html => { 'all' => {nil => 'grand_children'}}}, GrandChildrenController.inheritable_cache)    
+    assert_equal({:html => { false => { 'all' => {nil => 'children'}}}}, ChildrenController.send(:inheritable_cache))
+    assert_equal({:html => { false => { 'all' => {nil => 'grand_children'}}}}, GrandChildrenController.send(:inheritable_cache))    
   end
-  
-  
 
   private
   
   def touch(file)
-    #File.touch_template(file)
     f = File.join(TEST_VIEW_PATH, file)
     FileUtils.mkdir_p(File.dirname(f))
     FileUtils.touch(f)
-    
-    RootController.view_paths.last.instance_variable_set(:@loaded, false)
-    RootController.view_paths.last.load!
   end
-  
-  
   
 end

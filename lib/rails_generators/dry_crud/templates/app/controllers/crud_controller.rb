@@ -153,7 +153,7 @@ class CrudController < ApplicationController
   # If a callback renders or redirects, the action is not rendered.
   def render_with_callback(action)
     render_callbacks(action)
-    render_inheritable :action => action unless performed?
+    render :action => action unless performed?
   end
   
   # Saves the current entry with callbacks.

@@ -155,7 +155,7 @@ module StandardHelper
   # go within a normal <% form(...) %> section, not in a <%= output section
   def standard_form(object, attrs = [], options = {})
     form_for(object, {:builder => StandardFormBuilder}.merge(options)) do |form|
-      concat form.error_messages
+      concat render(:partial => 'shared/error_messages', :locals => {:errors => object.errors})
       
       if block_given? 
         yield(form)

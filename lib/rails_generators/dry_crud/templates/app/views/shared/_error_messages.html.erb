@@ -1,0 +1,10 @@
+<div class="errorExplanation" id="errorExplanation">
+	<h2><%= errors.size %> errors prevented this entry from being saved:</h2>
+	
+	<p>The following fields are invalid:</p>
+	<ul>
+	 	<% errors.each do |e| %>
+			<li>- <%= e %></li>
+		<% end %>
+	</ul>
+</div>

@@ -39,8 +39,9 @@ module CrudControllerTestHelper
   end
     
   def test_show_without_id_redirects_to_index
-    get :show
-    assert_redirected_to_index  
+    assert_raise(ActionController::RoutingError) do
+      get :show
+    end
   end
     
   def test_new
@@ -59,17 +60,6 @@ module CrudControllerTestHelper
     assert_test_attrs_equal
   end
   
-  def test_create_with_wrong_http_method_redirects
-    get :create, model_identifier => test_entry_attrs
-    assert_redirected_to_index
-    
-    put :create, model_identifier => test_entry_attrs
-    assert_redirected_to_index
-    
-    delete :create, model_identifier => test_entry_attrs
-    assert_redirected_to_index
-  end
-    
   def test_create_xml
     assert_difference("#{model_class.name}.count") do
       post :create, model_identifier => test_entry_attrs, :format => 'xml'
@@ -86,7 +76,7 @@ module CrudControllerTestHelper
   end
   
   def test_edit_without_id_raises_RecordNotFound
-    assert_raise(ActiveRecord::RecordNotFound) do
+    assert_raise(ActionController::RoutingError) do
       get :edit
     end
   end
@@ -98,15 +88,7 @@ module CrudControllerTestHelper
     assert_test_attrs_equal
     assert_redirected_to assigns(:entry)
   end
-    
-  def test_update_with_wrong_http_method_redirects
-    get :update, :id => test_entry.id, model_identifier => test_entry_attrs
-    assert_redirected_to_index
-    
-    delete :update, :id => test_entry.id, model_identifier => test_entry_attrs
-    assert_redirected_to_index
-  end
-  
+
   def test_update_xml
     assert_no_difference("#{model_class.name}.count") do
       put :update, :id => test_entry.id, model_identifier => test_entry_attrs, :format => 'xml'
@@ -121,15 +103,7 @@ module CrudControllerTestHelper
     end
     assert_redirected_to_index
   end
-  
-  def test_destroy_with_wrong_http_method_redirects
-    get :destroy, :id => test_entry.id
-    assert_redirected_to_index
-    
-    put :destroy, :id => test_entry.id
-    assert_redirected_to_index
-  end
-  
+
   def test_destroy_xml
     assert_difference("#{model_class.name}.count", -1) do
       delete :destroy, :id => test_entry.id, :format => 'xml'
@@ -138,6 +112,36 @@ module CrudControllerTestHelper
     assert_equal "", @response.body.strip
   end
   
+  # no need to test http methods for pure restfull controllers
+  def ignore_test_create_with_wrong_http_method_redirects
+    get :create, model_identifier => test_entry_attrs
+    assert_redirected_to_index
+    
+    put :create, model_identifier => test_entry_attrs
+    assert_redirected_to_index
+    
+    delete :create, model_identifier => test_entry_attrs
+    assert_redirected_to_index
+  end
+
+  # no need to test http methods for pure restfull controllers
+  def ignore_test_update_with_wrong_http_method_redirects
+    get :update, :id => test_entry.id, model_identifier => test_entry_attrs
+    assert_redirected_to_index
+    
+    delete :update, :id => test_entry.id, model_identifier => test_entry_attrs
+    assert_redirected_to_index
+  end
+  
+  # no need to test http methods for pure restfull controllers
+  def ignore_test_destroy_with_wrong_http_method_redirects
+    get :destroy, :id => test_entry.id
+    assert_redirected_to_index
+    
+    put :destroy, :id => test_entry.id
+    assert_redirected_to_index
+  end
+
   protected 
   
   def assert_redirected_to_index
