@@ -1,10 +1,12 @@
-<div class="errorExplanation" id="errorExplanation">
-	<h2><%= errors.size %> errors prevented this entry from being saved:</h2>
-	
-	<p>The following fields are invalid:</p>
-	<ul>
-	 	<% errors.each do |e| %>
-			<li>- <%= e %></li>
-		<% end %>
-	</ul>
-</div>
+<% if errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(errors.count, "error") %> prohibited this entry from being saved:</h2>
+
+      <ul>
+      <% errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% end -%>
