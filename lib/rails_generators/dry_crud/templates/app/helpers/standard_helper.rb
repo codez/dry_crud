@@ -112,9 +112,8 @@ module StandardHelper
   # Renders an arbitrary content with the given label. Used for uniform presentation.
   # Without block, this may be used in the form <%= labeled(...) %>, with like <% labeled(..) do %>
   def labeled(label, content = nil, &block)
-    content = capture(&block) if block_given?
-    html = render(:partial => 'shared/labeled', :locals => { :label => label, :content => content})
-    block_given? ? concat(html) : html  
+    content = with_output_buffer(&block) if block_given?
+    render(:partial => 'shared/labeled', :locals => { :label => label, :content => content}) 
   end
   
   # Transform the given text into a form as used by labels or table headers.

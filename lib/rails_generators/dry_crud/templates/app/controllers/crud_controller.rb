@@ -175,7 +175,7 @@ class CrudController < ApplicationController
     
     # A human readable plural name of the model.
     def models_label
-      @models_label ||= model_class.human_name.pluralize
+      @models_label ||= model_class.model_name.human.pluralize
     end   
   end
   

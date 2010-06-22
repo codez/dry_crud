@@ -47,9 +47,8 @@ class StandardTableBuilder
   # Renders the table as HTML.
 	def to_html
 		content_tag :table, :class => 'list' do
-			[html_header] + 
-			entries.collect { |e| html_row(e) }
-		end
+        html_header + entries.collect { |e| html_row(e) }.join
+    end
 	end
     
   # Returns css classes used for alignment of the cell data.
@@ -68,13 +67,13 @@ class StandardTableBuilder
   
 	def html_header
 		content_tag :tr do
-			cols.collect { |c| c.html_header }
-		end
+      cols.collect { |c| c.html_header }.join
+    end
   end
 
 	def html_row(entry)
 		tr_alt do
-			cols.collect { |c| c.html_cell(entry) }
+			cols.collect { |c| c.html_cell(entry) }.join
 		end
   end
 
