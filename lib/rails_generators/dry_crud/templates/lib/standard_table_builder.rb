@@ -11,7 +11,7 @@ class StandardTableBuilder
   # Delegate called methods to template.
   # including StandardHelper would lead to problems with indirectly called methods.
 	delegate :content_tag, :format_attr, :column_type, :belongs_to_association, 
-           :captionize, :raw, :tr_alt, :to => :template
+           :captionize, :tr_alt, :to => :template
 
 	def initialize(entries, template)
 		@entries = entries
@@ -47,7 +47,7 @@ class StandardTableBuilder
   # Renders the table as HTML.
 	def to_html
 		content_tag :table, :class => 'list' do
-        html_header + raw(entries.collect { |e| html_row(e) }.join)
+        html_header + entries.collect { |e| html_row(e) }.join.html_safe
     end
 	end
     

@@ -45,12 +45,114 @@ module StandardHelper
     end
   end
   
+  
+  ##############  STANDARD HTML SECTIONS  ############################
+  
+  
+  # Renders an arbitrary content with the given label. Used for uniform presentation.
+  # Without block, this may be used in the form <%= labeled(...) %>, with like <% labeled(..) do %>
+  def labeled(label, content = nil, &block)
+    content = capture(&block) if block_given?
+    render(:partial => 'shared/labeled', :locals => { :label => label, :content => content}) 
+  end
+  
+  # Transform the given text into a form as used by labels or table headers.
+  def captionize(text, clazz = nil)
+    if clazz.respond_to?(:human_attribute_name)
+      clazz.human_attribute_name(text)
+    else
+      text.to_s.humanize.titleize      
+    end
+  end
+  
+  # Renders a list of attributes with label and value for a given object. 
+  # Optionally surrounded with a div.
+  def render_attrs(obj, attrs, div = true)
+    html = attrs.collect do |a| 
+      labeled(captionize(a, obj.class), format_attr(obj, a))
+    end.join.html_safe
+    
+    div ? content_tag(:div, html, :class => 'attributes') : html
+  end
+  
+  # Renders a table for the given entries as defined by the following block.
+  # If entries are empty, an appropriate message is rendered.
+  def table(entries, &block)
+    if entries.present?
+      StandardTableBuilder.table(entries, self, &block)
+    else
+      content_tag(:div, NO_LIST_ENTRIES_MESSAGE, :class => 'list')
+    end
+  end
+  
+  # Renders a generic form for all given attributes using StandardFormBuilder.
+  # Before the input fields, the error messages are rendered, if present.
+  # The form is rendered with a basic save button.
+  # If a block is given, custom input fields may be rendered and attrs is ignored.
+  def standard_form(object, attrs = [], options = {}, &block)
+    form_for(object, {:builder => StandardFormBuilder}.merge(options)) do |form|
+      content = ""
+      content << render(:partial => 'shared/error_messages', :locals => {:errors => object.errors})
+      
+      content << if block_given? 
+        capture(form, &block) 
+      else
+        form.labeled_input_fields(*attrs)
+      end
+      
+      content << labeled(nil, form.submit("Save"))
+    end
+  end
+  
+  # Alternate table row
+  def tr_alt(&block)
+    content_tag(:tr, :class => cycle("even", "odd", :name => "row_class"), &block)
+  end
+ 
+  
+  ######## ACTION LINKS ###################################################### :nodoc:
+  
+  # Standard link action to the show page of a given record.
+  def link_action_show(record)
+    link_action 'Show', record
+  end
+  
+  # Standard link action to the edit page of a given record.
+  def link_action_edit(record)
+    link_action 'Edit', edit_polymorphic_path(record)
+  end
+  
+  # Standard link action to the destroy action of a given record.
+  def link_action_destroy(record)
+    link_action 'Delete', record, :confirm => CONFIRM_DELETE_MESSAGE, :method => :delete
+  end
+  
+  # Standard link action to the list page.
+  def link_action_index(url_options = {:action => 'index'})
+    link_action 'List', url_options
+  end
+  
+  # Standard link action to the new page.
+  def link_action_add(url_options = {:action => 'new'})
+    link_action 'Add', url_options
+  end
+  
+  # A generic helper method to create action links.
+  # These link may be styled to look like buttons, for example.
+  def link_action(label, options = {}, html_options = {})
+    link_to("[#{label}]", options, {:class => 'action'}.merge(html_options))
+  end
+  
+  protected
+  
+  # Helper methods that are not necessarely called from templates.
+  
   # Formats an active record association
   def format_assoc(obj, assoc)
     if assoc_val = obj.send(assoc.name)
       link_to_unless(no_assoc_link?(assoc), h(assoc_val.label), assoc_val)
     else
-			'(none)'
+      '(none)'
     end
   end
   
@@ -103,107 +205,6 @@ module StandardHelper
       assoc = attr.to_s =~ /_id$/ ? attr.to_s[0..-4].to_sym : attr
       obj.class.reflect_on_association(assoc)
     end
-  end
-  
-  
-  ##############  STANDARD HTML SECTIONS  ############################
-  
-  
-  # Renders an arbitrary content with the given label. Used for uniform presentation.
-  # Without block, this may be used in the form <%= labeled(...) %>, with like <% labeled(..) do %>
-  def labeled(label, content = nil, &block)
-    content = capture(&block) if block_given?
-    render(:partial => 'shared/labeled', :locals => { :label => label, :content => content}) 
-  end
-  
-  # Transform the given text into a form as used by labels or table headers.
-  def captionize(text, clazz = nil)
-    if clazz.respond_to?(:human_attribute_name)
-      clazz.human_attribute_name(text)
-    else
-      text.to_s.humanize.titleize      
-    end
-  end
-  
-  # Renders a list of attributes with label and value for a given object. 
-  # Optionally surrounded with a div.
-  def render_attrs(obj, attrs, div = true)
-    html = attrs.collect do |a| 
-      labeled(captionize(a, obj.class), format_attr(obj, a))
-    end.join
-    
-    div ? content_tag(:div, html, :class => 'attributes') : html
-  end
-  
-  # Renders a table for the given entries as defined by the following block.
-  # If entries are empty, an appropriate message is rendered.
-  def table(entries, &block)
-    if entries.present?
-      StandardTableBuilder.table(entries, self, &block)
-    else
-      content_tag(:div, NO_LIST_ENTRIES_MESSAGE, :class => 'list')
-    end
-  end
-  
-  # Renders a generic form for all given attributes using StandardFormBuilder.
-  # Before the input fields, the error messages are rendered, if present.
-  # The form is rendered with a basic save button.
-  # If a block is given, custom input fields may be rendered and attrs is ignored.
-  #
-  # The form is always directly printed into the erb, so the call must
-  # go within a normal <% form(...) %> section, not in a <%= output section
-  def standard_form(object, attrs = [], options = {})
-    form_for(object, {:builder => StandardFormBuilder}.merge(options)) do |form|
-      content = ""
-      content << render(:partial => 'shared/error_messages', :locals => {:errors => object.errors})
-      
-      content << if block_given? 
-        yield(form)
-      else
-        form.labeled_input_fields(*attrs)
-      end
-      
-      content << labeled(EMPTY_STRING, form.submit("Save"))
-    end
-  end
-  
-  # Alternate table row
-  def tr_alt(&block)
-    content_tag(:tr, :class => cycle("even", "odd", :name => "row_class"), &block)
-  end
- 
-  
-  ######## ACTION LINKS ###################################################### :nodoc:
-  
-  # Standard link action to the show page of a given record.
-  def link_action_show(record)
-    link_action 'Show', record
-  end
-  
-  # Standard link action to the edit page of a given record.
-  def link_action_edit(record)
-    link_action 'Edit', edit_polymorphic_path(record)
-  end
-  
-  # Standard link action to the destroy action of a given record.
-  def link_action_destroy(record)
-    link_action 'Delete', record, :confirm => CONFIRM_DELETE_MESSAGE, :method => :delete
-  end
-  
-  # Standard link action to the list page.
-  def link_action_index(url_options = {:action => 'index'})
-    link_action 'List', url_options
-  end
-  
-  # Standard link action to the new page.
-  def link_action_add(url_options = {:action => 'new'})
-    link_action 'Add', url_options
-  end
-  
-  # A generic helper method to create action links.
-  # These link may be styled to look like buttons, for example.
-  def link_action(label, options = {}, html_options = {})
-    link_to("[#{label}]", options, {:class => 'action'}.merge(html_options))
   end
   
 end

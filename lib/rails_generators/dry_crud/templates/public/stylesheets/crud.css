@@ -83,9 +83,9 @@ a:visited.action {
 	margin-bottom: 5pt;
 }
 
-div.field_with_errors {
+.value div.field_with_errors {
 	background-color: #FFBBBB;
 	display: inline-block;
-	padding: 2px;
+	padding: 1px;
 }
 
