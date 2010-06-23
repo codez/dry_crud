@@ -58,7 +58,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert assigns(:companions)
     assert flash[:error].present?
     assert_equal 'illegal', assigns(:entry).name
-    assert_nil @controller.called_callbacks
+    assert_equal [:before_render_new], @controller.called_callbacks
   end
     
   def test_create_with_before_callback_redirect

@@ -16,19 +16,19 @@ class StandardHelperTest < ActionView::TestCase
 	test "labeled text as block" do
 		result = labeled("label") { "value" }
 		
-		assert_dom_equal "<div class='labeled'><div class='caption'>label</div><div class='value'>value</div></div>", result
+		assert_dom_equal "<div class='labeled'> <div class='caption'>label</div> <div class='value'>value</div> </div>", result.squish
   end
 
   test "labeled text empty" do
     result = labeled("label", "")
     
-    assert_dom_equal "<div class='labeled'><div class='caption'>label</div><div class='value'>#{EMPTY_STRING}</div></div>", result
+    assert_dom_equal "<div class='labeled'> <div class='caption'>label</div> <div class='value'>#{EMPTY_STRING}</div> </div>", result.squish
   end
 
   test "labeled text as content" do
     result = labeled("label", "value")
     
-    assert_dom_equal "<div class='labeled'><div class='caption'>label</div><div class='value'>value</div></div>", result
+    assert_dom_equal "<div class='labeled'> <div class='caption'>label</div> <div class='value'>value</div> </div>", result.squish
   end
   
 	test "alternate row" do
@@ -175,8 +175,8 @@ class StandardHelperTest < ActionView::TestCase
   
     assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
     assert_match /input .*?name="_method" .*?type="hidden" .*?value="put"/, f
-    assert_match /div class="errorExplanation"/, f
-    assert_match /div class="fieldWithErrors"\>.*?\<input .*?name="crud_test_model\[name\]" .*?type="text"/, f
+    assert_match /div id="error_explanation"/, f
+    assert_match /div class="field_with_errors"\>.*?\<input .*?name="crud_test_model\[name\]" .*?type="text"/, f
     assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
     assert_match /option selected="selected" value="1910">1910<\/option>/, f
     assert_match /option selected="selected" value="1">January<\/option>/, f

@@ -112,7 +112,7 @@ module StandardHelper
   # Renders an arbitrary content with the given label. Used for uniform presentation.
   # Without block, this may be used in the form <%= labeled(...) %>, with like <% labeled(..) do %>
   def labeled(label, content = nil, &block)
-    content = with_output_buffer(&block) if block_given?
+    content = capture(&block) if block_given?
     render(:partial => 'shared/labeled', :locals => { :label => label, :content => content}) 
   end
   
@@ -154,15 +154,16 @@ module StandardHelper
   # go within a normal <% form(...) %> section, not in a <%= output section
   def standard_form(object, attrs = [], options = {})
     form_for(object, {:builder => StandardFormBuilder}.merge(options)) do |form|
-      concat render(:partial => 'shared/error_messages', :locals => {:errors => object.errors})
+      content = ""
+      content << render(:partial => 'shared/error_messages', :locals => {:errors => object.errors})
       
-      if block_given? 
+      content << if block_given? 
         yield(form)
       else
-        concat form.labeled_input_fields(*attrs)
+        form.labeled_input_fields(*attrs)
       end
       
-      concat labeled(EMPTY_STRING, form.submit("Save"))
+      content << labeled(EMPTY_STRING, form.submit("Save"))
     end
   end
   

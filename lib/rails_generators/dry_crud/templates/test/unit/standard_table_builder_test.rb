@@ -63,6 +63,7 @@ class StandardTableBuilderTest < ActionView::TestCase
 			<tr class="odd"><td>BAHR</td><td>4 chars</td></tr>
 			</table>
 		FIN
+    dom.gsub!(/[\n\t]/, "")
     
     table.attrs :upcase, :size
     
@@ -87,11 +88,13 @@ class StandardTableBuilderTest < ActionView::TestCase
 			</tr>
 			</table>
 		FIN
-		
+		dom.gsub!(/[\n\t]/, "")
+    
 	  table.col('head', :class => 'left') { |e| link_to e, "/" }
 	  table.attrs :upcase, :size
 	  table.col { |e| "Never #{e}" }
 		
+    
 		assert_dom_equal dom, table.to_html
 	end
 	

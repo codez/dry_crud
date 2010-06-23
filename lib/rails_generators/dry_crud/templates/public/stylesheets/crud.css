@@ -67,23 +67,23 @@ a:visited.action {
 	color: #663333;
 }
 
-div.errorExplanation {
+#error_explanation {
 	border: solid 1px #999999;
 	margin: 10pt;
 	padding: 5pt;
 	background-color: #FFBBBB;
 }
 
-.errorExplanation h2 {
+#error_explanation h2 {
 	font-size: 12pt;
 	margin-top: 0pt;
 }
 
-.errorExplanation ul {
+#error_explanation ul {
 	margin-bottom: 5pt;
 }
 
-div.fieldWithErrors {
+div.field_with_errors {
 	background-color: #FFBBBB;
 	display: inline-block;
 	padding: 2px;
