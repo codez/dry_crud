@@ -2,7 +2,12 @@ require 'rubygems'
 require "rake/testtask"
 require 'rake/gempackagetask' 
 require 'rake/rdoctask' 
-sdoc = (require 'sdoc' || true) rescue false
+sdoc = begin 
+  require 'sdoc'
+  true
+rescue Exception
+  false
+end
 
 load	'dry_crud.gemspec'
 
@@ -32,7 +37,7 @@ namespace :test do
 		desc "Create a rails test application"
 		task :create do
 			unless File.exist?(TEST_APP_ROOT)
-				sh "rails _3.0.0.beta4_ new #{TEST_APP_ROOT}"
+				sh "rails new #{TEST_APP_ROOT}"
 			end
 	  end
       

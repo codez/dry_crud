@@ -68,7 +68,7 @@ class CrudHelperTest < ActionView::TestCase
   
   def with_test_routing
     with_routing do |set|
-      set.draw {|map| map.resources :crud_test_models }
+      set.draw { resources :crud_test_models }
       yield
     end
   end

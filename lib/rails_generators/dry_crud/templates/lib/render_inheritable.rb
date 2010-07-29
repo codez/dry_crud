@@ -45,7 +45,7 @@ module RenderInheritable
     # exist to render templates from corresponding view folders.
     def inheritable_controller(param = nil)
       c = find_inheritable_artifact(param) do |folder|
-        ActionController::Base.subclasses.any? { |c| c.constantize.controller_path == folder }
+        inheritable_root_controller.descendants.any? { |s| s.controller_path == folder }
       end
       c || inheritable_root_controller.controller_path
     end

@@ -1,11 +1,15 @@
 TestApp::Application.routes.draw do
   
   resources :cities do
-      get :ajax, :on => :collection
+    collection do
+      get :ajax
+    end
   end  
   
   resources :people do
-      get :ajax, :on => :collection
+    collection do
+      get :ajax
+    end
   end
   
   # Install the default routes as the lowest priority.

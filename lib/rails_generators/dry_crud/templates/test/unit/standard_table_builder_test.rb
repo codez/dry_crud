@@ -54,49 +54,48 @@ class StandardTableBuilderTest < ActionView::TestCase
     
     assert_equal "4 chars", col.content("abcd")
   end
-	
-	test "two x two table" do
-		dom = <<-FIN
-			<table class="list">
-			<tr><th>Upcase</th><th>Size</th></tr>
-			<tr class="even"><td>FOO</td><td>3 chars</td></tr>
-			<tr class="odd"><td>BAHR</td><td>4 chars</td></tr>
-			</table>
-		FIN
+  
+  test "two x two table" do
+    dom = <<-FIN
+      <table class="list">
+      <tr><th>Upcase</th><th>Size</th></tr>
+      <tr class="even"><td>FOO</td><td>3 chars</td></tr>
+      <tr class="odd"><td>BAHR</td><td>4 chars</td></tr>
+      </table>
+    FIN
     dom.gsub!(/[\n\t]/, "")
     
     table.attrs :upcase, :size
     
-		assert_dom_equal dom, table.to_html
-	end
-	
-	test "table with before and after cells" do 
-		dom = <<-FIN
-			<table class="list">
-			<tr><th>head</th><th>Upcase</th><th>Size</th><th></th></tr>
-			<tr class="even">
-				<td class='left'><a href='/'>foo</a></td>
-				<td>FOO</td>
-				<td>3 chars</td>
-				<td>Never foo</td>
-			</tr>
-			<tr class="odd">
-				<td class='left'><a href='/'>bahr</a></td>
-				<td>BAHR</td>
-				<td>4 chars</td>
-				<td>Never bahr</td>
-			</tr>
-			</table>
-		FIN
-		dom.gsub!(/[\n\t]/, "")
+    assert_dom_equal dom, table.to_html
+  end
+  
+  test "table with before and after cells" do 
+    dom = <<-FIN
+      <table class="list">
+      <tr><th>head</th><th>Upcase</th><th>Size</th><th></th></tr>
+      <tr class="even">
+        <td class='left'><a href='/'>foo</a></td>
+        <td>FOO</td>
+        <td>3 chars</td>
+        <td>Never foo</td>
+      </tr>
+      <tr class="odd">
+        <td class='left'><a href='/'>bahr</a></td>
+        <td>BAHR</td>
+        <td>4 chars</td>
+        <td>Never bahr</td>
+      </tr>
+      </table>
+    FIN
+    dom.gsub!(/[\n\t]/, "")
     
-	  table.col('head', :class => 'left') { |e| link_to e, "/" }
-	  table.attrs :upcase, :size
-	  table.col { |e| "Never #{e}" }
-		
+    table.col('head', :class => 'left') { |e| link_to e, "/" }
+    table.attrs :upcase, :size
+    table.col { |e| "Never #{e}" }
     
-		assert_dom_equal dom, table.to_html
-	end
-	
-
+    
+    assert_dom_equal dom, table.to_html
+  end
+  
 end

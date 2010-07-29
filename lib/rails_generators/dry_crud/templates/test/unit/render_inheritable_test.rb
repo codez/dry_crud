@@ -2,7 +2,7 @@ require 'test_helper'
 
 TEST_VIEW_PATH = File.join(Rails.root, 'test', 'test_views')
 
-class RootController < ActionController::Base
+class RootController < ApplicationController
   include RenderInheritable
   
   attr_accessor :default_template_format
@@ -28,7 +28,7 @@ class GrandChildrenController < ChildrenController
   
 end
 
-# mock File ojbect
+# mock File object
 class File
   class << self
     def touched

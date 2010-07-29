@@ -88,7 +88,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
       include _routes.url_helpers
     end
     
-    @routes.draw { |map| map.resources :crud_test_models }
+    @routes.draw { resources :crud_test_models }
   end
   
   def test_entry
