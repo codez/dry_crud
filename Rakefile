@@ -2,7 +2,12 @@ require 'rubygems'
 require "rake/testtask"
 require 'rake/gempackagetask' 
 require 'rake/rdoctask' 
-sdoc = (require 'sdoc' || true) rescue false
+sdoc = begin 
+  require 'sdoc'
+  true
+rescue Exception
+  false
+end
 
 load	'dry_crud.gemspec'
 
@@ -23,6 +28,7 @@ end
 namespace :test do
 	namespace :app do
     task :environment do
+      #TODO: use rails 3 way to set root and env
       ::RAILS_ROOT = TEST_APP_ROOT
       ::RAILS_ENV = 'test'
       
@@ -32,7 +38,7 @@ namespace :test do
 		desc "Create a rails test application"
 		task :create do
 			unless File.exist?(TEST_APP_ROOT)
-				sh "rails _3.0.0.beta4_ new #{TEST_APP_ROOT}"
+				sh "rails new #{TEST_APP_ROOT}"
 			end
 	  end
       
@@ -41,7 +47,7 @@ namespace :test do
       require File.join(GENERATOR_ROOT, 'dry_crud_generator')
     
       #Rails::Generator::Spec.new('dry_crud', GENERATOR_ROOT, :RubyGems).klass.new([], :collision => :force).command(:create).invoke!
-      DryCrudGenerator.new('', {:force => true}, :destination_root => TEST_APP_ROOT).invoke
+      DryCrudGenerator.new('', {:force => true}, :destination_root => TEST_APP_ROOT).invoke_all
     end
    
     desc "Initializes the test application with a couple of classes"
