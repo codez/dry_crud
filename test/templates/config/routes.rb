@@ -7,7 +7,7 @@ TestApp::Application.routes.draw do
   end  
   
   resources :people do
-    collection do
+  	collection do
       get :ajax
     end
   end

@@ -28,8 +28,8 @@ end
 namespace :test do
   namespace :app do
     task :environment do
-      ::RAILS_ROOT = TEST_APP_ROOT
-      ::RAILS_ENV = 'test'
+      ENV['RAILS_ROOT'] = TEST_APP_ROOT
+      ENV['RAILS_ENV'] = 'test'
       
       require(File.join(TEST_APP_ROOT, 'config', 'environment'))
     end
