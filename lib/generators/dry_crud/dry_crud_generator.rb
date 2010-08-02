@@ -9,12 +9,8 @@ class DryCrudGenerator < Rails::Generators::Base
   def install_dry_crud
     # copy everything in template subfolders
     Dir.chdir(self.class.source_root) do
-      Dir.glob("*/**/*").each do |f|
-        if File.directory?(f)
-          directory f
-        else
-          copy_file f, f
-        end
+      Dir.glob("*").each do |f|
+        directory(f) if File.directory?(f)
       end
     end
     

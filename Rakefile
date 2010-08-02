@@ -12,7 +12,7 @@ end
 load 'dry_crud.gemspec'
 
 TEST_APP_ROOT  = File.join(File.dirname(__FILE__), 'test', 'test_app')
-GENERATOR_ROOT = File.join(File.dirname(__FILE__), 'lib', 'rails_generators', 'dry_crud')
+GENERATOR_ROOT = File.join(File.dirname(__FILE__), 'lib', 'generators', 'dry_crud')
 
 task :default => :test
 
@@ -96,8 +96,8 @@ Rake::RDocTask.new do |rdoc|
     list.exclude(/(^|[^.a-z])[a-z]+/)
     list.exclude('TODO') 
     end.to_a)
-  rdoc.rdoc_files.include('rails_generators/dry_crud/templates/**/*.rb') 
-  rdoc.rdoc_files.exclude('rails_generators/dry_crud/templates/**/*_test.rb') 
+  rdoc.rdoc_files.include('generators/dry_crud/templates/**/*.rb') 
+  rdoc.rdoc_files.exclude('generators/dry_crud/templates/**/*_test.rb') 
   rdoc.rdoc_files.exclude('TODO') 
     
   rdoc.rdoc_dir = 'rdoc'
