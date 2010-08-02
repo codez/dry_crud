@@ -24,13 +24,40 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /(<th.+?<\/th>){14}/m, t
     assert_match /(<a href.+?<\/a>.*?){18}/m, t
   end
+  
+  test "custom crud table with attributes" do
+    @entries = CrudTestModel.all
     
-  test "custom crud table" do
+    t = with_test_routing do
+      crud_table :name, :children, :companion_id
+    end
+        
+    assert_match /(<tr.+?<\/tr>){7}/m, t
+    assert_match /(<th.+?<\/th>){4}/m, t
+    assert_match /(<a href.+?<\/a>.*?){18}/m, t
+  end
+    
+  test "custom crud table with block" do
     @entries = CrudTestModel.all
     
     t = with_test_routing do
       crud_table do |t|
         t.attrs :name, :children, :companion_id
+        t.col("head") {|e| content_tag :span, e.income.to_s }
+      end
+    end
+    
+    assert_match /(<tr.+?<\/tr>){7}/m, t
+    assert_match /(<th.+?<\/th>){4}/m, t
+    assert_match /(<span>.+?<\/span>.*?){6}/m, t
+    assert_no_match /(<a href.+?<\/a>.*?)/m, t
+  end
+  
+  test "custom crud table with attributes and block" do
+    @entries = CrudTestModel.all
+    
+    t = with_test_routing do
+      crud_table :name, :children, :companion_id do |t|
         t.col("head") {|e| content_tag :span, e.income.to_s }
       end
     end

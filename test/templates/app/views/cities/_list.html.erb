@@ -1,5 +1,4 @@
-<%= crud_table do |t|
-	t.attrs :name, :country_code
+<%= crud_table :name, :country_code do |t|
 	t.col {|e| link_action_edit(e) }
 	t.col {|e| link_action_destroy(e) }
 end %>

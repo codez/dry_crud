@@ -75,11 +75,15 @@ module StandardHelper
     div ? content_tag(:div, html, :class => 'attributes') : html
   end
   
-  # Renders a table for the given entries as defined by the following block.
-  # If entries are empty, an appropriate message is rendered.
-  def table(entries, &block)
+  # Renders a table for the given entries. One column is rendered for each attribute passed. 
+  # If a block is given, the columns defined therein are appended to the attribute columns.
+  # If entries is empty, an appropriate message is rendered.
+  def table(entries, *attrs, &block)
     if entries.present?
-      StandardTableBuilder.table(entries, self, &block)
+      StandardTableBuilder.table(entries, self) do |t|
+        t.attrs(*attrs)
+        yield t if block_given?
+      end
     else
       content_tag(:div, NO_LIST_ENTRIES_MESSAGE, :class => 'list')
     end

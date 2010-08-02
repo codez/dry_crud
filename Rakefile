@@ -45,7 +45,6 @@ namespace :test do
     task :generate_crud => [:create, :environment] do
       require File.join(GENERATOR_ROOT, 'dry_crud_generator')
     
-      #Rails::Generator::Spec.new('dry_crud', GENERATOR_ROOT, :RubyGems).klass.new([], :collision => :force).command(:create).invoke!
       DryCrudGenerator.new('', {:force => true}, :destination_root => TEST_APP_ROOT).invoke_all
     end
    

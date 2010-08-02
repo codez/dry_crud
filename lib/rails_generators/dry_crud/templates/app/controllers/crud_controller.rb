@@ -1,6 +1,6 @@
 # Abstract controller providing basic CRUD actions.
 # This implementation mainly follows the one of the Rails scaffolding
-# controller. Some enhancements were made to ease extendability.
+# controller and responses to HTML and XML requests. Some enhancements were made to ease extendability.
 # Several protected helper methods are there to be (optionally) overriden by subclasses.
 class CrudController < ApplicationController
   
@@ -10,6 +10,7 @@ class CrudController < ApplicationController
   delegate :model_class, :model_identifier, :models_label, :to => 'self.class'  
 
   # Verify that required :id param is present and only allow good http methods.
+  # Uncomment if you have the Rails verification plugin installed.
   #verify :params => :id, :only => :show, :redirect_to => { :action => 'index' }
   #verify :method => :post, :only => :create,  :redirect_to => { :action => 'index' }  
   #verify :method => [:put, :post], :params => :id, :only => :update,  :redirect_to => { :action => 'index' }  

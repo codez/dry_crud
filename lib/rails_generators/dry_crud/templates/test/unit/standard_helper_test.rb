@@ -125,6 +125,12 @@ class StandardHelperTest < ActionView::TestCase
     assert_match(/^\<table.*\<\/table\>$/, table(['foo', 'bar']) {|t| t.attrs :size, :upcase })
   end
   
+  test "table with attrs" do
+    expected = StandardTableBuilder.table(['foo', 'bar'], self) { |t| t.attrs :size, :upcase }
+    actual = table(['foo', 'bar'], :size, :upcase)
+    assert_equal expected, actual
+  end
+  
   test "captionize" do
     assert_equal "Camel Case", captionize(:camel_case)
     assert_equal "All Upper Case", captionize("all upper case")

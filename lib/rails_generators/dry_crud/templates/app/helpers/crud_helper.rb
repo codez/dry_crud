@@ -5,12 +5,12 @@ module CrudHelper
   
   # Create a table of the @entries variable with the default or 
   # the passed attributes in its columns.
-  def crud_table(attrs = nil, &block)
+  def crud_table(*attrs, &block)
     if block_given?
-      table(@entries, &block)
+      table(@entries, *attrs, &block)
     else
-      table(@entries) do |t|
-        t.attrs(*(attrs || default_attrs))
+      attributes = attrs.present? ? attrs : default_attrs
+      table(@entries, *attributes) do |t|
         add_list_actions(t)
       end
     end
