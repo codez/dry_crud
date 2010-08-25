@@ -164,13 +164,21 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 === Controller:
 
-{controller/crud_controller.rb}[http://codez.ch/dry_crud/?q=CrudController]:: Abstract controller providing basic CRUD actions in a RESTful way. This implementation mainly follows the one of the Rails scaffolding controller. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses.
+{controller/crud_controller.rb}[http://codez.ch/dry_crud/?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method.
+
+{controller/render_inheritable.rb}[http://codez.ch/dry_crud/?q=RenderInheritable]:: A controller enhancement that allows one to render inheritable views and partials. If no view file is found for the current controller, the corresponding file is looked up in its superclass hierarchy. Thus, only views or partials that look differently have to be overwritten.
+
 
 === Helpers:
 
 {helpers/standard_helper.rb}[http://codez.ch/dry_crud/?q=StandardHelper]:: A view helper to standardize often used functions like formatting, tables, forms or action links. This helper is ideally defined in the ApplicationController. It is required to use the StandardTableBuilder and the StandardFormBuilder.
 
 {helpers/crud_helper.rb}[http://codez.ch/dry_crud/?q=CrudHelper]:: A small helper for CrudController to render tables and forms with a default set of attributes.
+
+{helpers/standard_table_builder.rb}[http://codez.ch/dry_crud/?q=StandardTableBuilder]:: A simple helper object to easily define tables listing several rows of the same data type.
+
+{helpers/standard_form_builder.rb}[http://codez.ch/dry_crud/?q=StandardFormBuilder]:: A form builder that automatically selects the corresponding input element for ActiveRecord columns. Input elements are rendered with a corresponding label by default.
+
 
 === Views:
 
@@ -194,15 +202,6 @@ views/layouts/crud.html.erb:: An example layout showing how to use the @title an
 
 public/stylesheets/crud.css:: A simple CSS with all the classes and ids used in the CRUD code. 
 
-=== Lib:
-
-{lib/standard_table_builder.rb}[http://codez.ch/dry_crud/?q=StandardTableBuilder]:: A simple helper to easily define tables listing several rows of the same data type.
-
-{lib/standard_form_builder.rb}[http://codez.ch/dry_crud/?q=StandardFormBuilder]:: A form builder that automatically selects the corresponding input element for ActiveRecord columns. Input elements are rendered with a corresponding label by default.
-
-{lib/render_inheritable.rb}[http://codez.ch/dry_crud/?q=RenderInheritable]:: Allows one to render inheritable views and partials. If no view file is found for the current controller, the corresponding file is looked up in its superclass hierarchy. Thus, only views or partials that look differently have to be overwritten.
-
-{lib/crud_callbacks.rb}[http://codez.ch/dry_crud/?q=CrudCallbacks]:: Defines before and after callback hooks for create, update, save and destroy. When to execute the callbacks is in the responsibility of the clients of this module. This module is used in the CrudController to provide callbacks.
 
 === Tests:
 

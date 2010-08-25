@@ -2,10 +2,24 @@
 # This implementation mainly follows the one of the Rails scaffolding
 # controller and responses to HTML and XML requests. Some enhancements were made to ease extendability.
 # Several protected helper methods are there to be (optionally) overriden by subclasses.
+# With the help of additional callbacks, it is possible to hook into the action procedures without
+# overriding the entire method.
 class CrudController < ApplicationController
   
-  include CrudCallbacks
   include RenderInheritable 
+  
+  extend ActiveModel::Callbacks
+   
+  # Defines before and after callback hooks for create, update, save and destroy.
+  define_model_callbacks :create, :update, :save, :destroy
+  
+  # Defines before callbacks for the render actions.
+  define_model_callbacks :render_index, 
+                         :render_show, 
+                         :render_new, 
+                         :render_edit, 
+                         :only => :before,
+                         :terminator => "result == false || performed?"
   
   delegate :model_class, :model_identifier, :models_label, :to => 'self.class'  
 
@@ -153,7 +167,7 @@ class CrudController < ApplicationController
   # Helper method to run before_render callbacks and render the action.
   # If a callback renders or redirects, the action is not rendered.
   def render_with_callback(action)
-    render_callbacks(action)
+    run_callbacks(:"render_#{action}")
     render :action => action unless performed?
   end
   
@@ -161,6 +175,12 @@ class CrudController < ApplicationController
   def save_entry       
     with_callbacks(:save) { @entry.save }
   end   
+  
+  # Helper method the run the given block in between the before and after
+  # callbacks of the given kind.
+  def with_callbacks(kind, &block)
+    send(:"_run_#{kind}_callbacks", &block)
+  end
   
   class << self
     # The ActiveRecord class of the model.
