@@ -34,6 +34,7 @@ class CrudTestModelsController < CrudController #:nodoc:
     end
   end
   
+  # create callback methods that record the before/after callbacks
   [:create, :update, :save, :destroy].each do |a|
     callback = "before_#{a.to_s}"
     send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
@@ -41,15 +42,18 @@ class CrudTestModelsController < CrudController #:nodoc:
     send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
   end
   
+  # create callback methods that record the before_render callbacks
   [:index, :show, :new, :edit].each do |a|
     callback = "before_render_#{a.to_s}"
     send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
   end
   
+  # handle the called callbacks
   def method_missing(sym, *args)
     called_callback(sym.to_s[HANDLE_PREFIX.size..-1].to_sym) if sym.to_s.starts_with?(HANDLE_PREFIX)
   end
   
+  # callback to redirect if @should_redirect is set
   def possibly_redirect
     redirect_to :action => 'index' if should_redirect && !performed?
     !should_redirect
@@ -59,6 +63,7 @@ class CrudTestModelsController < CrudController #:nodoc:
     @companions = CrudTestModel.all :conditions => {:human => true}
   end
   
+  # records a callback
   def called_callback(callback)
     @called_callbacks ||= []
     @called_callbacks << callback
