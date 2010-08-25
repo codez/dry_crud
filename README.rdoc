@@ -1,24 +1,24 @@
 = DRY CRUD
 
-Generates simple and extendable controller, views and helpers that support you to DRY up the CRUD code in your Rails project. Start with these elements and build a clean base to efficiently develop your application upon. First, you need to install the gem with
+DRY CRUD generates simple and extendable controller, views and helpers that support you to DRY up the CRUD code in your Rails project. Start with these elements and build a clean base to efficiently develop your application upon. First, you need to install the gem with
 
   gem install dry_crud
 
-Register the gem in your Rails application's +Gemfile+:
+In order to use the generator, you have to register the gem in your Rails application's +Gemfile+. Add the following lines:
 
   group :development, :test do
     gem 'dry_crud'
   end
 
-Then simply run the following generator in your Rails app to get the goodies:
+Don't worry, it's a simple development dependency. You may even savely remove it after you have run in once. So now, you should run the generator to get the goodies:
 
   rails generate dry_crud
 
-To integrate dry_crud into your code, only a few additions are required:
+To integrate DRY CRUD into your code, only a few additions are required:
 
-* To use a standard formatting, tables and forms throughout your application, add 'helper :standard' to your ApplicationController. 
-* To get uniform CRUD functionality, just subclass your controllers from CrudController. 
-* Add a :label method to your models for a human-friendly representation.
+* For uniform CRUD functionality, just subclass your controllers from +CrudController+. 
+* To use standard formatting, tables and forms throughout your application, add <tt>helper :standard</tt> to your +ApplicationController+ and benefit from these little helper methods. 
+* Add a +:label+ method to your models for a human-friendly representation.
 
 ATTENTION: This is the master branch on its way to get ready for Rails 3. If you need a working version for Rails 2.3.x, please go to the rails-2.3 branch or get the released dry_crud gem version 0.6.0.
 
@@ -32,11 +32,11 @@ Enter DRY CRUD.
 The main idea of DRY CRUD is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. DRY CRUD generates various foundation classes that you may freely adapt to your application's needs. For each model, you may transparently customize arbitrary parts or just fallback to the general behavior. This applies not only for controllers, but also for view templates and helpers.
 </b>
 
-A core element of DRY CRUD is the RenderInheritable module. This gives you inheritable views and partials. In the default case, a template is searched in the current controller's view folder. If it is not found there, the template with the same name in the view folder of the superclass controller is used. This lookup path might be customized as well. RenderInheritable is also available as a stand-alone gem at http://github.com/codez/render_inheritable.
+A core element of DRY CRUD is the +RenderInheritable+ module. This gives you inheritable views and partials. In the default case, a template is searched in the current controller's view folder. If it is not found there, the template with the same name in the view folder of the superclass controller is used. This lookup path might be customized as well. RenderInheritable is also available as a stand-alone gem at http://github.com/codez/render_inheritable.
 
 DRY CRUD is a Rails generator. All code resides in your application and is open for you to inspect and to extend. You may pick whatever you consider useful or adapt what is not sufficient. Even if you do not require any CRUD functionality, you might find some helpers simplifying your work. There are no runtime dependencies to the dry_crud gem. Having said this, DRY CRUD does not want to provide a maximum of functionality that requires a lot of configuration, but rather a clean and lightweight foundation to build your application's requirements upon. This is why DRY CRUD comes as a generator and not as a Rails plugin.
 
-DRY CRUD does not depend on any other plugins, but easily allows you to integrate them in order to unify the behavior of your CRUD controllers. You might even use the plugins mentioned above to adapt your generated CrudController base class. All classes come with thorough tests that provide you with a solid foundation for implementing your own adaptions.
+DRY CRUD does not depend on any other plugins, but easily allows you to integrate them in order to unify the behavior of your CRUD controllers. You might even use the plugins mentioned above to adapt your generated +CrudController+ base class. All classes come with thorough tests that provide you with a solid foundation for implementing your own adaptions.
 
 The gem was developed with Rails 2.3.8, we plan to reach a fully compatible version 1.0 when Rails 3 has come out.
 
@@ -46,7 +46,7 @@ See the Examples section for some use cases and the Generated Files section belo
 
 === Controller with CRUD functionality
 
-Say you want to manage a Person model. Create the following controller and add a :label method to your model for a human-friendly representation used in page titles.
+Say you want to manage a +Person+ model. Create the following controller and add a +:label+ method to your model for a human-friendly representation used in page titles.
 
 <tt>app/controllers/people_controller.rb</tt>:
   class PeopleController < CrudController
@@ -64,7 +64,7 @@ That's it. You have an overview of all people, detail pages and forms to edit an
 
 ==== Customize single views
 
-Well, maybe there are certain attributes you do not want to display in the people list, or others that are not editable. No problem, simply create a <tt>list</tt> partial in <tt>app/views/people/_list.html.erb</tt> to customize this:
+Well, maybe there are certain attributes you do not want to display in the people list, or others that are not editable. No problem, simply create a <tt>_list</tt> partial in <tt>app/views/people/_list.html.erb</tt> to customize this:
 
   <%= crud_table [:lastname, :firstname, :city, :sex] %>
 
@@ -85,19 +85,19 @@ In <tt>app/controllers/crud_controller.rb</tt>, change the index action to
 In <tt>app/views/crud/index.html.erb</tt>, add the following line for the pagination links:
    <%= will_paginate @entries %>
 
-And we are done again. All our controllers inheriting from CrudController, including above PeopleController, now have paginated index views. Because our customization for the people table is in the separate <tt>_list</tt> partial, no further modifications are required. 
+And we are done again. All our controllers inheriting from +CrudController+, including above +PeopleController+, now have paginated index views. Because our customization for the people table is in the separate <tt>_list</tt> partial, no further modifications are required. 
 
 
 ==== Special formatting for selected attributes
 
-Sometimes, the default formatting provided by :format_attr will not be sufficient. We have a boolean column <tt>sex</tt> in our model, but would like to display 'male' or 'female' for it (instead of 'no' or 'yes', which is a bit cryptic). Just define a method in your view helper starting with <tt>format_</tt>, followed by the attribute name:
+Sometimes, the default formatting provided by +:format_attr+ will not be sufficient. We have a boolean column <tt>sex</tt> in our model, but would like to display 'male' or 'female' for it (instead of 'no' or 'yes', which is a bit cryptic). Just define a method in your view helper starting with <tt>format_</tt>, followed by the attribute name:
 
 In <tt>app/helpers/people.rb</tt>:
   def format_sex(person)
     person.sex ? 'female' : 'male'
   end
 
-By the way: The method :f in StandardHelper uniformly formats arbitrary values according to their class.  
+By the way: The method +:f+ in +StandardHelper+ uniformly formats arbitrary values according to their class.  
 
 
 ==== CRUD controller callbacks
@@ -122,7 +122,7 @@ In <tt>app/controllers/people_controller.rb</tt>:
 
 === Standard Tables and Forms
 
-DRY CRUD also provides two builder classes for update/create forms and tables for displaying entries of one model. They may be used all over your application to DRY up the form and table code. Normally, they are used with the corresponding methods from StandardHelper.
+DRY CRUD also provides two builder classes for update/create forms and tables for displaying entries of one model. They may be used all over your application to DRY up the form and table code. Normally, they are used with the corresponding methods from +StandardHelper+.
 
 ==== Tables
 

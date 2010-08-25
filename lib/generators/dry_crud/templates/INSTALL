@@ -3,10 +3,11 @@ Thank you for using dry_crud. Feel free to adapt all generated classes to
 your needs. To integrate dry_crud into your code, only a few additions are 
 required:
 
- * To use a standard formatting, tables and forms throught your application, 
-   add 'helper :standard' to your ApplicationController. 
- * To get uniform CRUD functionallity, just subclass your controllers from 
+ * For uniform CRUD functionallity, just subclass your controllers from 
    CrudController. 
+ * To use standard formatting, tables and forms throughout your
+   application, add 'helper :standard' to your ApplicationController and 
+   benefit from these little helper methods. 
  * Add a :label method to your models for a human-friendly representation.
 
 Enjoy dry_crud and stay DRY!
