@@ -34,6 +34,7 @@ class CrudController < ApplicationController
   before_filter :build_entry, :only => [:new, :create]
   before_filter :set_entry,   :only => [:show, :edit, :update, :destroy]
   
+  helper :standard
   helper_method :model_class, :models_label, :full_entry_label
   
   hide_action :model_class, :models_label, :model_identifier, :run_callbacks, :inheritable_root_controller
