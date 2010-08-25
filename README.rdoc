@@ -18,7 +18,7 @@ To integrate DRY CRUD into your code, only a few additions are required:
 
 * For uniform CRUD functionality, just subclass your controllers from +CrudController+. 
 * To use standard formatting, tables and forms throughout your application, add <tt>helper :standard</tt> to your +ApplicationController+ and benefit from these little helper methods. 
-* Add a +:label+ method to your models for a human-friendly representation.
+* Add a <tt>:label</tt> method to your models for a human-friendly representation.
 
 ATTENTION: This is the master branch on its way to get ready for Rails 3. If you need a working version for Rails 2.3.x, please go to the rails-2.3 branch or get the released dry_crud gem version 0.6.0.
 
@@ -46,7 +46,7 @@ See the Examples section for some use cases and the Generated Files section belo
 
 === Controller with CRUD functionality
 
-Say you want to manage a +Person+ model. Create the following controller and add a +:label+ method to your model for a human-friendly representation used in page titles.
+Say you want to manage a +Person+ model. Create the following controller and add a <tt>:label</tt> method to your model for a human-friendly representation used in page titles.
 
 <tt>app/controllers/people_controller.rb</tt>:
   class PeopleController < CrudController
@@ -64,7 +64,7 @@ That's it. You have an overview of all people, detail pages and forms to edit an
 
 ==== Customize single views
 
-Well, maybe there are certain attributes you do not want to display in the people list, or others that are not editable. No problem, simply create a <tt>_list</tt> partial in <tt>app/views/people/_list.html.erb</tt> to customize this:
+Well, maybe there are certain attributes you do not want to display in the people list, or others that are not editable. No problem, simply create a <tt> _list</tt> partial in <tt>app/views/people/_list.html.erb</tt> to customize this:
 
   <%= crud_table [:lastname, :firstname, :city, :sex] %>
 
@@ -85,7 +85,7 @@ In <tt>app/controllers/crud_controller.rb</tt>, change the index action to
 In <tt>app/views/crud/index.html.erb</tt>, add the following line for the pagination links:
    <%= will_paginate @entries %>
 
-And we are done again. All our controllers inheriting from +CrudController+, including above +PeopleController+, now have paginated index views. Because our customization for the people table is in the separate <tt>_list</tt> partial, no further modifications are required. 
+And we are done again. All our controllers inheriting from +CrudController+, including above +PeopleController+, now have paginated index views. Because our customization for the people table is in the separate <tt> _list</tt> partial, no further modifications are required. 
 
 
 ==== Special formatting for selected attributes
