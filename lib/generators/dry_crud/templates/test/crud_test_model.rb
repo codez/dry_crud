@@ -94,6 +94,8 @@ module CrudTestHelper
         t.timestamps
       end
     end
+    
+    CrudTestModel.reset_column_information
   end
   
   # Removes the crud_test_models table from the database.
