@@ -7,7 +7,7 @@ required:
    CrudController. 
  * To use standard formatting, tables and forms throughout your
    application, add 'helper :standard' to your ApplicationController and 
-   benefit from these little helper methods. 
+   benefit everywhere from these little helper methods. 
  * Add a :label method to your models for a human-friendly representation.
 
 Enjoy dry_crud and stay DRY!

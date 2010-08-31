@@ -72,7 +72,11 @@ end
 
 desc "Deploy rdoc to website"
 task :site => :rdoc do
-  sh "rsync -rzv rdoc/ #{ENV['DEST']}"
+  if ENV['DEST']
+  	sh "rsync -rzv rdoc/ #{ENV['DEST']}"
+  else
+  	puts "Please specify a destination with DEST=user@server:/deploy/dir"
+  end
 end
 
 # :package task
