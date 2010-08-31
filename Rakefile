@@ -100,8 +100,8 @@ Rake::RDocTask.new do |rdoc|
     list.exclude(/(^|[^.a-z])[a-z]+/)
     list.exclude('TODO') 
     end.to_a)
-  rdoc.rdoc_files.include('generators/dry_crud/templates/**/*.rb') 
-  rdoc.rdoc_files.exclude('generators/dry_crud/templates/**/*_test.rb') 
+  rdoc.rdoc_files.include('lib/generators/dry_crud/templates/**/*.rb') 
+  rdoc.rdoc_files.exclude('lib/generators/dry_crud/templates/**/*_test.rb') 
   rdoc.rdoc_files.exclude('TODO') 
     
   rdoc.rdoc_dir = 'rdoc'
