@@ -62,7 +62,7 @@ class StandardHelperTest < ActionView::TestCase
   
   test "format Strings" do
     assert_equal "blah blah", f("blah blah")
-     assert_equal "&lt;injection&gt;", f("<injection>")
+    assert_equal "<injection>", f("<injection>")
   end
 
   test "format attr with fallthrough to f" do

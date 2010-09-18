@@ -8,7 +8,7 @@ module StandardHelper
   
   FLOAT_FORMAT = "%.2f"
   TIME_FORMAT  = "%H:%M"
-  EMPTY_STRING = "&nbsp;"   # non-breaking space asserts better css styling.
+  EMPTY_STRING = "&nbsp;".html_safe   # non-breaking space asserts better css styling.
   
   ################  FORMATTING HELPERS  ##################################
 
@@ -20,13 +20,13 @@ module StandardHelper
     case value
       when Fixnum then number_with_delimiter(value)
       when Float  then FLOAT_FORMAT % value
-			when Date	  then value.to_s
+      when Date	  then value.to_s
       when Time   then value.strftime(TIME_FORMAT)   
       when true   then 'yes'
       when false  then 'no'
       when nil    then EMPTY_STRING
     else 
-      value.respond_to?(:label) ? h(value.label) : h(value.to_s)
+      value.respond_to?(:label) ? value.label : value.to_s
     end
   end
   
@@ -149,12 +149,12 @@ module StandardHelper
   
   protected
   
-  # Helper methods that are not necessarely called from templates.
+  # Helper methods that are not directly called from templates.
   
   # Formats an active record association
   def format_assoc(obj, assoc)
     if assoc_val = obj.send(assoc.name)
-      link_to_unless(no_assoc_link?(assoc), h(assoc_val.label), assoc_val)
+      link_to_unless(no_assoc_link?(assoc), assoc_val.label, assoc_val)
     else
       '(none)'
     end
