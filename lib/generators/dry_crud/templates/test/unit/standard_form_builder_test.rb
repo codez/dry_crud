@@ -20,26 +20,40 @@ class StandardFormBuilderTest < ActionView::TestCase
   
   test "input_field dispatches string attr to string_field" do
     assert_equal form.string_field(:name), form.input_field(:name)
+    assert form.string_field(:name).html_safe?
   end
     
   test "input_field dispatches text attr to text_area" do
     assert_equal form.text_area(:remarks), form.input_field(:remarks)
+    assert form.text_area(:remarks).html_safe?
   end
   
   test "input_field dispatches integer attr to integer_field" do
     assert_equal form.integer_field(:children), form.input_field(:children)
+    assert form.integer_field(:children).html_safe?
   end
   
   test "input_field dispatches boolean attr to boolean_field" do
     assert_equal form.boolean_field(:human), form.input_field(:human)
+    assert form.boolean_field(:human).html_safe?
   end  
   
   test "input_field dispatches date attr to date_field" do
     assert_equal form.date_field(:birthdate), form.input_field(:birthdate)
+    assert form.date_field(:birthdate).html_safe?
   end
     
   test "input_field dispatches belongs_to attr to select field" do
     assert_equal form.belongs_to_field(:companion_id), form.input_field(:companion_id)
+    assert form.belongs_to_field(:companion_id).html_safe?
+  end
+  
+  test "input_fields concats multiple fields" do
+  	result = form.labeled_input_fields(:name, :remarks, :children)
+  	assert result.html_safe?
+  	assert result.include?(form.input_field(:name))
+  	assert result.include?(form.input_field(:remarks))
+  	assert result.include?(form.input_field(:children))
   end
   
   test "belongs_to_field has all options by default" do
@@ -70,14 +84,29 @@ class StandardFormBuilderTest < ActionView::TestCase
     assert_no_match /(\<option .*?)/m, f
   end
   
-  
   test "string_field sets maxlength attribute if limit" do
     assert_match /maxlength="50"/, form.string_field(:name)
   end
   
-  test "labeld_text_field create label" do
-    assert_match /label for.+input/m, form.labeled_string_field(:name)
+  test "label creates captionized label" do
+  	assert_match /label for.+Gugus dada/, form.label(:gugus_dada)
+  	assert form.label(:gugus_dada).html_safe?
   end
   
+  test "classic label still works" do
+  	assert_match /label for.+hoho/, form.label(:gugus_dada, "hoho")
+  	assert form.label(:gugus_dada, "hoho").html_safe?
+  end
+  
+  test "labeled_text_field create label" do
+    assert_match /label for.+input/m, form.labeled_string_field(:name)
+    assert form.labeled_string_field(:name).html_safe?
+  end
+  
+  test "labeled field creates label" do
+  	result = form.labeled("gugus", "<input type='text' name='gugus' />")
+  	assert result.html_safe?
+  	assert_match /label for.+input/m, result
+  end
   
 end

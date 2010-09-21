@@ -16,18 +16,21 @@ class StandardHelperTest < ActionView::TestCase
   test "labeled text as block" do
     result = labeled("label") { "value" }
     
+    assert result.html_safe?
     assert_dom_equal "<div class='labeled'> <div class='caption'>label</div> <div class='value'>value</div> </div>", result.squish
   end
 
   test "labeled text empty" do
     result = labeled("label", "")
     
+    assert result.html_safe?
     assert_dom_equal "<div class='labeled'> <div class='caption'>label</div> <div class='value'>#{EMPTY_STRING}</div> </div>", result.squish
   end
 
   test "labeled text as content" do
     result = labeled("label", "value")
     
+    assert result.html_safe?
     assert_dom_equal "<div class='labeled'> <div class='caption'>label</div> <div class='value'>value</div> </div>", result.squish
   end
   
@@ -35,6 +38,8 @@ class StandardHelperTest < ActionView::TestCase
     result_1 = tr_alt { "(test row content)" }
     result_2 = tr_alt { "(test row content)" }
 
+    assert result_1.html_safe?
+    assert result_2.html_safe?
     assert_dom_equal "<tr class='even'>(test row content)</tr>", result_1
     assert_dom_equal "<tr class='odd'>(test row content)</tr>", result_2
   end
@@ -57,12 +62,14 @@ class StandardHelperTest < ActionView::TestCase
   end
   
   test "format nil" do
+    assert EMPTY_STRING.html_safe?
     assert_equal EMPTY_STRING, f(nil)
   end
   
   test "format Strings" do
     assert_equal "blah blah", f("blah blah")
     assert_equal "<injection>", f("<injection>")
+    assert !f("<injection>").html_safe?
   end
 
   test "format attr with fallthrough to f" do
@@ -115,19 +122,25 @@ class StandardHelperTest < ActionView::TestCase
   test "format text column" do
     m = crud_test_models(:AAAAA)
     assert_equal "<p>AAAAA AAAAA AAAAA\n<br />AAAAA AAAAA AAAAA\n<br />AAAAA AAAAA AAAAA\n</p>", format_type(m, :remarks)
+    assert format_type(m, :remarks).html_safe?
   end
   
   test "empty table should render message" do
-    assert_dom_equal "<div class='list'>#{NO_LIST_ENTRIES_MESSAGE}</div>", table([]) { }
+    result = table([]) { }
+    assert result.html_safe?
+    assert_dom_equal "<div class='list'>#{NO_LIST_ENTRIES_MESSAGE}</div>", result
   end  
   
   test "non empty table should render table" do
-    assert_match(/^\<table.*\<\/table\>$/, table(['foo', 'bar']) {|t| t.attrs :size, :upcase })
+    result = table(['foo', 'bar']) {|t| t.attrs :size, :upcase }
+    assert result.html_safe?
+    assert_match(/^\<table.*\<\/table\>$/, result)
   end
   
   test "table with attrs" do
     expected = StandardTableBuilder.table(['foo', 'bar'], self) { |t| t.attrs :size, :upcase }
     actual = table(['foo', 'bar'], :size, :upcase)
+    assert actual.html_safe?
     assert_equal expected, actual
   end
   
@@ -135,6 +148,7 @@ class StandardHelperTest < ActionView::TestCase
     assert_equal "Camel Case", captionize(:camel_case)
     assert_equal "All Upper Case", captionize("all upper case")
     assert_equal "With Object", captionize("With object", Object.new)
+    assert !captionize('bad <title>').html_safe?
   end
   
   test "standard form for existing entry" do

@@ -24,6 +24,10 @@ class CrudTestModelsController < CrudController #:nodoc:
   
   hide_action :called_callbacks, :should_redirect, :should_redirect=
   
+  # don't use the standard layout as it may require different routes
+  # than just the test route for this controller
+  layout nil
+  
   private
   
   # custom callback

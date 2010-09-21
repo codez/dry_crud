@@ -40,9 +40,17 @@ class StandardTableBuilder
   # the formatted attribute value for the current entry.
   def attrs(*attrs)
     attrs.each do |a|
-      col(captionize(a, entry_class), :class => align_class(a)) { |e| format_attr(e, a) }
+      attr(a)
     end
   end  
+  
+  # Define a column for the given attribute and an optional header.
+  # If no header is given, the attribute name is used. The cell will
+  # contain the formatted attribute value for the current entry.
+  def attr(a, header = nil)
+      header ||= captionize(a, entry_class)
+      col(header, :class => align_class(a)) { |e| format_attr(e, a) }
+  end
   
   # Renders the table as HTML.
   def to_html

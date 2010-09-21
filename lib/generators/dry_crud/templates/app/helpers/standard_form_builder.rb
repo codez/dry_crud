@@ -14,7 +14,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   
   # Render multiple input fields together with a label for the given attributes.
   def labeled_input_fields(*attrs)
-    attrs.collect {|a| labeled_input_field(a) }.join("\n")
+    attrs.collect {|a| labeled_input_field(a) }.join("\n").html_safe
   end
   
   # Render a standartized label.
