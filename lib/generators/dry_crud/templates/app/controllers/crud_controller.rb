@@ -8,6 +8,18 @@ class CrudController < ApplicationController
   
   include RenderInheritable 
   
+  # Set up entry object to use in the various actions.
+  before_filter :build_entry, :only => [:new, :create]
+  before_filter :set_entry,   :only => [:show, :edit, :update, :destroy]
+  
+  helper :standard
+  helper_method :model_class, :models_label, :full_entry_label
+  
+  delegate :model_class, :model_identifier, :models_label, :to => 'self.class'  
+  
+  hide_action :model_class, :models_label, :model_identifier, :run_callbacks, :inheritable_root_controller
+  
+  # Callbacks
   extend ActiveModel::Callbacks
    
   # Defines before and after callback hooks for create, update, save and destroy.
@@ -20,24 +32,13 @@ class CrudController < ApplicationController
                          :render_edit, 
                          :only => :before,
                          :terminator => "result == false || performed?"
-  
-  delegate :model_class, :model_identifier, :models_label, :to => 'self.class'  
-
+                         
   # Verify that required :id param is present and only allow good http methods.
   # Uncomment if you have the Rails verification plugin installed.
   #verify :params => :id, :only => :show, :redirect_to => { :action => 'index' }
   #verify :method => :post, :only => :create,  :redirect_to => { :action => 'index' }  
   #verify :method => [:put, :post], :params => :id, :only => :update,  :redirect_to => { :action => 'index' }  
   #verify :method => [:delete, :post], :params => :id, :only => :destroy, :redirect_to => { :action => 'index' }  
-  
-  # Set up entry object to use in the various actions.
-  before_filter :build_entry, :only => [:new, :create]
-  before_filter :set_entry,   :only => [:show, :edit, :update, :destroy]
-  
-  helper :standard
-  helper_method :model_class, :models_label, :full_entry_label
-  
-  hide_action :model_class, :models_label, :model_identifier, :run_callbacks, :inheritable_root_controller
   
    
   ##############  ACTIONS  ############################################

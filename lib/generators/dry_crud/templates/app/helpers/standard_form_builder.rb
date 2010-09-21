@@ -152,7 +152,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
       assoc = association(@object, attr)
       list = @template.send(:instance_variable_get, :"@#{assoc.name.to_s.pluralize}")
       unless list
-        list = assoc.klass.find(:all, :conditions => assoc.options[:conditions],
+        list = assoc.klass.all(:conditions => assoc.options[:conditions],
                                :order => assoc.options[:order])
       end
     end
