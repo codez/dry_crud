@@ -9,7 +9,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   
   attr_reader :template 
   
-  delegate :association, :belongs_to_association, :column_type, :column_property, :captionize, 
+  delegate :association, :column_type, :column_property, :captionize, 
            :to => :template
   
   # Render multiple input fields together with a label for the given attributes.
@@ -136,7 +136,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   
   def belongs_to_association?(attr, type)
     if type == :integer || type == nil
-      assoc = belongs_to_association(@object, attr)
+      assoc = association(@object, attr, :belongs_to)
       assoc.present? && assoc.options[:polymorphic].nil?
     else
       false

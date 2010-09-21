@@ -38,7 +38,7 @@ module StandardHelper
     format_attr_method = :"format_#{attr.to_s}"
     if respond_to?(format_attr_method)
       send(format_attr_method, obj)
-    elsif assoc = belongs_to_association(obj, attr)
+    elsif assoc = association(obj, attr, :belongs_to)
       format_assoc(obj, assoc)
     else
       format_type(obj, attr)
@@ -70,7 +70,7 @@ module StandardHelper
   def render_attrs(obj, attrs, div = true)
     html = attrs.collect do |a| 
       labeled(captionize(a, obj.class), format_attr(obj, a))
-    end.join.html_safe
+    end.join("\n").html_safe
     
     div ? content_tag(:div, html, :class => 'attributes') : html
   end
@@ -194,20 +194,16 @@ module StandardHelper
     end  
   end
   
-  # Returns the :belongs_to association for the given attribute or nil if there is none.
-  def belongs_to_association(obj, attr)
-    if assoc = association(obj, attr)
-      assoc if assoc.macro == :belongs_to
-    end
-  end
-  
   # Returns the association proxy for the given attribute. The attr parameter
-  # may be the _id column or the association name. Returns nil if no association
-  # was found.
-  def association(obj, attr)
+  # may be the _id column or the association name. If a macro (e.g. :belongs_to)
+  # is given, the association must be of this type, otherwise, any association
+  # is returned. Returns nil if no association (or not of the given macro) was 
+  # found.
+  def association(obj, attr, macro = nil)
     if obj.class.respond_to?(:reflect_on_association)
-      assoc = attr.to_s =~ /_id$/ ? attr.to_s[0..-4].to_sym : attr
-      obj.class.reflect_on_association(assoc)
+      name = attr.to_s =~ /_id$/ ? attr.to_s[0..-4].to_sym : attr
+      assoc = obj.class.reflect_on_association(name)
+      assoc if assoc && (macro.nil? || assoc.macro == macro)
     end
   end
   
