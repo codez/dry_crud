@@ -98,6 +98,16 @@ In <tt>app/helpers/people.rb</tt>:
 By the way: The method +:f+ in +StandardHelper+ uniformly formats arbitrary values according to their class.  
 
 
+==== Filtering the index list
+
+There is a simple search functionality (based on SQL LIKE queries) implemented in the +CrudController+. Define an array of columns in your controller's +search_columns+ class variable to make the entries searchable by these fields:
+
+In <tt>app/controllers/people_controller.rb</tt>:
+  self.search_columns = [:firstname, :lastname]
+
+If you have columns defined, a search box will be displayed in the index view that let's you filter the displayed entries.
+
+
 ==== CRUD controller callbacks
 
 As a last example, let's say we have added a custom input field that must specially processed. Instead of overwriting the entire update action, it is possible to register callbacks for the +create+, +update+, +save+ (= +create+ and +update+) and +destroy+ actions. They work very similarliy like the callbacks on ActiveRecord. For each action, before and after callbacks are run. Before callbacks may also prevent the action from being executed when returning false. Here is some code:
@@ -129,7 +139,7 @@ This is the code to define a table with some attribute columns for a list of sam
         t.attrs :lastname, :firstname
       end %>
 
-If entries is empty, a basic 'No entries available' message is rendered instead of the table.
+If entries is empty, a basic 'No entries found' message is rendered instead of the table.
 
 To render custom columns, use the :col method:
   <%= table(@people) do |t|
@@ -180,7 +190,7 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 === Views:
 
-views/crud/index.html.erb:: The index view displaying a table with all entries and an action link to add new ones.
+views/crud/index.html.erb:: The index view displaying a table with all entries and an action link to add new ones. If you have +search_columns+ defined for your controller, then a search box is rendered as well.
 
 views/crud/_list.html.erb:: A partial defining the table in the index view. To change the displayed attributes in your CRUD model, just create an own _list.html.erb in your models view directory.
 
