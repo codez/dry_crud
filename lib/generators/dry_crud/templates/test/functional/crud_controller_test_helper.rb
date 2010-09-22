@@ -156,11 +156,11 @@ module CrudControllerTestHelper
   end
   
   def model_class
-    @controller.controller_name.classify.constantize
+    @controller.model_class
   end
   
   def model_identifier
-    @controller.controller_name.singularize.to_sym
+    @controller.model_identifier
   end
   
   # Test object used in several tests

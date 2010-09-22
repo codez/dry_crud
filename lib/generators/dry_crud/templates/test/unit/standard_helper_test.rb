@@ -28,10 +28,16 @@ class StandardHelperTest < ActionView::TestCase
   end
 
   test "labeled text as content" do
-    result = labeled("label", "value")
+    result = labeled("label", "value <unsafe>")
     
     assert result.html_safe?
-    assert_dom_equal "<div class='labeled'> <div class='caption'>label</div> <div class='value'>value</div> </div>", result.squish
+    assert_dom_equal "<div class='labeled'> <div class='caption'>label</div> <div class='value'>value &lt;unsafe&gt;</div> </div>", result.squish
+  end
+  
+  test "labeled attr" do
+  	result = labeled_attr('foo', :size)
+  	assert result.html_safe?
+  	assert_dom_equal "<div class='labeled'> <div class='caption'>Size</div> <div class='value'>3 chars</div> </div>", result.squish
   end
   
   test "alternate row" do
@@ -168,7 +174,6 @@ class StandardHelperTest < ActionView::TestCase
     assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
     assert_match /input .*?type="submit" .*?value="Save"/, f
   end
-  
   
   test "standard form for new entry" do
     e = CrudTestModel.new

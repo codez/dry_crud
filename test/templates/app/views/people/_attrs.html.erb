@@ -1,0 +1,7 @@
+<div class="attributes">
+	<%= render_attrs @entry, default_attrs, false %>
+	<%= labeled("I thinks its", "nice") %>
+	<%= labeled("Check google") do %>
+		<%= link_to "Maps", "http://map.google.com/?q=#{@entry.name}" %>
+	<% end %>
+</div>

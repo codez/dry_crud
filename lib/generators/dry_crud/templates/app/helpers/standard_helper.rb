@@ -50,7 +50,6 @@ module StandardHelper
   
   
   # Renders an arbitrary content with the given label. Used for uniform presentation.
-  # Without block, this may be used in the form <%= labeled(...) %>, with like <% labeled(..) do %>
   def labeled(label, content = nil, &block)
     content = capture(&block) if block_given?
     render(:partial => 'shared/labeled', :locals => { :label => label, :content => content}) 
@@ -69,10 +68,15 @@ module StandardHelper
   # Optionally surrounded with a div.
   def render_attrs(obj, attrs, div = true)
     html = attrs.collect do |a| 
-      labeled(captionize(a, obj.class), format_attr(obj, a))
+      labeled_attr(obj, a)
     end.join("\n").html_safe
     
     div ? content_tag(:div, html, :class => 'attributes') : html
+  end
+  
+  # Renders the formatted content of the given attribute with a label.
+  def labeled_attr(obj, attr)
+  	labeled(captionize(attr, obj.class), format_attr(obj, attr))
   end
   
   # Renders a table for the given entries. One column is rendered for each attribute passed. 
