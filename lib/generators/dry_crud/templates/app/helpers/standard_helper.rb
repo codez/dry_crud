@@ -3,7 +3,7 @@
 # ApplicationController.
 module StandardHelper
   
-  NO_LIST_ENTRIES_MESSAGE = "No entries available"
+  NO_LIST_ENTRIES_MESSAGE = "No entries found"
   CONFIRM_DELETE_MESSAGE  = 'Do you really want to delete this entry?'
   
   FLOAT_FORMAT = "%.2f"

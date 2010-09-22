@@ -29,6 +29,11 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_equal assigns(:entries).sort_by {|a| a.name }, assigns(:entries)
   end
   
+  def test_index_search
+  	super
+  	assert_equal 1, assigns(:entries).size
+  end
+  
   def test_new
     super
     assert assigns(:companions)

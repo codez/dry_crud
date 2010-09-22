@@ -13,11 +13,15 @@ class CrudController < ApplicationController
   before_filter :set_entry,   :only => [:show, :edit, :update, :destroy]
   
   helper :standard
-  helper_method :model_class, :models_label, :full_entry_label
+  helper_method :model_class, :models_label, :full_entry_label, :search_support?
   
   delegate :model_class, :model_identifier, :models_label, :to => 'self.class'  
   
   hide_action :model_class, :models_label, :model_identifier, :run_callbacks, :inheritable_root_controller
+  
+  # Define an array of searchable columns in your subclassing controllers.
+  class_attribute :search_columns
+  self.search_columns = []
   
   # Callbacks
   extend ActiveModel::Callbacks
@@ -144,16 +148,28 @@ class CrudController < ApplicationController
   # Sets an existing model entry from the given id.
   def set_entry
     @entry = model_class.find(params[:id])
-  end     
+  end
   
   # A label for the current entry, including the model name.
-  def full_entry_label        
-	  "#{models_label.singularize} '#{@entry.label}'"
-  end    
+  def full_entry_label
+    "#{models_label.singularize} '#{@entry.label}'"
+  end
   
   # Find options used in the index action.
   def find_all_options
-    {}
+    { :conditions => search_condition }
+  end
+  
+  def search_condition
+    if search_support? && params[:q].present?
+      clause = search_columns.collect {|f| "#{f} LIKE ?" }.join(" OR ")
+      param = "%#{params[:q]}%"
+      ["(#{clause})"] + [param] * search_columns.size
+    end
+  end
+  
+  def search_support?
+    search_columns.present?
   end
   
   # Redirects to the show action of a single entry.
@@ -174,9 +190,9 @@ class CrudController < ApplicationController
   end
   
   # Saves the current entry with callbacks.
-  def save_entry       
+  def save_entry
     with_callbacks(:save) { @entry.save }
-  end   
+  end
   
   # Helper method the run the given block in between the before and after
   # callbacks of the given kind.

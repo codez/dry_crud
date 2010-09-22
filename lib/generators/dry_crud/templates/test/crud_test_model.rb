@@ -13,6 +13,8 @@ end
 class CrudTestModelsController < CrudController #:nodoc:
   HANDLE_PREFIX = 'handle_'
   
+  self.search_columns = [:name, :whatever, :remarks]
+  
   before_create :possibly_redirect
   before_create :handle_name
   

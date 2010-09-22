@@ -1,0 +1,6 @@
+<%= form_tag({:action => 'index'}, {:method => :get}) do %>
+  <%= text_field_tag :q, params[:q] %>
+  <%= submit_tag 'Search' %>
+<% end %>
+
+<br/>

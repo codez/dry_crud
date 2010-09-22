@@ -8,20 +8,31 @@ module CrudControllerTestHelper
     get :index
     assert_response :success
     assert_template 'index'
-    assert_not_nil assigns(:entries)
+    assert_present assigns(:entries)
   end
   
   def test_index_xml
     get :index, :format => 'xml'
     assert_response :success
-    assert_not_nil assigns(:entries)
+    assert_present assigns(:entries)
     assert @response.body.starts_with?("<?xml")
+  end
+  
+  def test_index_search
+    field = @controller.search_columns.first
+    val = field && test_entry[field].to_s
+    return if val.blank?   # does not support search or no value in this field
+ 
+    get :index, :q => val[0..((val.size + 1)/ 2)]
+    assert_response :success
+    assert_present assigns(:entries)
+    assert assigns(:entries).include?(test_entry)
   end
   
   def test_show
     get :show, :id => test_entry.id
     assert_response :success
-    assert_template 'show'  
+    assert_template 'show'
     assert_equal test_entry, assigns(:entry)
   end
   
@@ -37,13 +48,13 @@ module CrudControllerTestHelper
       get :show, :id => 9999
     end
   end
-    
+  
   def test_show_without_id_redirects_to_index
     assert_raise(ActionController::RoutingError) do
       get :show
     end
   end
-    
+  
   def test_new
     get :new
     assert_response :success
