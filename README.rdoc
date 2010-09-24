@@ -130,7 +130,7 @@ In <tt>app/controllers/people_controller.rb</tt>:
 
 === Standard Tables and Forms
 
-DRY CRUD also provides two builder classes for update/create forms and tables for displaying entries of one model. They may be used all over your application to DRY up the form and table code. Normally, they are used with the corresponding methods from +StandardHelper+.
+DRY CRUD also provides two builder classes for update/create forms and tables for displaying entries of one model. They may be used all over your application to DRY up the form and table code. Normally, they are used with the corresponding methods from +StandardHelper+. When you define a view for a subclass of +CrudController+, you may also use the slightly enhanced +crud_table+ and +crud_form+ methods from +CrudHelper+.
 
 ==== Tables
 
@@ -153,10 +153,10 @@ To render custom columns, use the :col method:
 
 Forms work very similar. In the most simple case, you just have to specify which attributes of a model to create input fields for, and you get a complete form with error messages, labeled input fields according the column types and a save button:
 
-  <% form(@person, [:firstname, :lastname, :age, :city] -%>
+  <% standard_form(@person, [:firstname, :lastname, :age, :city] -%>
 
 Of course, custom input fields may be defined as well:
-  <% form(@person, [], :url => {:action => 'custom_update', :id => @person.id}) do |f| -%>
+  <% standard_form(@person, [], :url => {:action => 'custom_update', :id => @person.id}) do |f| -%>
     <%= f.labeled_input_fields :firstname, :lastname %>
     <% f.labeled(:sex) do %>
       <%= f.radio_button :sex, true %> female
@@ -166,7 +166,7 @@ Of course, custom input fields may be defined as well:
     <%= f.labeled_file_field :picture %>
   <% end -%>
 
-Even +belongs_to+ associations are automatically rendered with a select field. By default, all entries from the associated model are used as options. To customize this, either define an instance variable with the same name as the association in your controller, or pass a +:list+ option:
+Even +belongs_to+ associations are automatically rendered with a select field. By default, all entries from the associated model are used as options. To customize this, either define an instance variable with the same name as the association in your controller, or pass a <tt>:list</tt> option:
   <%= f.belongs_to_field :hometown, :list => City.where('country = ?', @person.country) %>
 
 (Yes, it's bad practice to use finder logic in your views! Define the variable <tt>@hometowns</tt> in your controller instead.)  
