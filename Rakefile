@@ -67,15 +67,15 @@ desc "Install dry_crud as a local gem."
 task :install => [:package] do
   sudo = RUBY_PLATFORM =~ /win32/ ? '' : 'sudo' 
   gem = RUBY_PLATFORM =~ /java/ ? 'jgem' : 'gem' 
-  sh %{#{sudo} #{gem} install --no-ri pkg/dry_crud-#{File.read('VERSION').strip}}
+  sh %{#{sudo} #{gem} install --no-ri pkg/dry_crud-#{File.read('VERSION').strip}.gem}
 end
 
 desc "Deploy rdoc to website"
 task :site => :rdoc do
   if ENV['DEST']
-  	sh "rsync -rzv rdoc/ #{ENV['DEST']}"
+    sh "rsync -rzv rdoc/ #{ENV['DEST']}"
   else
-  	puts "Please specify a destination with DEST=user@server:/deploy/dir"
+    puts "Please specify a destination with DEST=user@server:/deploy/dir"
   end
 end
 
@@ -106,4 +106,14 @@ Rake::RDocTask.new do |rdoc|
     
   rdoc.rdoc_dir = 'rdoc'
   rdoc.main = 'README.rdoc' 
+end
+
+desc "Outputs the commands required for a release. Does not perform any other actions"
+task :release do
+  version = File.read('VERSION').strip
+  puts "Issue the following commands to perform a release:"
+  puts " $ git tag version-#{version}"
+  puts " $ git push --tags"
+  puts " $ rake repackage"
+  puts " $ gem push pkg/dry_crud-#{version}.gem"
 end

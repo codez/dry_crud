@@ -156,20 +156,20 @@ Forms work very similar. In the most simple case, you just have to specify which
   <%= standard_form(@person, [:firstname, :lastname, :age, :city] -%>
 
 Of course, custom input fields may be defined as well:
-  <%= standard_form(@person, [], :url => {:action => 'custom_update', :id => @person.id}) do |f| -%>
+  <%= standard_form(@person, [], :url => {:action => 'custom_update', :id => @person.id}) do |f| %>
     <%= f.labeled_input_fields :firstname, :lastname %>
     <%= f.labeled(:sex) do %>
       <%= f.radio_button :sex, true %> female
       <%= f.radio_button :sex, false %> male
-    <% end -%>
+    <% end %>
     <%= f.labeled_integer_field :age %>
     <%= f.labeled_file_field :picture %>
-  <% end -%>
+  <% end %>
 
 Even +belongs_to+ associations are automatically rendered with a select field. By default, all entries from the associated model are used as options. To customize this, either define an instance variable with the same name as the association in your controller, or pass a <tt>:list</tt> option:
   <%= f.belongs_to_field :hometown, :list => City.where('country = ?', @person.country) %>
 
-(Yes, it's bad practice to use finder logic in your views! Define the variable <tt>@hometowns</tt> in your controller instead.)  
+Yes, it's bad practice to use finder logic in your views! Define the variable <tt>@hometowns</tt> in your controller instead, and you do not even have to specify the <tt>:list</tt> option.
 
 == Generated Files
 
