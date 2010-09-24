@@ -112,7 +112,7 @@ desc "Outputs the commands required for a release. Does not perform any other ac
 task :release do
   version = File.read('VERSION').strip
   puts "Issue the following commands to perform a release:"
-  puts " $ git tag version-#{version}"
+  puts " $ git tag version-#{version} -m \"Version tag for dry_crud-#{version}.gem\""
   puts " $ git push --tags"
   puts " $ rake repackage"
   puts " $ gem push pkg/dry_crud-#{version}.gem"
