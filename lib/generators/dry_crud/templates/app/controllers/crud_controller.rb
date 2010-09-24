@@ -179,7 +179,7 @@ class CrudController < ApplicationController
   
   # Redirects to the main action of this controller.
   def redirect_to_index
-    redirect_to :action => 'index'
+    redirect_to polymorphic_path(model_class)
   end
    
   # Helper method to run before_render callbacks and render the action.

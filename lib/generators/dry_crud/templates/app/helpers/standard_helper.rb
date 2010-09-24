@@ -146,7 +146,7 @@ module StandardHelper
   end
   
   # A generic helper method to create action links.
-  # These link may be styled to look like buttons, for example.
+  # These link could be styled to look like buttons, for example.
   def link_action(label, options = {}, html_options = {})
     link_to("[#{label}]", options, {:class => 'action'}.merge(html_options))
   end
