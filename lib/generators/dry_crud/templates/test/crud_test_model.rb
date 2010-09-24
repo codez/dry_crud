@@ -1,7 +1,9 @@
 class CrudTestModel < ActiveRecord::Base #:nodoc:
-  validates_presence_of :name
+
+  validates :name, :presence => true
+  validates :rating, :inclusion => { :in => 1..10 }
   
-  default_scope :order => 'name'
+  default_scope order('name')
   
   belongs_to :companion, :class_name => 'CrudTestModel'
   

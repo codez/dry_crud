@@ -104,7 +104,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     {:name => 'foo', 
      :children => 42, 
      :companion_id => 3,
-     :rating => 99.99, 
+     :rating => 8.5, 
      :income => 2.42, 
      :birthdate => '31-12-1999'.to_date,
      :human => true,

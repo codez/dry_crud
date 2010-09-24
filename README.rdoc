@@ -6,7 +6,7 @@ DRY CRUD generates simple and extendable controller, views and helpers that supp
 
 In order to use the generator, you have to register the gem in your Rails application's +Gemfile+. Add the following lines:
 
-  group :development, :test do
+  group :development do
     gem 'dry_crud'
   end
 
@@ -122,7 +122,7 @@ In <tt>app/controllers/people_controller.rb</tt>:
   
   def delete_picture
     if !perform_delete_picture(@entry.picture)
-      flash[:error] = 'Could not delete picture' 
+      flash[:alert] = 'Could not delete picture' 
       false
     end
   end
@@ -145,7 +145,7 @@ To render custom columns, use the :col method:
   <%= table(@people) do |t|
         t.attrs :lastname, :firstname
         t.col('', :class => 'center') {|entry| image_tag(entry.picture) }
-        t.attrs :street        
+        t.attrs :street
         t.col('Map') {|entry| link_to(entry.city, "http://maps.google.com/?q=#{entry.city}" }
       end %>
 
@@ -165,6 +165,11 @@ Of course, custom input fields may be defined as well:
     <%= f.labeled_integer_field :age %>
     <%= f.labeled_file_field :picture %>
   <% end -%>
+
+Even +belongs_to+ associations are automatically rendered with a select field. By default, all entries from the associated model are used as options. To customize this, either define an instance variable with the same name as the association in your controller, or pass a +:list+ option:
+  <%= f.belongs_to_field :hometown, :list => City.where('country = ?', @person.country) %>
+
+(Yes, it's bad practice to use finder logic in your views! Define the variable <tt>@hometowns</tt> in your controller instead.)  
 
 == Generated Files
 
@@ -194,6 +199,8 @@ views/crud/index.html.erb:: The index view displaying a table with all entries a
 
 views/crud/_list.html.erb:: A partial defining the table in the index view. To change the displayed attributes in your CRUD model, just create an own _list.html.erb in your models view directory.
 
+views/crud/_search.html.erb:: A partial defining a simple search form that is displayed when +search_columns+ are defined in a subclassing controller.
+
 views/crud/show.html.erb:: The show view displaying all the attributes of one entry and the various actions to perform on it.
 
 views/crud/_attrs.html.erb:: A partial defining the attributes to be displayed in the show view. 
@@ -213,7 +220,9 @@ public/stylesheets/crud.css:: A simple CSS with all the classes and ids used in 
 
 === Tests:
 
-test/crud_test_model.rb:: A dummy model to run CRUD tests against.
+{test/crud_test_model.rb}[http://codez.ch/dry_crud/?q=CrudTestHelper]:: A dummy model to run CRUD tests against.
+
+{test/custom_assertions.rb}[http://codez.ch/dry_crud/?q=CustomAssertions]:: A handful of convenient assertions. Include this module into your <tt>test_helper.rb</tt> file.
 
 {test/functionals/crud_controller_test_helper.rb}[http://codez.ch/dry_crud/?q=CrudControllerTestHelper]:: A module to include into the functional tests for your CrudController subclasses. Contains a handful of CRUD functionality tests for the provided implementation. So for each new CRUD controller, you get 20 tests for free.
 

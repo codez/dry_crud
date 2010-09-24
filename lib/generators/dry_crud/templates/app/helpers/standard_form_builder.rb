@@ -126,14 +126,8 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   
   protected
   
-  def labeled_field_method?(name)
-    prefix = 'labeled_'
-    if name.to_s.start_with?(prefix)
-      field_method = name.to_s[prefix.size..-1]
-      field_method if respond_to?(field_method)
-    end
-  end
-  
+  # Returns true if attr is a non-polymorphic belongs_to association,
+  # for which an input field may be automatically rendered.
   def belongs_to_association?(attr, type)
     if type == :integer || type == nil
       assoc = association(@object, attr, :belongs_to)
@@ -158,4 +152,15 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     end
     list
   end
+  
+  private
+  
+  def labeled_field_method?(name)
+    prefix = 'labeled_'
+    if name.to_s.start_with?(prefix)
+      field_method = name.to_s[prefix.size..-1]
+      field_method if respond_to?(field_method)
+    end
+  end
+  
 end
