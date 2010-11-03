@@ -158,16 +158,16 @@ module StandardHelper
   # Formats an active record association
   def format_assoc(obj, assoc)
     if assoc_val = obj.send(assoc.name)
-      link_to_unless(no_assoc_link?(assoc), assoc_val.label, assoc_val)
+      link_to_unless(no_assoc_link?(assoc, assoc_val), assoc_val.label, assoc_val)
     else
       '(none)'
     end
   end
   
   # Returns true if no link should be created when formatting the given association.
-  def no_assoc_link?(assoc)
+  def no_assoc_link?(assoc, val)
     (respond_to?(:no_assoc_links) && no_assoc_links.to_a.include?(assoc.name.to_sym)) || 
-    !respond_to?("#{assoc.klass.name.underscore}_path".to_sym)
+    !respond_to?("#{val.class.name.underscore}_path".to_sym)
   end
   
   # Formats an arbitrary attribute of the given object depending on its data type.
