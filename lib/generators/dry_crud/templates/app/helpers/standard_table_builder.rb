@@ -75,13 +75,13 @@ class StandardTableBuilder
   
   def html_header
     content_tag :tr do
-      cols.collect { |c| c.html_header }.join
+      cols.collect { |c| c.html_header }.join.html_safe
     end
   end
 
   def html_row(entry)
     tr_alt do
-      cols.collect { |c| c.html_cell(entry) }.join
+      cols.collect { |c| c.html_cell(entry) }.join.html_safe
     end
   end
 

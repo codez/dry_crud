@@ -109,6 +109,7 @@ module StandardHelper
       end
       
       content << labeled(nil, form.submit("Save"))
+      content.html_safe
     end
   end
   
