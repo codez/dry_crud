@@ -3,7 +3,7 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   validates :name, :presence => true
   validates :rating, :inclusion => { :in => 1..10 }
   
-  default_scope order('name')
+  #default_scope :order => 'name' 
   
   belongs_to :companion, :class_name => 'CrudTestModel'
   
@@ -31,6 +31,22 @@ class CrudTestModelsController < CrudController #:nodoc:
   # don't use the standard layout as it may require different routes
   # than just the test route for this controller
   layout nil
+  
+  protected
+  
+  def find_all_options
+  	if params[:filter]
+  	  options = {:conditions => ['rating < ?', 3], :order => 'children DESC'}
+  	  if s = search_condition
+  	  	s[0] = "(#{s[0]}) AND rating < ?"
+  	  	s << 3
+  	  	options[:conditions] = s
+  	  end
+  	  options
+  	else
+      super
+    end
+  end
   
   private
   

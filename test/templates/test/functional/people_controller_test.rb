@@ -17,6 +17,11 @@ class PeopleControllerTest < ActionController::TestCase
     assert_equal Person.all(:include => :city, :order => 'people.name, cities.country_code, cities.name'), assigns(:entries)
   end
   
+  def test_index_search
+    super
+  	assert_equal 1, assigns(:entries).size
+  end
+  
   protected 
   
   def test_entry

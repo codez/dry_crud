@@ -13,15 +13,12 @@ class CrudController < ApplicationController
   before_filter :set_entry,   :only => [:show, :edit, :update, :destroy]
   
   helper :standard
-  helper_method :model_class, :models_label, :full_entry_label, :search_support?
+  helper_method :model_class, :models_label, :full_entry_label
   
   delegate :model_class, :model_identifier, :models_label, :to => 'self.class'  
   
   hide_action :model_class, :models_label, :model_identifier, :run_callbacks, :inheritable_root_controller
   
-  # Define an array of searchable columns in your subclassing controllers.
-  class_attribute :search_columns
-  self.search_columns = []
   
   # Callbacks
   extend ActiveModel::Callbacks
@@ -141,7 +138,7 @@ class CrudController < ApplicationController
   end
   
   # Creates a new model entry from the given params.
-  def build_entry        
+  def build_entry
     @entry = model_class.new(params[model_identifier])
   end
   
@@ -157,19 +154,7 @@ class CrudController < ApplicationController
   
   # Find options used in the index action.
   def find_all_options
-    { :conditions => search_condition }
-  end
-  
-  def search_condition
-    if search_support? && params[:q].present?
-      clause = search_columns.collect {|f| "#{f} LIKE ?" }.join(" OR ")
-      param = "%#{params[:q]}%"
-      ["(#{clause})"] + [param] * search_columns.size
-    end
-  end
-  
-  def search_support?
-    search_columns.present?
+    {:conditions => search_condition}
   end
   
   # Redirects to the show action of a single entry.
@@ -217,5 +202,35 @@ class CrudController < ApplicationController
       @models_label ||= model_class.model_name.human.pluralize
     end   
   end
+  
+  # The search functionality for CrudController, extracted into 
+  # an own module for convenience.
+  module Search
+    def self.included(controller)    
+      # Define an array of searchable columns in your subclassing controllers.
+      controller.class_attribute :search_columns
+      controller.search_columns = []
+      
+      controller.helper_method :search_support?
+    end
+    
+    protected
+  
+    # Compose the search condition with a basic SQL OR query.
+    def search_condition
+      if search_support? && params[:q].present?
+        clause = search_columns.collect {|f| "#{f} LIKE ?" }.join(" OR ")
+        param = "%#{params[:q]}%"
+         ["(#{clause})"] + [param] * search_columns.size
+      end
+    end
+  
+    # Returns true if this controller has searchable columns.
+    def search_support?
+      search_columns.present?
+    end
+  end
+  
+  include Search
   
 end

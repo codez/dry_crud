@@ -26,12 +26,30 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_index
     super
     assert_equal 6, assigns(:entries).size
-    assert_equal assigns(:entries).sort_by {|a| a.name }, assigns(:entries)
+    assert_equal assigns(:entries).sort_by(&:name), assigns(:entries)
   end
   
   def test_index_search
   	super
   	assert_equal 1, assigns(:entries).size
+  end
+  
+  def test_index_with_custom_options
+    get :index, :filter => true
+    assert_response :success
+    assert_template 'index'
+    assert_present assigns(:entries)
+    assert_equal 2, assigns(:entries).size
+    assert_equal assigns(:entries).sort_by(&:children).reverse, assigns(:entries)
+  end
+    
+  def test_index_search_with_custom_options
+    get :index, :q => 'BBB', :filter => true
+    assert_response :success
+    assert_template 'index'
+    assert_present assigns(:entries)
+    assert_equal 1, assigns(:entries).size
+    assert_equal [CrudTestModel.find_by_name('BBBBB')], assigns(:entries)
   end
   
   def test_new
