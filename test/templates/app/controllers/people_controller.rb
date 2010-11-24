@@ -4,8 +4,8 @@ class PeopleController < AjaxController
   
   protected
   
-  def fetch_all_options
-    {:include => :city, :order => 'people.name, cities.country_code, cities.name'}
+  def list_entries
+    super.includes(:city).order('people.name, cities.country_code, cities.name')
   end
   
 end

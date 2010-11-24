@@ -4,7 +4,7 @@ class City < ActiveRecord::Base
 
   validates_presence_of :name, :country_code
   
-  default_scope :order => 'country_code, name'
+  default_scope order('country_code, name')
   
   def label
     "#{name} (#{country_code})"

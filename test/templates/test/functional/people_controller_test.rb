@@ -14,7 +14,7 @@ class PeopleControllerTest < ActionController::TestCase
   def test_index
     super
     assert_equal 2, assigns(:entries).size
-    assert_equal Person.all(:include => :city, :order => 'people.name, cities.country_code, cities.name'), assigns(:entries)
+    assert_equal Person.includes(:city).order('people.name, cities.country_code, cities.name').all, assigns(:entries)
   end
   
   def test_index_search

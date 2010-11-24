@@ -76,7 +76,7 @@ Next, let's adapt a part of the general behavior used in all CRUD controllers. A
 In <tt>app/controllers/crud_controller.rb</tt>, change the index action to
 
   def index
-    @entries = model_class.paginate({:page => params[:page]}.merge(find_all_options)) 
+    @entries = list_entries.paginate(:page => params[:page])
     respond_with @entries   
   end
 

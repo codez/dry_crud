@@ -48,7 +48,7 @@ class CrudController < ApplicationController
   #   GET /entries
   #   GET /entries.xml
   def index
-    @entries = model_class.all find_all_options
+    @entries = list_entries
     respond_with @entries
   end
   
@@ -152,9 +152,9 @@ class CrudController < ApplicationController
     "#{models_label.singularize} '#{@entry.label}'"
   end
   
-  # Find options used in the index action.
-  def find_all_options
-    {:conditions => search_condition}
+  # The entries to be displayed in the current index page.
+  def list_entries
+    model_class.scoped
   end
   
   # Redirects to the show action of a single entry.
@@ -212,14 +212,20 @@ class CrudController < ApplicationController
       controller.search_columns = []
       
       controller.helper_method :search_support?
+      
+      controller.alias_method_chain :list_entries, :search
     end
     
     protected
-  
+    
+    def list_entries_with_search
+    	list_entries_without_search.where(search_condition)
+    end
+    
     # Compose the search condition with a basic SQL OR query.
     def search_condition
       if search_support? && params[:q].present?
-        clause = search_columns.collect {|f| "#{f} LIKE ?" }.join(" OR ")
+        clause = search_columns.collect {|f| "#{model_class.table_name}.#{f} LIKE ?" }.join(" OR ")
         param = "%#{params[:q]}%"
          ["(#{clause})"] + [param] * search_columns.size
       end
@@ -229,6 +235,7 @@ class CrudController < ApplicationController
     def search_support?
       search_columns.present?
     end
+       
   end
   
   include Search

@@ -34,18 +34,12 @@ class CrudTestModelsController < CrudController #:nodoc:
   
   protected
   
-  def find_all_options
+  def list_entries
+    entries = super
   	if params[:filter]
-  	  options = {:conditions => ['rating < ?', 3], :order => 'children DESC'}
-  	  if s = search_condition
-  	  	s[0] = "(#{s[0]}) AND rating < ?"
-  	  	s << 3
-  	  	options[:conditions] = s
-  	  end
-  	  options
-  	else
-      super
+  	  entries = entries.where(['rating < ?', 3]).order('children DESC')
     end
+    entries
   end
   
   private

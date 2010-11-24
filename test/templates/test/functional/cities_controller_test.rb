@@ -14,7 +14,7 @@ class CitiesControllerTest < ActionController::TestCase
   def test_index
     super
     assert_equal 3, assigns(:entries).size
-    assert_equal City.all(:order => 'country_code, name'), assigns(:entries)
+    assert_equal City.order('country_code, name').all, assigns(:entries)
   end
   
   def test_show
