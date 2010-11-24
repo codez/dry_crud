@@ -25,7 +25,7 @@ class StandardTableBuilder
   def self.table(entries, template)
     t = new(entries, template)
     yield t
-    t.to_html    
+    t.to_html
   end
 
   # Define a column for the table with the given header, the html_options used for
@@ -42,23 +42,23 @@ class StandardTableBuilder
     attrs.each do |a|
       attr(a)
     end
-  end  
+  end
   
   # Define a column for the given attribute and an optional header.
   # If no header is given, the attribute name is used. The cell will
   # contain the formatted attribute value for the current entry.
   def attr(a, header = nil)
-      header ||= captionize(a, entry_class)
-      col(header, :class => align_class(a)) { |e| format_attr(e, a) }
+    header ||= attr_header(a)
+    col(header, :class => align_class(a)) { |e| format_attr(e, a) }
   end
   
   # Renders the table as HTML.
   def to_html
     content_tag :table, :class => 'list' do
-        html_header + entries.collect { |e| html_row(e) }.join.html_safe
+      html_header + entries.collect { |e| html_row(e) }.join.html_safe
     end
   end
-    
+  
   # Returns css classes used for alignment of the cell data.
   # Based on the column type of the attribute.
   def align_class(attr)
@@ -69,6 +69,10 @@ class StandardTableBuilder
       when :boolean  
         'center_align'
     end
+  end
+  
+  def attr_header(attr)
+    captionize(attr, entry_class)
   end
   
   private 
@@ -107,5 +111,40 @@ class StandardTableBuilder
     end
 
   end
+  
+  module Sorting
+    # Create a header with sort links
+    def sort_header(attr, label = nil)
+      label ||= attr_header(attr)
+      dir = :asc
+      current_mark = ''
+      if current = params[:sort] == attr.to_s
+        current_asc = params[:sort_dir] == 'asc'
+        current_mark = current_asc ? ' &darr;' : ' &uarr;'
+        dir = :desc if current_asc
+      end
+      
+      # include :page parameter preventatively
+      template.link_to(label, :sort => attr, :sort_dir => dir, :page => 1) + current_mark
+    end
+    
+    def attr_sortable(a, header = nil)
+      template.sortable?(a) ? attr(a, sort_header(a, header)) : attr(a, header)
+    end
+    
+    def attrs_sortable(*attrs)
+      attrs.each do |a|
+        attr_sortable(a)
+      end
+    end
+    
+    private
+    
+    def params
+      template.params
+    end
+  end
+  
+  include Sorting
 
 end

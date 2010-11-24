@@ -218,8 +218,9 @@ class CrudController < ApplicationController
     
     protected
     
+    # Enhance the list entries with an optional search criteria
     def list_entries_with_search
-    	list_entries_without_search.where(search_condition)
+      list_entries_without_search.where(search_condition)
     end
     
     # Compose the search condition with a basic SQL OR query.
@@ -239,5 +240,37 @@ class CrudController < ApplicationController
   end
   
   include Search
+  
+  module Sorting
+  	def self.included(controller)
+  	  # Define a map of (virtual) attributes to SQL order expressions.
+  	  controller.class_attribute :sort_mappings
+  	  controller.sort_mappings = {}
+  	  
+  	  controller.helper_method :sortable?
+  	
+  	  controller.alias_method_chain :list_entries, :sort
+  	end
+  	
+  	protected
+  	
+  	# Enhance the list entries with an optional sort order.
+  	def list_entries_with_sort
+  	  if sortable?(params[:sort])
+  	    dir = params[:sort_dir] == 'desc' ? 'desc' : 'asc'
+  	    col = sort_mappings[params[:sort].to_sym] || params[:sort]
+  	    list_entries_without_sort.order("#{col} #{dir}")
+  	  else
+  	  	list_entries_without_sort
+  	  end
+  	end
+  	
+  	# Returns true if the passed attribute is sortable.
+  	def sortable?(attr)
+  	  model_class.column_names.include?(attr.to_s) || sort_mappings.include?(attr)
+  	end
+  end
+  
+  include Sorting
   
 end

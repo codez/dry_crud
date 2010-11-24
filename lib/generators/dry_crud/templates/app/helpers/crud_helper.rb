@@ -6,13 +6,15 @@ module CrudHelper
   # Create a table of the @entries variable with the default or 
   # the passed attributes in its columns.
   def crud_table(*attrs, &block)
-    if block_given?
-      table(@entries, *attrs, &block)
-    else
-      attributes = attrs.present? ? attrs : default_attrs
-      table(@entries, *attributes) do |t|
-        add_list_actions(t)
-      end
+    # only use default attrs if no attrs and no block are given
+    attributes = (block_given? || attrs.present?) ? attrs : default_attrs
+    table(@entries) do |t|
+	  t.attrs_sortable(*attributes)
+	  if block_given? 
+	    yield t
+	  else
+	    add_list_actions(t)
+	  end
     end
   end
   
