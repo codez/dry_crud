@@ -9,10 +9,6 @@ class CrudHelperTest < ActionView::TestCase
   setup :reset_db, :setup_db, :create_test_data
   teardown :reset_db
   
-  def model_class
-    CrudTestModel
-  end
-  
   test "standard crud table" do
     @entries = CrudTestModel.all
     
@@ -34,7 +30,7 @@ class CrudHelperTest < ActionView::TestCase
         
     assert_match /(<tr.+?<\/tr>){7}/m, t
     assert_match /(<th.+?<\/th>){4}/m, t
-    assert_match /(<a href.+?<\/a>.*?){18}/m, t
+    assert_match /(<td><a href.+?<\/a><\/td>.*?){18}/m, t  # show, edit, delete links
   end
     
   test "custom crud table with block" do
@@ -50,7 +46,7 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /(<tr.+?<\/tr>){7}/m, t
     assert_match /(<th.+?<\/th>){4}/m, t
     assert_match /(<span>.+?<\/span>.*?){6}/m, t
-    assert_no_match /(<a href.+?<\/a>.*?)/m, t
+    assert_no_match /(<td><a href.+?<\/a><\/td>.*?)/m, t
   end
   
   test "custom crud table with attributes and block" do
@@ -65,7 +61,7 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /(<tr.+?<\/tr>){7}/m, t
     assert_match /(<th.+?<\/th>){4}/m, t
     assert_match /(<span>.+?<\/span>.*?){6}/m, t
-    assert_no_match /(<a href.+?<\/a>.*?)/m, t
+    assert_no_match /(<td><a href.+?<\/a><\/td>.*?)/m, t
   end
   
   test "crud form" do
@@ -90,12 +86,29 @@ class CrudHelperTest < ActionView::TestCase
     assert_equal [:name, :whatever, :children, :companion_id, :rating, :income, 
                   :birthdate, :human, :remarks, :created_at, :updated_at], default_attrs
   end
+  
+  # Controller helper methods for the tests
+  
+  def model_class
+    CrudTestModel
+  end
+  
+  def params
+  	{:controller => 'crud_test_models'}
+  end
+  
+  def sortable?(attr)
+  	true
+  end
+
     
   private
   
   def with_test_routing
     with_routing do |set|
       set.draw { resources :crud_test_models }
+      # used to define a controller in these tests
+      set.default_url_options = {:controller => 'crud_test_models'}
       yield
     end
   end
