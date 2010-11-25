@@ -9,7 +9,7 @@ module CrudHelper
     # only use default attrs if no attrs and no block are given
     attributes = (block_given? || attrs.present?) ? attrs : default_attrs
     table(@entries) do |t|
-	  t.attrs_sortable(*attributes)
+	  t.sortable_attrs(*attributes)
 	  if block_given? 
 	    yield t
 	  else

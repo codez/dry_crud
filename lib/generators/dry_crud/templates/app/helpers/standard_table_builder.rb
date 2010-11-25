@@ -116,29 +116,41 @@ class StandardTableBuilder
     # Create a header with sort links
     def sort_header(attr, label = nil)
       label ||= attr_header(attr)
-      dir = :asc
-      current_mark = ''
-      if current = params[:sort] == attr.to_s
-        current_asc = params[:sort_dir] == 'asc'
-        current_mark = current_asc ? ' &darr;' : ' &uarr;'
-        dir = :desc if current_asc
-      end
-      
-      # include :page parameter preventatively
-      template.link_to(label, :sort => attr, :sort_dir => dir, :page => 1) + current_mark
+      template.link_to(label, sort_params(attr)) + current_mark(attr)
     end
     
-    def attr_sortable(a, header = nil)
+    def sortable_attrs(*attrs)
+      attrs.each do |a|
+        sortable_attr(a)
+      end
+    end
+    
+    def sortable_attr(a, header = nil)
       template.sortable?(a) ? attr(a, sort_header(a, header)) : attr(a, header)
     end
     
-    def attrs_sortable(*attrs)
-      attrs.each do |a|
-        attr_sortable(a)
+    private
+    
+    def sort_params(attr)
+      # include :page parameter preventatively
+      params.merge({:sort => attr, :sort_dir => sort_dir(attr), :page => 1})
+    end
+    
+    def current_mark(attr)
+      if current_sort?(attr) 
+        (sort_dir(attr) == 'asc' ? ' &uarr;' : ' &darr;').html_safe
+      else
+        ''
       end
     end
     
-    private
+    def current_sort?(attr)
+      params[:sort] == attr.to_s
+    end
+    
+    def sort_dir(attr)
+      current_sort?(attr) && params[:sort_dir] == 'asc' ? 'desc' : 'asc'
+    end
     
     def params
       template.params

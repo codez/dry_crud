@@ -1,4 +1,6 @@
 <%= form_tag(polymorphic_path(model_class), {:method => :get}) do %>
+  <%= hidden_field_tag :sort, params[:sort] %>
+  <%= hidden_field_tag :sort_dir, params[:sort_dir] %>
   <%= text_field_tag :q, params[:q] %>
   <%= submit_tag 'Search' %>
 <% end %>

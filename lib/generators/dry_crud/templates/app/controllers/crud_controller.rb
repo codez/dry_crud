@@ -226,7 +226,8 @@ class CrudController < ApplicationController
     # Compose the search condition with a basic SQL OR query.
     def search_condition
       if search_support? && params[:q].present?
-        clause = search_columns.collect {|f| "#{model_class.table_name}.#{f} LIKE ?" }.join(" OR ")
+        clause = search_columns.collect {|f| "#{model_class.table_name}.#{f} LIKE ?" }.
+                                join(" OR ")
         param = "%#{params[:q]}%"
          ["(#{clause})"] + [param] * search_columns.size
       end
@@ -258,7 +259,8 @@ class CrudController < ApplicationController
   	def list_entries_with_sort
   	  if sortable?(params[:sort])
   	    dir = params[:sort_dir] == 'desc' ? 'desc' : 'asc'
-  	    col = sort_mappings[params[:sort].to_sym] || params[:sort]
+  	    col = sort_mappings[params[:sort].to_sym] || 
+  	          "#{model_class.table_name}.#{params[:sort]}"
   	    list_entries_without_sort.order("#{col} #{dir}")
   	  else
   	  	list_entries_without_sort

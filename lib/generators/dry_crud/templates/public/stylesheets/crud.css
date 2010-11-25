@@ -1,5 +1,5 @@
 body, div, p, td, th {
-	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-family: Verdana, Geneva, Helvetica, Arial, sans-serif;
 	font-size: 11pt;
 }
 
@@ -19,6 +19,14 @@ table.list {}
 
 /* div rendered if no entries available for list */
 div.list {}
+
+table.list th a {
+     color: darkblue;
+}
+
+td p {
+    margin: 0;
+}
 
 .right_align {
 	text-align: right;
