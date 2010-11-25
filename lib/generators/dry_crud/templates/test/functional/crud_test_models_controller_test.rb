@@ -44,12 +44,40 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
     
   def test_index_search_with_custom_options
-    get :index, :q => 'BBB', :filter => true
+    get :index, :q => 'DDD', :filter => true
     assert_response :success
     assert_template 'index'
     assert_present assigns(:entries)
     assert_equal 1, assigns(:entries).size
     assert_equal [CrudTestModel.find_by_name('BBBBB')], assigns(:entries)
+  end
+  
+  def test_sort_given_column
+  	get :index, :sort => 'children', :sort_dir => 'asc'
+    assert_response :success
+    assert_template 'index'
+    assert_present assigns(:entries)
+    assert_equal 6, assigns(:entries).size
+    assert_equal CrudTestModel.order(:children).all, assigns(:entries)
+  end
+  
+  def test_sort_virtual_column
+    get :index, :sort => 'chatty', :sort_dir => 'desc'
+    assert_response :success
+    assert_template 'index'
+    assert_present assigns(:entries)
+    assert_equal 6, assigns(:entries).size
+    sorted = CrudTestModel.all.sort_by &:chatty
+    assert_equal sorted.reverse.collect(&:name), assigns(:entries).collect(&:name)
+  end
+  
+  def test_sort_with_search
+    get :index, :q => 'DDD', :sort => 'chatty', :sort_dir => 'asc'
+    assert_response :success
+    assert_template 'index'
+    assert_present assigns(:entries)
+    assert_equal 3, assigns(:entries).size
+    assert_equal ['CCCCC', 'DDDDD', 'BBBBB'], assigns(:entries).collect(&:name)
   end
   
   def test_new

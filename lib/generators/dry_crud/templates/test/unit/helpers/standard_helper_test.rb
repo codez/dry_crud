@@ -101,7 +101,7 @@ class StandardHelperTest < ActionView::TestCase
   
   test "format integer column" do
     m = crud_test_models(:AAAAA)
-    assert_equal '1', format_type(m, :children)
+    assert_equal '9', format_type(m, :children)
     
     m.children = 10000
     assert_equal '10,000', format_type(m, :children)
@@ -127,7 +127,7 @@ class StandardHelperTest < ActionView::TestCase
   
   test "format text column" do
     m = crud_test_models(:AAAAA)
-    assert_equal "<p>AAAAA AAAAA AAAAA\n<br />AAAAA AAAAA AAAAA\n<br />AAAAA AAAAA AAAAA\n</p>", format_type(m, :remarks)
+    assert_equal "<p>AAAAA BBBBB CCCCC\n<br />AAAAA BBBBB CCCCC\n</p>", format_type(m, :remarks)
     assert format_type(m, :remarks).html_safe?
   end
   
@@ -170,7 +170,7 @@ class StandardHelperTest < ActionView::TestCase
     assert_match /option selected="selected" value="1910">1910<\/option>/, f 
     assert_match /option selected="selected" value="1">January<\/option>/, f
     assert_match /option selected="selected" value="1">1<\/option>/, f
-    assert_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=\"1\"/, f
+    assert_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=\"9\"/, f
     assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
     assert_match /input .*?type="submit" .*?value="Save"/, f
   end
@@ -207,7 +207,7 @@ class StandardHelperTest < ActionView::TestCase
     assert_match /option selected="selected" value="1910">1910<\/option>/, f
     assert_match /option selected="selected" value="1">January<\/option>/, f
     assert_match /option selected="selected" value="1">1<\/option>/, f
-    assert_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=\"1\"/, f
+    assert_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=\"9\"/, f
     assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
     assert_match /input .*?type="submit" .*?value="Save"/, f
   end

@@ -10,12 +10,17 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   def label
     name
   end
+  
+  def chatty
+  	remarks.size
+  end
 end
 
 class CrudTestModelsController < CrudController #:nodoc:
   HANDLE_PREFIX = 'handle_'
   
   self.search_columns = [:name, :whatever, :remarks]
+  self.sort_mappings = {:chatty => 'length(remarks)'}
   
   before_create :possibly_redirect
   before_create :handle_name
@@ -136,15 +141,28 @@ module CrudTestHelper
   private
   
   def create(index, companion)
-    c = (index + 64).chr * 5
+    c = str(index)
     CrudTestModel.create!(:name => c, 
-                          :children => index, 
+                          :children => 10 - index, 
                           :companion => companion,
                           :rating => "#{index}.#{index}".to_f, 
                           :income => 10000000 * index + 0.1 * index, 
                           :birthdate => "#{1900 + 10 * index}-#{index}-#{index}", 
                           :human => index % 2 == 0,
-                          :remarks => "#{c} #{c} #{c}\n" * 3)
+                          :remarks => "#{c} #{str(index + 1)} #{str(index + 2)}\n" * (index % 3 + 1))
+  end
+  
+  def str(index)
+     (index + 64).chr * 5
+  end
+  
+  def with_test_routing
+    with_routing do |set|
+      set.draw { resources :crud_test_models }
+      # used to define a controller in these tests
+      set.default_url_options = {:controller => 'crud_test_models'}
+      yield
+    end
   end
   
 end

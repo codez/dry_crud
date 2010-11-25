@@ -29,6 +29,24 @@ module CrudControllerTestHelper
     assert assigns(:entries).include?(test_entry)
   end
   
+  def test_index_sort_asc
+    col = model_class.column_names.first
+    get :index, :sort => col, :sort_dir => 'asc'
+    assert_response :success
+    assert_present assigns(:entries)
+    sorted = assigns(:entries).sort_by &(col.to_sym)
+    assert sorted, assigns(:entries)
+  end
+    
+  def test_index_sort_desc
+    col = model_class.column_names.first
+    get :index, :sort => col, :sort_dir => 'desc'
+    assert_response :success
+    assert_present assigns(:entries)
+    sorted = assigns(:entries).sort_by &(col.to_sym)
+    assert sorted.reverse, assigns(:entries)
+  end
+  
   def test_show
     get :show, :id => test_entry.id
     assert_response :success

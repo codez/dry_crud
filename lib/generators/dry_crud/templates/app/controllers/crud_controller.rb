@@ -257,7 +257,7 @@ class CrudController < ApplicationController
   	
   	# Enhance the list entries with an optional sort order.
   	def list_entries_with_sort
-  	  if sortable?(params[:sort])
+  	  if params[:sort].present? && sortable?(params[:sort])
   	    dir = params[:sort_dir] == 'desc' ? 'desc' : 'asc'
   	    col = sort_mappings[params[:sort].to_sym] || 
   	          "#{model_class.table_name}.#{params[:sort]}"
@@ -269,7 +269,8 @@ class CrudController < ApplicationController
   	
   	# Returns true if the passed attribute is sortable.
   	def sortable?(attr)
-  	  model_class.column_names.include?(attr.to_s) || sort_mappings.include?(attr)
+  	  model_class.column_names.include?(attr.to_s) || 
+  	  sort_mappings.include?(attr.to_sym)
   	end
   end
   
