@@ -261,7 +261,7 @@ class CrudController < ApplicationController
   	    dir = params[:sort_dir] == 'desc' ? 'desc' : 'asc'
   	    col = sort_mappings[params[:sort].to_sym] || 
   	          "#{model_class.table_name}.#{params[:sort]}"
-  	    list_entries_without_sort.order("#{col} #{dir}")
+  	    list_entries_without_sort.reorder("#{col} #{dir}")
   	  else
   	  	list_entries_without_sort
   	  end

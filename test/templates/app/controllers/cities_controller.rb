@@ -3,8 +3,8 @@ class CitiesController < AjaxController
   def show
     respond_to do |format|
       format.html do
-        flash[:notice] = flash[:notice]
-        redirect_to :action => 'index'
+        flash.keep
+        redirect_to_index
       end
       format.xml  { render :xml => @entry }
     end

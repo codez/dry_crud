@@ -132,8 +132,7 @@ class StandardTableBuilder
     private
     
     def sort_params(attr)
-      # include :page parameter preventatively
-      params.merge({:sort => attr, :sort_dir => sort_dir(attr), :page => 1})
+      params.merge({:sort => attr, :sort_dir => sort_dir(attr)})
     end
     
     def current_mark(attr)
