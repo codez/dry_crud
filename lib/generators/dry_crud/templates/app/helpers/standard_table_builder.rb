@@ -112,7 +112,7 @@ class StandardTableBuilder
 
   end
   
-  # Provides headers with sort links. Expects a method #sortable?(attr) 
+  # Provides headers with sort links. Expects a method :sortable?(attr) 
   # in the template/controller to tell if an attribute is sortable or not.
   # Extracted into an own module for convenience.
   module Sorting
@@ -122,18 +122,17 @@ class StandardTableBuilder
       template.link_to(label, sort_params(attr)) + current_mark(attr)
     end
     
-    # Same as #attrs, except that it renders a sort link in the header
+    # Same as :attrs, except that it renders a sort link in the header
     # if an attr is sortable.
     def sortable_attrs(*attrs)
       attrs.each do |a|
-        sortable_attr(a)
+        template.sortable?(a) ? sortable_attr(a) : attr(a)
       end
     end
     
-    # Same as #attr, except that it renders a sort link in the header
-    # if the attr is sortable.
+    # Renders a sort link header, otherwise similar to :attr.
     def sortable_attr(a, header = nil)
-      template.sortable?(a) ? attr(a, sort_header(a, header)) : attr(a, header)
+      attr(a, sort_header(a, header))
     end
     
     private
