@@ -137,7 +137,7 @@ module StandardHelper
   end
   
   # Standard link action to the list page.
-  def link_action_index(url_options = {:action => 'index'})
+  def link_action_index(url_options = {:action => 'index', :returning => true})
     link_action 'List', url_options
   end
   

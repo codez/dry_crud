@@ -43,5 +43,5 @@ module CrudHelper
     [:id, :position].each {|a| attrs.delete(a) }
     attrs
   end
-  
+    
 end

@@ -164,7 +164,7 @@ class CrudController < ApplicationController
   
   # Redirects to the main action of this controller.
   def redirect_to_index
-    redirect_to polymorphic_path(model_class)
+    redirect_to polymorphic_path(model_class, :returning => true)
   end
    
   # Helper method to run before_render callbacks and render the action.
@@ -203,8 +203,8 @@ class CrudController < ApplicationController
     end   
   end
   
-  # The search functionality for CrudController, extracted into 
-  # an own module for convenience.
+  # The search functionality for the index table.
+  # Extracted into an own module for convenience.
   module Search
     def self.included(controller)    
       # Define an array of searchable columns in your subclassing controllers.
@@ -242,9 +242,14 @@ class CrudController < ApplicationController
   
   include Search
   
+  # Sort functionality for the index table.
+  # Extracted into an own module for convenience.
   module Sorting
   	def self.included(controller)
   	  # Define a map of (virtual) attributes to SQL order expressions.
+  	  # May be used for sorting table columns that do not appear directly
+  	  # in the database table. E.g., map :city_id => 'cities.name' to
+  	  # sort the displayed city names.
   	  controller.class_attribute :sort_mappings
   	  controller.sort_mappings = {}
   	  
@@ -258,14 +263,23 @@ class CrudController < ApplicationController
   	# Enhance the list entries with an optional sort order.
   	def list_entries_with_sort
   	  if params[:sort].present? && sortable?(params[:sort])
-  	    dir = params[:sort_dir] == 'desc' ? 'desc' : 'asc'
-  	    col = sort_mappings[params[:sort].to_sym] || 
-  	          "#{model_class.table_name}.#{params[:sort]}"
-  	    list_entries_without_sort.reorder("#{col} #{dir}")
+  	    list_entries_without_sort.except(:order).order(sort_expression)
   	  else
   	  	list_entries_without_sort
   	  end
   	end
+  	
+  	# Return the sort expression to be used in the list query.
+  	def sort_expression
+  	  col = sort_mappings[params[:sort].to_sym] || 
+  	        "#{model_class.table_name}.#{params[:sort]}"
+  	  "#{col} #{sort_dir}"
+  	end
+  	
+  	# The sort direction, either 'asc' or 'desc'.
+  	def sort_dir
+      params[:sort_dir] == 'desc' ? 'desc' : 'asc'
+    end
   	
   	# Returns true if the passed attribute is sortable.
   	def sortable?(attr)
@@ -275,5 +289,45 @@ class CrudController < ApplicationController
   end
   
   include Sorting
+  
+  # Remembers certain params of the index action in order to return
+  # to the same list after an entry was shown or edited.
+  # If the index is called with a param :returning, the remembered params
+  # will be re-used.
+  # Extracted into an own module for convenience.
+  module Memory
+  
+    def self.included(controller)  	  
+      # Define a list of param keys that should be remembered for the list action.
+  	  controller.class_attribute :remember_params
+  	  controller.remember_params = [:q, :sort, :sort_dir]
+  	  
+      controller.before_filter :handle_remember_params, :only => [:index]
+    end
+    
+    private
+    
+    # Store and restore the corresponding params.
+    def handle_remember_params
+      remembered = remembered_params
+      if params[:returning]
+        # restore params
+        remember_params.each {|p| params[p] ||= remembered[p] }
+      end
+      
+      # store current params
+      remember_params.each {|p| remembered[p] = params[p].presence }
+    end
+    
+    # Get the params stored in the session.
+    # Params are stored by request path to play nice when a controller
+    # is used in different routes.
+    def remembered_params
+    	session[:list_params] ||= {}
+    	session[:list_params][request.path] ||= {}
+    end
+  end
+  
+  include Memory
   
 end

@@ -20,7 +20,7 @@ To integrate DRY CRUD into your code, only a few additions are required:
 * To use standard formatting, tables and forms throughout your application, add <tt>helper :standard</tt> to your +ApplicationController+ and benefit everywhere from these little helper methods. 
 * Add a <tt>:label</tt> method to your models for a human-friendly representation.
 
-Version 1.0.0 is built for Rails 3. If you need a version for Rails 2.3, please get version 0.6.0 of the gem or go to the rails-2.3 branch on Github.
+Version 1.2.0 is built for Rails 3. If you need a version for Rails 2.3, please get version 0.6.0 of the gem or go to the rails-2.3 branch on Github.
 
 == Overview
 
@@ -57,7 +57,7 @@ Say you want to manage a +Person+ model. Create the following controller and add
     end
   end
 
-That's it. You have an overview of all people, detail pages and forms to edit and create persons. Oh, and of course, you may delete persons as well. By default, all attributes are displayed and formatted according to their column type wherever they appear. This holds for the input fields as well.
+That's it. You have a sortable overview of all people, detail pages and forms to edit and create persons. Oh, and of course, you may delete persons as well. By default, all attributes are displayed and formatted according to their column type wherever they appear. This holds for the input fields as well.
 
 
 ==== Customize single views
@@ -84,6 +84,9 @@ In <tt>app/views/crud/index.html.erb</tt>, add the following line for the pagina
    <%= will_paginate @entries %>
 
 And we are done again. All our controllers inheriting from +CrudController+, including above +PeopleController+, now have paginated index views. Because our customization for the people table is in the separate <tt> _list</tt> partial, no further modifications are required. 
+If the current page should be remembered while viewing or editing an entry, just add :page to the remembered_params in <tt>CrudController::Memory</tt>:
+  
+  controller.remember_params = [:q, :sort, :sort_dir, :page]
 
 
 ==== Special formatting for selected attributes
@@ -136,16 +139,16 @@ DRY CRUD also provides two builder classes for update/create forms and tables fo
 
 This is the code to define a table with some attribute columns for a list of same-type entries. Columns get a header corresponding to the attribute name:
   <%= table(@people) do |t|
-        t.attrs :lastname, :firstname
+        t.sortable_attrs :lastname, :firstname
       end %>
 
 If entries is empty, a basic 'No entries found' message is rendered instead of the table.
 
 To render custom columns, use the :col method:
   <%= table(@people) do |t|
-        t.attrs :lastname, :firstname
+        t.sortable_attrs :lastname, :firstname
         t.col('', :class => 'center') {|entry| image_tag(entry.picture) }
-        t.attrs :street
+        t.attr :street
         t.col('Map') {|entry| link_to(entry.city, "http://maps.google.com/?q=#{entry.city}" }
       end %>
 
@@ -177,7 +180,7 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 === Controller:
 
-{controller/crud_controller.rb}[http://codez.ch/dry_crud/?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method.
+{controller/crud_controller.rb}[http://codez.ch/dry_crud/?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. There are two modules included that provide search and sort functionality for the table displayed in the index action. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method.
 
 {controller/render_inheritable.rb}[http://codez.ch/dry_crud/?q=RenderInheritable]:: A controller enhancement that allows one to render inheritable views and partials. If no view file is found for the current controller, the corresponding file is looked up in its superclass hierarchy. Thus, only views or partials that look differently have to be overwritten.
 

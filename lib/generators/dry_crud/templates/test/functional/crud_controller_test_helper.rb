@@ -174,7 +174,7 @@ module CrudControllerTestHelper
   protected 
   
   def assert_redirected_to_index
-    assert_redirected_to :action => 'index'
+    assert_redirected_to :action => 'index', :returning => true
   end
   
   def assert_test_attrs_equal

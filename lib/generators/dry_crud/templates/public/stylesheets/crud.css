@@ -7,14 +7,6 @@ td {
 	vertical-align: top;
 }
 
-tr.even {
-	background-color: #DDD;
-}
-
-tr.odd { 
-	background-color: #EEE;
-}
-
 table.list {}
 
 /* div rendered if no entries available for list */
@@ -22,6 +14,14 @@ div.list {}
 
 table.list th a {
      color: darkblue;
+}
+
+tr.even {
+	background-color: #F0F0F0;
+}
+
+tr.odd { 
+	background-color: #F8F8F8;
 }
 
 td p {

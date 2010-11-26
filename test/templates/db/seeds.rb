@@ -1,5 +1,6 @@
 be = City.create!(:name => 'Bern', :country_code => 'CH')
 ny = City.create!(:name => 'New York', :country_code => 'USA')
+sf = City.create!(:name => 'San Francisco', :country_code => 'USA')
 lon = City.create!(:name => 'London', :country_code => 'GB')
 br = City.create!(:name => 'Berlin', :country_code => 'DE')
 
