@@ -206,7 +206,6 @@ class CrudController < ApplicationController
   # The search functionality for the index table.
   # Extracted into an own module for convenience.
   module Search
-    # Adds a :search_columns class attribute.
     def self.included(controller)    
       # Define an array of searchable columns in your subclassing controllers.
       controller.class_attribute :search_columns
@@ -299,7 +298,7 @@ class CrudController < ApplicationController
   # Extracted into an own module for convenience.
   module Memory
   
-    # Adds the :remember_paramas class attribute and a before filter to the index action.
+    # Adds the :remember_params class attribute and a before filter to the index action.
     def self.included(controller)  	  
       # Define a list of param keys that should be remembered for the list action.
   	  controller.class_attribute :remember_params
