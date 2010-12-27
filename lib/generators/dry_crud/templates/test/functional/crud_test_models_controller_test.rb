@@ -68,7 +68,17 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_present assigns(:entries)
     assert_equal 6, assigns(:entries).size
     sorted = CrudTestModel.all.sort_by &:chatty
-    assert_equal sorted.reverse.collect(&:name), assigns(:entries).collect(&:name)
+    
+    # sort order is ambiguous, use index    
+    names = assigns(:entries).collect(&:name)
+    assert names.index('BBBBB') < names.index('AAAAA')
+    assert names.index('BBBBB') < names.index('DDDDD')
+    assert names.index('EEEEE') < names.index('AAAAA')
+    assert names.index('EEEEE') < names.index('DDDDD')
+    assert names.index('AAAAA') < names.index('CCCCC')
+    assert names.index('AAAAA') < names.index('FFFFF')
+    assert names.index('DDDDD') < names.index('CCCCC')
+    assert names.index('DDDDD') < names.index('FFFFF')
   end
   
   def test_sort_with_search
