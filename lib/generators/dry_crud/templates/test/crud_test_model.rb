@@ -123,8 +123,11 @@ module CrudTestHelper
   
   # Removes the crud_test_models table from the database.
   def reset_db
+    c = ActiveRecord::Base.connection
     [:crud_test_models].each do |table|            
-      ActiveRecord::Base.connection.drop_table(table) rescue nil
+      if c.table_exists?(table)
+        c.drop_table(table) rescue nil
+      end
     end
   end
   
