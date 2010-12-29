@@ -73,18 +73,18 @@ This only displays these three attributes in the table. All other templates, as 
 
 Next, let's adapt a part of the general behavior used in all CRUD controllers. As an example, we include pagination with will_paginate[http://wiki.github.com/mislav/will_paginate/] in all our overview tables: 
 
-In <tt>app/controllers/crud_controller.rb</tt>, change the index action to
+In <tt>app/controllers/list_controller.rb</tt>, change the index action to
 
   def index
     @entries = list_entries.paginate(:page => params[:page])
     respond_with @entries   
   end
 
-In <tt>app/views/crud/index.html.erb</tt>, add the following line for the pagination links:
+In <tt>app/views/list/index.html.erb</tt>, add the following line for the pagination links:
    <%= will_paginate @entries %>
 
-And we are done again. All our controllers inheriting from +CrudController+, including above +PeopleController+, now have paginated index views. Because our customization for the people table is in the separate <tt> _list</tt> partial, no further modifications are required. 
-If the current page should be remembered while viewing or editing an entry, just add :page to the remembered_params in <tt>CrudController::Memory</tt>:
+And we are done again. All our controllers inheriting from +ListController+, including above +PeopleController+, now have paginated index views. Because our customization for the people table is in the separate <tt>_list</tt> partial, no further modifications are required. 
+If the current page should be remembered while viewing or editing an entry, just add :page to the remembered_params in <tt>ListController::Memory</tt>:
   
   controller.remember_params = [:q, :sort, :sort_dir, :page]
 

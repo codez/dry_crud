@@ -61,7 +61,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'index'
     assert_present assigns(:entries)
     assert_equal 6, assigns(:entries).size
-    assert_equal CrudTestModel.order(:children).all, assigns(:entries)
+    assert_equal CrudTestModel.all.sort_by(&:children), assigns(:entries)
     assert_equal({:sort => 'children', :sort_dir => 'asc'}, session[:list_params]['/crud_test_models'])
   end
   
@@ -73,7 +73,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_equal 6, assigns(:entries).size
     assert_equal({:sort => 'chatty', :sort_dir => 'desc'}, session[:list_params]['/crud_test_models'])
     
-    sorted = CrudTestModel.all.sort_by &:chatty
+    sorted = CrudTestModel.all.sort_by(&:chatty)
     
     # sort order is ambiguous, use index    
     names = assigns(:entries).collect(&:name)

@@ -3,7 +3,7 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   validates :name, :presence => true
   validates :rating, :inclusion => { :in => 1..10 }
   
-  #default_scope :order => 'name' 
+  default_scope order('name') 
   
   belongs_to :companion, :class_name => 'CrudTestModel'
   
@@ -42,7 +42,7 @@ class CrudTestModelsController < CrudController #:nodoc:
   def list_entries
     entries = super
   	if params[:filter]
-  	  entries = entries.where(['rating < ?', 3]).order('children DESC')
+  	  entries = entries.where(['rating < ?', 3]).except(:order).order('children DESC')
     end
     entries
   end
@@ -102,23 +102,25 @@ module CrudTestHelper
   # Sets up the test database with a crud_test_models table.
   # Look at the source to view the column definition.
   def setup_db    
-    silence_stream(STDOUT) do
-      ActiveRecord::Base.connection.create_table :crud_test_models, :force => true do |t|
-        t.string  :name, :null => false, :limit => 50
-        t.string  :whatever
-        t.integer :children
-        t.integer :companion_id
-        t.float   :rating
-        t.decimal :income, :precision => 14, :scale => 2
-        t.date    :birthdate
-        t.boolean :human, :default => true
-        t.text    :remarks
-        
-        t.timestamps
+    without_transaction do
+      silence_stream(STDOUT) do
+        ActiveRecord::Base.connection.create_table :crud_test_models, :force => true do |t|
+          t.string  :name, :null => false, :limit => 50
+          t.string  :whatever
+          t.integer :children
+          t.integer :companion_id
+          t.float   :rating
+          t.decimal :income, :precision => 14, :scale => 2
+          t.date    :birthdate
+          t.boolean :human, :default => true
+          t.text    :remarks
+          
+          t.timestamps
+        end
       end
+          
+      CrudTestModel.reset_column_information
     end
-    
-    CrudTestModel.reset_column_information
   end
   
   # Removes the crud_test_models table from the database.
@@ -157,6 +159,20 @@ module CrudTestHelper
   
   def str(index)
      (index + 64).chr * 5
+  end
+  
+  # hack to avoid ddl + transaction issues with mysql.
+  def without_transaction
+    c = ActiveRecord::Base.connection
+    start_transaction = false
+    if c.adapter_name.downcase.start_with?('mysql') && c.open_transactions > 0
+      c.execute("ROLLBACK")
+      start_transaction = true
+    end
+    
+    yield    
+    
+    c.execute("BEGIN") if start_transaction
   end
   
   def with_test_routing

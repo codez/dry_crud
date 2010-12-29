@@ -2,7 +2,7 @@
 # This action lists all entries of a certain model and provides functionality to 
 # search and sort this list. 
 # Furthermore, it remembers the last search and sort parameters. When the action
-# is called with a param +returning=true+, these parameters are reused to present
+# is called with a param returning=true, these parameters are reused to present
 # the user the same list as he left it.  
 class ListController < ApplicationController
     

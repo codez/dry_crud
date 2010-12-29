@@ -124,6 +124,11 @@ class StandardHelperTest < ActionView::TestCase
     m = crud_test_models(:AAAAA)
     assert_equal '1910-01-01', format_type(m, :birthdate)
   end
+    
+  test "format datetime column" do
+    m = crud_test_models(:AAAAA)
+    assert_equal f(m.created_at.to_date) + " " + f(m.created_at.to_time), format_type(m, :created_at)
+  end
   
   test "format text column" do
     m = crud_test_models(:AAAAA)
