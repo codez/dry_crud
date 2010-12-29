@@ -11,4 +11,3 @@ required:
  * Add a :label method to your models for a human-friendly representation.
 
 Enjoy dry_crud and stay DRY!
- 

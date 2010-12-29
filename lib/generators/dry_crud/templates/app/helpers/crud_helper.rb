@@ -20,9 +20,9 @@ module CrudHelper
   
   # Adds a set of standard action link column (show, edit, destroy) to the given table.
   def add_list_actions(table)
-    table.col { |e| link_action_show(e) }
-    table.col { |e| link_action_edit(e) }
-    table.col { |e| link_action_destroy(e) }
+    table.col('', :class => 'center') { |e| link_action_show(e) }
+    table.col('', :class => 'center') { |e| link_action_edit(e) }
+    table.col('', :class => 'center') { |e| link_action_destroy(e) }
   end
   
   # Renders a generic form for the current entry with :default_attrs or the 

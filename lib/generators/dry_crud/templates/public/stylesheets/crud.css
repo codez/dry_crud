@@ -28,11 +28,11 @@ td p {
     margin: 0;
 }
 
-.right_align {
+.right {
 	text-align: right;
 }
 
-.center_align {
+.center {
 	text-align: center;
 }
 
@@ -72,18 +72,21 @@ a:visited.action {
 }
 
 #flash_notice {
-	color: #663333;
+    border: solid 2px #6a6;
+    background-color: #afa;
+    margin: 20pt;
+    padding: 5pt 10pt;
 }
 
 #error_explanation {
-	border: solid 1px #999999;
-	margin: 10pt;
-	padding: 5pt;
-	background-color: #FFBBBB;
+	border: solid 2pt #da9;
+	margin: 20pt;
+	padding: 5pt 10pt;
+	background-color: #fec;
 }
 
 #error_explanation h2 {
-	font-size: 12pt;
+	font-size: 11pt;
 	margin-top: 0pt;
 }
 
@@ -92,8 +95,8 @@ a:visited.action {
 }
 
 .value div.field_with_errors {
-	background-color: #FFBBBB;
+	background-color: #da9;
 	display: inline-block;
-	padding: 1px;
+	padding: 1px 1px;
 }
 

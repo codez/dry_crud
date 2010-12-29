@@ -65,9 +65,9 @@ class StandardTableBuilder
     entry = entries.first
     case column_type(entry, attr)
       when :integer, :float, :decimal 
-        'right_align' unless association(entry, attr, :belongs_to)
+        'right' unless association(entry, attr, :belongs_to)
       when :boolean  
-        'center_align'
+        'center'
     end
   end
   

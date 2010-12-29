@@ -18,7 +18,7 @@ class CrudHelperTest < ActionView::TestCase
     
     assert_match /(<tr.+?<\/tr>){7}/m, t
     assert_match /(<th><a .*asc.*>.*<\/a><\/th>){4}/m, t
-    assert_match /(<td><a href.+?<\/a><\/td>.*?){18}/m, t  # show, edit, delete links
+    assert_match /(<td class="center"><a href.+?<\/a><\/td>.*?){18}/m, t  # show, edit, delete links
   end
   
   test "custom crud table with attributes" do
@@ -30,7 +30,7 @@ class CrudHelperTest < ActionView::TestCase
         
     assert_match /(<tr.+?<\/tr>){7}/m, t
     assert_match /(<th.+?<\/th>){4}/m, t
-    assert_match /(<td><a href.+?<\/a><\/td>.*?){18}/m, t  # show, edit, delete links
+    assert_match /(<td class="center"><a href.+?<\/a><\/td>.*?){18}/m, t  # show, edit, delete links
   end
     
   test "custom crud table with block" do
@@ -61,7 +61,7 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /(<tr.+?<\/tr>){7}/m, t
     assert_match /(<th.+?<\/th>){4}/m, t
     assert_match /(<span>.+?<\/span>.*?){6}/m, t
-    assert_no_match /(<td><a href.+?<\/a><\/td>.*?)/m, t
+    assert_no_match /(<td class="center"><a href.+?<\/a><\/td>.*?)/m, t
   end
     
   test "standard crud table with ascending sort params" do
@@ -78,7 +78,7 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /(<tr.+?<\/tr>){7}/m, t
     assert_match /(<th><a .*desc.*>Children<\/a> &darr;<\/th>){1}/m, t
     assert_match /(<th><a .*asc.*>.*<\/a><\/th>){3}/m, t
-    assert_match /(<td><a href.+?<\/a><\/td>.*?){18}/m, t
+    assert_match /(<td class="center"><a href.+?<\/a><\/td>.*?){18}/m, t
   end
   
   test "standard crud table with descending sort params" do
@@ -95,7 +95,7 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /(<tr.+?<\/tr>){7}/m, t
     assert_match /(<th><a .*asc.*>Children<\/a> &uarr;<\/th>){1}/m, t
     assert_match /(<th><a .*asc.*>.*<\/a><\/th>){4}/m, t
-    assert_match /(<td><a href.+?<\/a><\/td>.*?){18}/m, t
+    assert_match /(<td class="center"><a href.+?<\/a><\/td>.*?){18}/m, t
   end
     
   test "crud table with custom column sort params" do
@@ -112,7 +112,7 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /(<tr.+?<\/tr>){7}/m, t
     assert_match /(<th><a .*desc.*>Chatty<\/a> &darr;<\/th>){1}/m, t
     assert_match /(<th><a .*asc.*>.*<\/a><\/th>){2}/m, t
-    assert_match /(<td><a href.+?<\/a><\/td>.*?){18}/m, t
+    assert_match /(<td class="center"><a href.+?<\/a><\/td>.*?){18}/m, t
   end
   
   test "crud form" do

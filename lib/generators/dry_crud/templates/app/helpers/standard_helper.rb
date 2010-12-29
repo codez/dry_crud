@@ -180,7 +180,7 @@ module StandardHelper
     case column_type(obj, attr)
       when :time    then val.strftime(TIME_FORMAT)
       when :date    then val.to_date.to_s
-      when :text    then simple_format(h(val))
+      when :text    then val.present? ? simple_format(h(val)) : EMPTY_STRING
       when :decimal then f(val.to_s.to_f)
     else f(val)
     end

@@ -1,4 +1,4 @@
-<%= crud_table :name, :country_code do |t|
-	t.col {|e| link_action_edit(e) }
-	t.col {|e| link_action_destroy(e) }
+<%= crud_table *default_attrs do |t|
+	t.col('', :class => 'center') {|e| link_action_edit(e) }
+	t.col('', :class => 'center') {|e| link_action_destroy(e) }
 end %>
