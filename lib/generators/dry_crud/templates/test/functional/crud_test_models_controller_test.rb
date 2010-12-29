@@ -27,11 +27,13 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     super
     assert_equal 6, assigns(:entries).size
     assert_equal assigns(:entries).sort_by(&:name), assigns(:entries)
+    assert_equal Hash.new, session[:list_params]
   end
   
   def test_index_search
   	super
   	assert_equal 1, assigns(:entries).size
+    assert_equal({:q => 'AAAA'}, session[:list_params]['/crud_test_models'])
   end
   
   def test_index_with_custom_options
@@ -50,6 +52,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_present assigns(:entries)
     assert_equal 1, assigns(:entries).size
     assert_equal [CrudTestModel.find_by_name('BBBBB')], assigns(:entries)
+    assert_equal({:q => 'DDD'}, session[:list_params]['/crud_test_models'])
   end
   
   def test_sort_given_column
@@ -59,6 +62,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_present assigns(:entries)
     assert_equal 6, assigns(:entries).size
     assert_equal CrudTestModel.order(:children).all, assigns(:entries)
+    assert_equal({:sort => 'children', :sort_dir => 'asc'}, session[:list_params]['/crud_test_models'])
   end
   
   def test_sort_virtual_column
@@ -67,6 +71,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'index'
     assert_present assigns(:entries)
     assert_equal 6, assigns(:entries).size
+    assert_equal({:sort => 'chatty', :sort_dir => 'desc'}, session[:list_params]['/crud_test_models'])
+    
     sorted = CrudTestModel.all.sort_by &:chatty
     
     # sort order is ambiguous, use index    
@@ -88,6 +94,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_present assigns(:entries)
     assert_equal 3, assigns(:entries).size
     assert_equal ['CCCCC', 'DDDDD', 'BBBBB'], assigns(:entries).collect(&:name)
+    assert_equal({:sort => 'chatty', :sort_dir => 'asc', :q => 'DDD'}, session[:list_params]['/crud_test_models'])
   end
   
   def test_new

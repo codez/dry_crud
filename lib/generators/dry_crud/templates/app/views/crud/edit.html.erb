@@ -1,4 +1,4 @@
-<% @title = "Edit #{full_entry_label}" -%>
+<% @title ||= "Edit #{full_entry_label}" -%>
 
 <%= render :partial => 'form' %>
 

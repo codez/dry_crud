@@ -41,6 +41,24 @@ class CustomAssertionsTest < ActiveSupport::TestCase
     end
   end
   
+  test "assert count succeeds if count matches" do
+    assert_nothing_raised do
+      assert_count 3, "ba", "barbabapa"
+    end
+  end
+  
+  test "assert count succeeds if count is zero" do
+    assert_nothing_raised do
+      assert_count 0, "bo", "barbabapa"
+    end
+  end
+  
+  test "assert count fails if count does not match" do
+    assert_raise(Test::Unit::AssertionFailedError) do
+      assert_count 2, "ba", "barbabapa"
+    end
+  end
+  
   test "assert valid record succeeds" do
     assert_nothing_raised do
       assert_valid crud_test_models("AAAAA")

@@ -180,7 +180,9 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 === Controller:
 
-{controller/crud_controller.rb}[http://codez.ch/dry_crud/?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. There are two modules included that provide search and sort functionality for the table displayed in the index action. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method.
+{controller/crud_controller.rb}[http://codez.ch/dry_crud/?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on ListController.
+
+{controller/list_controller.rb}[http://codez.ch/dry_crud/?q=ListController]:: Abstract controller providing a basic list action. There are two sub-modules that provide search and sort functionality for the table displayed in the list action. A third sub-module remembers the list parameters in order to return to an identical list.
 
 {controller/render_inheritable.rb}[http://codez.ch/dry_crud/?q=RenderInheritable]:: A controller enhancement that allows one to render inheritable views and partials. If no view file is found for the current controller, the corresponding file is looked up in its superclass hierarchy. Thus, only views or partials that look differently have to be overwritten.
 
@@ -191,6 +193,8 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 {helpers/crud_helper.rb}[http://codez.ch/dry_crud/?q=CrudHelper]:: A small helper for CrudController to render tables and forms with a default set of attributes.
 
+{helpers/list_helper.rb}[http://codez.ch/dry_crud/?q=ListHelper]:: A small helper for ListController to render the list table with a default set of attributes.
+
 {helpers/standard_table_builder.rb}[http://codez.ch/dry_crud/?q=StandardTableBuilder]:: A simple helper object to easily define tables listing several rows of the same data type.
 
 {helpers/standard_form_builder.rb}[http://codez.ch/dry_crud/?q=StandardFormBuilder]:: A form builder that automatically selects the corresponding input element for ActiveRecord columns. Input elements are rendered with a corresponding label by default.
@@ -200,21 +204,18 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 All templates in the +crud+ folder may be 'overriden' individually in a respective view folder. Define the basic structure of your CRUD views here and adapt it as required for each single model.
 
-views/crud/index.html.erb:: The index view displaying a table with all entries and an action link to add new ones. If you have +search_columns+ defined for your controller, then a search box is rendered as well.
-
-views/crud/_list.html.erb:: A partial defining the table in the index view. To change the displayed attributes in your CRUD model, just create an own _list.html.erb in your models view directory.
-
-views/crud/_search.html.erb:: A partial defining a simple search form that is displayed when +search_columns+ are defined in a subclassing controller.
 
 views/crud/show.html.erb:: The show view displaying all the attributes of one entry and the various actions to perform on it.
 
 views/crud/_attrs.html.erb:: A partial defining the attributes to be displayed in the show view. 
 
+views/crud/_list.html.erb:: A partial defining the table in the index view. To change the displayed attributes for your list model, just create an own _list.html.erb in your controller's view directory.
+
 views/crud/new.html.erb:: The view to create a new entry.
 
 views/crud/edit.html.erb:: The view to edit an existing entry.
 
-views/crud/_form.html.erb:: The form used to create and edit entries. If you would like to customize this form for various models, just create an own _form.html.erb in your models view directory.
+views/crud/_form.html.erb:: The form used to create and edit entries. If you would like to customize this form for various models, just create an own _form.html.erb in your controller's view directory.
 
 views/crud/_actions_index.html.erb:: The action links available in the index view.
 
@@ -222,9 +223,17 @@ views/crud/_actions_show.html.erb:: The action links available in the show view.
 
 views/crud/_actions_edit.html.erb:: The action links available in the edit view.
 
+views/list/index.html.erb:: The index view displaying a sortable table with all entries. If you have +search_columns+ defined for your controller, then a search box is rendered as well.
+
+views/list/_list.html.erb:: A partial defining the table in the index view. To change the displayed attributes for your list model, just create an own _list.html.erb in your controller's view directory.
+
+views/list/_search.html.erb:: A partial defining a simple search form that is displayed when +search_columns+ are defined in a subclassing controller.
+
+views/list/_actions_index.html.erb:: The action links available in the index view. None by default.
+
 views/shared/_labeled.html.erb:: Partial to define the layout for an arbitrary content with a label.
 
-views/layouts/crud.html.erb:: An example layout showing how to use the @title and +flash+. Most probably you want to include this in your application.html.erb or adapt this main crud templates, so you wont need this file.
+views/layouts/crud.html.erb:: An example layout showing how to use the @title and +flash+. Most probably you want to merge this with your application.html.erb or adapt the main CRUD templates, so you wont need this file.
 
 public/stylesheets/crud.css:: A simple CSS with all the classes and ids used in the CRUD code. 
 

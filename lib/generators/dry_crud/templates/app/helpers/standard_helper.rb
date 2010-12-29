@@ -178,11 +178,12 @@ module StandardHelper
     val = obj.send(attr)
     return EMPTY_STRING if val.nil?
     case column_type(obj, attr)
-      when :time    then val.strftime(TIME_FORMAT)
-      when :date    then val.to_date.to_s
+      when :time    then f(val.to_time)
+      when :date    then f(val.to_date)
+      when :datetime, :timestamp then "#{f(val.to_date)} #{f(val.to_time)}"
       when :text    then val.present? ? simple_format(h(val)) : EMPTY_STRING
       when :decimal then f(val.to_s.to_f)
-    else f(val)
+      else f(val)
     end
   end
   

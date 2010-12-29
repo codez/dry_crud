@@ -23,6 +23,14 @@ module CustomAssertions
     assert_block(full_message) { !collection.include?(element) }
   end
   
+  # Asserts that <regexp> occurs exactly <expected> times in <string>.
+  def assert_count(expected, regexp, string, message = "")
+    actual = string.scan(regexp).size
+    full_message = build_message(message, "<?> expected to occur ? time(s), but occured ? time(s) in \n<?>.", 
+                                 regexp, expected, actual, string)
+    assert_block(full_message) { expected == actual }
+  end
+  
   # Asserts that the given active model record is valid.
   # This method used to be part of Rails but was deprecated, no idea why.
   def assert_valid(record, message = "")

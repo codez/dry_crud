@@ -1,4 +1,4 @@
-<% @title = "New #{models_label.singularize}" -%>
+<% @title ||= "New #{models_label.singularize}" -%>
 
 <%= render :partial => 'form' %>
 

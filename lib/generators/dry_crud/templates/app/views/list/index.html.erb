@@ -1,4 +1,4 @@
-<% @title = "Listing #{models_label}" -%>
+<% @title ||= "Listing #{models_label}" -%>
 
 <%= render :partial => 'search' if search_support? %>
 

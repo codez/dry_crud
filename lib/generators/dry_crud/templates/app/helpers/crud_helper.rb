@@ -6,15 +6,13 @@ module CrudHelper
   # Create a table of the @entries variable with the default or 
   # the passed attributes in its columns.
   def crud_table(*attrs, &block)
-    # only use default attrs if no attrs and no block are given
-    attributes = (block_given? || attrs.present?) ? attrs : default_attrs
-    table(@entries) do |t|
-	  t.sortable_attrs(*attributes)
-	  if block_given? 
-	    yield t
-	  else
-	    add_list_actions(t)
-	  end
+    if block_given?
+      list_table(*attrs, &block)
+    else      
+      attrs = default_attrs if attrs.blank?
+      list_table(*attrs) do |t| 
+         add_list_actions(t)
+      end
     end
   end
   
@@ -36,12 +34,4 @@ module CrudHelper
     standard_form(@entry, attrs, &block)
   end
   
-  # The default attributes to use in attrs, list and form partials.
-  # These are all defined attributes except certain special ones like 'id' or 'position'.
-  def default_attrs	
-    attrs = model_class.column_names.collect(&:to_sym)
-    [:id, :position].each {|a| attrs.delete(a) }
-    attrs
-  end
-    
 end

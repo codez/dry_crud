@@ -25,9 +25,7 @@ table {
 }
 
 td {
-	margin: 0;
-	border: 0;
-	padding: 2px;	
+	padding: 2px 4px;	
 }
 
 th {
@@ -35,6 +33,7 @@ th {
 	background-color: #2580a2;
     color: white;
 	font-weight: bold;
+    padding: 2px 4px;   
 }
 
 th a {
