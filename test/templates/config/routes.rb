@@ -13,6 +13,8 @@ TestApp::Application.routes.draw do
   end
   
   match 'vips' => 'vips#index', :as => :vips
+
+  root :to => 'people#index'
   
   # Install the default routes as the lowest priority.
   # Note: These default routes make all actions in every controller accessible via GET requests. You should

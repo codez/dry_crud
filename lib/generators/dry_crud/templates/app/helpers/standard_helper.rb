@@ -52,7 +52,8 @@ module StandardHelper
   # Renders an arbitrary content with the given label. Used for uniform presentation.
   def labeled(label, content = nil, &block)
     content = capture(&block) if block_given?
-    render(:partial => 'shared/labeled', :locals => { :label => label, :content => content}) 
+    render(:partial => 'shared/labeled', 
+           :locals => { :label => label, :content => content}) 
   end
   
   # Transform the given text into a form as used by labels or table headers.
@@ -100,7 +101,8 @@ module StandardHelper
   def standard_form(object, attrs = [], options = {}, &block)
     form_for(object, {:builder => StandardFormBuilder}.merge(options)) do |form|
       content = ""
-      content << render(:partial => 'shared/error_messages', :locals => {:errors => object.errors})
+      content << render(:partial => 'shared/error_messages', 
+      				    :locals => {:errors => object.errors})
       
       content << if block_given? 
         capture(form, &block) 
@@ -108,9 +110,13 @@ module StandardHelper
         form.labeled_input_fields(*attrs)
       end
       
-      content << labeled(nil, form.submit("Save"))
+      content << labeled(nil, form.submit("Save") + cancel_link(object))
       content.html_safe
     end
+  end
+  
+  def cancel_link(object)
+  	link_to("Cancel", polymorphic_path(object), :class => 'cancel')
   end
   
   # Alternate table row

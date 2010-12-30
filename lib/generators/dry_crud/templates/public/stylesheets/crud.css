@@ -71,6 +71,11 @@ a:visited.action {
 	color: red;
 }
 
+.cancel {
+    font-size: 80%;
+    margin-left: 7pt;
+}
+
 #flash_notice {
     border: solid 2px #6a6;
     background-color: #afa;
