@@ -136,14 +136,4 @@ class ListHelperTest < ActionView::TestCase
   end
 
     
-  private
-  
-  def with_test_routing
-    with_routing do |set|
-      set.draw { resources :crud_test_models }
-      # used to define a controller in these tests
-      set.default_url_options = {:controller => 'crud_test_models'}
-      yield
-    end
-  end
 end

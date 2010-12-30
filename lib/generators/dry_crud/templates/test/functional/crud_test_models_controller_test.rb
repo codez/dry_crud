@@ -2,6 +2,9 @@ require 'test_helper'
 require 'crud_test_model'
 require File.join(File.dirname(__FILE__), 'crud_controller_test_helper')
 
+# Tests all actions of the CrudController based on a dummy model 
+# (CrudTestModel). This is useful to test the general behavior
+# of CrudController.
 class CrudTestModelsControllerTest < ActionController::TestCase
   
   include CrudControllerTestHelper

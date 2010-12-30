@@ -217,13 +217,4 @@ class StandardHelperTest < ActionView::TestCase
     assert_match /input .*?type="submit" .*?value="Save"/, f
   end
   
-  private
-  
-  def with_test_routing
-    with_routing do |set|
-      set.draw { resources :crud_test_models }
-      yield
-    end
-  end
-  
 end

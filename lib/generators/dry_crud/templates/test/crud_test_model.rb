@@ -1,3 +1,4 @@
+# A dummy model used for general testing.
 class CrudTestModel < ActiveRecord::Base #:nodoc:
 
   validates :name, :presence => true
@@ -16,6 +17,7 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   end
 end
 
+# Controller for the dummy model.
 class CrudTestModelsController < CrudController #:nodoc:
   HANDLE_PREFIX = 'handle_'
   
@@ -95,6 +97,8 @@ class CrudTestModelsController < CrudController #:nodoc:
 end
 
 # A simple test helper to prepare the test database with a CrudTestModel model.
+# This helper is used to test the CrudController and various helpers
+# without the need for an application based model.
 module CrudTestHelper
 
   protected 
@@ -142,6 +146,16 @@ module CrudTestHelper
   def crud_test_models(name)
     CrudTestModel.find_by_name(name.to_s)
   end
+    
+  def with_test_routing
+    with_routing do |set|
+      set.draw { resources :crud_test_models }
+      # used to define a controller in these tests
+      set.default_url_options = {:controller => 'crud_test_models'}
+      yield
+    end
+  end
+  
   
   private
   
@@ -161,11 +175,12 @@ module CrudTestHelper
      (index + 64).chr * 5
   end
   
-  # hack to avoid ddl + transaction issues with mysql.
+  # hack to avoid ddl in transaction issues with mysql.
   def without_transaction
     c = ActiveRecord::Base.connection
     start_transaction = false
-    if c.adapter_name.downcase.start_with?('mysql') && c.open_transactions > 0
+    if c.adapter_name.downcase.include?('mysql') && c.open_transactions > 0
+      # in transactional tests, we may simply rollback
       c.execute("ROLLBACK")
       start_transaction = true
     end
@@ -174,14 +189,5 @@ module CrudTestHelper
     
     c.execute("BEGIN") if start_transaction
   end
-  
-  def with_test_routing
-    with_routing do |set|
-      set.draw { resources :crud_test_models }
-      # used to define a controller in these tests
-      set.default_url_options = {:controller => 'crud_test_models'}
-      yield
-    end
-  end
-  
+
 end
