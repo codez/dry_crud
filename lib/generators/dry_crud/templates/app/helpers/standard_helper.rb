@@ -67,12 +67,10 @@ module StandardHelper
   
   # Renders a list of attributes with label and value for a given object. 
   # Optionally surrounded with a div.
-  def render_attrs(obj, attrs, div = true)
-    html = attrs.collect do |a| 
+  def render_attrs(obj, *attrs)
+    attrs.collect do |a| 
       labeled_attr(obj, a)
     end.join("\n").html_safe
-    
-    div ? content_tag(:div, html, :class => 'attributes') : html
   end
   
   # Renders the formatted content of the given attribute with a label.

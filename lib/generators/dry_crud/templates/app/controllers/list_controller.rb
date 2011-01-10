@@ -115,7 +115,7 @@ class ListController < ApplicationController
   
   # Sort functionality for the index table.
   # Extracted into an own module for convenience.
-  module Sorting
+  module Sort
     # Adds a :sort_mappings class attribute.
     def self.included(controller)
       # Define a map of (virtual) attributes to SQL order expressions.
@@ -160,7 +160,7 @@ class ListController < ApplicationController
     end
   end
   
-  include Sorting
+  include Sort
   
   # Remembers certain params of the index action in order to return
   # to the same list after an entry was viewed or edited.
