@@ -1,3 +1,5 @@
+if City.count == 0
+
 be = City.create!(:name => 'Bern', :country_code => 'CH')
 ny = City.create!(:name => 'New York', :country_code => 'USA')
 sf = City.create!(:name => 'San Francisco', :country_code => 'USA')
@@ -53,3 +55,5 @@ Person.create!(:name => 'Andy Warhol',
 			   :income => 123000,
 			   :birthdate => '1938-09-08',
 			   :remarks => 'Tomato Soup')
+			   
+end

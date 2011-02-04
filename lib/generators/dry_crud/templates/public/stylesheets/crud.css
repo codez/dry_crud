@@ -144,7 +144,7 @@ a.action img {
 }
 
 
-#flash_notice, #flash_error {
+#flash_notice, #flash_alert {
     margin: 15pt;
     padding: 5pt 10pt;
 }
@@ -154,7 +154,7 @@ a.action img {
     background-color: #afa;
 }
 
-#flash_error {
+#flash_alert {
     border: solid 2px #da9;
     background-color: #fec;
 }

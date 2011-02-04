@@ -20,16 +20,16 @@ To integrate DRY CRUD into your code, only a few additions are required:
 * To use standard formatting, tables and forms throughout your application, add <tt>helper :standard</tt> to your +ApplicationController+ and benefit everywhere from these little helper methods. 
 * Add a <tt>:label</tt> method to your models for a human-friendly representation.
 
-Version 1.2.0 is built for Rails 3. If you need a version for Rails 2.3, please get version 0.6.0 of the gem or go to the rails-2.3 branch on Github.
+Version 1.0.0 and higher are built for Rails 3. If you need a version for Rails 2.3, please get version 0.6.0 of the gem or go to the rails-2.3 branch on Github.
 
 == Overview
 
-In most Rails applications, you have some models that require basic CRUD (create, read, update, delete) functionality. There are various possibilities like Rails scaffolding, {Active Scaffold}[http://activescaffold.com/] or {Dry Scaffold}[http://github.com/grimen/dry_scaffold]. Still, various parts in your application remain duplicated. While you might pull up common methods into a common superclass controller, most views still contain very similar code.
+In most Rails applications, you have some models that require basic CRUD (create, read, update, delete) functionality. There are various possibilities like Rails scaffolding, {Inherited Resources}[https://github.com/josevalim/inherited_resources] or {Dry Scaffold}[http://github.com/grimen/dry_scaffold]. Still, various parts in your application remain duplicated. While you might pull up common methods into a common superclass controller, most views still contain very similar code.
 
 Enter DRY CRUD.
 
 <b>
-The main idea of DRY CRUD is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. DRY CRUD generates various foundation classes that you may freely adapt to your application's needs. For each model, you may transparently customize arbitrary parts or just fallback to the general behavior. This applies not only for controllers, but also for view templates and helpers.
+The main idea of DRY CRUD is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. DRY CRUD generates various foundation classes that you may freely adapt to your application's needs. For each model, you may transparently customize arbitrary parts or just fallback to the general behavior. There is no black box your code depends on. This applies not only for controllers, but also for view templates and helpers.
 </b>
 
 A core element of DRY CRUD is the +RenderInheritable+ module. This gives you inheritable views and partials. In the default case, a template is searched in the current controller's view folder. If it is not found there, the template with the same name in the view folder of the superclass controller is used. This lookup path might be customized as well. RenderInheritable is also available as a stand-alone gem at http://github.com/codez/render_inheritable.
@@ -85,7 +85,7 @@ In <tt>app/views/list/index.html.erb</tt>, add the following line for the pagina
 
 And we are done again. All our controllers inheriting from +ListController+, including above +PeopleController+, now have paginated index views. Because our customization for the people table is in the separate <tt>_list</tt> partial, no further modifications are required. 
 If the current page should be remembered while viewing or editing an entry, just add :page to the remembered_params in <tt>ListController::Memory</tt>:
-  
+
   controller.remember_params = [:q, :sort, :sort_dir, :page]
 
 
@@ -130,6 +130,14 @@ In <tt>app/controllers/people_controller.rb</tt>:
     end
   end
 
+Beside these "action" callbacks, there is also a set of "before render" callbacks that are called whenever a certain view is rendered. They are available for the +index+, +show+, +new+, +edit+ and +form+ (= +new+ and +edit+) views. These callbacks are not only called for the corresponding action, but, for example, also when the +new+ view is going to be rendered from an unsuccessfull +create+ action. Say you need to prepare additional variables whenever the form is rendered:
+
+In <tt>app/controllers/people_controller.rb</tt>:
+  before_render_form :set_hometowns
+  
+  def set_hometowns
+    @hometowns = City.where(:country => @entry.country)
+  end
 
 === Standard Tables and Forms
 
@@ -170,9 +178,9 @@ Of course, custom input fields may be defined as well:
   <% end %>
 
 Even +belongs_to+ associations are automatically rendered with a select field. By default, all entries from the associated model are used as options. To customize this, either define an instance variable with the same name as the association in your controller, or pass a <tt>:list</tt> option:
-  <%= f.belongs_to_field :hometown, :list => City.where('country = ?', @person.country) %>
+  <%= f.belongs_to_field :hometown, :list => City.where(:country => @person.country) %>
 
-Yes, it's bad practice to use finder logic in your views! Define the variable <tt>@hometowns</tt> in your controller instead, and you do not even have to specify the <tt>:list</tt> option.
+Yes, it's bad practice to use finder logic in your views! Define the variable <tt>@hometowns</tt> in your controller instead (as shown in the example above), and you do not even have to specify the <tt>:list</tt> option.
 
 == Generated Files
 
@@ -234,6 +242,8 @@ views/list/_actions_index.html.erb:: The action links available in the index vie
 views/shared/_labeled.html.erb:: Partial to define the layout for an arbitrary content with a label.
 
 views/layouts/crud.html.erb:: An example layout showing how to use the @title and +flash+. Most probably you want to merge this with your application.html.erb or adapt the main CRUD templates, so you wont need this file.
+
+views/layouts/_menu.html.erb:: An empty file to put your menu items into. Included from +list.html.erb+.
 
 public/stylesheets/crud.css:: A simple CSS with all the classes and ids used in the CRUD code. 
 

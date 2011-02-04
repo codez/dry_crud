@@ -91,10 +91,19 @@ class CrudController < ListController
   #   DELETE /entries/1.xml
   def destroy
     destroyed = with_callbacks(:destroy) { @entry.destroy }
-    
-    respond_processed(destroyed, 'destroyed', 'show', @entry.errors.full_messages.join('<br/>').html_safe) do |format|
-      format.html { redirect_to_index }
-      format.xml  { head :ok }
+
+    respond_to do |format|
+      if destroyed
+        flash.notice = "#{full_entry_label} was successfully destroyed."
+        format.html { redirect_to_index }
+        format.xml  { head :ok }
+      else 
+        format.html do
+          flash.alert = @entry.errors.full_messages.join('<br/>').html_safe
+          redirect_to :back
+        end
+        format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
+      end
     end
   end
   
@@ -107,13 +116,12 @@ class CrudController < ListController
   # action may succeed or fail. In case of failure, a standard response
   # is given and the failed_action template is rendered. In case of success,
   # the flash[:notice] is set and control is passed to the given block.
-  def respond_processed(success, operation, failed_action, failed_alert = nil)
+  def respond_processed(success, operation, failed_action)
     respond_to do |format|
       if success
         flash.notice = "#{full_entry_label} was successfully #{operation}."
         yield format
       else 
-        flash.alert = failed_alert
         format.html { render_with_callback failed_action }
         format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
       end
@@ -164,10 +172,10 @@ class CrudController < ListController
     end
 
     # Convenience callback to apply a callback on both form actions (new and edit).
-	def before_render_form(*methods)
-		before_render_new *methods
-		before_render_edit *methods
-	end
+    def before_render_form(*methods)
+      before_render_new *methods
+      before_render_edit *methods
+    end
   end
   
 end
