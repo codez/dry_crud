@@ -27,10 +27,7 @@ module CrudHelper
   # given attribute array, using the StandardFormBuilder.
   # If a block is given, a custom form may be rendered and attrs is ignored.
   def crud_form(attrs = nil, options = {}, &block)
-    unless attrs
-      attrs = default_attrs
-      [:created_at, :updated_at].each {|a| attrs.delete(a) }
-    end		
+    attrs = default_attrs - [:created_at, :updated_at] unless attrs
     standard_form(@entry, attrs, &block)
   end
   
