@@ -53,7 +53,6 @@ class ListController < ApplicationController
     end
   end
   
-  
   # Helper method to run before_render callbacks and render the action.
   # If a callback renders or redirects, the action is not rendered.
   def render_with_callback(action)

@@ -20,7 +20,8 @@ class CrudController < ListController
   # Defines before and after callback hooks for create, update, save and destroy.
   define_model_callbacks :create, :update, :save, :destroy
   
-  # Defines before callbacks for the render actions.
+  # Defines before callbacks for the render actions. A virtual callback
+  # unifiying render_new and render_edit, called render_form, is defined further down.
   define_model_callbacks :render_show, 
                          :render_new, 
                          :render_edit, 
@@ -49,25 +50,27 @@ class CrudController < ListController
   #   GET /entries/new
   #   GET /entries/new.xml
   def new
+    @entry.attributes = params[model_identifier]
     respond_with @entry
   end
-  
-  # Display a form to edit an exisiting entry of this model.
-  #   GET /entries/1/edit
-  def edit
-    render_with_callback :edit
-  end
-  
+
   # Create a new entry of this model from the passed params.
   #   POST /entries
   #   POST /entries.xml
   def create
+    @entry.attributes = params[model_identifier]
     created = with_callbacks(:create) { save_entry } 
     
     respond_processed(created, 'created', 'new') do |format|
       format.html { redirect_to_show }
       format.xml  { render :xml => @entry, :status => :created, :location => @entry }
     end
+  end
+    
+  # Display a form to edit an exisiting entry of this model.
+  #   GET /entries/1/edit
+  def edit
+    render_with_callback 'edit'
   end
   
   # Update an existing entry of this model from the passed params.
@@ -89,7 +92,7 @@ class CrudController < ListController
   def destroy
     destroyed = with_callbacks(:destroy) { @entry.destroy }
     
-    respond_processed(destroyed, 'destroyed', 'show') do |format|
+    respond_processed(destroyed, 'destroyed', 'show', @entry.errors.full_messages.join('<br/>').html_safe) do |format|
       format.html { redirect_to_index }
       format.xml  { head :ok }
     end
@@ -104,21 +107,22 @@ class CrudController < ListController
   # action may succeed or fail. In case of failure, a standard response
   # is given and the failed_action template is rendered. In case of success,
   # the flash[:notice] is set and control is passed to the given block.
-  def respond_processed(success, operation, failed_action)
+  def respond_processed(success, operation, failed_action, failed_alert = nil)
     respond_to do |format|
       if success
-        flash[:notice] = "#{full_entry_label} was successfully #{operation}."
+        flash.notice = "#{full_entry_label} was successfully #{operation}."
         yield format
       else 
+        flash.alert = failed_alert
         format.html { render_with_callback failed_action }
         format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
       end
     end
   end
   
-  # Creates a new model entry from the given params.
+  # Creates a new model entry.
   def build_entry
-    @entry = model_class.new(params[model_identifier])
+    @entry = model_class.new
   end
   
   # Sets an existing model entry from the given id.
@@ -159,6 +163,11 @@ class CrudController < ListController
       @model_identifier ||= model_class.name.underscore.to_sym
     end
 
+    # Convenience callback to apply a callback on both form actions (new and edit).
+	def before_render_form(*methods)
+		before_render_new *methods
+		before_render_edit *methods
+	end
   end
   
 end
