@@ -121,39 +121,53 @@ module StandardHelper
   def tr_alt(&block)
     content_tag(:tr, :class => cycle("even", "odd", :name => "row_class"), &block)
   end
+  
+  def clear
+  	content_tag(:div, '', :class => 'clear')
+  end
  
   
   ######## ACTION LINKS ###################################################### :nodoc:
   
   # Standard link action to the show page of a given record.
   def link_action_show(record)
-    link_action 'Show', record
+    link_action 'Show', 'show', record
   end
   
   # Standard link action to the edit page of a given record.
   def link_action_edit(record)
-    link_action 'Edit', edit_polymorphic_path(record)
+    link_action 'Edit', 'edit', edit_polymorphic_path(record)
   end
   
   # Standard link action to the destroy action of a given record.
   def link_action_destroy(record)
-    link_action 'Delete', record, :confirm => CONFIRM_DELETE_MESSAGE, :method => :delete
+    link_action 'Delete', 'delete', record, 
+    		    :confirm => CONFIRM_DELETE_MESSAGE, 
+    		    :method => :delete
   end
   
   # Standard link action to the list page.
   def link_action_index(url_options = {:action => 'index', :returning => true})
-    link_action 'List', url_options
+    link_action 'List', 'list', url_options
   end
   
   # Standard link action to the new page.
   def link_action_add(url_options = {:action => 'new'})
-    link_action 'Add', url_options
+    link_action 'Add', 'add', url_options
   end
   
   # A generic helper method to create action links.
   # These link could be styled to look like buttons, for example.
-  def link_action(label, options = {}, html_options = {})
-    link_to("[#{label}]", options, {:class => 'action'}.merge(html_options))
+  def link_action(label, icon = nil, url = {}, html_options = {})
+    link_to(icon ? action_icon(icon, label) : label, 
+    		url, 
+    		{:class => 'action'}.merge(html_options))
+  end
+  
+  def action_icon(icon, label = nil)
+  	html = image_tag("actions/#{icon}.png", :size => '16x16') 
+  	html << ' ' << label if label
+  	html
   end
   
   protected

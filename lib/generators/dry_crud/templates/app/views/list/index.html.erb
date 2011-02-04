@@ -1,9 +1,9 @@
 <% @title ||= "Listing #{models_label}" -%>
 
+<% content_for(:actions, render(:partial => 'actions_index')) %>
+
 <%= render :partial => 'search' if search_support? %>
 
+<%= clear %>
+
 <%= render :partial => 'list' %>
-
-<br/>
-
-<%= render :partial => 'actions_index' %>

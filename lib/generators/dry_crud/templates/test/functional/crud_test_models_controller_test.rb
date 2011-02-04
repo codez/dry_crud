@@ -103,11 +103,17 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_new
     super
     assert assigns(:companions)
+    assert_equal [:before_render_new, :before_render_form], @controller.called_callbacks
   end
   
   def test_create
     super
     assert_equal [:before_create, :before_save, :after_save, :after_create], @controller.called_callbacks
+  end
+  
+  def test_edit
+  	super
+    assert_equal [:before_render_edit, :before_render_form], @controller.called_callbacks
   end
   
   def test_update
@@ -129,7 +135,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert assigns(:companions)
     assert flash[:error].present?
     assert_equal 'illegal', assigns(:entry).name
-    assert_equal [:before_render_new], @controller.called_callbacks
+    assert_equal [:before_render_new, :before_render_form], @controller.called_callbacks
   end
     
   def test_create_with_before_callback_redirect

@@ -68,7 +68,7 @@ class CrudTestModelsController < CrudController #:nodoc:
   end
   
   # create callback methods that record the before_render callbacks
-  [:index, :show, :new, :edit].each do |a|
+  [:index, :show, :new, :edit, :form].each do |a|
     callback = "before_render_#{a.to_s}"
     send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
   end

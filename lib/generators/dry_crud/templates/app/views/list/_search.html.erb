@@ -1,7 +1,5 @@
-<%= form_tag(nil, {:method => :get}) do %>
+<%= form_tag(nil, {:method => :get, :class => 'search'}) do %>
   <%= hidden_field_tag :returning, true %>
   <%= search_field_tag :q, params[:q] %>
   <%= submit_tag 'Search' %>
 <% end %>
-
-<br/>

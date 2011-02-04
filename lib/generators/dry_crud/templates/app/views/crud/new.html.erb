@@ -1,7 +1,7 @@
 <% @title ||= "New #{models_label.singularize}" -%>
 
+<% content_for(:actions, link_action_index) %>
+
+<%= clear %>
+
 <%= render :partial => 'form' %>
-
-<br/>
-
-<%= link_action_index %>

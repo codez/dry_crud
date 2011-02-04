@@ -3,17 +3,27 @@ body, div, p, td, th {
 	font-size: 11pt;
 }
 
-td {
-	vertical-align: top;
+body {
+	text-align: center;
+    margin: 0pt;
+    background-color: #ddf;
 }
 
-table.list {}
+#container {
+	padding: 20pt 20pt;
+	margin: 0 auto;
+	text-align: left;
+	width: 600pt;
+	height: 100%;
+    background-color: #f6f6ff;
+	-moz-box-shadow: 0px 0px 10px #2580a2;
+    -webkit-box-shadow: 0px 0px 10px #2580a2;
+    box-shadow: 0px 0px 10px #2580a2;
+}
 
-/* div rendered if no entries available for list */
-div.list {}
-
-table.list th a {
-     color: darkblue;
+h1 {
+	font-size: 150%;
+	margin: 30px 0 15px 0;
 }
 
 tr.even {
@@ -24,8 +34,67 @@ tr.odd {
 	background-color: #F8F8F8;
 }
 
+td {
+	vertical-align: top;
+}
+
 td p {
     margin: 0;
+}
+
+a {
+	color: #2580a2;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:visited {
+	color:  #2580a2;
+}
+
+a img {
+	border: none;
+}
+
+
+.list {
+	margin-top: 10pt;
+}
+
+table.list {
+	border-collapse: collapse;
+	width: 100%;
+	padding: 0;
+}
+
+/* div rendered if no entries available for list */
+div.list {}
+
+table.list th {
+	text-align: left;	
+	background-color: #2580a2;
+    color: white;
+	font-weight: bold;
+    padding: 2px 4px;   
+}
+
+table.list th a {
+    color: white;	
+    text-decoration: none;
+}
+
+table.list td {
+	padding: 2px 4px;	
+}
+
+
+.clear {
+  clear: both;
+  height: 0;
+  overflow: hidden;
 }
 
 .right {
@@ -56,36 +125,43 @@ td p {
 	margin: 0px;
 }
 
-.attributes {}
+.actions {
+	float: right;
+}
 
 a.action {
-	color: red;
-	text-decoration: none;
+    margin-right: 10pt;
 }
 
-a:hover.action {
-	text-decoration: underline;
+a.action img {
+	vertical-align: text-top;
 }
 
-a:visited.action {
-	color: red;
-}
 
 .cancel {
     font-size: 80%;
     margin-left: 7pt;
 }
 
+
+#flash_notice, #flash_error {
+    margin: 15pt;
+    padding: 5pt 10pt;
+}
+
 #flash_notice {
     border: solid 2px #6a6;
     background-color: #afa;
-    margin: 20pt;
-    padding: 5pt 10pt;
+}
+
+#flash_error {
+    border: solid 2px #da9;
+    background-color: #fec;
 }
 
 #error_explanation {
 	border: solid 2pt #da9;
-	margin: 20pt;
+	margin: 10pt;
 	padding: 5pt 10pt;
 	background-color: #fec;
 }
@@ -105,3 +181,37 @@ a:visited.action {
 	padding: 1px 1px;
 }
 
+#menu {
+    background: #333;
+	-moz-box-shadow: 0px 3px 3px #2580a2;
+    -webkit-box-shadow: 0px 3px 3px #2580a2;
+    box-shadow: 0px 3px 3px #2580a2;
+    float: left;
+    list-style: none;
+    margin: -20pt;
+    padding: 0 20px;
+    width: 610pt;
+}
+
+#menu li {
+    float: left;
+    font-size: 110%;
+    margin: 0;
+    padding: 0;
+}
+
+#menu a {
+    background: #333 bottom right no-repeat;
+    color: #ddd;
+    display: block;
+    float: left;
+    margin: 0;
+    padding: 4px 12px;
+    text-decoration: none;
+}
+
+#menu a:hover {
+    background: #2580a2 bottom center no-repeat;
+    color: #fff;
+    padding-bottom: 4px;
+}

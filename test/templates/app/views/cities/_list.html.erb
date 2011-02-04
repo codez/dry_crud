@@ -1,4 +1,4 @@
 <%= crud_table *default_attrs do |t|
-	t.col('', :class => 'center') {|e| link_action_edit(e) }
-	t.col('', :class => 'center') {|e| link_action_destroy(e) }
+    action_col(t) { |e| link_table_action_edit(e) }
+    action_col(t) { |e| link_table_action_destroy(e) }
 end %>

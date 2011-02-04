@@ -51,7 +51,6 @@ namespace :test do
     desc "Initializes the test application with a couple of classes"
     task :init => :generate_crud do
       FileUtils.cp_r(File.join(File.dirname(__FILE__), 'test', 'templates', '.'), TEST_APP_ROOT)
-      FileUtils.rm_f(File.join(TEST_APP_ROOT, 'app', 'views', 'layouts', 'crud.html.erb'))
       FileUtils.rm_f(File.join(TEST_APP_ROOT, 'public', 'index.html'))
       FileUtils.cd(TEST_APP_ROOT) do
         sh "rake db:migrate db:seed db:test:prepare"

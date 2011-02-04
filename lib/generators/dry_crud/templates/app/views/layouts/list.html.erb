@@ -8,18 +8,31 @@
   <%= stylesheet_link_tag 'crud' %>
   <%= javascript_include_tag :all %>
   <%= csrf_meta_tag %>
+  <%= yield :head %> 
 </head>
 <body>
 
-<h1><%= @title %></h1>
-
-<% if flash[:notice].present? %>
-    <div id="flash_notice"><%= flash[:notice] %></div>
-<% elsif flash[:alert].present? %>
-    <div id="flash_alert"><%= flash[:alert] %></div>
-<% end %>
-
-<%= yield %>
+<div id="container">
+	<ul id="menu">
+		<%= render :partial => 'layouts/menu' %>
+	</ul>
+	
+	<h1><%= @title %></h1>
+	
+	<% if flash.notice.present? %>
+		<div id="flash_notice"><%= flash.notice %></div>
+	<% elsif flash.alert.present? %>
+		<div id="flash_alert"><%= flash.alert %></div>
+	<% end %>
+	
+	<div class="actions">
+		<%= yield :actions %> 
+	</div>
+	
+	<div id="content">
+		<%= yield %>
+	</div>
+</div>
 
 </body>
 </html>
