@@ -62,8 +62,7 @@ class CrudController < ListController
     created = with_callbacks(:create) { save_entry } 
     
     respond_processed(created, 'created', 'new') do |format|
-      format.html { redirect_to_show }
-      format.xml  { render :xml => @entry, :status => :created, :location => @entry }
+      format.xml  { render :xml => @entry, :status => :created, :location => @entry } if created
     end
   end
     
@@ -80,10 +79,7 @@ class CrudController < ListController
     @entry.attributes = params[model_identifier]
     updated = with_callbacks(:update) { save_entry }
     
-    respond_processed(updated, 'updated', 'edit') do |format|
-      format.html { redirect_to_show }
-      format.xml  { head :ok }
-    end
+    respond_processed(updated, 'updated', 'edit')
   end
   
   # Destroy an existing entry of this model.
@@ -92,17 +88,14 @@ class CrudController < ListController
   def destroy
     destroyed = with_callbacks(:destroy) { @entry.destroy }
 
-    respond_to do |format|
-      if destroyed
-        flash.notice = "#{full_entry_label} was successfully destroyed."
-        format.html { redirect_to_index }
-        format.xml  { head :ok }
-      else 
-        format.html do
+    respond_processed(destroyed, 'destroyed') do |format|
+      format.html do 
+        if destroyed
+          redirect_to_index
+        else
           flash.alert = @entry.errors.full_messages.join('<br/>').html_safe
           redirect_to :back
         end
-        format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -110,17 +103,21 @@ class CrudController < ListController
   protected 
   
   #############  CUSTOMIZABLE HELPER METHODS  ##############################
-
   
   # Convenience method to respond to various formats if the performed
-  # action may succeed or fail. In case of failure, a standard response
-  # is given and the failed_action template is rendered. In case of success,
-  # the flash[:notice] is set and control is passed to the given block.
-  def respond_processed(success, operation, failed_action)
+  # action may succeed or fail. It is possible to pass a block and respond
+  # in custom ways for certain cases. If no response is performed in the 
+  # given block, the default responses in this method are executed.
+  def respond_processed(success, operation, failed_action = 'show')
     respond_to do |format|
+      flash.notice = "#{full_entry_label} was successfully #{operation}." if success
+      yield format if block_given?
+      return if performed?
+      
+      # fallback responders if nothing was performed in the block
       if success
-        flash.notice = "#{full_entry_label} was successfully #{operation}."
-        yield format
+        format.html { redirect_to_show }
+        format.xml  { head :ok }
       else 
         format.html { render_with_callback failed_action }
         format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }

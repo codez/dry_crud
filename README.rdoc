@@ -29,7 +29,7 @@ In most Rails applications, you have some models that require basic CRUD (create
 Enter DRY CRUD.
 
 <b>
-The main idea of DRY CRUD is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. DRY CRUD generates various foundation classes that you may freely adapt to your application's needs. For each model, you may transparently customize arbitrary parts or just fallback to the general behavior. There is no black box your code depends on. This applies not only for controllers, but also for view templates and helpers.
+The main idea of DRY CRUD is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. DRY CRUD generates various foundation classes that you may freely adapt to your application's needs. For each model, you may transparently customize arbitrary parts or just fallback to the general behavior. This applies not only for controllers, but also for view templates and helpers. There is no black box your code depends on. You lay the foundation that fits your application best.
 </b>
 
 A core element of DRY CRUD is the +RenderInheritable+ module. This gives you inheritable views and partials. In the default case, a template is searched in the current controller's view folder. If it is not found there, the template with the same name in the view folder of the superclass controller is used. This lookup path might be customized as well. RenderInheritable is also available as a stand-alone gem at http://github.com/codez/render_inheritable.
