@@ -2,6 +2,7 @@
 .project
 .loadpath
 .tmp*
+coverage
 test/test_app
 tmp
 pkg

@@ -23,6 +23,11 @@ class StandardFormBuilderTest < ActionView::TestCase
     assert form.string_field(:name).html_safe?
   end
     
+  test "input_field dispatches password attr to password_field" do
+    assert_equal form.password_field(:password), form.input_field(:password)
+    assert form.password_field(:name).html_safe?
+  end
+  
   test "input_field dispatches text attr to text_area" do
     assert_equal form.text_area(:remarks), form.input_field(:remarks)
     assert form.text_area(:remarks).html_safe?
@@ -104,6 +109,12 @@ class StandardFormBuilderTest < ActionView::TestCase
   	result = form.labeled("gugus", "<input type='text' name='gugus' />")
   	assert result.html_safe?
   	assert_match /label for.+input/m, result
+  end
+  
+  test "required mark is shown" do
+    assert_equal StandardFormBuilder::REQUIRED_MARK, form.required_mark(:name)
+    assert_nil form.required_mark(:rating)
+    assert_nil form.required_mark(:anything)
   end
   
 end

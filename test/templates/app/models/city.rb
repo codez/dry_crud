@@ -2,7 +2,8 @@ class City < ActiveRecord::Base
   
   has_many :people
 
-  validates_presence_of :name, :country_code
+  validates :name, :presence => true
+  validates :country_code, :presence => true
   
   before_destroy :protect_with_inhabitants
   

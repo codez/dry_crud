@@ -25,6 +25,16 @@ task :test => ['test:app:init'] do
   end
 end
 
+require 'rcov/rcovtask'
+Rcov::RcovTask.new do |test| 
+    test.libs << "test/test_app/test"
+    test.test_files = Dir[ "test/test_app/test/**/*_test.rb" ]
+    test.rcov_opts = ['--text-report',
+                      '-i', '"test\/test_app\/app\/.*"',
+                      '-x', '"\/Library\/Ruby\/.*"']
+    test.verbose = true
+end
+
 namespace :test do
   namespace :app do
     task :environment do

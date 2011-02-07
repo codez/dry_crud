@@ -91,11 +91,6 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /textarea .*?name="crud_test_model\[remarks\]"/, f
   end
   
-  test "default attributes do not include id" do 
-    assert_equal [:name, :whatever, :children, :companion_id, :rating, :income, 
-                  :birthdate, :human, :remarks, :created_at, :updated_at], default_attrs
-  end
-  
   # Controller helper methods for the tests
   
   def model_class

@@ -137,12 +137,15 @@ a.action img {
 	vertical-align: text-top;
 }
 
-
 .cancel {
     font-size: 80%;
     margin-left: 7pt;
 }
 
+.required {
+	font-size: 80%;
+	vertical-align: top;
+}
 
 #flash_notice, #flash_alert {
     margin: 15pt;

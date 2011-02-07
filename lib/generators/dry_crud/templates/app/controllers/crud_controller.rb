@@ -94,7 +94,7 @@ class CrudController < ListController
           redirect_to_index
         else
           flash.alert = @entry.errors.full_messages.join('<br/>').html_safe
-          redirect_to :back
+          request.env["HTTP_REFERER"].present? ? redirect_to(:back) : redirect_to_show
         end
       end
     end

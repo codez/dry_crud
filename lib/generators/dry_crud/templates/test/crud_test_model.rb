@@ -1,12 +1,12 @@
 # A dummy model used for general testing.
 class CrudTestModel < ActiveRecord::Base #:nodoc:
 
+  belongs_to :companion, :class_name => 'CrudTestModel'
+  
   validates :name, :presence => true
   validates :rating, :inclusion => { :in => 1..10 }
   
   default_scope order('name') 
-  
-  belongs_to :companion, :class_name => 'CrudTestModel'
   
   def label
     name
@@ -110,6 +110,7 @@ module CrudTestHelper
       silence_stream(STDOUT) do
         ActiveRecord::Base.connection.create_table :crud_test_models, :force => true do |t|
           t.string  :name, :null => false, :limit => 50
+          t.string  :password
           t.string  :whatever
           t.integer :children
           t.integer :companion_id

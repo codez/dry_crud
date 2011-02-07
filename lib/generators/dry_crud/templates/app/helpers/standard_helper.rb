@@ -4,6 +4,7 @@
 module StandardHelper
   
   NO_LIST_ENTRIES_MESSAGE = "No entries found"
+  NO_ENTRY                = '(none)'
   CONFIRM_DELETE_MESSAGE  = 'Do you really want to delete this entry?'
   
   FLOAT_FORMAT = "%.2f"
@@ -118,8 +119,8 @@ module StandardHelper
   end
   
   # Alternate table row
-  def tr_alt(&block)
-    content_tag(:tr, :class => cycle("even", "odd", :name => "row_class"), &block)
+  def tr_alt(cycle_name = 'row_class', &block)
+    content_tag(:tr, :class => cycle("even", "odd", :name => cycle_name), &block)
   end
   
   def clear
@@ -179,7 +180,7 @@ module StandardHelper
     if assoc_val = obj.send(assoc.name)
       link_to_unless(no_assoc_link?(assoc, assoc_val), assoc_val.label, assoc_val)
     else
-      '(none)'
+      NO_ENTRY
     end
   end
   

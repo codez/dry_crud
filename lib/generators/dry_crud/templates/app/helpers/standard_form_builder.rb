@@ -6,6 +6,7 @@
 class StandardFormBuilder < ActionView::Helpers::FormBuilder
   
   BLANK_SELECT_LABEL = 'Please select'
+  REQUIRED_MARK    = '<span class="required">*</span>'.html_safe
   
   attr_reader :template 
   
@@ -35,6 +36,8 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
       text_area(attr, html_options)
     elsif belongs_to_association?(attr, type)
       belongs_to_field(attr, html_options)
+    elsif attr.to_s.include?('password')
+      password_field(attr, html_options)
     else
       custom_field_method = :"#{type}_field"
       if respond_to?(custom_field_method)
@@ -47,6 +50,11 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   
   # Render a standard text field.
   def text_field(attr, html_options = {})
+    super(attr, {:size => 30}.merge(html_options))
+  end
+  
+  # Render a standard password field.
+  def password_field(attr, html_options = {})
     super(attr, {:size => 30}.merge(html_options))
   end
   
@@ -99,10 +107,15 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   def belongs_to_field(attr, html_options = {})
     list = association_entries(attr, html_options)
     if list.present?
-      collection_select(attr, list, :id, :label, { :prompt => BLANK_SELECT_LABEL }, html_options)
+      collection_select(attr, list, :id, :label, select_options(attr), html_options)
     else
       '(none available)'
     end
+  end
+  
+  # Renders a marker if the given attr has to be present.
+  def required_mark(attr)
+    REQUIRED_MARK if required?(attr)
   end
   
   # Render a label for the given attribute with the passed field html section.
@@ -114,7 +127,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   # input field. E.g. labeled_boolean_field(:checked, {:class => 'bold'})
   def method_missing(name, *args)
     if field_method = labeled_field_method?(name)
-      labeled(args.first, send(field_method, *args))
+      labeled(args.first, send(field_method, *args) + required_mark(args.first))
     else     
       super(name, *args)
     end
@@ -129,7 +142,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   # Returns true if attr is a non-polymorphic belongs_to association,
   # for which an input field may be automatically rendered.
   def belongs_to_association?(attr, type)
-    if type == :integer || type == nil
+    if type == :integer || type.nil?
       assoc = association(@object, attr, :belongs_to)
       assoc.present? && assoc.options[:polymorphic].nil?
     else
@@ -151,6 +164,22 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
       end
     end
     list
+  end
+  
+  # Returns true if the given attribute must be present.
+  def required?(attr)
+    attr = attr.to_s
+    attr, attr_id = attr.end_with?('_id') ? [attr[0..-4], attr] : [attr, "#{attr}_id"]
+    validators = @object.class.validators_on(attr) + 
+                 @object.class.validators_on(attr_id)
+    validators.any? {|v| v.kind == :presence }
+  end
+  
+  # Depending if the given attribute must be present, return
+  # only an initial selection prompt or a blank option, respectively.
+  def select_options(attr)
+    required?(attr) ? { :prompt => BLANK_SELECT_LABEL } : 
+                      { :include_blank => StandardHelper::NO_ENTRY }
   end
   
   private

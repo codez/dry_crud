@@ -22,6 +22,16 @@ class CitiesControllerTest < ActionController::TestCase
     assert_redirected_to_index
   end
   
+  def test_destroy_with_inhabitants
+    ny = cities(:ny)
+    assert_no_difference('City.count') do 
+      request.env["HTTP_REFERER"]
+      delete :destroy, :id => ny.id
+    end
+    assert_redirected_to :action => 'show'
+    assert flash.alert
+  end
+  
   protected   
   
   def test_entry
