@@ -21,7 +21,7 @@ module StandardHelper
     case value
       when Fixnum then number_with_delimiter(value)
       when Float  then FLOAT_FORMAT % value
-      when Date	  then value.to_s
+      when Date   then value.to_s
       when Time   then value.strftime(TIME_FORMAT)   
       when true   then 'yes'
       when false  then 'no'
@@ -76,7 +76,7 @@ module StandardHelper
   
   # Renders the formatted content of the given attribute with a label.
   def labeled_attr(obj, attr)
-  	labeled(captionize(attr, obj.class), format_attr(obj, attr))
+    labeled(captionize(attr, obj.class), format_attr(obj, attr))
   end
   
   # Renders a table for the given entries. One column is rendered for each attribute passed. 
@@ -99,9 +99,8 @@ module StandardHelper
   # If a block is given, custom input fields may be rendered and attrs is ignored.
   def standard_form(object, attrs = [], options = {}, &block)
     form_for(object, {:builder => StandardFormBuilder}.merge(options)) do |form|
-      content = ""
-      content << render(:partial => 'shared/error_messages', 
-      				    :locals => {:errors => object.errors})
+      content = render(:partial => 'shared/error_messages', 
+                       :locals => {:errors => object.errors})
       
       content << if block_given? 
         capture(form, &block) 
@@ -115,7 +114,7 @@ module StandardHelper
   end
   
   def cancel_link(object)
-  	link_to("Cancel", polymorphic_path(object), :class => 'cancel')
+    link_to("Cancel", polymorphic_path(object), :class => 'cancel')
   end
   
   # Alternate table row
@@ -124,7 +123,7 @@ module StandardHelper
   end
   
   def clear
-  	content_tag(:div, '', :class => 'clear')
+    content_tag(:div, '', :class => 'clear')
   end
  
   
@@ -143,8 +142,8 @@ module StandardHelper
   # Standard link action to the destroy action of a given record.
   def link_action_destroy(record)
     link_action 'Delete', 'delete', record, 
-    		    :confirm => CONFIRM_DELETE_MESSAGE, 
-    		    :method => :delete
+                :confirm => CONFIRM_DELETE_MESSAGE, 
+                :method => :delete
   end
   
   # Standard link action to the list page.
@@ -161,14 +160,14 @@ module StandardHelper
   # These link could be styled to look like buttons, for example.
   def link_action(label, icon = nil, url = {}, html_options = {})
     link_to(icon ? action_icon(icon, label) : label, 
-    		url, 
-    		{:class => 'action'}.merge(html_options))
+            url, 
+            {:class => 'action'}.merge(html_options))
   end
   
   def action_icon(icon, label = nil)
-  	html = image_tag("actions/#{icon}.png", :size => '16x16') 
-  	html << ' ' << label if label
-  	html
+    html = image_tag("actions/#{icon}.png", :size => '16x16') 
+    html << ' ' << label if label
+    html
   end
   
   protected

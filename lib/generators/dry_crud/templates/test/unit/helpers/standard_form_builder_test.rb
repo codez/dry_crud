@@ -117,4 +117,15 @@ class StandardFormBuilderTest < ActionView::TestCase
     assert_nil form.required_mark(:anything)
   end
   
+  test "method missing still works" do
+    assert_raise(NoMethodError) do
+      form.blabla
+    end
+  end    
+
+  test "respond to still works" do
+    assert !form.respond_to?(:blalba)
+    assert form.respond_to?(:text_field)
+    assert form.respond_to?(:labeled_text_field)
+  end
 end

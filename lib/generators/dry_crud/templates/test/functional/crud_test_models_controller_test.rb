@@ -100,6 +100,20 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_equal({:sort => 'chatty', :sort_dir => 'asc', :q => 'DDD'}, session[:list_params]['/crud_test_models'])
   end
   
+  def test_index_returning
+    session[:list_params] = {}
+    session[:list_params]['/crud_test_models'] = {:q => 'DDD', :sort => 'chatty', :sort_dir => 'desc'}
+    get :index, :returning => true
+    assert_response :success
+    assert_template 'index'
+    assert_present assigns(:entries)
+    assert_equal 3, assigns(:entries).size
+    assert_equal ['BBBBB', 'DDDDD', 'CCCCC'], assigns(:entries).collect(&:name)
+    assert_equal 'DDD', @controller.params[:q]
+    assert_equal 'chatty', @controller.params[:sort]
+    assert_equal 'desc', @controller.params[:sort_dir]
+  end
+  
   def test_new
     super
     assert assigns(:companions)

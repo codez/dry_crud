@@ -125,7 +125,7 @@ In <tt>app/controllers/people_controller.rb</tt>:
   
   def delete_picture
     if !perform_delete_picture(@entry.picture)
-      flash[:alert] = 'Could not delete picture' 
+      flash.alert = 'Could not delete picture' 
       false
     end
   end
