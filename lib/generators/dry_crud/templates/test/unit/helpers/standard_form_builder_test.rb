@@ -61,6 +61,13 @@ class StandardFormBuilderTest < ActionView::TestCase
   	assert result.include?(form.input_field(:children))
   end
   
+  test "labeld_input_field adds required mark" do
+  	result = form.labeled_input_field(:name)
+  	assert result.include?(StandardFormBuilder::REQUIRED_MARK)
+  	result = form.labeled_input_field(:remarks)
+  	assert !result.include?(StandardFormBuilder::REQUIRED_MARK)
+  end
+  
   test "belongs_to_field has all options by default" do
     f = form.belongs_to_field(:companion_id)
     assert_equal 7, f.scan('</option>').size
@@ -113,8 +120,8 @@ class StandardFormBuilderTest < ActionView::TestCase
   
   test "required mark is shown" do
     assert_equal StandardFormBuilder::REQUIRED_MARK, form.required_mark(:name)
-    assert_nil form.required_mark(:rating)
-    assert_nil form.required_mark(:anything)
+    assert_equal "", form.required_mark(:rating)
+    assert_equal "", form.required_mark(:anything)
   end
   
   test "method missing still works" do

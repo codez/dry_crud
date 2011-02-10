@@ -82,9 +82,9 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /form .*?action="\/crud_test_models\/#{@entry.id}"/, f
     assert_match /input .*?name="crud_test_model\[name\]" .*?type="text"/, f
     assert_match /input .*?name="crud_test_model\[whatever\]" .*?type="text"/, f
-    assert_match /input .*?name="crud_test_model\[children\]" .*?type="text"/, f
-    assert_match /input .*?name="crud_test_model\[rating\]" .*?type="text"/, f
-    assert_match /input .*?name="crud_test_model\[income\]" .*?type="text"/, f
+    assert_match /input .*?name="crud_test_model\[children\]" .*?type="number"/, f
+    assert_match /input .*?name="crud_test_model\[rating\]" .*?type="number"/, f
+    assert_match /input .*?name="crud_test_model\[income\]" .*?type="number"/, f
     assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
     assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
     assert_match /select .*?name="crud_test_model\[companion_id\]"/, f

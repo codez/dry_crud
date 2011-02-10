@@ -145,6 +145,7 @@ a.action img {
 .required {
 	font-size: 80%;
 	vertical-align: top;
+	margin-left: 1pt;
 }
 
 #flash_notice, #flash_alert {

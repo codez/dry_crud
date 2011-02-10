@@ -72,7 +72,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   
   # Render a standard number field.
   def number_field(attr, html_options = {})
-    text_field(attr, {:size => 15}.merge(html_options))
+    super(attr, {:size => 15}.merge(html_options))
   end
   
   # Render an integer field.
@@ -115,7 +115,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   
   # Renders a marker if the given attr has to be present.
   def required_mark(attr)
-    REQUIRED_MARK if required?(attr)
+    required?(attr) ? REQUIRED_MARK : ''
   end
   
   # Render a label for the given attribute with the passed field html section.

@@ -175,7 +175,7 @@ class StandardHelperTest < ActionView::TestCase
     assert_match /option selected="selected" value="1910">1910<\/option>/, f 
     assert_match /option selected="selected" value="1">January<\/option>/, f
     assert_match /option selected="selected" value="1">1<\/option>/, f
-    assert_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=\"9\"/, f
+    assert_match /input .*?name="crud_test_model\[children\]" .*?type="number" .*?value=\"9\"/, f
     assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
     assert_match /input .*?type="submit" .*?value="Save"/, f
   end
@@ -190,7 +190,7 @@ class StandardHelperTest < ActionView::TestCase
     assert_match /input .*?name="crud_test_model\[name\]" .*?type="text"/, f
     assert_no_match /input .*?name="crud_test_model\[name\]" .*?type="text" .*?value=/, f
     assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
-    assert_match /input .*?name="crud_test_model\[children\]" .*?type="text"/, f
+    assert_match /input .*?name="crud_test_model\[children\]" .*?type="number"/, f
     assert_no_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=/, f
     assert_match /input .*?type="submit" .*?value="Save"/, f
   end
@@ -212,7 +212,7 @@ class StandardHelperTest < ActionView::TestCase
     assert_match /option selected="selected" value="1910">1910<\/option>/, f
     assert_match /option selected="selected" value="1">January<\/option>/, f
     assert_match /option selected="selected" value="1">1<\/option>/, f
-    assert_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=\"9\"/, f
+    assert_match /input .*?name="crud_test_model\[children\]" .*?type="number" .*?value=\"9\"/, f
     assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
     assert_match /input .*?type="submit" .*?value="Save"/, f
   end
