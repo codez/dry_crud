@@ -4,7 +4,7 @@ class CreatePeopleAndCities < ActiveRecord::Migration
       t.string :name, :null => false
       t.string :country_code, :null => false, :limit => 3
     end
-    
+
     create_table :people do |t|
       t.string :name, :null => false
       t.integer :children
@@ -18,6 +18,6 @@ class CreatePeopleAndCities < ActiveRecord::Migration
 
   def self.down
     drop_table :people
-    drop_table :cities  
+    drop_table :cities
   end
 end

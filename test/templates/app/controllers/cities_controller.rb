@@ -1,5 +1,5 @@
 class CitiesController < AjaxController
-  
+
   def show
     respond_to do |format|
       format.html do
