@@ -1,9 +1,9 @@
 <% @title ||= full_entry_label -%>
 
-<% content_for(:actions, render(:partial => 'actions_show')) %>
+<% content_for(:actions, render('actions_show')) %>
 
 <%= clear %>
 
-<%= render :partial => 'attrs' %>
+<%= render 'attrs' %>
 
 

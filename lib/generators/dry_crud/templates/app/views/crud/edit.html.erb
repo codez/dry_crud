@@ -1,7 +1,7 @@
 <% @title ||= "Edit #{full_entry_label}" -%>
 
-<% content_for(:actions, render(:partial => 'actions_edit')) %>
+<% content_for(:actions, render('actions_edit')) %>
 
 <%= clear %>
 
-<%= render :partial => 'form' %>
+<%= render 'form' %>

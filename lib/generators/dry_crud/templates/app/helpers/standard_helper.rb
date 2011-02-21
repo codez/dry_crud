@@ -6,10 +6,7 @@ module StandardHelper
   NO_LIST_ENTRIES_MESSAGE = "No entries found"
   NO_ENTRY                = '(none)'
   CONFIRM_DELETE_MESSAGE  = 'Do you really want to delete this entry?'
-
-  FLOAT_FORMAT = "%.2f"
-  TIME_FORMAT  = "%H:%M"
-  EMPTY_STRING = "&nbsp;".html_safe   # non-breaking space asserts better css styling.
+  EMPTY_STRING            = "&nbsp;".html_safe   # non-breaking space asserts better css styling.
 
   ################  FORMATTING HELPERS  ##################################
 
@@ -20,9 +17,9 @@ module StandardHelper
   def f(value)
     case value
       when Fixnum then number_with_delimiter(value)
-      when Float  then FLOAT_FORMAT % value
-      when Date   then value.to_s
-      when Time   then value.strftime(TIME_FORMAT)
+      when Float  then number_with_precision(value, :precision => 2)
+      when Date   then l(value)
+      when Time   then l(value)
       when true   then 'yes'
       when false  then 'no'
       when nil    then EMPTY_STRING
@@ -53,8 +50,7 @@ module StandardHelper
   # Renders an arbitrary content with the given label. Used for uniform presentation.
   def labeled(label, content = nil, &block)
     content = capture(&block) if block_given?
-    render(:partial => 'shared/labeled',
-           :locals => { :label => label, :content => content})
+    render 'shared/labeled', :label => label, :content => content
   end
 
   # Transform the given text into a form as used by labels or table headers.
@@ -99,8 +95,7 @@ module StandardHelper
   # If a block is given, custom input fields may be rendered and attrs is ignored.
   def standard_form(object, attrs = [], options = {}, &block)
     form_for(object, {:builder => StandardFormBuilder}.merge(options)) do |form|
-      content = render(:partial => 'shared/error_messages',
-                       :locals => {:errors => object.errors})
+      content = render('shared/error_messages', :errors => object.errors)
 
       content << if block_given?
         capture(form, &block)
@@ -172,22 +167,7 @@ module StandardHelper
 
   protected
 
-  # Helper methods that are not directly called from templates.
-
-  # Formats an active record association
-  def format_assoc(obj, assoc)
-    if assoc_val = obj.send(assoc.name)
-      link_to_unless(no_assoc_link?(assoc, assoc_val), assoc_val.label, assoc_val)
-    else
-      NO_ENTRY
-    end
-  end
-
-  # Returns true if no link should be created when formatting the given association.
-  def no_assoc_link?(assoc, val)
-    (respond_to?(:no_assoc_links) && no_assoc_links.to_a.include?(assoc.name.to_sym)) ||
-    !respond_to?("#{val.class.name.underscore}_path".to_sym)
-  end
+  # Helper methods that are not directly called from templates.
 
   # Formats an arbitrary attribute of the given object depending on its data type.
   # For ActiveRecords, take the defined data type into account for special types
@@ -216,6 +196,21 @@ module StandardHelper
       column = obj.column_for_attribute(attr)
       column.try(property)
     end
+  end
+
+  # Formats an active record association
+  def format_assoc(obj, assoc)
+    if assoc_val = obj.send(assoc.name)
+      link_to_unless(no_assoc_link?(assoc, assoc_val), assoc_val.label, assoc_val)
+    else
+      NO_ENTRY
+    end
+  end
+
+  # Returns true if no link should be created when formatting the given association.
+  def no_assoc_link?(assoc, val)
+    (respond_to?(:no_assoc_links) && no_assoc_links.to_a.include?(assoc.name.to_sym)) ||
+    !respond_to?("#{val.class.name.underscore}_path".to_sym)
   end
 
   # Returns the association proxy for the given attribute. The attr parameter

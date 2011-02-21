@@ -57,7 +57,7 @@ class ListController < ApplicationController
   # If a callback renders or redirects, the action is not rendered.
   def render_with_callback(action)
     run_callbacks(:"render_#{action}")
-    render :action => action unless performed?
+    render action unless performed?
   end
 
 
@@ -182,24 +182,32 @@ class ListController < ApplicationController
     # Store and restore the corresponding params.
     def handle_remember_params
       remembered = remembered_params
+
+      restore_params_on_return(remembered)
+      store_current_params(remembered)
+      clear_void_params(remembered)
+    end
+
+    def restore_params_on_return(remembered)
       if params[:returning]
-        # restore params
         remember_params.each {|p| params[p] ||= remembered[p] }
       end
+    end
 
-      # store current params
+    def store_current_params(remembered)
       remember_params.each do |p|
         remembered[p] = params[p].presence
         remembered.delete(p) if remembered[p].nil?
       end
+    end
 
-      # clear void params
+    def clear_void_params(remembered)
       session[:list_params].delete(request.path) if remembered.blank?
     end
 
     # Get the params stored in the session.
     # Params are stored by request path to play nice when a controller
-    # is used in different routes.
+    # is used in different routes.
     def remembered_params
       session[:list_params] ||= {}
       session[:list_params][request.path] ||= {}
