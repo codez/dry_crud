@@ -8,7 +8,7 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
 
   default_scope order('name')
 
-  def label
+  def to_s
     name
   end
 

@@ -23,8 +23,7 @@ module StandardHelper
       when true   then 'yes'
       when false  then 'no'
       when nil    then EMPTY_STRING
-    else
-      value.respond_to?(:label) ? value.label : value.to_s
+      else value.to_s
     end
   end
 
@@ -204,7 +203,7 @@ module StandardHelper
   # Formats an active record association
   def format_assoc(obj, assoc)
     if assoc_val = obj.send(assoc.name)
-      link_to_unless(no_assoc_link?(assoc, assoc_val), assoc_val.label, assoc_val)
+      link_to_unless(no_assoc_link?(assoc, assoc_val), assoc_val, assoc_val)
     else
       NO_ENTRY
     end

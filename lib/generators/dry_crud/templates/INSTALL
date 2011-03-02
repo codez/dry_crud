@@ -8,6 +8,8 @@ required:
  * To use standard formatting, tables and forms throughout your
    application, add 'helper :standard' to your ApplicationController and 
    benefit everywhere from these little helper methods. 
- * Add a #label method to your models for a human-friendly representation.
+ * Overwrite the <tt>:to_s</tt> method of your models for a human-friendly
+   representation.
+
 
 Enjoy dry_crud and stay DRY!

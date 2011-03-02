@@ -107,7 +107,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   def belongs_to_field(attr, html_options = {})
     list = association_entries(attr, html_options)
     if list.present?
-      collection_select(attr, list, :id, :label, select_options(attr), html_options)
+      collection_select(attr, list, :id, :to_s, select_options(attr), html_options)
     else
       '(none available)'
     end

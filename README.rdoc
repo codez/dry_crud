@@ -18,7 +18,7 @@ To integrate DRY CRUD into your code, only a few additions are required:
 
 * For uniform CRUD functionality, just subclass your controllers from +CrudController+. 
 * To use standard formatting, tables and forms throughout your application, add <tt>helper :standard</tt> to your +ApplicationController+ and benefit everywhere from these little helper methods. 
-* Add a <tt>:label</tt> method to your models for a human-friendly representation.
+* Overwrite the <tt>:to_s</tt> method of your models for a human-friendly representation.
 
 Version 1.0.0 and higher are built for Rails 3. If you need a version for Rails 2.3, please get version 0.6.0 of the gem or go to the rails-2.3 branch on Github.
 
@@ -44,7 +44,7 @@ See the Examples section for some use cases and the Generated Files section belo
 
 === Controller with CRUD functionality
 
-Say you want to manage a +Person+ model. Create the following controller and add a <tt>:label</tt> method to your model for a human-friendly representation used in page titles.
+Say you want to manage a +Person+ model. Create the following controller and overwrite the <tt>:to_s</tt> method of your model for a human-friendly representation used in page titles.
 
 <tt>app/controllers/people_controller.rb</tt>:
   class PeopleController < CrudController
@@ -52,7 +52,7 @@ Say you want to manage a +Person+ model. Create the following controller and add
 
 <tt>app/models/person.rb</tt>:
   class Person
-    def label
+    def to_s
       "#{lastname} #{firstname}"
     end
   end
@@ -205,7 +205,7 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 {helpers/standard_table_builder.rb}[http://codez.ch/dry_crud/?q=StandardTableBuilder]:: A simple helper object to easily define tables listing several rows of the same data type.
 
-{helpers/standard_form_builder.rb}[http://codez.ch/dry_crud/?q=StandardFormBuilder]:: A form builder that automatically selects the corresponding input element for ActiveRecord columns. Input elements are rendered with a corresponding label by default.
+{helpers/standard_form_builder.rb}[http://codez.ch/dry_crud/?q=StandardFormBuilder]:: A form builder that automatically selects the corresponding input type for ActiveRecord columns. Input elements are rendered together with a label by default.
 
 
 === Views:

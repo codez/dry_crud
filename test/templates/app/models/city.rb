@@ -9,7 +9,7 @@ class City < ActiveRecord::Base
 
   default_scope order('country_code, name')
 
-  def label
+  def to_s
     "#{name} (#{country_code})"
   end
 

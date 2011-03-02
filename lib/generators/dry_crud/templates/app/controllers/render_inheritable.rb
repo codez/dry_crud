@@ -29,6 +29,7 @@ module RenderInheritable
   end
 
   module ClassMethods
+  
     # Performs a lookup for the given filename and returns the most specific
     # folder that contains the file.
     def find_inheritable_template_folder(view_context, name, partial, formats, param = nil)
@@ -46,7 +47,7 @@ module RenderInheritable
     def inheritable_controller(param = nil)
       descendants = inheritable_root_controller.descendants
       c = find_inheritable_artifact(param) do |folder|
-      	descendants.any? { |s| s.controller_path == folder }
+        descendants.any? { |s| s.controller_path == folder }
       end
       c || inheritable_root_controller.controller_path
     end
@@ -75,7 +76,7 @@ module RenderInheritable
       path.collect(&:controller_path)
     end
 
-    # Override view context class to includes the render inheritable modules.
+    # Override view context class to include the render inheritable modules.
     def view_context_class
       @view_context_class ||= begin
         Class.new(super) do

@@ -5,7 +5,8 @@
 # With the help of additional callbacks, it is possible to hook into the action procedures without
 # overriding the entire method.
 class CrudController < ListController
-
+  include ERB::Util
+  
   # Set up entry object to use in the various actions.
   before_filter :build_entry, :only => [:new, :create]
   before_filter :set_entry,   :only => [:show, :edit, :update, :destroy]
@@ -137,7 +138,7 @@ class CrudController < ListController
 
   # A label for the current entry, including the model name.
   def full_entry_label
-    "#{models_label.singularize} '#{@entry.label}'"
+    "#{models_label.singularize} <i>#{h(@entry)}</i>".html_safe
   end
 
   # Redirects to the show action of a single entry.

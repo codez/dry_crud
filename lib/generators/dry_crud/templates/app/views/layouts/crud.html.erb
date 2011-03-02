@@ -4,9 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title><%= @title %></title>
+  <title><%= strip_tags(@title) %></title>
   <%= stylesheet_link_tag 'crud' %>
-  <%= javascript_include_tag :all %>
   <%= csrf_meta_tag %>
   <%= yield :head %>
 </head>
@@ -20,9 +19,9 @@
 	<h1><%= @title %></h1>
 	
 	<% if flash.notice.present? %>
-		<div id="flash_notice"><%= flash.notice %></div>
+		<div id="flash_notice"><%= flash.notice.html_safe %></div>
 	<% elsif flash.alert.present? %>
-		<div id="flash_alert"><%= flash.alert %></div>
+		<div id="flash_alert"><%= flash.alert.html_safe %></div>
 	<% end %>
 	
 	<div class="actions">
@@ -33,6 +32,9 @@
 		<%= yield %>
 	</div>
 </div>
+
+<%= javascript_include_tag :all %>
+<%= javascript_tag content_tag_for(:javascripts) if content_for?(:javascripts) %>
 
 </body>
 </html>
