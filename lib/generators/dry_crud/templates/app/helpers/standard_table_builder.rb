@@ -6,24 +6,25 @@
 #     t.attrs :name, :city
 #   end
 class StandardTableBuilder
-  attr_reader :entries, :cols, :template
+  attr_reader :entries, :cols, :options, :template
 
   # Delegate called methods to template.
   # including StandardHelper would lead to problems with indirectly called methods.
   delegate :content_tag, :format_attr, :column_type, :association,
            :captionize, :tr_alt, :to => :template
 
-  def initialize(entries, template)
+  def initialize(entries, template, options = {})
     @entries = entries
     @template = template
+    @options = options
     @cols = []
   end
 
   # Convenience method to directly generate a table. Renders a row for each entry in entries.
   # Takes a block that gets the table object as parameter for configuration.
   # Returns the generated html for the table.
-  def self.table(entries, template)
-    t = new(entries, template)
+  def self.table(entries, template, options = {})
+    t = new(entries, template, options)
     yield t
     t.to_html
   end

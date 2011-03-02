@@ -78,9 +78,10 @@ module StandardHelper
   # Renders a table for the given entries. One column is rendered for each attribute passed.
   # If a block is given, the columns defined therein are appended to the attribute columns.
   # If entries is empty, an appropriate message is rendered.
+  # An options hash may be given as the last argument.
   def table(entries, *attrs, &block)
     if entries.present?
-      StandardTableBuilder.table(entries, self) do |t|
+      StandardTableBuilder.table(entries, self, attrs.extract_options!) do |t|
         t.attrs(*attrs)
         yield t if block_given?
       end
@@ -93,8 +94,9 @@ module StandardHelper
   # Before the input fields, the error messages are rendered, if present.
   # The form is rendered with a basic save button.
   # If a block is given, custom input fields may be rendered and attrs is ignored.
-  def standard_form(object, attrs = [], options = {}, &block)
-    form_for(object, {:builder => StandardFormBuilder}.merge(options)) do |form|
+  # An options hash may be given as the last argument.
+  def standard_form(object, *attrs, &block)
+    form_for(object, {:builder => StandardFormBuilder}.merge(attrs.extract_options!)) do |form|
       content = render('shared/error_messages', :errors => object.errors)
 
       content << if block_given?
@@ -116,7 +118,8 @@ module StandardHelper
   def tr_alt(cycle_name = 'row_class', &block)
     content_tag(:tr, :class => cycle("even", "odd", :name => cycle_name), &block)
   end
-
+  
+  # Renders a div with clear:both style.
   def clear
     content_tag(:div, '', :class => 'clear')
   end

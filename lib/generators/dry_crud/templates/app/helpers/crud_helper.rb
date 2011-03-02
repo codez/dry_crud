@@ -4,20 +4,22 @@
 module CrudHelper
 
   # Renders a generic form for the current entry with :default_attrs or the
-  # given attribute array, using the StandardFormBuilder.
+  # given attribute array, using the StandardFormBuilder. An options hash 
+  # may be given as the last argument.
   # If a block is given, a custom form may be rendered and attrs is ignored.
-  def crud_form(attrs = nil, options = {}, &block)
-    attrs = default_attrs - [:created_at, :updated_at] unless attrs
-    standard_form(@entry, attrs, &block)
+  def crud_form(*attrs, &block)
+    attrs = attrs_or_default(attrs) { default_attrs - [:created_at, :updated_at] }
+    standard_form(@entry, *attrs, &block)
   end
 
   # Create a table of the @entries variable with the default or
-  # the passed attributes in its columns.
+  # the passed attributes in its columns. An options hash may be given
+  # as the last argument.
   def crud_table(*attrs, &block)
     if block_given?
       list_table(*attrs, &block)
     else
-      attrs = default_attrs if attrs.blank?
+      attrs = attrs_or_default(attrs) { default_attrs }
       list_table(*attrs) do |t|
          add_table_actions(t)
       end
@@ -52,5 +54,14 @@ module CrudHelper
   def action_col(table, &block)
   	table.col('', :class => 'center', &block)
   end
+  
+  private
+
+  def attrs_or_default(attrs)
+  	options = attrs.extract_options!
+  	attrs = yield if attrs.blank?
+  	attrs << options
+  end
+
 
 end

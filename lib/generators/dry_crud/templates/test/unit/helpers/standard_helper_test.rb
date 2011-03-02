@@ -165,7 +165,7 @@ class StandardHelperTest < ActionView::TestCase
   test "standard form for existing entry" do
     e = crud_test_models('AAAAA')
     f = with_test_routing do
-      f = capture { standard_form(e, [:name, :children, :birthdate, :human], :class => 'special') }
+      f = capture { standard_form(e, :name, :children, :birthdate, :human, :class => 'special') }
     end
 
     assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
@@ -183,10 +183,10 @@ class StandardHelperTest < ActionView::TestCase
   test "standard form for new entry" do
     e = CrudTestModel.new
     f = with_test_routing do
-      f = capture { standard_form(e, [:name, :children, :birthdate, :human], :class => 'special') }
+      f = capture { standard_form(e, :name, :children, :birthdate, :human, :html => {:class => 'special'}) }
     end
 
-    assert_match /form .*?action="\/crud_test_models" .*?method="post"/, f
+    assert_match /form .*?action="\/crud_test_models" .?class="special" .*?method="post"/, f
     assert_match /input .*?name="crud_test_model\[name\]" .*?type="text"/, f
     assert_no_match /input .*?name="crud_test_model\[name\]" .*?type="text" .*?value=/, f
     assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
@@ -201,7 +201,7 @@ class StandardHelperTest < ActionView::TestCase
     assert !e.valid?
 
     f = with_test_routing do
-      f = capture { standard_form(e, [:name, :children, :birthdate, :human], :class => 'special') }
+      f = capture { standard_form(e, :name, :children, :birthdate, :human) }
     end
 
     assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f

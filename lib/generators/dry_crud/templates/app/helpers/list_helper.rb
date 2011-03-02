@@ -4,11 +4,13 @@
 module ListHelper
 
   # Create a table of the @entries variable with the default or
-  # the passed attributes in its columns.
+  # the passed attributes in its columns. An options hash may be given
+  # as the last argument.
   def list_table(*attrs, &block)
+    options = attrs.extract_options!
     # only use default attrs if no attrs and no block are given
     attributes = (block_given? || attrs.present?) ? attrs : default_attrs
-    table(@entries) do |t|
+    table(@entries, options) do |t|
   	  t.sortable_attrs(*attributes)	
   	  yield t if block_given?
     end
@@ -20,5 +22,5 @@ module ListHelper
     attrs = model_class.column_names.collect(&:to_sym)
     attrs - [:id, :position, :password]
   end
-
+  
 end
