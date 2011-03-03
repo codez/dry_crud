@@ -64,7 +64,7 @@ That's it. You have a sortable overview of all people, detail pages and forms to
 
 Well, maybe there are certain attributes you do not want to display in the people list, or others that are not editable. No problem, simply create a <tt> _list</tt> partial in <tt>app/views/people/_list.html.erb</tt> to customize this:
 
-  <%= crud_table [:lastname, :firstname, :city, :sex] %>
+  <%= crud_table :lastname, :firstname, :city, :sex %>
 
 This only displays these three attributes in the table. All other templates, as well as the main index view, fallback to the ones in <tt>app/views/crud</tt>.
 
@@ -164,7 +164,7 @@ To render custom columns, use the :col method:
 
 Forms work very similar. In the most simple case, you just have to specify which attributes of a model to create input fields for, and you get a complete form with error messages, labeled input fields according the column types and a save button:
 
-  <%= standard_form(@person, [:firstname, :lastname, :age, :city] -%>
+  <%= standard_form(@person, :firstname, :lastname, :age, :city) -%>
 
 Of course, custom input fields may be defined as well:
   <%= standard_form(@person, [], :url => {:action => 'custom_update', :id => @person.id}) do |f| %>
