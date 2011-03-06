@@ -18,15 +18,6 @@ class ListController < ApplicationController
   hide_action :model_class, :models_label, :inheritable_root_controller
 
 
-  # Callbacks
-  extend ActiveModel::Callbacks
-
-  # Defines before callbacks for the render actions.
-  define_model_callbacks :render_index,
-                         :only => :before,
-                         :terminator => "result == false || performed?"
-
-
   ##############  ACTIONS  ############################################
 
   # List all entries of this model.
@@ -36,7 +27,6 @@ class ListController < ApplicationController
     @entries = list_entries
     respond_with @entries
   end
-
 
   protected
 
@@ -62,6 +52,9 @@ class ListController < ApplicationController
 
 
   class << self
+    # Callbacks
+    include ActiveModel::Callbacks
+   
     # The ActiveRecord class of the model.
     def model_class
       @model_class ||= controller_name.classify.constantize
@@ -71,7 +64,17 @@ class ListController < ApplicationController
     def models_label
       @models_label ||= model_class.model_name.human.pluralize
     end
+    
+    # Defines before callbacks for the render actions.
+    def define_render_callbacks(*actions)
+      args = actions.collect {|a| :"render_#{a}" }
+      args << {:only => :before,
+               :terminator => "result == false || performed?"}
+      define_model_callbacks *args
+    end
   end
+  
+  define_render_callbacks :index
 
   # The search functionality for the index table.
   # Extracted into an own module for convenience.

@@ -23,11 +23,7 @@ class CrudController < ListController
 
   # Defines before callbacks for the render actions. A virtual callback
   # unifiying render_new and render_edit, called render_form, is defined further down.
-  define_model_callbacks :render_show,
-                         :render_new,
-                         :render_edit,
-                         :only => :before,
-                         :terminator => "result == false || performed?"
+  define_render_callbacks :show, :new, :edit
 
   # Verify that required :id param is present and only allow good http methods.
   # Uncomment if you have the Rails verification plugin installed.
