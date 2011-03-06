@@ -15,6 +15,7 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   def chatty
   	remarks.size
   end
+  
 end
 
 # Controller for the dummy model.

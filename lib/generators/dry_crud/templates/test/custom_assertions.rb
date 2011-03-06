@@ -63,5 +63,16 @@ module CustomAssertions
       end
     end
   end
+  
+  # The method used to by Test::Unit to format arguments in
+  # #build_message. Prints ActiveRecord objects in a simpler format.
+  # Only works for Ruby 1.9
+  def mu_pp(obj)
+    if obj.is_a?(ActiveRecord::Base)
+      obj.to_s
+    else
+      super
+    end
+  end
 
 end

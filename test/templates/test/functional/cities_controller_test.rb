@@ -1,5 +1,5 @@
 require 'test_helper'
-require File.join(File.dirname(__FILE__), 'crud_controller_test_helper')
+require File.join('functional', 'crud_controller_test_helper')
 
 class CitiesControllerTest < ActionController::TestCase
 

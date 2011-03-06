@@ -8,7 +8,7 @@ required:
  * To use standard formatting, tables and forms throughout your
    application, add 'helper :standard' to your ApplicationController and 
    benefit everywhere from these little helper methods. 
- * Overwrite the <tt>:to_s</tt> method of your models for a human-friendly
+ * Overwrite the :to_s method of your models for a human-friendly
    representation.
 
 

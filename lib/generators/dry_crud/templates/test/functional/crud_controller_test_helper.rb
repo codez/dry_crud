@@ -35,7 +35,7 @@ module CrudControllerTestHelper
     assert_response :success
     assert_present assigns(:entries)
     sorted = assigns(:entries).sort_by &(col.to_sym)
-    assert sorted, assigns(:entries)
+    assert_equal sorted, assigns(:entries)
   end
 
   def test_index_sort_desc
@@ -44,7 +44,7 @@ module CrudControllerTestHelper
     assert_response :success
     assert_present assigns(:entries)
     sorted = assigns(:entries).sort_by &(col.to_sym)
-    assert sorted.reverse, assigns(:entries)
+    assert_equal sorted.reverse, assigns(:entries)
   end
 
   def test_show
