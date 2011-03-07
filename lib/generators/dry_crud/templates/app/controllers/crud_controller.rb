@@ -5,6 +5,7 @@
 # With the help of additional callbacks, it is possible to hook into the action procedures without
 # overriding the entire method.
 class CrudController < ListController
+
   include ERB::Util
   
   # Set up entry object to use in the various actions.
@@ -18,23 +19,15 @@ class CrudController < ListController
   hide_action :model_identifier, :run_callbacks
 
 
-  # Defines before and after callback hooks for create, update, save and destroy.
+  # Defines before and after callback hooks for create, update, save and destroy actions.
   define_model_callbacks :create, :update, :save, :destroy
 
   # Defines before callbacks for the render actions. A virtual callback
   # unifiying render_new and render_edit, called render_form, is defined further down.
   define_render_callbacks :show, :new, :edit
 
-  # Verify that required :id param is present and only allow good http methods.
-  # Uncomment if you have the Rails verification plugin installed.
-  #verify :params => :id, :only => :show, :redirect_to => { :action => 'index' }
-  #verify :method => :post, :only => :create,  :redirect_to => { :action => 'index' }
-  #verify :method => [:put, :post], :params => :id, :only => :update,  :redirect_to => { :action => 'index' }
-  #verify :method => [:delete, :post], :params => :id, :only => :destroy, :redirect_to => { :action => 'index' }
-
 
   ##############  ACTIONS  ############################################
-
 
   # Show one entry of this model.
   #   GET /entries/1
@@ -52,14 +45,23 @@ class CrudController < ListController
   end
 
   # Create a new entry of this model from the passed params.
+  # There are before and after create callbacks to hook into the action.
+  # To customize the response, you may overwrite this action and call
+  # super with a block that gets success and format parameters.
   #   POST /entries
   #   POST /entries.xml
-  def create
+  def create(&block)
     @entry.attributes = params[model_identifier]
-    created = with_callbacks(:create) { save_entry }
+    created = with_callbacks(:create, :save) { @entry.save }
 
-    respond_processed(created, 'created', 'new') do |format|
-      format.xml  { render :xml => @entry, :status => :created, :location => @entry } if created
+    customizable_respond_to(created, block) do |format|
+      if created
+        format.html { redirect_to_show :notice => "#{full_entry_label} was successfully created." }
+        format.xml  { render :xml => @entry, :status => :created, :location => @entry }
+      else
+        format.html { render_with_callback 'new'  }
+        format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
+      end
     end
   end
 
@@ -70,29 +72,45 @@ class CrudController < ListController
   end
 
   # Update an existing entry of this model from the passed params.
+  # There are before and after update callbacks to hook into the action.
+  # To customize the response, you may overwrite this action and call
+  # super with a block that gets success and format parameters.
   #   PUT /entries/1
   #   PUT /entries/1.xml
-  def update
+  def update(&block)
     @entry.attributes = params[model_identifier]
-    updated = with_callbacks(:update) { save_entry }
+    updated = with_callbacks(:update, :save) { @entry.save }
 
-    respond_processed(updated, 'updated', 'edit')
+    customizable_respond_to(updated, block) do |format|
+      if updated
+        format.html { redirect_to_show :notice => "#{full_entry_label} was successfully updated." }
+        format.xml  { head :ok }
+      else
+        format.html { render_with_callback 'edit'  }
+        format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
+      end
+    end
   end
 
   # Destroy an existing entry of this model.
+  # There are before and after destroy callbacks to hook into the action.
+  # To customize the response, you may overwrite this action and call
+  # super with a block that gets success and format parameters.
   #   DELETE /entries/1
   #   DELETE /entries/1.xml
-  def destroy
-    destroyed = with_callbacks(:destroy) { @entry.destroy }
+  def destroy(&block)
+    destroyed = run_callbacks(:destroy) { @entry.destroy }
 
-    respond_processed(destroyed, 'destroyed') do |format|
-      format.html do
-        if destroyed
-          redirect_to_index
-        else
-          flash.alert = @entry.errors.full_messages.join('<br/>').html_safe
+    customizable_respond_to(destroyed, block) do |format|
+      if destroyed
+        format.html { redirect_to_index :notice => "#{full_entry_label} was successfully destroyed." }
+        format.xml  { head :ok }
+      else
+        format.html { 
+          flash.alert = @entry.errors.full_messages.join('<br/>')
           request.env["HTTP_REFERER"].present? ? redirect_to(:back) : redirect_to_show
-        end
+        }
+        format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -100,27 +118,6 @@ class CrudController < ListController
   protected
 
   #############  CUSTOMIZABLE HELPER METHODS  ##############################
-
-  # Convenience method to respond to various formats if the performed
-  # action may succeed or fail. It is possible to pass a block and respond
-  # in custom ways for certain cases. If no response is performed in the
-  # given block, the default responses in this method are executed.
-  def respond_processed(success, operation, failed_action = 'show')
-    respond_to do |format|
-      flash.notice = "#{full_entry_label} was successfully #{operation}." if success
-      yield format if block_given?
-      return if performed?
-
-      # fallback responders if nothing was performed in the block
-      if success
-        format.html { redirect_to_show }
-        format.xml  { head :ok }
-      else
-        format.html { render_with_callback failed_action }
-        format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
 
   # Creates a new model entry.
   def build_entry
@@ -138,24 +135,35 @@ class CrudController < ListController
   end
 
   # Redirects to the show action of a single entry.
-  def redirect_to_show
-    redirect_to @entry
+  def redirect_to_show(options = {})
+    redirect_to @entry, options
   end
 
   # Redirects to the main action of this controller.
-  def redirect_to_index
-    redirect_to polymorphic_path(model_class, :returning => true)
-  end
-
-  # Saves the current entry with callbacks.
-  def save_entry
-    with_callbacks(:save) { @entry.save }
+  def redirect_to_index(options = {})
+    redirect_to polymorphic_path(model_class, :returning => true), options
   end
 
   # Helper method the run the given block in between the before and after
-  # callbacks of the given kind.
-  def with_callbacks(kind, &block)
-    send(:"_run_#{kind}_callbacks", &block)
+  # callbacks of the given kinds.
+  def with_callbacks(*kinds, &block)
+    kinds.reverse.inject(block) do |b, kind| 
+      lambda { run_callbacks(kind, &b) }
+    end.call
+  end
+  
+  private
+  
+  # Convenience method to respond to various formats if the performed
+  # action may succeed or fail. It is possible to pass a custom_block and respond
+  # in custom ways for certain cases. If no response is performed in the
+  # given block, the default responses in the main block are executed.
+  def customizable_respond_to(success, custom_block = nil)
+    respond_to do |format|
+      custom_block.call(success, format) if custom_block
+      return if performed?
+      yield format
+    end
   end
 
   class << self

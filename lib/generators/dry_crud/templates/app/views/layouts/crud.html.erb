@@ -19,9 +19,9 @@
 	<h1><%= @title %></h1>
 	
 	<% if flash.notice.present? %>
-		<div id="flash_notice"><%= flash.notice.html_safe %></div>
+		<div id="flash_notice"><%= raw(flash.notice) %></div>
 	<% elsif flash.alert.present? %>
-		<div id="flash_alert"><%= flash.alert.html_safe %></div>
+		<div id="flash_alert"><%= raw(flash.alert) %></div>
 	<% end %>
 	
 	<div class="actions">

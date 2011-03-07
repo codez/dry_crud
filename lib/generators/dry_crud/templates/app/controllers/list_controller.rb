@@ -50,7 +50,6 @@ class ListController < ApplicationController
     render action unless performed?
   end
 
-
   class << self
     # Callbacks
     include ActiveModel::Callbacks

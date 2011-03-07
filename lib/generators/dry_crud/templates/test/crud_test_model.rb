@@ -39,6 +39,12 @@ class CrudTestModelsController < CrudController #:nodoc:
   # don't use the standard layout as it may require different routes
   # than just the test route for this controller
   layout nil
+  
+  def destroy
+  	super do |success, format|
+  		format.html { redirect_to_index :notice => 'model is gone' } if success
+  	end
+  end
 
   protected
 

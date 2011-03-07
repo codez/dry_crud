@@ -138,6 +138,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_destroy
     super
     assert_equal [:before_destroy, :after_destroy], @controller.called_callbacks
+    assert_equal 'model is gone', flash[:notice]
   end
 
   def test_create_with_before_callback

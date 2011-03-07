@@ -141,36 +141,6 @@ module CrudControllerTestHelper
     assert_equal "", @response.body.strip
   end
 
-  # no need to test http methods for pure restfull controllers
-  def ignore_test_create_with_wrong_http_method_redirects
-    get :create, model_identifier => test_entry_attrs
-    assert_redirected_to_index
-
-    put :create, model_identifier => test_entry_attrs
-    assert_redirected_to_index
-
-    delete :create, model_identifier => test_entry_attrs
-    assert_redirected_to_index
-  end
-
-  # no need to test http methods for pure restfull controllers
-  def ignore_test_update_with_wrong_http_method_redirects
-    get :update, :id => test_entry.id, model_identifier => test_entry_attrs
-    assert_redirected_to_index
-
-    delete :update, :id => test_entry.id, model_identifier => test_entry_attrs
-    assert_redirected_to_index
-  end
-
-  # no need to test http methods for pure restfull controllers
-  def ignore_test_destroy_with_wrong_http_method_redirects
-    get :destroy, :id => test_entry.id
-    assert_redirected_to_index
-
-    put :destroy, :id => test_entry.id
-    assert_redirected_to_index
-  end
-
   protected
 
   def assert_redirected_to_index
