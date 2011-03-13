@@ -33,35 +33,40 @@ module CrudHelper
     action_col(table) { |e| link_table_action_destroy(e) }
   end
 
+  # Action link to show inside a table.
   def link_table_action_show(record)
     link_table_action('show', record)
   end
 
+  # Action link to edit inside a table.
   def link_table_action_edit(record)
     link_table_action('edit', edit_polymorphic_path(record))
   end
 
+  # Action link to destroy inside a table.
   def link_table_action_destroy(record)
     link_table_action('delete', record,
-                      :confirm => StandardHelper::CONFIRM_DELETE_MESSAGE,
+                      :confirm => ti(:confirm_delete),
                       :method => :delete)
   end
 
+  # Generic action link inside a table.
   def link_table_action(image, url, html_options = {})
   	link_to(action_icon(image), url, html_options)
   end
 
+  # Defines a column with an action link.
   def action_col(table, &block)
   	table.col('', :class => 'center', &block)
   end
   
   private
 
+  # Returns default attrs for a crud table if no others are passed.
   def attrs_or_default(attrs)
   	options = attrs.extract_options!
   	attrs = yield if attrs.blank?
   	attrs << options
   end
-
 
 end

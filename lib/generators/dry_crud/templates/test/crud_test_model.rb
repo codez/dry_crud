@@ -108,6 +108,28 @@ end
 # without the need for an application based model.
 module CrudTestHelper
 
+  # Controller helper methods for the tests
+
+  def model_class
+    CrudTestModel
+  end
+  
+  def controller_name
+    'crud_tests'
+  end
+  
+  def action_name
+    'index'
+  end
+
+  def params
+  	{}
+  end
+
+  def sortable?(attr)
+  	true
+  end
+  
   protected
 
   # Sets up the test database with a crud_test_models table.
@@ -164,7 +186,6 @@ module CrudTestHelper
     end
   end
 
-
   private
 
   def create(index, companion)
@@ -197,5 +218,5 @@ module CrudTestHelper
 
     c.execute("BEGIN") if start_transaction
   end
-
+  
 end

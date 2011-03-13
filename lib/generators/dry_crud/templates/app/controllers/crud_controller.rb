@@ -56,7 +56,7 @@ class CrudController < ListController
 
     customizable_respond_to(created, block) do |format|
       if created
-        format.html { redirect_to_show :notice => "#{full_entry_label} was successfully created." }
+        format.html { redirect_to_show success_notice }
         format.xml  { render :xml => @entry, :status => :created, :location => @entry }
       else
         format.html { render_with_callback 'new'  }
@@ -83,7 +83,7 @@ class CrudController < ListController
 
     customizable_respond_to(updated, block) do |format|
       if updated
-        format.html { redirect_to_show :notice => "#{full_entry_label} was successfully updated." }
+        format.html { redirect_to_show success_notice }
         format.xml  { head :ok }
       else
         format.html { render_with_callback 'edit'  }
@@ -103,7 +103,7 @@ class CrudController < ListController
 
     customizable_respond_to(destroyed, block) do |format|
       if destroyed
-        format.html { redirect_to_index :notice => "#{full_entry_label} was successfully destroyed." }
+        format.html { redirect_to_index success_notice }
         format.xml  { head :ok }
       else
         format.html { 
@@ -162,8 +162,17 @@ class CrudController < ListController
     respond_to do |format|
       custom_block.call(success, format) if custom_block
       return if performed?
+      
       yield format
     end
+  end
+  
+  # Create an I18n flash notice if the action was successfull.
+  def success_notice
+    key = "#{action_name}.flash.success"
+    {:notice => t(:"#{controller_name}.#{key}", 
+                  :model => full_entry_label, 
+                  :default => :"crud.#{key}")}
   end
 
   class << self

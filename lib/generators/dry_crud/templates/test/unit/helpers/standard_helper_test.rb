@@ -139,7 +139,7 @@ class StandardHelperTest < ActionView::TestCase
   test "empty table should render message" do
     result = table([]) { }
     assert result.html_safe?
-    assert_dom_equal "<div class='list'>#{NO_LIST_ENTRIES_MESSAGE}</div>", result
+    assert_dom_equal "<div class='list'>No entries found.</div>", result
   end
 
   test "non empty table should render table" do

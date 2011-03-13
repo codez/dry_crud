@@ -5,12 +5,11 @@
 # a standard label with them.
 class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
-  BLANK_SELECT_LABEL = 'Please select'
   REQUIRED_MARK    = '<span class="required">*</span>'.html_safe
 
   attr_reader :template
 
-  delegate :association, :column_type, :column_property, :captionize,
+  delegate :association, :column_type, :column_property, :captionize, :ta,
            :to => :template
 
   # Render multiple input fields together with a label for the given attributes.
@@ -109,7 +108,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     if list.present?
       collection_select(attr, list, :id, :to_s, select_options(attr), html_options)
     else
-      '(none available)'
+      ta(:none_available, association(@object, attr))
     end
   end
 
@@ -159,8 +158,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
       assoc = association(@object, attr)
       list = @template.send(:instance_variable_get, :"@#{assoc.name.to_s.pluralize}")
       unless list
-        list = assoc.klass.all(:conditions => assoc.options[:conditions],
-                               :order => assoc.options[:order])
+        list = assoc.klass.where(assoc.options[:conditions]).order(assoc.options[:order])
       end
     end
     list
@@ -178,8 +176,9 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   # Depending if the given attribute must be present, return
   # only an initial selection prompt or a blank option, respectively.
   def select_options(attr)
-    required?(attr) ? { :prompt => BLANK_SELECT_LABEL } :
-                      { :include_blank => StandardHelper::NO_ENTRY }
+    assoc = association(@object, attr)
+    required?(attr) ? { :prompt => ta(:please_select, assoc) } :
+                      { :include_blank => ta(:no_entry, assoc) }
   end
 
   private

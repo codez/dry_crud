@@ -1,0 +1,25 @@
+en:
+  # cities controller
+  cities:
+    global:
+      confirm_delete: You kill city?
+    index:
+      title: All cities of the world
+    list:
+      no_list_entries: Nada citta
+    update:
+      flash:
+        success: The %{model} got an update
+ 
+  # people controller
+  people:
+    confirm_delete: You delete pipl?
+  
+  # model associations
+  activerecord:
+    associations:
+      person:
+        no_entry: Nobody
+        none_available: Nobody here
+      city:
+        none_available: No City

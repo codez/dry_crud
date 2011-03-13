@@ -3,10 +3,7 @@
 # ApplicationController.
 module StandardHelper
 
-  NO_LIST_ENTRIES_MESSAGE = "No entries found"
-  NO_ENTRY                = '(none)'
-  CONFIRM_DELETE_MESSAGE  = 'Do you really want to delete this entry?'
-  EMPTY_STRING            = "&nbsp;".html_safe   # non-breaking space asserts better css styling.
+  EMPTY_STRING = "&nbsp;".html_safe   # non-breaking space asserts better css styling.
 
   ################  FORMATTING HELPERS  ##################################
 
@@ -20,8 +17,8 @@ module StandardHelper
       when Float  then number_with_precision(value, :precision => 2)
       when Date   then l(value)
       when Time   then l(value)
-      when true   then 'yes'
-      when false  then 'no'
+      when true   then t(:"global.yes")
+      when false  then t(:"global.no")
       when nil    then EMPTY_STRING
       else value.to_s
     end
@@ -85,7 +82,7 @@ module StandardHelper
         yield t if block_given?
       end
     else
-      content_tag(:div, NO_LIST_ENTRIES_MESSAGE, :class => 'list')
+      content_tag(:div, ti(:no_list_entries), :class => 'list')
     end
   end
 
@@ -96,7 +93,7 @@ module StandardHelper
   # An options hash may be given as the last argument.
   def standard_form(object, *attrs, &block)
     form_for(object, {:builder => StandardFormBuilder}.merge(attrs.extract_options!)) do |form|
-      content = render('shared/error_messages', :errors => object.errors)
+      content = render('shared/error_messages', :errors => object.errors, :object => object)
 
       content << if block_given?
         capture(form, &block)
@@ -104,13 +101,13 @@ module StandardHelper
         form.labeled_input_fields(*attrs)
       end
 
-      content << labeled(nil, form.submit("Save") + cancel_link(object))
+      content << labeled(nil, form.submit(ti(:"button.save")) + cancel_link(object))
       content.html_safe
     end
   end
 
   def cancel_link(object)
-    link_to("Cancel", polymorphic_path(object), :class => 'cancel')
+    link_to(ti(:"button.cancel"), polymorphic_path(object), :class => 'cancel')
   end
 
   # Alternate table row
@@ -128,29 +125,29 @@ module StandardHelper
 
   # Standard link action to the show page of a given record.
   def link_action_show(record)
-    link_action 'Show', 'show', record
+    link_action ti(:"link.show"), 'show', record
   end
 
   # Standard link action to the edit page of a given record.
   def link_action_edit(record)
-    link_action 'Edit', 'edit', edit_polymorphic_path(record)
+    link_action ti(:"link.edit"), 'edit', edit_polymorphic_path(record)
   end
 
   # Standard link action to the destroy action of a given record.
   def link_action_destroy(record)
-    link_action 'Delete', 'delete', record,
-                :confirm => CONFIRM_DELETE_MESSAGE,
+    link_action ti(:"link.delete"), 'delete', record,
+                :confirm => ti(:confirm_delete),
                 :method => :delete
   end
 
   # Standard link action to the list page.
   def link_action_index(url_options = {:action => 'index', :returning => true})
-    link_action 'List', 'list', url_options
+    link_action ti(:"link.list"), 'list', url_options
   end
 
   # Standard link action to the new page.
   def link_action_add(url_options = {:action => 'new'})
-    link_action 'Add', 'add', url_options
+    link_action ti(:"link.add"), 'add', url_options
   end
 
   # A generic helper method to create action links.
@@ -161,12 +158,39 @@ module StandardHelper
             {:class => 'action'}.merge(html_options))
   end
 
+  # Outputs an icon for an action with an optional label.
   def action_icon(icon, label = nil)
     html = image_tag("actions/#{icon}.png", :size => '16x16')
     html << ' ' << label if label
     html
   end
 
+  def ti(key, variables = {})
+    defaults = []
+    if controller.class.respond_to?(:template_lookup_path)
+      partial = @_virtual_path ? @_virtual_path.gsub(%r{.*/_?}, "") : nil
+      controller.class.template_lookup_path.each do |folder|
+        defaults << :"#{folder}.#{partial}.#{key}" if partial
+        defaults << :"#{folder}.#{action_name}.#{key}"
+        defaults << :"#{folder}.global.#{key}"
+      end
+    else
+      defaults << :"#{controller_name}.#{action_name}.#{key}"
+      defaults << :"#{controller_name}.global.#{key}"
+    end
+    defaults << :"global.#{key}"
+    
+    variables[:default] ||= defaults
+    t(defaults.shift, variables)
+  end
+
+  def ta(key, assoc, variables = {})
+    primary = :"activerecord.associations.models.#{assoc.active_record.name.underscore}.#{assoc.name}.#{key}"
+    variables[:default] ||= [:"activerecord.associations.#{assoc.klass.name.underscore}.#{key}",
+                             :"global.associations.#{key}"]
+    t(primary, variables)
+  end
+  
   protected
 
   # Helper methods that are not directly called from templates.
@@ -205,7 +229,7 @@ module StandardHelper
     if assoc_val = obj.send(assoc.name)
       link_to_unless(no_assoc_link?(assoc, assoc_val), assoc_val, assoc_val)
     else
-      NO_ENTRY
+      ta(:no_entry, assoc)
     end
   end
 

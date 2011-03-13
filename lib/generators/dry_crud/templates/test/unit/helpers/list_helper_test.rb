@@ -121,19 +121,4 @@ class ListHelperTest < ActionView::TestCase
                   :birthdate, :human, :remarks, :created_at, :updated_at], default_attrs
   end
 
-  # Controller helper methods for the tests
-
-  def model_class
-    CrudTestModel
-  end
-
-  def params
-  	{}
-  end
-
-  def sortable?(attr)
-  	true
-  end
-
-
 end

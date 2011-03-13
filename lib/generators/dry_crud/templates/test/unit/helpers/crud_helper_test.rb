@@ -91,18 +91,4 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /textarea .*?name="crud_test_model\[remarks\]"/, f
   end
 
-  # Controller helper methods for the tests
-
-  def model_class
-    CrudTestModel
-  end
-
-  def params
-  	{}
-  end
-
-  def sortable?(attr)
-  	true
-  end
-
 end
