@@ -23,7 +23,7 @@ class ListHelperTest < ActionView::TestCase
     end
 
     assert_count 7, REGEXP_ROWS, t
-    assert_count 12, REGEXP_SORT_HEADERS, t
+    assert_count 13, REGEXP_SORT_HEADERS, t
   end
 
   test "custom list table with attributes" do
@@ -80,7 +80,7 @@ class ListHelperTest < ActionView::TestCase
     end
 
     assert_count 7, REGEXP_ROWS, t
-    assert_count 11, REGEXP_SORT_HEADERS, t
+    assert_count 12, REGEXP_SORT_HEADERS, t
     assert_count 1, /<th><a .*?sort_dir=desc.*?>Children<\/a> &darr;<\/th>/, t
   end
 
@@ -96,7 +96,7 @@ class ListHelperTest < ActionView::TestCase
     end
 
     assert_count 7, REGEXP_ROWS, t
-    assert_count 11, REGEXP_SORT_HEADERS, t
+    assert_count 12, REGEXP_SORT_HEADERS, t
     assert_count 1, /<th><a .*?sort_dir=asc.*?>Children<\/a> &uarr;<\/th>/, t
   end
 
@@ -118,7 +118,8 @@ class ListHelperTest < ActionView::TestCase
 
   test "default attributes do not include id" do
     assert_equal [:name, :whatever, :children, :companion_id, :rating, :income,
-                  :birthdate, :gets_up_at, :human, :remarks, :created_at, :updated_at], default_attrs
+                  :birthdate, :gets_up_at, :last_seen, :human, :remarks,
+                  :created_at, :updated_at], default_attrs
   end
 
 end

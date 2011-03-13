@@ -14,10 +14,15 @@ en:
   cities:
     global:
       confirm_delete: You kill city?
+      button:
+        save: Save City
     index:
       title: All cities of the world
     list:
       no_list_entries: Nada citta
+    new:
+      button:
+        save: Create City
     update:
       flash:
         success: The %{model} got an update

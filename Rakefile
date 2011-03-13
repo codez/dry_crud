@@ -48,6 +48,7 @@ namespace :test do
     task :create do
       unless File.exist?(TEST_APP_ROOT)
         sh "rails new #{TEST_APP_ROOT}"
+        FileUtils.cp(File.join(File.dirname(__FILE__), 'test', 'templates', 'Gemfile'), TEST_APP_ROOT)
       end
     end
       
@@ -66,7 +67,8 @@ namespace :test do
                    File.join(TEST_APP_ROOT, 'app', 'views', 'layouts', 'application.html.erb'), 
                    :force => true)
       FileUtils.cd(TEST_APP_ROOT) do
-        sh "rake db:migrate db:seed db:test:prepare RAILS_ENV=development"
+        sh "rake db:migrate db:seed RAILS_ENV=development"
+        sh "rake db:migrate RAILS_ENV=test"  # db:test:prepare does not work for jdbcsqlite3
       end
     end
   end

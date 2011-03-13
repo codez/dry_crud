@@ -194,6 +194,7 @@ module StandardHelper
     variables[:default] ||= defaults
     t(defaults.shift, variables)
   end
+  
   alias_method :ti, :translate_inheritable
 
   # Translates the passed key for an active record association. This helper is used
@@ -213,7 +214,9 @@ module StandardHelper
     end
     t(primary, variables)
   end
+  
   alias_method :ta, :translate_association
+  
   
   protected
 

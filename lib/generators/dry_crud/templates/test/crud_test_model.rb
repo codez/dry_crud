@@ -13,7 +13,7 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   end
 
   def chatty
-  	remarks.size
+    remarks.size
   end
   
 end
@@ -41,17 +41,17 @@ class CrudTestModelsController < CrudController #:nodoc:
   layout nil
   
   def destroy
-  	super do |success, format|
-  		format.html { redirect_to_index :notice => 'model is gone' } if success
-  	end
+    super do |success, format|
+      format.html { redirect_to_index :notice => 'model is gone' } if success
+    end
   end
 
   protected
 
   def list_entries
     entries = super
-  	if params[:filter]
-  	  entries = entries.where(['rating < ?', 3]).except(:order).order('children DESC')
+    if params[:filter]
+      entries = entries.where(['rating < ?', 3]).except(:order).order('children DESC')
     end
     entries
   end
@@ -123,11 +123,11 @@ module CrudTestHelper
   end
 
   def params
-  	{}
+    {}
   end
 
   def sortable?(attr)
-  	true
+    true
   end
   
   protected
@@ -147,6 +147,7 @@ module CrudTestHelper
           t.decimal :income, :precision => 14, :scale => 2
           t.date    :birthdate
           t.time    :gets_up_at
+          t.datetime :last_seen
           t.boolean :human, :default => true
           t.text    :remarks
 
@@ -197,6 +198,11 @@ module CrudTestHelper
                           :rating => "#{index}.#{index}".to_f,
                           :income => 10000000 * index + 0.1 * index,
                           :birthdate => "#{1900 + 10 * index}-#{index}-#{index}",
+                          # store entire date to avoid time zone issues
+                          :gets_up_at => ENV['RUBY_VERSION'].include?('-1.9.') ? 
+                                            Time.local(2000,1,1,index,index) :
+                                            Time.utc(2000,1,1,index,index),  
+                          :last_seen => "#{2000 + 10 * index}-#{index}-#{index} 1#{index}:2#{index}",
                           :human => index % 2 == 0,
                           :remarks => "#{c} #{str(index + 1)} #{str(index + 2)}\n" * (index % 3 + 1))
   end

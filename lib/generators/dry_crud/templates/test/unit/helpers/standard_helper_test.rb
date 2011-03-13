@@ -92,9 +92,15 @@ class StandardHelperTest < ActionView::TestCase
     assert_equal :integer, column_type(m, :children)
     assert_equal :integer, column_type(m, :companion_id)
     assert_equal nil, column_type(m, :companion)
-    assert_equal :float, column_type(m, :rating)
+    if ActiveRecord::Base.connection.adapter_name == 'SQLite' && defined?(JRUBY_VERSION)
+      assert_equal :decimal, column_type(m, :rating)
+    else 
+      assert_equal :float, column_type(m, :rating)
+    end
     assert_equal :decimal, column_type(m, :income)
     assert_equal :date, column_type(m, :birthdate)
+    assert_equal :time, column_type(m, :gets_up_at)
+    assert_equal :datetime, column_type(m, :last_seen)
     assert_equal :boolean, column_type(m, :human)
     assert_equal :text, column_type(m, :remarks)
   end
@@ -124,10 +130,15 @@ class StandardHelperTest < ActionView::TestCase
     m = crud_test_models(:AAAAA)
     assert_equal '1910-01-01', format_type(m, :birthdate)
   end
-
+  
+  test "format time column" do
+    m = crud_test_models(:AAAAA)
+    assert_equal '01:01', format_type(m, :gets_up_at)
+  end
+  
   test "format datetime column" do
     m = crud_test_models(:AAAAA)
-    assert_equal f(m.created_at.to_date) + " " + f(m.created_at.to_time), format_type(m, :created_at)
+    assert_equal "2010-01-01 11:21", format_type(m, :last_seen)
   end
 
   test "format text column" do
