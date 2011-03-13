@@ -12,7 +12,10 @@ class CreatePeopleAndCities < ActiveRecord::Migration
       t.float :rating
       t.decimal :income, :precision => 14, :scale => 2
       t.date :birthdate
+      t.time :gets_up_at
+      t.datetime :last_seen
       t.text :remarks
+      t.boolean :cool, :null => false, :default => false
     end
   end
 

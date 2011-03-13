@@ -16,7 +16,7 @@ module StandardHelper
       when Fixnum then number_with_delimiter(value)
       when Float  then number_with_precision(value, :precision => 2)
       when Date   then l(value)
-      when Time   then l(value)
+      when Time   then l(value, :format => :time)
       when true   then t(:"global.yes")
       when false  then t(:"global.no")
       when nil    then EMPTY_STRING
@@ -165,7 +165,18 @@ module StandardHelper
     html
   end
 
-  def ti(key, variables = {})
+  # Translates the passed key by looking it up over the template lookup path
+  # (i.e., usually the controller hierarchy). The key is searched in the following
+  # order:
+  #  - {controller}.{current_partial}.{key}
+  #  - {controller}.{current_action}.{key}
+  #  - {controller}.global.{key}
+  #  - {parent_controller}.{current_partial}.{key}
+  #  - {parent_controller}.{current_action}.{key}
+  #  - {parent_controller}.global.{key}
+  #  - ...
+  #  - global.{key}
+  def translate_inheritable(key, variables = {})
     defaults = []
     if controller.class.respond_to?(:template_lookup_path)
       partial = @_virtual_path ? @_virtual_path.gsub(%r{.*/_?}, "") : nil
@@ -183,13 +194,26 @@ module StandardHelper
     variables[:default] ||= defaults
     t(defaults.shift, variables)
   end
+  alias_method :ti, :translate_inheritable
 
-  def ta(key, assoc, variables = {})
-    primary = :"activerecord.associations.models.#{assoc.active_record.name.underscore}.#{assoc.name}.#{key}"
-    variables[:default] ||= [:"activerecord.associations.#{assoc.klass.name.underscore}.#{key}",
-                             :"global.associations.#{key}"]
+  # Translates the passed key for an active record association. This helper is used
+  # for rendering association dependent keys in forms like :no_entry, :none_available or 
+  # :please_select.
+  # The key is looked up in the following order:
+  #  - activerecord.associations.models.{model_name}.{association_name}.{key}
+  #  - activerecord.associations.{association_model_name}.{key}
+  #  - global.associations.{key}
+  def translate_association(key, assoc = nil, variables = {})
+    primary = if assoc
+      variables[:default] ||= [:"activerecord.associations.#{assoc.klass.name.underscore}.#{key}",
+                               :"global.associations.#{key}"]
+      :"activerecord.associations.models.#{assoc.active_record.name.underscore}.#{assoc.name}.#{key}"
+    else
+      :"global.associations.#{key}"
+    end
     t(primary, variables)
   end
+  alias_method :ta, :translate_association
   
   protected
 

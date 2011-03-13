@@ -115,7 +115,7 @@ module CrudTestHelper
   end
   
   def controller_name
-    'crud_tests'
+    'crud_test_models'
   end
   
   def action_name
@@ -146,6 +146,7 @@ module CrudTestHelper
           t.float   :rating
           t.decimal :income, :precision => 14, :scale => 2
           t.date    :birthdate
+          t.time    :gets_up_at
           t.boolean :human, :default => true
           t.text    :remarks
 

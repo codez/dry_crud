@@ -20,7 +20,7 @@ To integrate DRY CRUD into your code, only a few additions are required:
 * To use standard formatting, tables and forms throughout your application, add <tt>helper :standard</tt> to your +ApplicationController+ and benefit everywhere from these little helper methods. 
 * Overwrite the <tt>:to_s</tt> method of your models for a human-friendly representation.
 
-Version 1.0.0 and higher are built for Rails 3. If you need a version for Rails 2.3, please get version 0.6.0 of the gem or go to the rails-2.3 branch on Github.
+Version 1.0 and higher are built for Rails 3. If you need a version for Rails 2.3, please get version 0.6.0 of the gem or go to the rails-2.3 branch on Github.
 
 == Overview
 
@@ -181,6 +181,28 @@ Even +belongs_to+ associations are automatically rendered with a select field. B
   <%= f.belongs_to_field :hometown, :list => City.where(:country => @person.country) %>
 
 Yes, it's bad practice to use finder logic in your views! Define the variable <tt>@hometowns</tt> in your controller instead (as shown in the example above), and you do not even have to specify the <tt>:list</tt> option.
+
+=== Internationalization (I18N)
+
+All text strings used are externalized to an english locale yaml. The keys are organized by controller and template name plus a generic global scope. 
+
+To represent the controller hierarchy used by <tt>render_inheritable</tt>, a special translation helper <tt>:ti</tt> looks up keys along this hierarchy in the following order:
+  {controller_name}.{template_name}.{key}
+  {controller_name}.{action_name}.{key}
+  {controller_name}.global.{key}
+  {parent_controller_name}.{template_name}.{key}
+  {parent_controller_name}.{action_name}.{key}
+  {parent_controller_name}.global.{key}
+  ...
+  global.{key}
+
+In order to change the title for your +PeopleController+'s +index+ action, you do not need to override the entire template, but simply define the following key:
+  people.index.title = "The People"
+
+Otherwise, the lookup for the title would fallback on the +ListController+'s key +list.index.title+.
+
+This lookup mechanism also allows you to easily define per-controller overridable text snippets in your views.
+
 
 == Generated Files
 

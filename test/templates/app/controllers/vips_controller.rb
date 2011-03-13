@@ -4,11 +4,6 @@ class VipsController < ListController
 
   self.sort_mappings = {:city_id => 'cities.name'}
 
-  def index
-    @title = 'Listing VIPs'
-    super
-  end
-
   protected
 
   class << self

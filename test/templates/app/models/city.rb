@@ -17,7 +17,7 @@ class City < ActiveRecord::Base
 
   def protect_with_inhabitants
     if people.exists?
-      errors.add(:base, "You cannot destroy this city as long as it has any inhabitants")
+      errors.add(:base, :protect_with_inhabitants)
       false
     end
   end

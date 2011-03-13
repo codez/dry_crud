@@ -99,6 +99,16 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     date_select(attr, {}, html_options)
   end
 
+  # Render a field to enter a time. You might want to customize this.
+  def time_field(attr, html_options = {})
+    time_select(attr, {}, html_options)
+  end
+  
+  # Render a field to enter a date and time. You might want to customize this.
+  def datetime_field(attr, html_options = {})
+    datetime_select(attr, {}, html_options)
+  end
+  
   # Render a select element for a :belongs_to association defined by attr.
   # Use additional html_options for the select element.
   # To pass a custom element list, specify the list with the :list key or
@@ -122,6 +132,14 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     template.labeled(label(attr), field_html, &block)
   end
 
+  # Depending if the given attribute must be present, return
+  # only an initial selection prompt or a blank option, respectively.
+  def select_options(attr)
+    assoc = association(@object, attr)
+    required?(attr) ? { :prompt => ta(:please_select, assoc) } :
+                      { :include_blank => ta(:no_entry, assoc) }
+  end
+  
   # Dispatch methods starting with 'labeled_' to render a label and the corresponding
   # input field. E.g. labeled_boolean_field(:checked, {:class => 'bold'})
   def method_missing(name, *args)
@@ -135,7 +153,6 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   def respond_to?(name)
     labeled_field_method?(name).present? || super(name)
   end
-
   protected
 
   # Returns true if attr is a non-polymorphic belongs_to association,
@@ -171,14 +188,6 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     validators = @object.class.validators_on(attr) +
                  @object.class.validators_on(attr_id)
     validators.any? {|v| v.kind == :presence }
-  end
-
-  # Depending if the given attribute must be present, return
-  # only an initial selection prompt or a blank option, respectively.
-  def select_options(attr)
-    assoc = association(@object, attr)
-    required?(attr) ? { :prompt => ta(:please_select, assoc) } :
-                      { :include_blank => ta(:no_entry, assoc) }
   end
 
   private

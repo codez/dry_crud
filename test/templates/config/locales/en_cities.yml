@@ -1,4 +1,15 @@
 en:
+  global:
+    menu:
+      people: People
+      cities: Cities
+      vips: VIPs
+    link:
+      maps: Maps
+  ajax:
+    global:
+      link:
+        ajax: Ajahx
   # cities controller
   cities:
     global:
@@ -10,13 +21,28 @@ en:
     update:
       flash:
         success: The %{model} got an update
- 
+        
   # people controller
   people:
-    confirm_delete: You delete pipl?
+    global:
+      confirm_delete: You delete pipl?
+    attrs:
+      i_think_its: I think it's
+      nice: Nice
+      check_google: Check Google
   
+  # vips controller
+  vips:
+    index:
+      title: Listing VIPs
+      no_list_entries: No VIPs found
+      
   # model associations
   activerecord:
+    errors:
+      models:
+        city:
+          protect_with_inhabitants: You cannot destroy this city as long as it has any inhabitants.
     associations:
       person:
         no_entry: Nobody

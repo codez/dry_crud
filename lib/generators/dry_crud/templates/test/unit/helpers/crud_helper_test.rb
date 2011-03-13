@@ -25,7 +25,7 @@ class CrudHelperTest < ActionView::TestCase
     end
 
     assert_count 7, REGEXP_ROWS, t
-    assert_count 11, REGEXP_SORT_HEADERS, t
+    assert_count 12, REGEXP_SORT_HEADERS, t
     assert_count 18, REGEXP_ACTION_CELL, t      # show, edit, delete links
   end
 
