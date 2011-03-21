@@ -168,6 +168,8 @@ class CrudController < ListController
   end
   
   # Create an I18n flash notice if the action was successfull.
+  # Uses the key {controller_name}.{action_name}.flash.success
+  # or crud.{action_name}.flash.success as fallback.
   def success_notice
     key = "#{action_name}.flash.success"
     {:notice => t(:"#{controller_name}.#{key}", 

@@ -91,14 +91,14 @@ If the current page should be remembered while viewing or editing an entry, just
 
 ==== Special formatting for selected attributes
 
-Sometimes, the default formatting provided by +:format_attr+ will not be sufficient. We have a boolean column <tt>sex</tt> in our model, but would like to display 'male' or 'female' for it (instead of 'no' or 'yes', which is a bit cryptic). Just define a method in your view helper starting with <tt>format_</tt>, followed by the attribute name:
+Sometimes, the default formatting provided by <tt>:format_attr</tt> will not be sufficient. We have a boolean column +sex+ in our model, but would like to display 'male' or 'female' for it (instead of 'no' or 'yes', which is a bit cryptic). Just define a method in your view helper starting with <tt>format_</tt>, followed by the attribute name:
 
 In <tt>app/helpers/people.rb</tt>:
   def format_sex(person)
     person.sex ? 'female' : 'male'
   end
 
-By the way: The method +:f+ in +StandardHelper+ uniformly formats arbitrary values according to their class.  
+By the way: The method <tt>:f</tt> in +StandardHelper+ uniformly formats arbitrary values according to their class.  
 
 
 ==== Filtering the index list
@@ -199,7 +199,7 @@ To represent the controller hierarchy used by <tt>render_inheritable</tt>, a spe
 In order to change the title for your +PeopleController+'s +index+ action, you do not need to override the entire template, but simply define the following key:
   people.index.title = "The People"
 
-Otherwise, the lookup for the title would fallback on the +ListController+'s key +list.index.title+.
+Otherwise, the lookup for the title would fallback on the +ListController+'s key <tt>list.index.title</tt>.
 
 This lookup mechanism also allows you to easily define per-controller overridable text snippets in your views.
 
@@ -210,7 +210,7 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 === Controller:
 
-{controller/crud_controller.rb}[http://codez.ch/dry_crud/?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on ListController.
+{controller/crud_controller.rb}[http://codez.ch/dry_crud/?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on +ListController+.
 
 {controller/list_controller.rb}[http://codez.ch/dry_crud/?q=ListController]:: Abstract controller providing a basic list action. There are two sub-modules that provide search and sort functionality for the table displayed in the list action. A third sub-module remembers the list parameters in order to return to an identical list.
 
@@ -219,11 +219,11 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 === Helpers:
 
-{helpers/standard_helper.rb}[http://codez.ch/dry_crud/?q=StandardHelper]:: A view helper to standardize often used functions like formatting, tables, forms or action links. This helper is ideally defined in the ApplicationController. It is required to use the StandardTableBuilder and the StandardFormBuilder.
+{helpers/standard_helper.rb}[http://codez.ch/dry_crud/?q=StandardHelper]:: A view helper to standardize often used functions like formatting, tables, forms or action links. This helper is ideally defined in the +ApplicationController+. It is required to use the +StandardTableBuilder+ and the +StandardFormBuilder+.
 
-{helpers/crud_helper.rb}[http://codez.ch/dry_crud/?q=CrudHelper]:: A small helper for CrudController to render tables and forms with a default set of attributes.
+{helpers/crud_helper.rb}[http://codez.ch/dry_crud/?q=CrudHelper]:: A small helper for +CrudController+ to render tables and forms with a default set of attributes.
 
-{helpers/list_helper.rb}[http://codez.ch/dry_crud/?q=ListHelper]:: A small helper for ListController to render the list table with a default set of attributes.
+{helpers/list_helper.rb}[http://codez.ch/dry_crud/?q=ListHelper]:: A small helper for +ListController+ to render the list table with a default set of attributes.
 
 {helpers/standard_table_builder.rb}[http://codez.ch/dry_crud/?q=StandardTableBuilder]:: A simple helper object to easily define tables listing several rows of the same data type.
 
@@ -232,20 +232,28 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 === Views:
 
-All templates in the +crud+ folder may be 'overriden' individually in a respective view folder. Define the basic structure of your CRUD views here and adapt it as required for each single model.
+All templates in the +list+ and +crud+ folders may be 'overriden' individually in a respective view folder. Define the basic structure of your CRUD views here and adapt it as required for each single model. Actually, the <tt>_list.html.erb</tt> partial from the +list+ folder gets overriden in the +crud+ folder already.
 
+
+views/list/index.html.erb:: The index view displaying a sortable table with all entries. If you have +search_columns+ defined for your controller, then a search box is rendered as well.
+
+views/list/_list.html.erb:: A partial defining the table in the index view. To change the displayed attributes for your list model, just create an own <tt>_list.html.erb</tt> in your controller's view directory.
+
+views/list/_search.html.erb:: A partial defining a simple search form that is displayed when +search_columns+ are defined in a subclassing controller.
+
+views/list/_actions_index.html.erb:: The action links available in the index view. None by default.
 
 views/crud/show.html.erb:: The show view displaying all the attributes of one entry and the various actions to perform on it.
 
 views/crud/_attrs.html.erb:: A partial defining the attributes to be displayed in the show view. 
 
-views/crud/_list.html.erb:: A partial defining the table in the index view. To change the displayed attributes for your list model, just create an own _list.html.erb in your controller's view directory.
+views/crud/_list.html.erb:: A partial defining the table in the index view with various links to manipulate the entries.
 
 views/crud/new.html.erb:: The view to create a new entry.
 
 views/crud/edit.html.erb:: The view to edit an existing entry.
 
-views/crud/_form.html.erb:: The form used to create and edit entries. If you would like to customize this form for various models, just create an own _form.html.erb in your controller's view directory.
+views/crud/_form.html.erb:: The form used to create and edit entries. If you would like to customize this form for various models, just create an own <tt>_form.html.erb</tt> in your controller's view directory.
 
 views/crud/_actions_index.html.erb:: The action links available in the index view.
 
@@ -253,21 +261,17 @@ views/crud/_actions_show.html.erb:: The action links available in the show view.
 
 views/crud/_actions_edit.html.erb:: The action links available in the edit view.
 
-views/list/index.html.erb:: The index view displaying a sortable table with all entries. If you have +search_columns+ defined for your controller, then a search box is rendered as well.
-
-views/list/_list.html.erb:: A partial defining the table in the index view. To change the displayed attributes for your list model, just create an own _list.html.erb in your controller's view directory.
-
-views/list/_search.html.erb:: A partial defining a simple search form that is displayed when +search_columns+ are defined in a subclassing controller.
-
-views/list/_actions_index.html.erb:: The action links available in the index view. None by default.
-
 views/shared/_labeled.html.erb:: Partial to define the layout for an arbitrary content with a label.
 
-views/layouts/crud.html.erb:: An example layout showing how to use the @title and +flash+. Most probably you want to merge this with your application.html.erb or adapt the main CRUD templates, so you wont need this file.
+views/shared/_error_messages.html.erb:: Partial to display the validation errors in Rails 2 style.
 
-views/layouts/_menu.html.erb:: An empty file to put your menu items into. Included from +list.html.erb+.
+views/layouts/crud.html.erb:: An example layout showing how to use the <tt>@title</tt> and +flash+. Most probably you want to merge this with your <tt>application.html.erb</tt> or adapt the main CRUD templates, so you wont need this file.
+
+views/layouts/_menu.html.erb:: An empty file to put your menu items into. Included from <tt>crud.html.erb</tt>.
 
 public/stylesheets/crud.css:: A simple CSS with all the classes and ids used in the CRUD code. 
+
+public/images/action/*.png:: Some sample action icons from the {Open Icon Library}[http://openiconlibrary.sourceforge.net].
 
 
 === Tests:
@@ -276,7 +280,7 @@ public/stylesheets/crud.css:: A simple CSS with all the classes and ids used in 
 
 {test/custom_assertions.rb}[http://codez.ch/dry_crud/?q=CustomAssertions]:: A handful of convenient assertions. Include this module into your <tt>test_helper.rb</tt> file.
 
-{test/functionals/crud_controller_test_helper.rb}[http://codez.ch/dry_crud/?q=CrudControllerTestHelper]:: A module to include into the functional tests for your CrudController subclasses. Contains a handful of CRUD functionality tests for the provided implementation. So for each new CRUD controller, you get 20 tests for free.
+{test/functionals/crud_controller_test_helper.rb}[http://codez.ch/dry_crud/?q=CrudControllerTestHelper]:: A module to include into the functional tests for your +CrudController+ subclasses. Contains a handful of CRUD functionality tests for the provided implementation. So for each new CRUD controller, you get 20 tests for free.
 
 test/several other tests:: Testing the provided implementation and a great base to test your adaptions of the CRUD code.
 

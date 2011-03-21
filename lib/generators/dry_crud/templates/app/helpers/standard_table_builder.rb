@@ -56,7 +56,8 @@ class StandardTableBuilder
   # Renders the table as HTML.
   def to_html
     content_tag :table, :class => 'list' do
-      html_header + entries.collect { |e| html_row(e) }.join.html_safe
+      content_tag(:thead, html_header) + 
+      content_tag(:tbody, safe_join(entries) { |e| html_row(e) })
     end
   end
 
@@ -80,18 +81,22 @@ class StandardTableBuilder
 
   def html_header
     content_tag :tr do
-      cols.collect { |c| c.html_header }.join.html_safe
+      safe_join(cols) { |c| c.html_header }
     end
   end
 
   def html_row(entry)
     tr_alt do
-      cols.collect { |c| c.html_cell(entry) }.join.html_safe
+      safe_join(cols) { |c| c.html_cell(entry) }
     end
   end
 
   def entry_class
     entries.first.class
+  end
+  
+  def safe_join(collection, &block)
+    collection.collect(&block).join.html_safe
   end
 
   # Helper class to store column information.

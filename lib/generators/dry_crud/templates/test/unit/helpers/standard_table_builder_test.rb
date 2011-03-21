@@ -58,9 +58,13 @@ class StandardTableBuilderTest < ActionView::TestCase
   test "two x two table" do
     dom = <<-FIN
       <table class="list">
+      <thead>
       <tr><th>Upcase</th><th>Size</th></tr>
+      </thead>
+	  <tbody>
       <tr class="even"><td>FOO</td><td>3 chars</td></tr>
       <tr class="odd"><td>BAHR</td><td>4 chars</td></tr>
+      </tbody>
       </table>
     FIN
     dom.gsub!(/[\n\t]/, "").gsub!(/\s{2,}/, "")
@@ -73,7 +77,10 @@ class StandardTableBuilderTest < ActionView::TestCase
   test "table with before and after cells" do
     dom = <<-FIN
       <table class="list">
+      <thead>
       <tr><th>head</th><th>Upcase</th><th>Size</th><th></th></tr>
+      </thead>
+      <tbody>
       <tr class="even">
         <td class='left'><a href='/'>foo</a></td>
         <td>FOO</td>
@@ -86,6 +93,7 @@ class StandardTableBuilderTest < ActionView::TestCase
         <td>4 chars</td>
         <td>Never bahr</td>
       </tr>
+      </tbody>
       </table>
     FIN
     dom.gsub!(/[\n\t]/, "").gsub!(/\s{2,}/, "")
@@ -94,6 +102,26 @@ class StandardTableBuilderTest < ActionView::TestCase
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }
 
+
+    assert_dom_equal dom, table.to_html
+  end
+  
+  test "empty entries collection renders empty table" do
+    dom = <<-FIN
+      <table class="list">
+      <thead>
+      <tr><th>head</th><th>Upcase</th><th>Size</th><th></th></tr>
+      </thead>
+      <tbody>
+      </tbody>
+      </table>
+    FIN
+    dom.gsub!(/[\n\t]/, "").gsub!(/\s{2,}/, "")
+    
+ 	table = StandardTableBuilder.new([], self)
+    table.col('head', :class => 'left') { |e| link_to e, "/" }
+    table.attrs :upcase, :size
+    table.col { |e| "Never #{e}" }
 
     assert_dom_equal dom, table.to_html
   end

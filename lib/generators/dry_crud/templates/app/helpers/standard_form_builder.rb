@@ -5,7 +5,7 @@
 # a standard label with them.
 class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
-  REQUIRED_MARK    = '<span class="required">*</span>'.html_safe
+  REQUIRED_MARK = '<span class="required">*</span>'.html_safe
 
   attr_reader :template
 

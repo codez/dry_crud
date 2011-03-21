@@ -1,9 +1,7 @@
 <% if errors.any? %>
 	<div id="error_explanation">
 	    <h2>
-	    <%= t(:"errors.template.header", 
-	          :count => errors.count, 
-	          :model => object.to_s) %>
+	    <%= ti(:"errors.header", :count => errors.count, :model => object.to_s) %>
 	    </h2>
 	    <ul>
 	        <% errors.full_messages.each do |msg| %>
