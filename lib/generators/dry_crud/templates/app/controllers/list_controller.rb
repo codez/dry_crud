@@ -204,15 +204,19 @@ class ListController < ApplicationController
     end
 
     def clear_void_params(remembered)
-      session[:list_params].delete(request.path) if remembered.blank?
+      session[:list_params].delete(remember_key) if remembered.blank?
     end
 
     # Get the params stored in the session.
-    # Params are stored by request path to play nice when a controller
-    # is used in different routes.
     def remembered_params
       session[:list_params] ||= {}
-      session[:list_params][request.path] ||= {}
+      session[:list_params][remember_key] ||= {}
+    end
+    
+    # Params are stored by request path to play nice when a controller
+    # is used in different routes.
+    def remember_key
+       request.path
     end
   end
 

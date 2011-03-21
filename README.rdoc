@@ -234,6 +234,7 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 All templates in the +list+ and +crud+ folders may be 'overriden' individually in a respective view folder. Define the basic structure of your CRUD views here and adapt it as required for each single model. Actually, the <tt>_list.html.erb</tt> partial from the +list+ folder gets overriden in the +crud+ folder already.
 
+==== List
 
 views/list/index.html.erb:: The index view displaying a sortable table with all entries. If you have +search_columns+ defined for your controller, then a search box is rendered as well.
 
@@ -242,6 +243,8 @@ views/list/_list.html.erb:: A partial defining the table in the index view. To c
 views/list/_search.html.erb:: A partial defining a simple search form that is displayed when +search_columns+ are defined in a subclassing controller.
 
 views/list/_actions_index.html.erb:: The action links available in the index view. None by default.
+
+==== Crud
 
 views/crud/show.html.erb:: The show view displaying all the attributes of one entry and the various actions to perform on it.
 
@@ -260,6 +263,8 @@ views/crud/_actions_index.html.erb:: The action links available in the index vie
 views/crud/_actions_show.html.erb:: The action links available in the show view.
 
 views/crud/_actions_edit.html.erb:: The action links available in the edit view.
+
+==== Various
 
 views/shared/_labeled.html.erb:: Partial to define the layout for an arbitrary content with a label.
 
