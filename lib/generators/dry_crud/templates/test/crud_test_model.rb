@@ -138,18 +138,18 @@ module CrudTestHelper
     without_transaction do
       silence_stream(STDOUT) do
         ActiveRecord::Base.connection.create_table :crud_test_models, :force => true do |t|
-          t.string  :name, :null => false, :limit => 50
-          t.string  :password
-          t.string  :whatever
-          t.integer :children
-          t.integer :companion_id
-          t.float   :rating
-          t.decimal :income, :precision => 14, :scale => 2
-          t.date    :birthdate
-          t.time    :gets_up_at
+          t.string   :name, :null => false, :limit => 50
+          t.string   :password
+          t.string   :whatever
+          t.integer  :children
+          t.integer  :companion_id
+          t.float    :rating
+          t.decimal  :income, :precision => 14, :scale => 2
+          t.date     :birthdate
+          t.time     :gets_up_at
           t.datetime :last_seen
-          t.boolean :human, :default => true
-          t.text    :remarks
+          t.boolean  :human, :default => true
+          t.text     :remarks
 
           t.timestamps
         end
@@ -199,7 +199,7 @@ module CrudTestHelper
                           :income => 10000000 * index + 0.1 * index,
                           :birthdate => "#{1900 + 10 * index}-#{index}-#{index}",
                           # store entire date to avoid time zone issues
-                          :gets_up_at => ENV.key?('RUBY_VERSION') && ENV['RUBY_VERSION'].include?('-1.9.') ? 
+                          :gets_up_at => RUBY_VERSION.include?('1.9.') ? 
                                             Time.local(2000,1,1,index,index) :
                                             Time.utc(2000,1,1,index,index),  
                           :last_seen => "#{2000 + 10 * index}-#{index}-#{index} 1#{index}:2#{index}",
