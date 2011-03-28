@@ -87,6 +87,8 @@ And we are done again. All our controllers inheriting from +ListController+, inc
 If the current page should be remembered while viewing or editing an entry, just add :page to the remembered_params in <tt>ListController::Memory</tt>:
 
   controller.remember_params = [:q, :sort, :sort_dir, :page]
+  
+In this case, you should also pass the parameter <tt>page=1</tt> with a hidden field in your <tt>list/_search.html.erb</tt> to start displaying search results at page one.
 
 
 ==== Special formatting for selected attributes

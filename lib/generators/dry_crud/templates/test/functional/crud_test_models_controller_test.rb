@@ -34,8 +34,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_index_search
-  	super
-  	assert_equal 1, assigns(:entries).size
+    super
+    assert_equal 1, assigns(:entries).size
     assert_equal({:q => 'AAAA'}, session[:list_params]['/crud_test_models'])
   end
 
@@ -59,7 +59,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_sort_given_column
-  	get :index, :sort => 'children', :sort_dir => 'asc'
+    get :index, :sort => 'children', :sort_dir => 'asc'
     assert_response :success
     assert_template 'index'
     assert_present assigns(:entries)
@@ -126,7 +126,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_edit
-  	super
+    super
     assert_equal [:before_render_edit, :before_render_form], @controller.called_callbacks
   end
 
@@ -167,6 +167,11 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     get :new
     assert_redirected_to :action => 'index'
     assert_nil assigns(:companions)
+  end
+  
+  def test_models_label
+    assert_equal 'Crud test models', @controller.models_label
+    assert_equal 'Crud test model', @controller.models_label(false)
   end
 
   protected

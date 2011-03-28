@@ -131,7 +131,7 @@ class CrudController < ListController
 
   # A label for the current entry, including the model name.
   def full_entry_label
-    "#{models_label.singularize} <i>#{h(@entry)}</i>".html_safe
+    "#{models_label(false)} <i>#{h(@entry)}</i>".html_safe
   end
 
   # Redirects to the show action of a single entry.

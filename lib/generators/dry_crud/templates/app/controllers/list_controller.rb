@@ -60,8 +60,10 @@ class ListController < ApplicationController
     end
 
     # A human readable plural name of the model.
-    def models_label
-      @models_label ||= model_class.model_name.human.pluralize
+    def models_label(plural = true)
+      opts = {:count => (plural ? 3 : 1)}
+      opts[:default] = model_class.model_name.human.pluralize if plural
+      model_class.model_name.human(opts)
     end
     
     # Defines before callbacks for the render actions.
