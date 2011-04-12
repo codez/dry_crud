@@ -64,8 +64,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   # Render a standard string field with column contraints.
   def string_field(attr, html_options = {})
-    limit = column_property(@object, attr, :limit)
-    html_options = {:maxlength => limit}.merge(html_options) if limit
+    html_options[:maxlength] ||= column_property(@object, attr, :limit)
     text_field(attr, html_options)
   end
 
@@ -76,16 +75,19 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   # Render an integer field.
   def integer_field(attr, html_options = {})
+    html_options[:step] ||= 1
     number_field(attr, html_options)
   end
 
   # Render a float field.
   def float_field(attr, html_options = {})
+    html_options[:step] ||= 'any'
     number_field(attr, html_options)
   end
 
   # Render a decimal field.
   def decimal_field(attr, html_options = {})
+    html_options[:step] ||= 'any'
     number_field(attr, html_options)
   end
 
