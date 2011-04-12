@@ -2,3 +2,7 @@
 
 <%= link_action ti(:'link.ajax'), nil, {:action => 'ajax'}, :method => :get, :remote => true %>
 <div id="response"></div>
+
+<% content_for :javascripts do %>
+  var sayHello = function() { alert('Hello'); };
+<% end %>

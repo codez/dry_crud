@@ -34,7 +34,7 @@
 </div>
 
 <%= javascript_include_tag :defaults, :cache => 'all' %>
-<%= javascript_tag content_tag_for(:javascripts) if content_for?(:javascripts) %>
+<%= javascript_tag yield(:javascripts) if content_for?(:javascripts) %>
 
 </body>
 </html>
