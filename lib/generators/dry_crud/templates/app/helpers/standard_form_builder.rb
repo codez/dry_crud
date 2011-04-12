@@ -49,12 +49,12 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   # Render a standard text field.
   def text_field(attr, html_options = {})
-    super(attr, {:size => 30}.merge(html_options))
+    super(attr, html_options)
   end
 
   # Render a standard password field.
   def password_field(attr, html_options = {})
-    super(attr, {:size => 30}.merge(html_options))
+    super(attr, html_options)
   end
 
   # Render a standard text area.
@@ -70,7 +70,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   # Render a standard number field.
   def number_field(attr, html_options = {})
-    super(attr, {:size => 15}.merge(html_options))
+    super(attr, html_options)
   end
 
   # Render an integer field.

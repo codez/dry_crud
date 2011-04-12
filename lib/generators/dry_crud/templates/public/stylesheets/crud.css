@@ -137,6 +137,24 @@ a.action img {
 	vertical-align: text-top;
 }
 
+input, textarea {
+	font-family: Verdana, Geneva, Helvetica, Arial, sans-serif;
+	font-size: 10pt;
+}
+
+input[type=text] {
+  	width: 180pt;
+}
+
+input[type=number] {
+  	width: 80pt;
+}
+
+textarea {
+	width: 180pt;
+	height: 80pt;
+}
+
 .cancel {
     font-size: 80%;
     margin-left: 7pt;
