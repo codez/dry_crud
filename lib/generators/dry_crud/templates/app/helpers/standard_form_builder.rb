@@ -17,15 +17,6 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     attrs.collect {|a| labeled_input_field(a) }.join("\n").html_safe
   end
 
-  # Render a standartized label.
-  def label(attr, text = nil, options = {})
-    if attr.is_a?(Symbol) && text.nil? && options.blank?
-      super(attr, captionize(attr, @object.class))
-    else
-      super(attr, text, options)
-    end
-  end
-
   # Render a corresponding input field for the given attribute.
   # The input field is chosen based on the ActiveRecord column type.
   # Use additional html_options for the input element.
@@ -47,30 +38,17 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
-  # Render a standard text field.
-  def text_field(attr, html_options = {})
+  # Render a number field.
+  def number_field(attr, html_options = {})
+    html_options[:size] ||= 10
     super(attr, html_options)
   end
-
-  # Render a standard password field.
-  def password_field(attr, html_options = {})
-    super(attr, html_options)
-  end
-
-  # Render a standard text area.
-  def text_area(attr, html_options = {})
-    super(attr, {:rows => 5, :cols => 30}.merge(html_options))
-  end
-
+  
   # Render a standard string field with column contraints.
   def string_field(attr, html_options = {})
     html_options[:maxlength] ||= column_property(@object, attr, :limit)
+    html_options[:size] ||= 30
     text_field(attr, html_options)
-  end
-
-  # Render a standard number field.
-  def number_field(attr, html_options = {})
-    super(attr, html_options)
   end
 
   # Render an integer field.
@@ -152,9 +130,11 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
+  # Overriden to fullfill contract with method_missing 'labeled_' methods.
   def respond_to?(name)
     labeled_field_method?(name).present? || super(name)
   end
+
   protected
 
   # Returns true if attr is a non-polymorphic belongs_to association,

@@ -142,7 +142,7 @@ input, textarea {
 	font-size: 10pt;
 }
 
-input[type=text] {
+input[type=text], input[type=password] {
   	width: 180pt;
 }
 

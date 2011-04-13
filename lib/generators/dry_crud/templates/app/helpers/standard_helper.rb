@@ -7,9 +7,6 @@ module StandardHelper
 
   ################  FORMATTING HELPERS  ##################################
 
-  # Define an array of associations symbols in your helper that should not get automatically linked.
-  #def no_assoc_links = [:city]
-
   # Formats a single value
   def f(value)
     case value
@@ -25,12 +22,16 @@ module StandardHelper
   end
 
   # Formats an arbitrary attribute of the given ActiveRecord object.
-  # If no specific format_{attr} method is found, formats the value as follows:
+  # If no specific format_{type}_{attr} or format_{attr} method is found, 
+  # formats the value as follows:
   # If the value is an associated model, renders the label of this object.
   # Otherwise, calls format_type.
   def format_attr(obj, attr)
+    format_type_attr_method = :"format_#{obj.class.name.underscore}_#{attr.to_s}"
     format_attr_method = :"format_#{attr.to_s}"
-    if respond_to?(format_attr_method)
+    if respond_to?(format_type_attr_method)
+      send(format_type_attr_method, obj)
+    elsif respond_to?(format_attr_method)
       send(format_attr_method, obj)
     elsif assoc = association(obj, attr, :belongs_to)
       format_assoc(obj, assoc)
@@ -61,9 +62,7 @@ module StandardHelper
   # Renders a list of attributes with label and value for a given object.
   # Optionally surrounded with a div.
   def render_attrs(obj, *attrs)
-    attrs.collect do |a|
-      labeled_attr(obj, a)
-    end.join("\n").html_safe
+    attrs.collect { |a| labeled_attr(obj, a) }.join("\n").html_safe
   end
 
   # Renders the formatted content of the given attribute with a label.
@@ -262,7 +261,6 @@ module StandardHelper
 
   # Returns true if no link should be created when formatting the given association.
   def no_assoc_link?(assoc, val)
-    (respond_to?(:no_assoc_links) && no_assoc_links.to_a.include?(assoc.name.to_sym)) ||
     !respond_to?("#{val.class.name.underscore}_path".to_sym)
   end
 

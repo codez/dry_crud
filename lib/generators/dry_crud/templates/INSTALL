@@ -5,9 +5,6 @@ required:
 
  * For uniform CRUD functionallity, just subclass your controllers from 
    CrudController. 
- * To use standard formatting, tables and forms throughout your
-   application, add 'helper :standard' to your ApplicationController and 
-   benefit everywhere from these little helper methods. 
  * Overwrite the :to_s method of your models for a human-friendly
    representation.
 

@@ -17,7 +17,6 @@ Don't worry, it's a simple development dependency. You may even savely remove it
 To integrate DRY CRUD into your code, only a few additions are required:
 
 * For uniform CRUD functionality, just subclass your controllers from +CrudController+. 
-* To use standard formatting, tables and forms throughout your application, add <tt>helper :standard</tt> to your +ApplicationController+ and benefit everywhere from these little helper methods. 
 * Overwrite the <tt>:to_s</tt> method of your models for a human-friendly representation.
 
 Version 1.0 and higher are built for Rails 3. If you need a version for Rails 2.3, please get version 0.6.0 of the gem or go to the rails-2.3 branch on Github. DRY CRUD 1.3 is fully compatible with Ruby 1.8.7, Ruby 1.9.2 and JRuby.
@@ -93,12 +92,14 @@ In this case, you should also pass the parameter <tt>page=1</tt> with a hidden f
 
 ==== Special formatting for selected attributes
 
-Sometimes, the default formatting provided by <tt>:format_attr</tt> will not be sufficient. We have a boolean column +sex+ in our model, but would like to display 'male' or 'female' for it (instead of 'no' or 'yes', which is a bit cryptic). Just define a method in your view helper starting with <tt>format_</tt>, followed by the attribute name:
+Sometimes, the default formatting provided by <tt>:format_attr</tt> will not be sufficient. We have a boolean column +sex+ in our model, but would like to display 'male' or 'female' for it (instead of 'no' or 'yes', which is a bit cryptic). Just define a method in your view helper starting with <tt>format_</tt>, followed by the class and attribute name:
 
 In <tt>app/helpers/people.rb</tt>:
-  def format_sex(person)
+  def format_person_sex(person)
     person.sex ? 'female' : 'male'
   end
+  
+Should you have attributes with the same name for multiple models that you want to be formatted the same way, you may define a helper method <tt>format_{attr}</tt> for these attributes.
 
 By the way: The method <tt>:f</tt> in +StandardHelper+ uniformly formats arbitrary values according to their class.  
 

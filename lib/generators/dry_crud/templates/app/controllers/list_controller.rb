@@ -8,9 +8,6 @@ class ListController < ApplicationController
 
   include RenderInheritable
 
-  # Move this declaration to the application controller.
-  helper :standard
-
   helper_method :model_class, :models_label
 
   delegate :model_class, :models_label, :to => 'self.class'

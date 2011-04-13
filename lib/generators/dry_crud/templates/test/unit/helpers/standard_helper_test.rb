@@ -10,6 +10,10 @@ class StandardHelperTest < ActionView::TestCase
   teardown :reset_db
 
   def format_size(obj)
+    "#{f(obj.size)} items"
+  end
+  
+  def format_string_size(obj)
     "#{f(obj.size)} chars"
   end
 
@@ -82,8 +86,12 @@ class StandardHelperTest < ActionView::TestCase
     assert_equal "12.23", format_attr("12.23424", :to_f)
   end
 
-  test "format attr with custom format_size method" do
+  test "format attr with custom format_string_size method" do
     assert_equal "4 chars", format_attr("abcd", :size)
+  end
+  
+  test "format attr with custom format_size method" do
+    assert_equal "2 items", format_attr([1,2], :size)
   end
 
   test "column types" do
