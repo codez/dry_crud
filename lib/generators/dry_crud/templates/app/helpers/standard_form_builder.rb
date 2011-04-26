@@ -14,7 +14,10 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   # Render multiple input fields together with a label for the given attributes.
   def labeled_input_fields(*attrs)
-    attrs.collect {|a| labeled_input_field(a) }.join("\n").html_safe
+    options = attrs.extract_options!
+    attrs.collect do |a|
+      labeled_input_field(a, options.clone)
+    end.join("\n").html_safe
   end
 
   # Render a corresponding input field for the given attribute.
@@ -121,7 +124,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   end
   
   # Dispatch methods starting with 'labeled_' to render a label and the corresponding
-  # input field. E.g. labeled_boolean_field(:checked, {:class => 'bold'})
+  # input field. E.g. labeled_boolean_field(:checked, :class => 'bold')
   def method_missing(name, *args)
     if field_method = labeled_field_method?(name)
       labeled(args.first, send(field_method, *args) + required_mark(args.first))
