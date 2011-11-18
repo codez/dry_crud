@@ -6,8 +6,6 @@
 # the user the same list as he left it.
 class ListController < ApplicationController
 
-  include RenderInheritable
-
   helper_method :model_class, :models_label
 
   delegate :model_class, :models_label, :to => 'self.class'
@@ -135,7 +133,7 @@ class ListController < ApplicationController
     # Enhance the list entries with an optional sort order.
     def list_entries_with_sort
       if params[:sort].present? && sortable?(params[:sort])
-        list_entries_without_sort.except(:order).order(sort_expression)
+        list_entries_without_sort.reorder(sort_expression)
       else
         list_entries_without_sort
       end

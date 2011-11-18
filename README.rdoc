@@ -19,7 +19,7 @@ To integrate DRY CRUD into your code, only a few additions are required:
 * For uniform CRUD functionality, just subclass your controllers from +CrudController+. 
 * Overwrite the <tt>:to_s</tt> method of your models for a human-friendly representation in captions.
 
-Version 1.0 and higher are built for Rails 3. If you need a version for Rails 2.3, please get version 0.6.0 of the gem or go to the rails-2.3 branch on Github. DRY CRUD 1.3 is fully compatible with Ruby 1.8.7, Ruby 1.9.2 and JRuby.
+Version 1.4 and higher are built for Rails 3.1. As of Rails 3.1, views are inheritable as well, so a core functionality of DRY CRUD got into the Rails core itself. For Rails 3.0, use version 1.3.1 or refer to the rails-3.0 branch. If you need a version for Rails 2.3, please get version 0.6.0 of the gem or go to the rails-2.3 branch on Github. DRY CRUD 1.3 is fully compatible with Ruby 1.8.7, Ruby 1.9.2 and JRuby.
 
 == Overview
 
@@ -30,8 +30,6 @@ Enter DRY CRUD.
 <b>
 The main idea of DRY CRUD is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. DRY CRUD generates various foundation classes that you may freely adapt to your application's needs. For each model, you may transparently customize arbitrary parts or just fallback to the general behavior. This applies not only for controllers, but also for view templates and helpers. There is no black box your code depends on. You lay the foundation that fits your application best.
 </b>
-
-A core element of DRY CRUD is the +RenderInheritable+ module. This gives you inheritable views and partials. In the default case, a template is searched in the current controller's view folder. If it is not found there, the template with the same name in the view folder of the superclass controller is used. This lookup path might be customized as well. RenderInheritable is also available as a stand-alone gem at http://github.com/codez/render_inheritable.
 
 DRY CRUD is a Rails generator. All code resides in your application and is open for you to inspect and to extend. You may pick whatever you consider useful or adapt what is not sufficient. Even if you do not require any CRUD functionality, you might find some helpers simplifying your work. There are no runtime dependencies to the dry_crud gem. Having said this, DRY CRUD does not want to provide a maximum of functionality that requires a lot of configuration, but rather a clean and lightweight foundation to build your application's requirements upon. This is why DRY CRUD comes as a generator and not as a Rails plugin.
 
@@ -218,8 +216,6 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 {controller/crud_controller.rb}[http://codez.ch/dry_crud/?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on +ListController+.
 
 {controller/list_controller.rb}[http://codez.ch/dry_crud/?q=ListController]:: Abstract controller providing a basic list action. There are two sub-modules that provide search and sort functionality for the table displayed in the list action. A third sub-module remembers the list parameters in order to return to an identical list.
-
-{controller/render_inheritable.rb}[http://codez.ch/dry_crud/?q=RenderInheritable]:: A controller enhancement that allows one to render inheritable views and partials. If no view file is found for the current controller, the corresponding file is looked up in its superclass hierarchy. Thus, only views or partials that look differently have to be overwritten.
 
 
 === Helpers:

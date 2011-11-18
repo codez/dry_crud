@@ -130,6 +130,10 @@ module CrudTestHelper
     true
   end
   
+  def h(text)
+    ERB::Util.h(text)
+  end
+  
   protected
 
   # Sets up the test database with a crud_test_models table.

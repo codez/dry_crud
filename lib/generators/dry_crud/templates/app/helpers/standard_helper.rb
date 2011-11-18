@@ -164,9 +164,8 @@ module StandardHelper
     html
   end
 
-  # Translates the passed key by looking it up over the template lookup path
-  # (i.e., usually the controller hierarchy). The key is searched in the following
-  # order:
+  # Translates the passed key by looking it up over the controller hierarchy. 
+  # The key is searched in the following order:
   #  - {controller}.{current_partial}.{key}
   #  - {controller}.{current_action}.{key}
   #  - {controller}.global.{key}
@@ -177,16 +176,16 @@ module StandardHelper
   #  - global.{key}
   def translate_inheritable(key, variables = {})
     defaults = []
-    if controller.class.respond_to?(:template_lookup_path)
-      partial = @_virtual_path ? @_virtual_path.gsub(%r{.*/_?}, "") : nil
-      controller.class.template_lookup_path.each do |folder|
+    partial = @_virtual_path ? @_virtual_path.gsub(%r{.*/_?}, "") : nil
+    current = controller.class
+    while current < ActionController::Base
+      folder = current.controller_path
+      if folder.present?
         defaults << :"#{folder}.#{partial}.#{key}" if partial
         defaults << :"#{folder}.#{action_name}.#{key}"
         defaults << :"#{folder}.global.#{key}"
       end
-    else
-      defaults << :"#{controller_name}.#{action_name}.#{key}"
-      defaults << :"#{controller_name}.global.#{key}"
+      current = current.superclass
     end
     defaults << :"global.#{key}"
     

@@ -49,6 +49,8 @@ namespace :test do
       unless File.exist?(TEST_APP_ROOT)
         sh "rails new #{TEST_APP_ROOT}"
         FileUtils.cp(File.join(File.dirname(__FILE__), 'test', 'templates', 'Gemfile'), TEST_APP_ROOT)
+        sh "cd #{TEST_APP_ROOT}; bundle update rake" # update Gemfile.lock
+        FileUtils.rm_f(File.join(TEST_APP_ROOT, 'test', 'performance', 'browsing_test.rb'))
       end
     end
       
