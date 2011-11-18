@@ -11,11 +11,11 @@ module CrudControllerTestHelper
     assert_present assigns(:entries)
   end
 
-  def test_index_xml
-    get :index, :format => 'xml'
+  def test_index_json
+    get :index, :format => 'json'
     assert_response :success
     assert_present assigns(:entries)
-    assert @response.body.starts_with?("<?xml")
+    assert @response.body.starts_with?("[{"), @response.body
   end
 
   def test_index_search
@@ -54,11 +54,11 @@ module CrudControllerTestHelper
     assert_equal test_entry, assigns(:entry)
   end
 
-  def test_show_xml
-    get :show, :id => test_entry.id, :format => 'xml'
+  def test_show_json
+    get :show, :id => test_entry.id, :format => 'json'
     assert_response :success
     assert_equal test_entry, assigns(:entry)
-    assert @response.body.starts_with?("<?xml")
+    assert @response.body.starts_with?("{")
   end
 
   def test_show_with_not_existing_id_raises_RecordNotFound
@@ -89,12 +89,12 @@ module CrudControllerTestHelper
     assert_test_attrs_equal
   end
 
-  def test_create_xml
+  def test_create_json
     assert_difference("#{model_class.name}.count") do
-      post :create, model_identifier => test_entry_attrs, :format => 'xml'
+      post :create, model_identifier => test_entry_attrs, :format => 'json'
     end
     assert_response :success
-    assert @response.body.starts_with?("<?xml")
+    assert @response.body.starts_with?("{")
   end
 
   def test_edit
@@ -118,9 +118,9 @@ module CrudControllerTestHelper
     assert_redirected_to assigns(:entry)
   end
 
-  def test_update_xml
+  def test_update_json
     assert_no_difference("#{model_class.name}.count") do
-      put :update, :id => test_entry.id, model_identifier => test_entry_attrs, :format => 'xml'
+      put :update, :id => test_entry.id, model_identifier => test_entry_attrs, :format => 'json'
     end
     assert_response :success
     assert_equal "", @response.body.strip
@@ -133,9 +133,9 @@ module CrudControllerTestHelper
     assert_redirected_to_index
   end
 
-  def test_destroy_xml
+  def test_destroy_json
     assert_difference("#{model_class.name}.count", -1) do
-      delete :destroy, :id => test_entry.id, :format => 'xml'
+      delete :destroy, :id => test_entry.id, :format => 'json'
     end
     assert_response :success
     assert_equal "", @response.body.strip

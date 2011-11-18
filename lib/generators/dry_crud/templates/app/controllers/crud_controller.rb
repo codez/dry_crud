@@ -1,6 +1,6 @@
 # Abstract controller providing basic CRUD actions.
 # This implementation mainly follows the one of the Rails scaffolding
-# controller and responses to HTML and XML requests. Some enhancements were made to ease extendability.
+# controller and responses to HTML and JSON requests. Some enhancements were made to ease extendability.
 # Several protected helper methods are there to be (optionally) overriden by subclasses.
 # With the help of additional callbacks, it is possible to hook into the action procedures without
 # overriding the entire method.
@@ -31,14 +31,14 @@ class CrudController < ListController
 
   # Show one entry of this model.
   #   GET /entries/1
-  #   GET /entries/1.xml
+  #   GET /entries/1.json
   def show
     respond_with @entry
   end
 
   # Display a form to create a new entry of this model.
   #   GET /entries/new
-  #   GET /entries/new.xml
+  #   GET /entries/new.json
   def new
     @entry.attributes = params[model_identifier]
     respond_with @entry
@@ -49,7 +49,7 @@ class CrudController < ListController
   # To customize the response, you may overwrite this action and call
   # super with a block that gets success and format parameters.
   #   POST /entries
-  #   POST /entries.xml
+  #   POST /entries.json
   def create(&block)
     @entry.attributes = params[model_identifier]
     created = with_callbacks(:create, :save) { @entry.save }
@@ -57,10 +57,10 @@ class CrudController < ListController
     customizable_respond_to(created, block) do |format|
       if created
         format.html { redirect_to_show success_notice }
-        format.xml  { render :xml => @entry, :status => :created, :location => @entry }
+        format.json  { render :json => @entry, :status => :created, :location => @entry }
       else
         format.html { render_with_callback 'new'  }
-        format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
+        format.json  { render :json => @entry.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -76,7 +76,7 @@ class CrudController < ListController
   # To customize the response, you may overwrite this action and call
   # super with a block that gets success and format parameters.
   #   PUT /entries/1
-  #   PUT /entries/1.xml
+  #   PUT /entries/1.json
   def update(&block)
     @entry.attributes = params[model_identifier]
     updated = with_callbacks(:update, :save) { @entry.save }
@@ -84,10 +84,10 @@ class CrudController < ListController
     customizable_respond_to(updated, block) do |format|
       if updated
         format.html { redirect_to_show success_notice }
-        format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { render_with_callback 'edit'  }
-        format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
+        format.json  { render :json => @entry.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -97,20 +97,20 @@ class CrudController < ListController
   # To customize the response, you may overwrite this action and call
   # super with a block that gets success and format parameters.
   #   DELETE /entries/1
-  #   DELETE /entries/1.xml
+  #   DELETE /entries/1.json
   def destroy(&block)
     destroyed = run_callbacks(:destroy) { @entry.destroy }
 
     customizable_respond_to(destroyed, block) do |format|
       if destroyed
         format.html { redirect_to_index success_notice }
-        format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { 
           flash.alert = @entry.errors.full_messages.join('<br/>')
           request.env["HTTP_REFERER"].present? ? redirect_to(:back) : redirect_to_show
         }
-        format.xml  { render :xml => @entry.errors, :status => :unprocessable_entity }
+        format.json  { render :json => @entry.errors, :status => :unprocessable_entity }
       end
     end
   end

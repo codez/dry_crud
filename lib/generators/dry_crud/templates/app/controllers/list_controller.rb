@@ -17,7 +17,7 @@ class ListController < ApplicationController
 
   # List all entries of this model.
   #   GET /entries
-  #   GET /entries.xml
+  #   GET /entries.json
   def index
     @entries = list_entries
     respond_with @entries
@@ -34,7 +34,7 @@ class ListController < ApplicationController
   def respond_with(object)
     respond_to do |format|
       format.html { render_with_callback action_name }
-      format.xml  { render :xml => object }
+      format.json  { render :json => object }
     end
   end
 
