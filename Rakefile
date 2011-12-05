@@ -1,13 +1,7 @@
 require 'rubygems'
-require "rake/testtask"
-require 'rake/gempackagetask' 
-require 'rake/rdoctask' 
-sdoc = begin 
-  require 'sdoc'
-  true
-rescue Exception
-  false
-end
+require 'rake/testtask'
+require 'rubygems/package_task' 
+require 'rdoc/task' 
 
 load 'dry_crud.gemspec'
 
@@ -98,7 +92,7 @@ task :site => :rdoc do
 end
 
 # :package task
-Rake::GemPackageTask.new(DRY_CRUD_GEMSPEC) do |pkg|
+Gem::PackageTask.new(DRY_CRUD_GEMSPEC) do |pkg|
   if Rake.application.top_level_tasks.include?('release')
     pkg.need_tar_gz = true 
     pkg.need_tar_bz2 = true 
@@ -109,11 +103,7 @@ end
 # :rdoc task
 Rake::RDocTask.new do |rdoc| 
   rdoc.title  = 'Dry Crud' 
-  rdoc.options << '--line-numbers' << '--inline-source'
-  if sdoc
-    rdoc.options << '--fmt' << 'shtml'
-    rdoc.template = 'direct'
-  end
+  rdoc.options << '--line-numbers'
   rdoc.rdoc_files.include(*FileList.new('*') do |list|
     list.exclude(/(^|[^.a-z])[a-z]+/)
     list.exclude('TODO') 
