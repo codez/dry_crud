@@ -27,7 +27,7 @@ module StandardHelper
   # If the value is an associated model, renders the label of this object.
   # Otherwise, calls format_type.
   def format_attr(obj, attr)
-    format_type_attr_method = :"format_#{obj.class.model_name.underscore}_#{attr.to_s}"
+    format_type_attr_method = obj.class.respond_to?(:model_name) ? :"format_#{obj.class.model_name.underscore}_#{attr.to_s}" : :"format_#{obj.class.name.underscore}_#{attr.to_s}"
     format_attr_method = :"format_#{attr.to_s}"
     if respond_to?(format_type_attr_method)
       send(format_type_attr_method, obj)
@@ -176,7 +176,7 @@ module StandardHelper
   #  - global.{key}
   def translate_inheritable(key, variables = {})
     defaults = []
-    partial = @_virtual_path ? @_virtual_path.gsub(%r{.*/_?}, "") : nil
+    partial = @virtual_path ? @virtual_path.gsub(%r{.*/_?}, "") : nil
     current = controller.class
     while current < ActionController::Base
       folder = current.controller_path
@@ -204,9 +204,9 @@ module StandardHelper
   #  - global.associations.{key}
   def translate_association(key, assoc = nil, variables = {})
     primary = if assoc
-      variables[:default] ||= [:"activerecord.associations.#{assoc.klass.name.underscore}.#{key}",
+      variables[:default] ||= [:"activerecord.associations.#{assoc.klass.model_name.underscore}.#{key}",
                                :"global.associations.#{key}"]
-      :"activerecord.associations.models.#{assoc.active_record.name.underscore}.#{assoc.name}.#{key}"
+      :"activerecord.associations.models.#{assoc.active_record.model_name.underscore}.#{assoc.name}.#{key}"
     else
       :"global.associations.#{key}"
     end
