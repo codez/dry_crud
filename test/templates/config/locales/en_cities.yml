@@ -2,7 +2,7 @@ en:
   global:
     menu:
       people: People
-      cities: Cities
+      countries: Countries
       vips: VIPs
     link:
       maps: Maps
@@ -17,7 +17,7 @@ en:
       button:
         save: Save City
     index:
-      title: All cities of the world
+      country_title: All cities of %{country}
     list:
       no_list_entries: Nada citta
     new:

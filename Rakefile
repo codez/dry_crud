@@ -70,8 +70,8 @@ namespace :test do
         FileUtils.rm(f)
       end
       FileUtils.cd(TEST_APP_ROOT) do
-        sh "rake db:migrate db:seed RAILS_ENV=development"
-        sh "rake db:migrate RAILS_ENV=test"  # db:test:prepare does not work for jdbcsqlite3
+        sh "rake db:migrate db:seed RAILS_ENV=development --trace"
+        sh "rake db:migrate RAILS_ENV=test --trace"  # db:test:prepare does not work for jdbcsqlite3
       end
     end
   end

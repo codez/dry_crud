@@ -92,7 +92,8 @@ module StandardHelper
   # An options hash may be given as the last argument.
   def standard_form(object, *attrs, &block)
     form_for(object, {:builder => StandardFormBuilder}.merge(attrs.extract_options!)) do |form|
-      content = render('shared/error_messages', :errors => object.errors, :object => object)
+      record = object.is_a?(Array) ? object.last : object
+      content = render('shared/error_messages', :errors => record.errors, :object => record)
 
       content << if block_given?
         capture(form, &block)
@@ -124,29 +125,29 @@ module StandardHelper
 
   # Standard link action to the show page of a given record.
   def link_action_show(record)
-    link_action ti(:"link.show"), 'show', record
+    link_action ti(:"link.show"), 'show', path_entry(record)
   end
 
   # Standard link action to the edit page of a given record.
   def link_action_edit(record)
-    link_action ti(:"link.edit"), 'edit', edit_polymorphic_path(record)
+    link_action ti(:"link.edit"), 'edit', edit_polymorphic_path(path_entry(record))
   end
 
   # Standard link action to the destroy action of a given record.
   def link_action_destroy(record)
-    link_action ti(:"link.delete"), 'delete', record,
+    link_action ti(:"link.delete"), 'delete', path_entry(record),
                 :confirm => ti(:confirm_delete),
                 :method => :delete
   end
 
   # Standard link action to the list page.
-  def link_action_index(url_options = {:action => 'index', :returning => true})
-    link_action ti(:"link.list"), 'list', url_options
+  def link_action_index(url_options = {:returning => true})
+    link_action ti(:"link.list"), 'list', polymorphic_url(path_entry(model_class), url_options)
   end
 
   # Standard link action to the new page.
-  def link_action_add(url_options = {:action => 'new'})
-    link_action ti(:"link.add"), 'add', url_options
+  def link_action_add(url_options = {})
+    link_action ti(:"link.add"), 'add', new_polymorphic_url(path_entry(model_class), url_options)
   end
 
   # A generic helper method to create action links.

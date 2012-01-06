@@ -7,7 +7,7 @@ class PeopleController < AjaxController
   protected
 
   def list_entries
-    super.includes(:city).order('people.name, cities.country_code, cities.name')
+    super.includes(:city => :country).order('people.name, countries.code, cities.name')
   end
 
 end

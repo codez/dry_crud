@@ -7,18 +7,18 @@ class CitiesControllerTest < ActionController::TestCase
 
   def test_setup
     assert_equal 3, City.count
-    assert_recognizes({:controller => 'cities', :action => 'index'}, '/cities')
-    assert_recognizes({:controller => 'cities', :action => 'show', :id => '1'}, '/cities/1')
+    assert_recognizes({:controller => 'cities', :action => 'index', :country_id => '1'}, 'countries/1/cities')
+    assert_recognizes({:controller => 'cities', :action => 'show', :country_id => '2', :id => '1'}, 'countries/2/cities/1')
   end
 
   def test_index
     super
-    assert_equal 3, assigns(:entries).size
-    assert_equal City.order('country_code, name').all, assigns(:entries)
+    assert_equal 1, assigns(:entries).size
+    assert_equal test_entry.country.cities.order('countries.code, cities.name'), assigns(:entries)
   end
 
   def test_show
-    get :show, :id => test_entry.id
+    get :show, test_params(:id => test_entry.id)
     assert_redirected_to_index
   end
 
@@ -26,7 +26,7 @@ class CitiesControllerTest < ActionController::TestCase
     ny = cities(:ny)
     assert_no_difference('City.count') do
       request.env["HTTP_REFERER"]
-      delete :destroy, :id => ny.id
+      delete :destroy, :country_id => ny.country_id, :id => ny.id
     end
     assert_redirected_to :action => 'show'
     assert flash.alert
@@ -39,7 +39,7 @@ class CitiesControllerTest < ActionController::TestCase
   end
 
   def test_entry_attrs
-    {:name => 'Rejkiavik', :country_code => 'IS'}
+    {:name => 'Rejkiavik'}
   end
 
 end

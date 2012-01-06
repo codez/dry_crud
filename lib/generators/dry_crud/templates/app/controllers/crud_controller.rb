@@ -57,7 +57,7 @@ class CrudController < ListController
     customizable_respond_to(created, block) do |format|
       if created
         format.html { redirect_to_show success_notice }
-        format.json  { render :json => @entry, :status => :created, :location => @entry }
+        format.json  { render :json => @entry, :status => :created, :location => path_entry(@entry) }
       else
         format.html { render_with_callback 'new'  }
         format.json  { render :json => @entry.errors, :status => :unprocessable_entity }
@@ -121,12 +121,12 @@ class CrudController < ListController
 
   # Creates a new model entry.
   def build_entry
-    @entry = model_class.new
+    @entry = model_scope.new
   end
 
   # Sets an existing model entry from the given id.
   def set_entry
-    @entry = model_class.find(params[:id])
+    @entry = model_scope.find(params[:id])
   end
 
   # A label for the current entry, including the model name.
@@ -136,12 +136,12 @@ class CrudController < ListController
 
   # Redirects to the show action of a single entry.
   def redirect_to_show(options = {})
-    redirect_to @entry, options
+    redirect_to path_entry(@entry), options
   end
 
   # Redirects to the main action of this controller.
   def redirect_to_index(options = {})
-    redirect_to polymorphic_path(model_class, :returning => true), options
+    redirect_to polymorphic_path(path_entry(model_class), :returning => true), options
   end
 
   # Helper method the run the given block in between the before and after

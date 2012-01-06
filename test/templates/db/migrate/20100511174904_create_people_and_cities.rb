@@ -1,8 +1,13 @@
 class CreatePeopleAndCities < ActiveRecord::Migration
-  def self.up
+  def change
+    create_table :countries do |t|
+      t.string :name, :null => false
+      t.string :code, :null => :false, :limit => 3
+    end
+    
     create_table :cities do |t|
       t.string :name, :null => false
-      t.string :country_code, :null => false, :limit => 3
+      t.integer :country_id, :null => false
     end
 
     create_table :people do |t|
@@ -17,10 +22,5 @@ class CreatePeopleAndCities < ActiveRecord::Migration
       t.text :remarks
       t.boolean :cool, :null => false, :default => false
     end
-  end
-
-  def self.down
-    drop_table :people
-    drop_table :cities
   end
 end

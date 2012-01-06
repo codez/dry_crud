@@ -191,7 +191,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_entry
     crud_test_models(:AAAAA)
   end
-
+  
   def test_entry_attrs
     {:name => 'foo',
      :children => 42,

@@ -1,3 +1,5 @@
+- @title = ti(:country_title, :country => @parents.last)
+
 = crud_table *default_attrs do |t|
     - action_col(t) { |e| link_table_action_edit(e) }
     - action_col(t) { |e| link_table_action_destroy(e) }

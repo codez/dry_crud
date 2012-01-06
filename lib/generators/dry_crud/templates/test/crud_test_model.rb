@@ -125,6 +125,10 @@ module CrudTestHelper
   def params
     {}
   end
+  
+  def path_entry(entry)
+    entry
+  end
 
   def sortable?(attr)
     true

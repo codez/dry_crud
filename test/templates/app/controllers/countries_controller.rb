@@ -1,6 +1,4 @@
-class CitiesController < AjaxController
-
-  self.nested = Country
+class CountriesController < AjaxController
 
   def show
     respond_to do |format|

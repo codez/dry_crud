@@ -1,6 +1,6 @@
 class VipsController < ListController
 
-  self.search_columns = [:name, :children, :rating, :remarks]
+  self.search_columns = [:name, :children, :rating, :remarks, 'cities.name']
 
   self.sort_mappings = {:city_id => 'cities.name'}
 
@@ -13,7 +13,7 @@ class VipsController < ListController
   end
 
   def list_entries
-    super.where('rating > 5').includes(:city).order('people.name, cities.country_code, cities.name')
+    super.where('rating > 5').includes(:city => :country).order('people.name, countries.code, cities.name')
   end
 
 end

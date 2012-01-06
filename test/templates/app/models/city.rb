@@ -1,16 +1,17 @@
 class City < ActiveRecord::Base
 
+  belongs_to :country
   has_many :people
 
   validates :name, :presence => true
-  validates :country_code, :presence => true
+  validates :country, :presence => true
 
   before_destroy :protect_with_inhabitants
 
-  default_scope order('country_code, name')
+  default_scope includes(:country).order('countries.code, cities.name')
 
   def to_s
-    "#{name} (#{country_code})"
+    "#{name} (#{country.code})"
   end
 
   protected

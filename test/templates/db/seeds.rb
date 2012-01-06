@@ -1,10 +1,16 @@
 if City.count == 0
 
-be = City.create!(:name => 'Bern', :country_code => 'CH')
-ny = City.create!(:name => 'New York', :country_code => 'USA')
-sf = City.create!(:name => 'San Francisco', :country_code => 'USA')
-lon = City.create!(:name => 'London', :country_code => 'GB')
-br = City.create!(:name => 'Berlin', :country_code => 'DE')
+ch = Country.create!(:name => 'Switzerland', :code => 'CH')
+de = Country.create!(:name => 'Germany', :code => 'DE')
+usa = Country.create!(:name => 'USA', :code => 'USA')
+gb = Country.create!(:name => 'England', :code => 'GB')
+jp = Country.create!(:name => 'Japan', :code => 'JP')
+
+be = City.create!(:name => 'Bern', :country => ch)
+ny = City.create!(:name => 'New York', :country => usa)
+sf = City.create!(:name => 'San Francisco', :country => usa)
+lon = City.create!(:name => 'London', :country => gb)
+br = City.create!(:name => 'Berlin', :country => de)
 
 Person.create!(:name => 'Albert Einstein',
 			   :city => be,

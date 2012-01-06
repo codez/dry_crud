@@ -6,7 +6,7 @@
 # the user the same list as he left it.
 class ListController < ApplicationController
 
-  helper_method :model_class, :models_label
+  helper_method :model_class, :models_label, :path_entry
 
   delegate :model_class, :models_label, :to => 'self.class'
 
@@ -27,7 +27,20 @@ class ListController < ApplicationController
 
   # The entries to be displayed in the current index page.
   def list_entries
+    model_scope
+  end
+  
+  # The scope where model entries will be listed and created.
+  # This is mainly used for nested models to provide the 
+  # required context.
+  def model_scope
     model_class.scoped
+  end
+  
+  # The path arguments to link to the given entry.
+  # If the controller is nested, this provides the required context.
+  def path_entry(entry = @entry)
+    entry
   end
 
   # Convenience method to respond to various formats with the given object.
@@ -95,10 +108,14 @@ class ListController < ApplicationController
     # Compose the search condition with a basic SQL OR query.
     def search_condition
       if search_support? && params[:q].present?
-        clause = search_columns.collect {|f| "#{model_class.table_name}.#{f} LIKE ?" }.
-                                join(" OR ")
-        param = "%#{params[:q]}%"
-         ["(#{clause})"] + [param] * search_columns.size
+        terms = params[:q].split(/\s+/).collect { |t| "%#{t}%" }
+        clause = search_columns.collect do |f| 
+          col = f.to_s.include?('.') ? f : "#{model_class.table_name}.#{f}"
+          "#{col} LIKE ?"
+        end.join(" OR ")
+        clause = terms.collect {|t| "(#{clause})" }.join(" AND ")
+        
+         ["(#{clause})"] + terms.collect {|t| [t] * search_columns.size }.flatten
       end
     end
 
@@ -219,4 +236,43 @@ class ListController < ApplicationController
 
   include Memory
 
+  # TODO: comments
+  module Nested
+    def self.included(controller)
+      controller.class_attribute :nested
+      
+      controller.alias_method_chain :model_scope, :nested
+      controller.alias_method_chain :path_entry, :nested
+    end
+    
+    protected
+    
+    def parents
+      @parents ||= Array(nested).collect do |p|
+        if p < ActiveRecord::Base
+          p.find(params["#{p.name.underscore}_id"])
+        else
+          p
+        end
+      end
+    end
+    
+    private
+    
+    def path_entry_with_nested(entry = @entry)
+      parents + [entry]
+    end
+    
+    def model_scope_with_nested
+      ar = parents.select {|p| p.is_a?(ActiveRecord::Base) }
+      if ar.present?
+        ar.last.send(model_class.name.underscore.pluralize)
+      else
+        model_scope_without_nested
+      end
+    end
+  end
+  
+  include Nested
+  
 end
