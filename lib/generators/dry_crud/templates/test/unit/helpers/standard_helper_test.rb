@@ -225,7 +225,7 @@ class StandardHelperTest < ActionView::TestCase
 
     assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
     assert_match /input .*?name="_method" .*?type="hidden" .*?value="put"/, f
-    assert_match /div id="error_explanation"/, f
+    assert_match /div id='error_explanation'/, f
     assert_match /div class="field_with_errors"\>.*?\<input .*?name="crud_test_model\[name\]" .*?type="text"/, f
     assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
     assert_match /option selected="selected" value="1910">1910<\/option>/, f

@@ -51,8 +51,8 @@ module CrudHelper
   end
 
   # Generic action link inside a table.
-  def link_table_action(image, url, html_options = {})
-  	link_to(action_icon(image), url, html_options)
+  def link_table_action(icon, url, html_options = {})
+  	link_to('', url, {:class => "action icon #{icon}"}.merge(html_options))
   end
 
   # Defines a column with an action link.

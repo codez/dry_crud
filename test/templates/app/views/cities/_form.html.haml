@@ -1,0 +1,7 @@
+= crud_form do |f|
+  = f.labeled_input_field :name
+  = f.labeled_collection_select(:country_code, 
+                                ['BR', 'CH', 'DE', 'GB', 'JP', 'USA'], 
+                                :to_s, 
+                                :to_s, 
+                                f.select_options(:country_code))

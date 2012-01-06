@@ -52,7 +52,7 @@ namespace :test do
     task :generate_crud => [:create, :environment] do
       require File.join(GENERATOR_ROOT, 'dry_crud_generator')
     
-      DryCrudGenerator.new('', {:force => true}, :destination_root => TEST_APP_ROOT).invoke_all
+      DryCrudGenerator.new('', {:force => true, :templates => ENV['HAML'] ? 'haml' : 'erb'}, :destination_root => TEST_APP_ROOT).invoke_all
     end
    
     desc "Initializes the test application with a couple of classes"
@@ -62,6 +62,13 @@ namespace :test do
       FileUtils.mv(File.join(TEST_APP_ROOT, 'app', 'views', 'layouts', 'crud.html.erb'),
                    File.join(TEST_APP_ROOT, 'app', 'views', 'layouts', 'application.html.erb'), 
                    :force => true)
+      FileUtils.mv(File.join(TEST_APP_ROOT, 'app', 'views', 'layouts', 'crud.html.haml'),
+                   File.join(TEST_APP_ROOT, 'app', 'views', 'layouts', 'application.html.haml'), 
+                   :force => true)
+      exclude = ENV['HAML'] ? 'erb' : 'haml'
+      Dir.glob(File.join(TEST_APP_ROOT, 'app', 'views', '**', "*.#{exclude}")).each do |f|
+        FileUtils.rm(f)
+      end
       FileUtils.cd(TEST_APP_ROOT) do
         sh "rake db:migrate db:seed RAILS_ENV=development"
         sh "rake db:migrate RAILS_ENV=test"  # db:test:prepare does not work for jdbcsqlite3
