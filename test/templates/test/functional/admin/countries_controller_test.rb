@@ -1,14 +1,14 @@
 require 'test_helper'
 require File.join('functional', 'crud_controller_test_helper')
 
-class CountriesControllerTest < ActionController::TestCase
+class Admin::CountriesControllerTest < ActionController::TestCase
 
   include CrudControllerTestHelper
 
   def test_setup
     assert_equal 3, Country.count
-    assert_recognizes({:controller => 'countries', :action => 'index'}, 'countries')
-    assert_recognizes({:controller => 'countries', :action => 'show', :id => '1'}, 'countries/1')
+    assert_recognizes({:controller => 'admin/countries', :action => 'index'}, 'admin/countries')
+    assert_recognizes({:controller => 'admin/countries', :action => 'show', :id => '1'}, 'admin/countries/1')
   end
 
   def test_index

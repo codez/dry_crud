@@ -11,7 +11,7 @@ en:
       link:
         ajax: Ajahx
   # cities controller
-  cities:
+  admin/cities:
     global:
       confirm_delete: You kill city?
       button:

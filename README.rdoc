@@ -13,6 +13,10 @@ In order to use the generator, you have to register the gem in your Rails applic
 Don't worry, it's a simple development dependency. You may even savely remove it after you have run in once. So now, you should run the generator to get the goodies:
 
   rails generate dry_crud
+  
+If you prefer HAML templates instead of ERB, run
+
+  rails generate dry_crud -t HAML
 
 To integrate DRY CRUD into your code, only a few additions are required:
 

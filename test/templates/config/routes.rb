@@ -1,17 +1,5 @@
 TestApp::Application.routes.draw do
-
-  resources :countries do
-    collection do
-      get :ajax
-    end
-      
-    resources :cities do
-      collection do
-        get :ajax
-      end
-    end
-  end
-
+  
   resources :people do
   	collection do
       get :ajax
@@ -19,6 +7,20 @@ TestApp::Application.routes.draw do
   end
 
   match 'vips' => 'vips#index', :as => :vips
+  
+  namespace :admin do
+    resources :countries do
+      collection do
+        get :ajax
+      end
+        
+      resources :cities do
+        collection do
+          get :ajax
+        end
+      end
+    end
+  end
 
   root :to => 'people#index'
   

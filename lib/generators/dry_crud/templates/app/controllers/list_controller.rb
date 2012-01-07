@@ -6,7 +6,7 @@
 # the user the same list as he left it.
 class ListController < ApplicationController
 
-  helper_method :model_class, :models_label, :path_entry
+  helper_method :model_class, :models_label, :path_args
 
   delegate :model_class, :models_label, :to => 'self.class'
 
@@ -39,8 +39,8 @@ class ListController < ApplicationController
   
   # The path arguments to link to the given entry.
   # If the controller is nested, this provides the required context.
-  def path_entry(entry = @entry)
-    entry
+  def path_args(last)
+    last
   end
 
   # Convenience method to respond to various formats with the given object.
@@ -236,43 +236,71 @@ class ListController < ApplicationController
 
   include Memory
 
-  # TODO: comments
-  module Nested
+  # Provides functionality to nest controllers/resources.
+  # If a controller is nested, the parent classes and namespaces
+  # may be defined as an array in the :nesting class attribute.
+  # For example, a cities controller, nested in country and a admin
+  # namespace, may define this attribute as follows:
+  #   self.nesting = :admin, Country
+  module Nesting
+    
+    # Adds the :nesting class attribute and parent helper methods
+    # to the including controller.
     def self.included(controller)
-      controller.class_attribute :nested
+      controller.class_attribute :nesting
       
-      controller.alias_method_chain :model_scope, :nested
-      controller.alias_method_chain :path_entry, :nested
+      controller.helper_method :parent, :parents
+      
+      controller.alias_method_chain :model_scope, :nesting
+      controller.alias_method_chain :path_args, :nesting
     end
     
     protected
     
+    # Returns the direct parent ActiveRecord of the current request, if any.
+    def parent
+      parents.select {|p| p.is_a?(ActiveRecord::Base) }.last
+    end
+    
+    # Returns the parent entries of the current request, if any.
+    # These are ActiveRecords or namespace symbols, corresponding 
+    # to the defined nesting attribute.
     def parents
-      @parents ||= Array(nested).collect do |p|
-        if p < ActiveRecord::Base
-          p.find(params["#{p.name.underscore}_id"])
+      @parents ||= Array(nesting).collect do |p|
+        if p.is_a?(Class) && p < ActiveRecord::Base
+          parent_entry(p)
         else
           p
         end
       end
     end
     
-    private
-    
-    def path_entry_with_nested(entry = @entry)
-      parents + [entry]
+    # Loads the parent entry for the given ActiveRecord class.
+    # By default, performs a find with the class_name_id param.
+    def parent_entry(clazz)
+      clazz.find(params["#{clazz.name.underscore}_id"])
     end
     
-    def model_scope_with_nested
-      ar = parents.select {|p| p.is_a?(ActiveRecord::Base) }
-      if ar.present?
-        ar.last.send(model_class.name.underscore.pluralize)
+    # An array of objects used in url_for and related functions.
+    def path_args_with_nesting(last)
+      parents + [last]
+    end
+    
+    # Uses the parent entry (if any) to constrain the model scope.
+    def model_scope_with_nesting
+      if parent.present?
+        parent_scope
       else
-        model_scope_without_nested
+        model_scope_without_nesting
       end
+    end
+    
+    # The model scope for the current parent resource.
+    def parent_scope
+      parent.send(model_class.name.underscore.pluralize)
     end
   end
   
-  include Nested
+  include Nesting
   
 end

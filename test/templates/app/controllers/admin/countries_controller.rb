@@ -1,6 +1,6 @@
-class CitiesController < AjaxController
+class Admin::CountriesController < AjaxController
 
-  self.nested = Country
+  self.nesting = :admin
 
   def show
     respond_to do |format|

@@ -59,12 +59,13 @@ namespace :test do
     task :init => :generate_crud do
       FileUtils.cp_r(File.join(File.dirname(__FILE__), 'test', 'templates', '.'), TEST_APP_ROOT)
       FileUtils.rm_f(File.join(TEST_APP_ROOT, 'public', 'index.html'))
-      FileUtils.mv(File.join(TEST_APP_ROOT, 'app', 'views', 'layouts', 'crud.html.erb'),
-                   File.join(TEST_APP_ROOT, 'app', 'views', 'layouts', 'application.html.erb'), 
-                   :force => true)
-      FileUtils.mv(File.join(TEST_APP_ROOT, 'app', 'views', 'layouts', 'crud.html.haml'),
-                   File.join(TEST_APP_ROOT, 'app', 'views', 'layouts', 'application.html.haml'), 
-                   :force => true)
+      layouts = File.join(TEST_APP_ROOT, 'app', 'views', 'layouts')
+      FileUtils.mv(File.join(layouts, 'crud.html.erb'),
+                   File.join(layouts, 'application.html.erb'), 
+                   :force => true) if File.exists?(File.join(layouts, 'crud.html.erb'))
+      FileUtils.mv(File.join(layouts, 'crud.html.haml'),
+                   File.join(layouts, 'application.html.haml'), 
+                   :force => true) if File.exists?(File.join(layouts, 'crud.html.haml'))
       exclude = ENV['HAML'] ? 'erb' : 'haml'
       Dir.glob(File.join(TEST_APP_ROOT, 'app', 'views', '**', "*.#{exclude}")).each do |f|
         FileUtils.rm(f)

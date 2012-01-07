@@ -9,7 +9,7 @@ module CrudHelper
   # If a block is given, a custom form may be rendered and attrs is ignored.
   def crud_form(*attrs, &block)
     attrs = attrs_or_default(attrs) { default_attrs - [:created_at, :updated_at] }
-    standard_form(path_entry(@entry), *attrs, &block)
+    standard_form(path_args(@entry), *attrs, &block)
   end
 
   # Create a table of the @entries variable with the default or
@@ -35,17 +35,17 @@ module CrudHelper
 
   # Action link to show inside a table.
   def link_table_action_show(record)
-    link_table_action('show', path_entry(record))
+    link_table_action('show', path_args(record))
   end
 
   # Action link to edit inside a table.
   def link_table_action_edit(record)
-    link_table_action('edit', edit_polymorphic_path(path_entry(record)))
+    link_table_action('edit', edit_polymorphic_path(path_args(record)))
   end
 
   # Action link to destroy inside a table.
   def link_table_action_destroy(record)
-    link_table_action('delete', path_entry(record),
+    link_table_action('delete', path_args(record),
                       :confirm => ti(:confirm_delete),
                       :method => :delete)
   end

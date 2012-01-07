@@ -126,7 +126,7 @@ module CrudTestHelper
     {}
   end
   
-  def path_entry(entry)
+  def path_args(entry)
     entry
   end
 
