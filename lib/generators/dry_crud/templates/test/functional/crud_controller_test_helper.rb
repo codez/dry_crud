@@ -68,7 +68,7 @@ module CrudControllerTestHelper
   end
 
   def test_show_without_id_redirects_to_index
-    assert_raise(ActionController::RoutingError) do
+    assert_raise ActionController::RoutingError, ActiveRecord::RecordNotFound do
       get :show, test_params
     end
   end
@@ -105,7 +105,7 @@ module CrudControllerTestHelper
   end
 
   def test_edit_without_id_raises_RecordNotFound
-    assert_raise(ActionController::RoutingError) do
+    assert_raise ActionController::RoutingError, ActiveRecord::RecordNotFound do
       get :edit, test_params
     end
   end
