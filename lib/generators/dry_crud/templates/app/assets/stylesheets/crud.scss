@@ -1,4 +1,4 @@
-$container_width: 600pt;
+$container_width: 800pt;
 $theme_color: #2580a2;
 
 body, div, p, td, th {
@@ -93,6 +93,11 @@ table.list td {
   padding: 2px 4px;  
 }
 
+table.list td.action {
+  width: 20pt;
+  text-align: center;
+}
+
 
 .clear {
   clear: both;
@@ -133,7 +138,8 @@ table.list td {
 }
 
 a.action {
-  margin-right: 10pt;
+  margin-right: 5pt;
+  margin-left: 5pt;
 }
 
 a.action img {

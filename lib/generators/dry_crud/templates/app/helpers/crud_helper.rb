@@ -57,7 +57,7 @@ module CrudHelper
 
   # Defines a column with an action link.
   def action_col(table, &block)
-  	table.col('', :class => 'center', &block)
+  	table.col('', :class => 'action', &block)
   end
   
   private
