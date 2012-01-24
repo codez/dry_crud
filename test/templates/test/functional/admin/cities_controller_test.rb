@@ -13,13 +13,22 @@ class Admin::CitiesControllerTest < ActionController::TestCase
 
   def test_index
     super
-    assert_equal 1, assigns(:entries).size
     assert_equal test_entry.country.cities.order('countries.code, cities.name'), assigns(:entries)
+    
+    assert_equal [:admin, test_entry.country], @controller.send(:parents)
+    assert_equal test_entry.country, @controller.send(:parent)
+    assert_equal test_entry.country.cities, @controller.send(:model_scope)
+    assert_equal [:admin, test_entry.country, 2], @controller.send(:path_args, 2)
   end
 
   def test_show
     get :show, test_params(:id => test_entry.id)
     assert_redirected_to_index
+  end
+  
+  def test_create
+    super
+    assert_equal test_entry.country, assigns(:entry).country
   end
 
   def test_destroy_with_inhabitants

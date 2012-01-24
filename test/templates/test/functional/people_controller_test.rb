@@ -15,6 +15,11 @@ class PeopleControllerTest < ActionController::TestCase
     super
     assert_equal 2, assigns(:entries).size
     assert_equal Person.includes(:city => :country).order('people.name, countries.code, cities.name').all, assigns(:entries)
+    
+    assert_equal [], @controller.send(:parents)
+    assert_nil @controller.send(:parent)
+    assert_equal Person.scoped, @controller.send(:model_scope)
+    assert_equal [2], @controller.send(:path_args, 2)
   end
 
   def test_index_search
