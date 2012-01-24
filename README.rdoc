@@ -23,7 +23,7 @@ To integrate DRY CRUD into your code, only a few additions are required:
 * For uniform CRUD functionality, just subclass your controllers from +CrudController+. 
 * Overwrite the <tt>:to_s</tt> method of your models for a human-friendly representation in captions.
 
-Version 1.4 and higher are built for Rails 3.1. As of Rails 3.1, views are inheritable as well, so a core functionality of DRY CRUD got into the Rails core itself. For Rails 3.0, use version 1.3.1 or refer to the rails-3.0 branch. If you need a version for Rails 2.3, please get version 0.6.0 of the gem or go to the rails-2.3 branch on Github. DRY CRUD 1.3 is fully compatible with Ruby 1.8.7, Ruby 1.9.2 and JRuby.
+Version 1.5 and higher are built for Rails 3.2. As of Rails 3.1, views are inheritable as well, so a core functionality of DRY CRUD got into the Rails core itself. For Rails 3.0, use version 1.3.1 or refer to the rails-3.0 branch. If you need a version for Rails 2.3, please get version 0.6.0 of the gem or go to the rails-2.3 branch on Github. DRY CRUD 1.3 and above are fully compatible with Ruby 1.8.7, Ruby 1.9.2 and JRuby.
 
 == Overview
 
@@ -189,11 +189,23 @@ Even +belongs_to+ associations are automatically rendered with a select field. B
 
 Yes, it's bad practice to use finder logic in your views! Define the variable <tt>@hometowns</tt> in your controller instead (as shown in the example above), and you do not even have to specify the <tt>:list</tt> option.
 
+
+=== Nested Resources
+
+In case you define nested resources, your +CrudController+ subclass should know. Listing and creating entries as well as displaying links for these resources is dependent on the nesting hierarchy. This is how you declare the namespaces and parent resources in your controller:
+
+  self.nesting = :my_namspace, ParentResource
+  
+This declaration is for a controller nested in +parent_resources+ within a +:my_namespace+ scope. +ParentResource+ is the corresponding +ActiveRecord+ model. The request param +:parent_resource_id+ is used to load the parent entry, which in turn is used to filter the entries listed and created in your controller.
+
+The <tt>ListController::Nesting</tt> module defines this basic behaviour. For more complex setups, have a look there and adjust it to your needs.
+
+
 === Internationalization (I18N)
 
 All text strings used are externalized to an english locale yaml. The keys are organized by controller and template name plus a generic global scope. 
 
-To represent the controller hierarchy used by <tt>render_inheritable</tt>, a special translation helper <tt>:ti</tt> looks up keys along this hierarchy in the following order:
+To represent your controller hierarchy, a special translation helper <tt>:ti</tt> looks up keys along the hierarchy in the following order:
   {controller_name}.{template_name}.{key}
   {controller_name}.{action_name}.{key}
   {controller_name}.global.{key}
@@ -219,7 +231,7 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 {controller/crud_controller.rb}[http://codez.ch/dry_crud/?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on +ListController+.
 
-{controller/list_controller.rb}[http://codez.ch/dry_crud/?q=ListController]:: Abstract controller providing a basic list action. There are two sub-modules that provide search and sort functionality for the table displayed in the list action. A third sub-module remembers the list parameters in order to return to an identical list.
+{controller/list_controller.rb}[http://codez.ch/dry_crud/?q=ListController]:: Abstract controller providing a basic list action. Use this controller if you require read-only functionality. There are two sub-modules that provide search and sort functionality for the table displayed in the list action. A third sub-module remembers the list parameters in order to return to an identical list.
 
 
 === Helpers:
@@ -279,9 +291,9 @@ views/layouts/crud.html.erb:: An example layout showing how to use the <tt>@titl
 
 views/layouts/_menu.html.erb:: An empty file to put your menu items into. Included from <tt>crud.html.erb</tt>.
 
-public/stylesheets/crud.css:: A simple CSS with all the classes and ids used in the CRUD code. 
+app/assets/stylesheets/crud.scss:: A simple SCSS with all the classes and ids used in the CRUD code. 
 
-public/images/action/*.png:: Some sample action icons from the {Open Icon Library}[http://openiconlibrary.sourceforge.net].
+app/assets/images/action/*.png:: Some sample action icons from the {Open Icon Library}[http://openiconlibrary.sourceforge.net].
 
 
 === Tests:
