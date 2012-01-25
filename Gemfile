@@ -3,8 +3,10 @@ source 'http://rubygems.org'
 gem 'rails', '>= 3.2'
 
 gem 'rake'
-gem 'rcov'
 gem 'rdoc'
+
+gem 'rcov', :platforms => :ruby_18
+gem 'simplecov', :platforms => :ruby_19
 
 
 # Bundle edge Rails instead:

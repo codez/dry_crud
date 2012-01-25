@@ -19,16 +19,6 @@ task :test => ['test:app:init'] do
   end
 end
 
-require 'rcov/rcovtask'
-Rcov::RcovTask.new do |test| 
-    test.libs << "test/test_app/test"
-    test.test_files = Dir[ "test/test_app/test/**/*_test.rb" ]
-    test.rcov_opts = ['--text-report',
-                      '-i', '"test\/test_app\/app\/.*"',
-                      '-x', '"\/Library\/Ruby\/.*"']
-    test.verbose = true
-end
-
 namespace :test do
   namespace :app do
     task :environment do
@@ -41,7 +31,7 @@ namespace :test do
     desc "Create a rails test application"
     task :create do
       unless File.exist?(TEST_APP_ROOT)
-        sh "rails new #{TEST_APP_ROOT}"
+        sh "rails new #{TEST_APP_ROOT} --skip-bundle"
         FileUtils.cp(File.join(File.dirname(__FILE__), 'test', 'templates', 'Gemfile'), TEST_APP_ROOT)
         sh "cd #{TEST_APP_ROOT}; bundle install" # update Gemfile.lock
         FileUtils.rm_f(File.join(TEST_APP_ROOT, 'test', 'performance', 'browsing_test.rb'))
@@ -97,6 +87,18 @@ task :site => :rdoc do
   else
     puts "Please specify a destination with DEST=user@server:/deploy/dir"
   end
+end
+
+if RUBY_VERSION == '1.8.7'
+	require 'rcov/rcovtask'
+	Rcov::RcovTask.new do |test| 
+	    test.libs << "test/test_app/test"
+	    test.test_files = Dir[ "test/test_app/test/**/*_test.rb" ]
+	    test.rcov_opts = ['--text-report',
+	                      '-i', '"test\/test_app\/app\/.*"',
+	                      '-x', '"\/Library\/Ruby\/.*"']
+	    test.verbose = true
+	end
 end
 
 # :package task

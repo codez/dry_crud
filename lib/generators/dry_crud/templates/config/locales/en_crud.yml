@@ -47,17 +47,17 @@ en:
   # crud controller
   crud:
     show:
-      title: %{model}
+      title: "%{model}"
     new:
-      title: New %{model}
+      title: "New %{model}"
     edit:
-      title: Edit %{model}
+      title: "Edit %{model}"
     create:
       flash:
-        success: %{model} was successfully created.
+        success: "%{model} was successfully created."
     update:
       flash:
-        success: %{model} was successfully updated.
+        success: "%{model} was successfully updated."
     destroy:
       flash:
-        success: %{model} was successfully deleted.
+        success: "%{model} was successfully deleted."
