@@ -307,4 +307,4 @@ app/assets/images/action/*.png:: Some sample action icons from the {Open Icon Li
 test/several other tests:: Testing the provided implementation and a great base to test your adaptions of the CRUD code.
 
 
-
+{<img src="https://secure.travis-ci.org/codez/dry_crud.png" />}[http://travis-ci.org/codez/dry_crud]
