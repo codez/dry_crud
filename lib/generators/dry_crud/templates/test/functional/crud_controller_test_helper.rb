@@ -61,15 +61,9 @@ module CrudControllerTestHelper
     assert @response.body.starts_with?("{")
   end
 
-  def test_show_with_not_existing_id_raises_RecordNotFound
+  def test_show_with_non_existing_id_raises_RecordNotFound
     assert_raise(ActiveRecord::RecordNotFound) do
       get :show, test_params(:id => 9999)
-    end
-  end
-
-  def test_show_without_id_redirects_to_index
-    assert_raise ActionController::RoutingError, ActiveRecord::RecordNotFound do
-      get :show, test_params
     end
   end
 
@@ -102,12 +96,6 @@ module CrudControllerTestHelper
     assert_response :success
     assert_template 'edit'
     assert_equal test_entry, assigns(:entry)
-  end
-
-  def test_edit_without_id_raises_RecordNotFound
-    assert_raise ActionController::RoutingError, ActiveRecord::RecordNotFound do
-      get :edit, test_params
-    end
   end
 
   def test_update

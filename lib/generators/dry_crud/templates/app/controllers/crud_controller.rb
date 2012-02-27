@@ -7,12 +7,8 @@
 class CrudController < ListController
 
   include ERB::Util
-  
-  # Set up entry object to use in the various actions.
-  before_filter :build_entry, :only => [:new, :create]
-  before_filter :set_entry,   :only => [:show, :edit, :update, :destroy]
 
-  helper_method :full_entry_label
+  helper_method :entry, :full_entry_label
 
   delegate :model_identifier, :to => 'self.class'
 
@@ -33,15 +29,15 @@ class CrudController < ListController
   #   GET /entries/1
   #   GET /entries/1.json
   def show
-    respond_with @entry
+    respond_with entry
   end
 
   # Display a form to create a new entry of this model.
   #   GET /entries/new
   #   GET /entries/new.json
   def new
-    @entry.attributes = params[model_identifier]
-    respond_with @entry
+    assign_attributes
+    respond_with entry
   end
 
   # Create a new entry of this model from the passed params.
@@ -51,16 +47,16 @@ class CrudController < ListController
   #   POST /entries
   #   POST /entries.json
   def create(&block)
-    @entry.attributes = params[model_identifier]
-    created = with_callbacks(:create, :save) { @entry.save }
+    assign_attributes
+    created = with_callbacks(:create, :save) { entry.save }
 
     customizable_respond_to(created, block) do |format|
       if created
         format.html { redirect_to_show success_notice }
-        format.json  { render :json => @entry, :status => :created, :location => path_args(@entry) }
+        format.json  { render :json => entry, :status => :created, :location => path_args(entry) }
       else
         format.html { render_with_callback 'new'  }
-        format.json  { render :json => @entry.errors, :status => :unprocessable_entity }
+        format.json  { render :json => entry.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -78,8 +74,8 @@ class CrudController < ListController
   #   PUT /entries/1
   #   PUT /entries/1.json
   def update(&block)
-    @entry.attributes = params[model_identifier]
-    updated = with_callbacks(:update, :save) { @entry.save }
+    assign_attributes
+    updated = with_callbacks(:update, :save) { entry.save }
 
     customizable_respond_to(updated, block) do |format|
       if updated
@@ -87,7 +83,7 @@ class CrudController < ListController
         format.json  { head :ok }
       else
         format.html { render_with_callback 'edit'  }
-        format.json  { render :json => @entry.errors, :status => :unprocessable_entity }
+        format.json  { render :json => entry.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -99,7 +95,7 @@ class CrudController < ListController
   #   DELETE /entries/1
   #   DELETE /entries/1.json
   def destroy(&block)
-    destroyed = run_callbacks(:destroy) { @entry.destroy }
+    destroyed = run_callbacks(:destroy) { entry.destroy }
 
     customizable_respond_to(destroyed, block) do |format|
       if destroyed
@@ -107,10 +103,10 @@ class CrudController < ListController
         format.json  { head :ok }
       else
         format.html { 
-          flash.alert = @entry.errors.full_messages.join('<br/>')
+          flash.alert = entry.errors.full_messages.join('<br/>')
           request.env["HTTP_REFERER"].present? ? redirect_to(:back) : redirect_to_show
         }
-        format.json  { render :json => @entry.errors, :status => :unprocessable_entity }
+        format.json  { render :json => entry.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -119,24 +115,34 @@ class CrudController < ListController
 
   #############  CUSTOMIZABLE HELPER METHODS  ##############################
 
+  # Main accessor method for the handled model entry.
+  def entry
+    @entry ||= params[:id] ? find_entry : build_entry
+  end
+  
   # Creates a new model entry.
   def build_entry
-    @entry = model_scope.new
+    model_scope.new
   end
 
   # Sets an existing model entry from the given id.
-  def set_entry
-    @entry = model_scope.find(params[:id])
+  def find_entry
+    model_scope.find(params[:id])
+  end
+  
+  # Assigns the attributes from the params to the model entry.
+  def assign_attributes
+    entry.attributes = params[model_identifier]
   end
 
   # A label for the current entry, including the model name.
   def full_entry_label
-    "#{models_label(false)} <i>#{h(@entry)}</i>".html_safe
+    "#{models_label(false)} <i>#{h(entry)}</i>".html_safe
   end
 
   # Redirects to the show action of a single entry.
   def redirect_to_show(options = {})
-    redirect_to path_args(@entry), options
+    redirect_to path_args(entry), options
   end
 
   # Redirects to the main action of this controller.

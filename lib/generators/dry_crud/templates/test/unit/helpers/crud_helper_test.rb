@@ -74,7 +74,6 @@ class CrudHelperTest < ActionView::TestCase
 
 
   test "crud form" do
-    @entry = CrudTestModel.first
     f = with_test_routing do
       capture { crud_form }
     end
@@ -90,5 +89,8 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /select .*?name="crud_test_model\[companion_id\]"/, f
     assert_match /textarea .*?name="crud_test_model\[remarks\]"/, f
   end
-
+  
+  def entry
+    @entry ||= CrudTestModel.first
+  end
 end

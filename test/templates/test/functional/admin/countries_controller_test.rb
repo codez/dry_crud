@@ -25,6 +25,11 @@ class Admin::CountriesControllerTest < ActionController::TestCase
     assert_redirected_to_index
   end
 
+  def test_show_with_non_existing_id_raises_RecordNotFound #not
+    get :show, test_params(:id => 9999)
+    assert_redirected_to_index
+  end
+  
   protected
 
   def test_entry
