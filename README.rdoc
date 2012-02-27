@@ -27,17 +27,19 @@ Version 1.5 and higher are built for Rails 3.2. As of Rails 3.1, views are inher
 
 == Overview
 
-In most Rails applications, you have some models that require basic CRUD (create, read, update, delete) functionality. There are various possibilities like Rails scaffolding, {Inherited Resources}[https://github.com/josevalim/inherited_resources] or {Dry Scaffold}[http://github.com/grimen/dry_scaffold]. Still, various parts in your application remain duplicated. While you might pull up common methods into a common superclass controller, most views still contain very similar code.
+In most Rails applications, you have some models that require basic CRUD (create, read, update, delete) functionality. There are various possibilities like Rails scaffolding, {Inherited Resources}[https://github.com/josevalim/inherited_resources] or {Dry Scaffold}[http://github.com/grimen/dry_scaffold]. Still, various parts in your application remain duplicated. While you might pull up common methods into a common superclass controller, most views still contain very similar code. And then you also have to remember the entire API of these frameworks.
 
 Enter DRY CRUD.
 
 <b>
-The main idea of DRY CRUD is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. DRY CRUD generates various foundation classes that you may freely adapt to your application's needs. For each model, you may transparently customize arbitrary parts or just fallback to the general behavior. This applies not only for controllers, but also for view templates and helpers. There is no black box your code depends on. You lay the foundation that fits your application best.
+The main idea of DRY CRUD is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. DRY CRUD generates various foundation classes that you may browse easily and adapt freely to your application's needs. For each model, you may transparently customize arbitrary parts or just fallback to the general behavior. This applies not only for controllers, but also for view templates and helpers. There is no black box your code depends on. You lay the foundation that fits your application best.
 </b>
 
 DRY CRUD is a Rails generator. All code resides in your application and is open for you to inspect and to extend. You may pick whatever you consider useful or adapt what is not sufficient. Even if you do not require any CRUD functionality, you might find some helpers simplifying your work. There are no runtime dependencies to the dry_crud gem. Having said this, DRY CRUD does not want to provide a maximum of functionality that requires a lot of configuration, but rather a clean and lightweight foundation to build your application's requirements upon. This is why DRY CRUD comes as a generator and not as a Rails plugin.
 
 DRY CRUD does not depend on any other plugins, but easily allows you to integrate them in order to unify the behavior of your CRUD controllers. You might even use the plugins mentioned above to adapt your generated +CrudController+ base class. All classes come with thorough tests that provide you with a solid foundation for implementing your own adaptions.
+
+A basic CSS gets you started with your application's layout. For advanced needs, DRY CRUD supports the styles and classes used in {Bootstrap}[http://twitter.github.com/bootstrap/]. A great design never was so close.
 
 If you find yourself adapting the same parts of DRY CRUD for your applications over and over, please feel free to {fork me on Github}[http://github.com/codez/dry_crud].
 
@@ -105,7 +107,7 @@ In <tt>app/helpers/people.rb</tt>:
   
 Should you have attributes with the same name for multiple models that you want to be formatted the same way, you may define a helper method <tt>format_{attr}</tt> for these attributes.
 
-By the way: The method <tt>:f</tt> in +StandardHelper+ uniformly formats arbitrary values according to their class.  
+By the way: The method <tt>:f</tt> in +StandardHelper+ uniformly formats arbitrary values according to their class.
 
 
 ==== Filtering the index list
