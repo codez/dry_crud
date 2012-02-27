@@ -23,4 +23,5 @@ module ListHelper
     attrs - [:id, :position, :password]
   end
   
+  
 end

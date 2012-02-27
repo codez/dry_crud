@@ -4,24 +4,39 @@
   %head
     %meta{:charset => 'utf-8'}
     %title= strip_tags(@title)
-    = stylesheet_link_tag 'crud'
     = csrf_meta_tag
+    
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+  
+    = stylesheet_link_tag 'application', :media => 'all'
+      
+    %link{:href => "images/favicon.ico", :rel => "shortcut icon"}
+    %link{:href => "images/apple-touch-icon.png", :rel => "apple-touch-icon"}
+    %link{:href => "images/apple-touch-icon-72x72.png", :rel => "apple-touch-icon", :sizes => "72x72"}
+    %link{:href => "images/apple-touch-icon-114x114.png", :rel => "apple-touch-icon", :sizes => "114x114"}
+  
     = yield :head
     
   %body
-    #container
-      %ul#menu= render 'layouts/menu'
-      
+    .container
+      = render 'layouts/nav'
+    
       %h1= @title
       
-      - if flash.notice.present?
-        #flash_notice= raw(flash.notice)
-      - elsif flash.alert.present?
-        #flash_alert= raw(flash.alert)
+      = render :partial => 'layouts/flash', :collection => [:notice, :alert], :as => :level
       
-      .actions= yield :actions
+      .actions.btn-toolbar.clearfix
+        .pull-left=yield :tools
+        .pull-right= yield :actions
       
       #content= yield
       
+    %footer
+      %p
+        &copy; MyCompany #{Time.now.year}
+          
   = javascript_include_tag 'application'
   = javascript_tag yield(:javascripts) if content_for?(:javascripts)

@@ -11,7 +11,7 @@ class StandardTableBuilder
   # Delegate called methods to template.
   # including StandardHelper would lead to problems with indirectly called methods.
   delegate :content_tag, :format_attr, :column_type, :association,
-           :captionize, :tr_alt, :to => :template
+           :captionize, :add_css_class, :to => :template
 
   def initialize(entries, template, options = {})
     @entries = entries
@@ -55,7 +55,8 @@ class StandardTableBuilder
 
   # Renders the table as HTML.
   def to_html
-    content_tag :table, :class => 'list' do
+    add_css_class options, 'table'
+    content_tag :table, options do
       content_tag(:thead, html_header) + 
       content_tag(:tbody, safe_join(entries) { |e| html_row(e) })
     end
@@ -86,7 +87,7 @@ class StandardTableBuilder
   end
 
   def html_row(entry)
-    tr_alt do
+    content_tag :tr do
       safe_join(cols) { |c| c.html_cell(entry) }
     end
   end

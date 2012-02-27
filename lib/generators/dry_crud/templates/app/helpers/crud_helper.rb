@@ -35,24 +35,25 @@ module CrudHelper
 
   # Action link to show inside a table.
   def link_table_action_show(record)
-    link_table_action('show', path_args(record))
+    link_table_action('zoom-in', path_args(record))
   end
 
   # Action link to edit inside a table.
   def link_table_action_edit(record)
-    link_table_action('edit', edit_polymorphic_path(path_args(record)))
+    link_table_action('pencil', edit_polymorphic_path(path_args(record)))
   end
 
   # Action link to destroy inside a table.
   def link_table_action_destroy(record)
-    link_table_action('delete', path_args(record),
+    link_table_action('remove', path_args(record),
                       :confirm => ti(:confirm_delete),
                       :method => :delete)
   end
 
   # Generic action link inside a table.
   def link_table_action(icon, url, html_options = {})
-  	link_to('', url, {:class => "action icon #{icon}"}.merge(html_options))
+    add_css_class html_options, "icon-#{icon}"
+  	link_to('', url, html_options)
   end
 
   # Defines a column with an action link.

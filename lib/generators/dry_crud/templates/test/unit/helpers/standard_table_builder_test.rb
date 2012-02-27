@@ -26,7 +26,7 @@ class StandardTableBuilderTest < ActionView::TestCase
   test "single attr row" do
     table.attrs :upcase, :size
 
-    dom = '<tr class="even"><td>FOO</td><td>3 chars</td></tr>'
+    dom = '<tr><td>FOO</td><td>3 chars</td></tr>'
 
     assert_dom_equal dom, table.send(:html_row, "foo")
   end
@@ -34,7 +34,7 @@ class StandardTableBuilderTest < ActionView::TestCase
   test "custom row" do
     table.col("Header", :class => 'hula') {|e| "Weights #{e.size} kg" }
 
-    dom = '<tr class="even"><td class="hula">Weights 3 kg</td></tr>'
+    dom = '<tr><td class="hula">Weights 3 kg</td></tr>'
 
     assert_dom_equal dom, table.send(:html_row, "foo")
   end
@@ -57,13 +57,13 @@ class StandardTableBuilderTest < ActionView::TestCase
 
   test "two x two table" do
     dom = <<-FIN
-      <table class="list">
+      <table class="table">
       <thead>
       <tr><th>Upcase</th><th>Size</th></tr>
       </thead>
 	  <tbody>
-      <tr class="even"><td>FOO</td><td>3 chars</td></tr>
-      <tr class="odd"><td>BAHR</td><td>4 chars</td></tr>
+      <tr><td>FOO</td><td>3 chars</td></tr>
+      <tr><td>BAHR</td><td>4 chars</td></tr>
       </tbody>
       </table>
     FIN
@@ -76,18 +76,18 @@ class StandardTableBuilderTest < ActionView::TestCase
 
   test "table with before and after cells" do
     dom = <<-FIN
-      <table class="list">
+      <table class="table">
       <thead>
       <tr><th>head</th><th>Upcase</th><th>Size</th><th></th></tr>
       </thead>
       <tbody>
-      <tr class="even">
+      <tr>
         <td class='left'><a href='/'>foo</a></td>
         <td>FOO</td>
         <td>3 chars</td>
         <td>Never foo</td>
       </tr>
-      <tr class="odd">
+      <tr>
         <td class='left'><a href='/'>bahr</a></td>
         <td>BAHR</td>
         <td>4 chars</td>
@@ -108,7 +108,7 @@ class StandardTableBuilderTest < ActionView::TestCase
   
   test "empty entries collection renders empty table" do
     dom = <<-FIN
-      <table class="list">
+      <table class="table">
       <thead>
       <tr><th>head</th><th>Upcase</th><th>Size</th><th></th></tr>
       </thead>

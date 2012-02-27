@@ -21,37 +21,27 @@ class StandardHelperTest < ActionView::TestCase
     result = labeled("label") { "value" }
 
     assert result.html_safe?
-    assert_dom_equal "<div class='labeled'> <div class='caption'>label</div> <div class='value'>value</div> </div>", result.squish
+    assert_dom_equal "<div class='labeled'> <label> label </label> <div class='subject'> value </div> </div>", result.squish
   end
 
   test "labeled text empty" do
     result = labeled("label", "")
 
     assert result.html_safe?
-    assert_dom_equal "<div class='labeled'> <div class='caption'>label</div> <div class='value'>#{EMPTY_STRING}</div> </div>", result.squish
+    assert_dom_equal "<div class='labeled'> <label> label </label> <div class='subject'> #{EMPTY_STRING} </div> </div>", result.squish
   end
 
   test "labeled text as content" do
     result = labeled("label", "value <unsafe>")
 
     assert result.html_safe?
-    assert_dom_equal "<div class='labeled'> <div class='caption'>label</div> <div class='value'>value &lt;unsafe&gt;</div> </div>", result.squish
+    assert_dom_equal "<div class='labeled'> <label> label </label> <div class='subject'> value &lt;unsafe&gt; </div> </div>", result.squish
   end
 
   test "labeled attr" do
     result = labeled_attr('foo', :size)
     assert result.html_safe?
-    assert_dom_equal "<div class='labeled'> <div class='caption'>Size</div> <div class='value'>3 chars</div> </div>", result.squish
-  end
-
-  test "alternate row" do
-    result_1 = tr_alt { "(test row content)" }
-    result_2 = tr_alt { "(test row content)" }
-
-    assert result_1.html_safe?
-    assert result_2.html_safe?
-    assert_dom_equal "<tr class='even'>(test row content)</tr>", result_1
-    assert_dom_equal "<tr class='odd'>(test row content)</tr>", result_2
+    assert_dom_equal "<div class='labeled'> <label> Size </label> <div class='subject'> 3 chars </div> </div>", result.squish
   end
 
   test "format Fixnums" do
@@ -158,7 +148,7 @@ class StandardHelperTest < ActionView::TestCase
   test "empty table should render message" do
     result = table([]) { }
     assert result.html_safe?
-    assert_dom_equal "<div class='list'>No entries found.</div>", result
+    assert_dom_equal "<div class='table'>No entries found.</div>", result
   end
 
   test "non empty table should render table" do
@@ -196,7 +186,7 @@ class StandardHelperTest < ActionView::TestCase
     assert_match /option selected="selected" value="1">1<\/option>/, f
     assert_match /input .*?name="crud_test_model\[children\]" .*?type="number" .*?value=\"9\"/, f
     assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
-    assert_match /input .*?type="submit" .*?value="Save"/, f
+    assert_match /button .*?type="submit">Save<\/button>/, f
   end
 
   test "standard form for new entry" do
@@ -205,13 +195,13 @@ class StandardHelperTest < ActionView::TestCase
       f = capture { standard_form(e, :name, :children, :birthdate, :human, :html => {:class => 'special'}) }
     end
 
-    assert_match /form .*?action="\/crud_test_models" .?class="special" .*?method="post"/, f
+    assert_match /form .*?action="\/crud_test_models" .?class="special form-horizontal" .*?method="post"/, f
     assert_match /input .*?name="crud_test_model\[name\]" .*?type="text"/, f
     assert_no_match /input .*?name="crud_test_model\[name\]" .*?type="text" .*?value=/, f
     assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
     assert_match /input .*?name="crud_test_model\[children\]" .*?type="number"/, f
     assert_no_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=/, f
-    assert_match /input .*?type="submit" .*?value="Save"/, f
+    assert_match /button .*?type="submit">Save<\/button>/, f
   end
 
   test "standard form with errors" do
@@ -233,7 +223,7 @@ class StandardHelperTest < ActionView::TestCase
     assert_match /option selected="selected" value="1">1<\/option>/, f
     assert_match /input .*?name="crud_test_model\[children\]" .*?type="number" .*?value=\"9\"/, f
     assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
-    assert_match /input .*?type="submit" .*?value="Save"/, f
+    assert_match /button .*?type="submit">Save<\/button>/, f
   end
   
   test "translate inheritable lookup" do

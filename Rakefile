@@ -45,9 +45,12 @@ namespace :test do
       DryCrudGenerator.new('', {:force => true, :templates => ENV['HAML'] ? 'haml' : 'erb'}, :destination_root => TEST_APP_ROOT).invoke_all
     end
    
-    desc "Initializes the test application with a couple of classes"
-    task :init => :generate_crud do
+    desc "Populates the test application with some models and controllers"
+    task :populate => :generate_crud do
+      # copy test app templates
       FileUtils.cp_r(File.join(File.dirname(__FILE__), 'test', 'templates', '.'), TEST_APP_ROOT)
+      
+      # replace some unused files
       FileUtils.rm_f(File.join(TEST_APP_ROOT, 'public', 'index.html'))
       layouts = File.join(TEST_APP_ROOT, 'app', 'views', 'layouts')
       FileUtils.mv(File.join(layouts, 'crud.html.erb'),
@@ -56,14 +59,37 @@ namespace :test do
       FileUtils.mv(File.join(layouts, 'crud.html.haml'),
                    File.join(layouts, 'application.html.haml'), 
                    :force => true) if File.exists?(File.join(layouts, 'crud.html.haml'))
+                   
+      # remove unused template type, erb or haml
       exclude = ENV['HAML'] ? 'erb' : 'haml'
       Dir.glob(File.join(TEST_APP_ROOT, 'app', 'views', '**', "*.#{exclude}")).each do |f|
         FileUtils.rm(f)
       end
+      
+      # migrate the database
       FileUtils.cd(TEST_APP_ROOT) do
         sh "rake db:migrate db:seed RAILS_ENV=development --trace"
         sh "rake db:migrate RAILS_ENV=test --trace"  # db:test:prepare does not work for jdbcsqlite3
       end
+    end
+   
+    desc "Customize some of the functionality provided by dry_crud"
+    task :customize => :generate_crud do
+      # add pagination
+      file_replace(File.join(TEST_APP_ROOT, 'app', 'controllers', 'list_controller.rb'), 
+                   "@entries = list_entries", "@entries = list_entries.page(params[:page]).per(5)")
+      file_replace(File.join(TEST_APP_ROOT, 'app', 'views', 'list', 'index.html.erb'), 
+                   "<%= render 'list' %>", "<%= paginate @entries %>\n\n<%= render 'list' %>")
+      file_replace(File.join(TEST_APP_ROOT, 'app', 'views', 'list', 'index.html.haml'), 
+                   "= render 'list'", "= paginate @entries\n\n= render 'list'")
+                   
+       # add bootstrap css
+       #FileUtils.cd(TEST_APP_ROOT) { sh "rails g bootstrap:install" }
+       #FileUtils.rm(File.join(TEST_APP_ROOT, 'app', 'assets', 'stylesheets', 'crud.scss'))
+    end
+   
+    desc "Initializes the test application with a couple of classes"
+    task :init => [:populate, :customize] do
     end
   end
 end
@@ -134,4 +160,13 @@ task :release do
   puts " $ git push --tags"
   puts " $ rake repackage"
   puts " $ gem push pkg/dry_crud-#{version}.gem"
+end
+
+
+def file_replace(file, expression, replacement)
+  return unless File.exists?(file)
+  text = File.read(file)
+  replaced = text.gsub(expression, replacement)
+  puts "WARN: Nothing replaced in '#{file}' for '#{expression}'" if text == replaced
+  File.open(file, "w") { |f| f.puts replaced }
 end

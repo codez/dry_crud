@@ -9,8 +9,8 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   attr_reader :template
 
-  delegate :association, :column_type, :column_property, :captionize, :ta,
-           :to => :template
+  delegate :association, :column_type, :column_property, :captionize, 
+           :content_tag, :ta, :add_css_class, :to => :template
 
   # Render multiple input fields together with a label for the given attributes.
   def labeled_input_fields(*attrs)
@@ -43,6 +43,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   # Render a number field.
   def number_field(attr, html_options = {})
+    add_css_class html_options, 'span1'
     html_options[:size] ||= 10
     super(attr, html_options)
   end
@@ -79,16 +80,19 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   # Render a field to select a date. You might want to customize this.
   def date_field(attr, html_options = {})
+    add_css_class html_options, 'span1'
     date_select(attr, {}, html_options)
   end
 
   # Render a field to enter a time. You might want to customize this.
   def time_field(attr, html_options = {})
+    add_css_class html_options, 'span1'
     time_select(attr, {}, html_options)
   end
   
   # Render a field to enter a date and time. You might want to customize this.
   def datetime_field(attr, html_options = {})
+    add_css_class html_options, 'span1'
     datetime_select(attr, {}, html_options)
   end
   
@@ -112,7 +116,11 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   # Render a label for the given attribute with the passed field html section.
   def labeled(attr, field_html = nil, &block)
-    template.labeled(label(attr), field_html, &block)
+    field_html = capture(&block) if block_given?
+    content_tag(:div, 
+                label(attr) + 
+                content_tag(:div, field_html, :class => 'controls'), 
+                :class => 'control-group')
   end
 
   # Depending if the given attribute must be present, return

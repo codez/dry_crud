@@ -4,34 +4,53 @@
 <head>
   <meta charset="utf-8" />
   <title><%= strip_tags(@title) %></title>
-  <%= stylesheet_link_tag 'crud' %>
   <%= csrf_meta_tag %>
+
+  <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+  <![endif]-->
+
+  <%= stylesheet_link_tag 'application', :media => 'all' %>
+  
+  <!-- fav and touch icons -->
+  <link href="images/favicon.ico" rel="shortcut icon">
+  <link href="images/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="images/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72">
+  <link href="images/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114">
+  
   <%= yield :head %>
 </head>
 <body>
+  
 
-<div id="container">
-	<ul id="menu">
-		<%= render 'layouts/menu' %>
-	</ul>
-	
-	<h1><%= @title %></h1>
-	
-	<% if flash.notice.present? %>
-		<div id="flash_notice"><%= raw(flash.notice) %></div>
-	<% elsif flash.alert.present? %>
-		<div id="flash_alert"><%= raw(flash.alert) %></div>
-	<% end %>
-	
-	<div class="actions">
-		<%= yield :actions %>
-	</div>
-	
-	<div id="content">
-		<%= yield %>
-	</div>
+<div class="container">
+  <%= render 'layouts/nav' %>
+  
+  <h1><%= @title %></h1>
+
+  <%= render :partial => 'layouts/flash', :collection => [:notice, :alert], :as => :level %>
+
+  <div class="actions btn-toolbar">
+    <div class="pull-left">
+      <%= yield :tools %>
+    </div>
+    <div class="pull-right">
+      <%= yield :actions %>
+    </div>
+  </div>
+
+  <div id="content">
+    <%= yield %>
+  </div>
+  
 </div>
 
+<footer>
+  <p>&copy; Company <%= Time.now.year %></p>
+</footer>
+  
+<!-- Javascript placed at the end of the document so the pages load faster -->
 <%= javascript_include_tag 'application' %>
 <%= javascript_tag yield(:javascripts) if content_for?(:javascripts) %>
 

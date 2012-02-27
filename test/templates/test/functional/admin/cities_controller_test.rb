@@ -13,7 +13,7 @@ class Admin::CitiesControllerTest < ActionController::TestCase
 
   def test_index
     super
-    assert_equal test_entry.country.cities.order('countries.code, cities.name'), assigns(:entries)
+    assert_equal test_entry.country.cities.order('countries.code, cities.name').to_a, assigns(:entries).to_a
     
     assert_equal [:admin, test_entry.country], @controller.send(:parents)
     assert_equal test_entry.country, @controller.send(:parent)

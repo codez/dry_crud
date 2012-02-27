@@ -1,0 +1,4 @@
+- if flash[level].present?
+  %div{:class => "alert alert-#{flash_class(level)}"}
+    %a.close{:'data-dismiss' => 'alert'} &times;
+    %div= raw(flash[level])

@@ -81,7 +81,7 @@ module StandardHelper
         yield t if block_given?
       end
     else
-      content_tag(:div, ti(:no_list_entries), :class => 'list')
+      content_tag(:div, ti(:no_list_entries), :class => 'table')
     end
   end
 
@@ -91,7 +91,12 @@ module StandardHelper
   # If a block is given, custom input fields may be rendered and attrs is ignored.
   # An options hash may be given as the last argument.
   def standard_form(object, *attrs, &block)
-    form_for(object, {:builder => StandardFormBuilder}.merge(attrs.extract_options!)) do |form|
+    options = attrs.extract_options!
+    options[:builder] ||= StandardFormBuilder
+    options[:html] ||= {}
+    add_css_class options[:html], 'form-horizontal'
+    
+    form_for(object, options) do |form|
       record = object.is_a?(Array) ? object.last : object
       content = render('shared/error_messages', :errors => record.errors, :object => record)
 
@@ -101,7 +106,11 @@ module StandardHelper
         form.labeled_input_fields(*attrs)
       end
 
-      content << labeled(nil, form.submit(ti(:"button.save")) + cancel_link(object))
+      content << content_tag(:div, 
+                             form.button(ti(:"button.save"), :class => 'btn btn-primary') + 
+                             ' ' + 
+                             cancel_link(object),
+                             :class => 'form-actions')
       content.html_safe
     end
   end
@@ -110,32 +119,22 @@ module StandardHelper
     link_to(ti(:"button.cancel"), polymorphic_path(object), :class => 'cancel')
   end
 
-  # Alternate table row
-  def tr_alt(cycle_name = 'row_class', &block)
-    content_tag(:tr, :class => cycle("even", "odd", :name => cycle_name), &block)
-  end
-  
-  # Renders a div with clear:both style.
-  def clear
-    content_tag(:div, '', :class => 'clear')
-  end
-
 
   ######## ACTION LINKS ###################################################### :nodoc:
 
   # Standard link action to the show page of a given record.
   def link_action_show(record)
-    link_action ti(:"link.show"), 'show', path_args(record)
+    link_action ti(:"link.show"), 'zoom-in', path_args(record)
   end
 
   # Standard link action to the edit page of a given record.
   def link_action_edit(record)
-    link_action ti(:"link.edit"), 'edit', edit_polymorphic_path(path_args(record))
+    link_action ti(:"link.edit"), 'pencil', edit_polymorphic_path(path_args(record))
   end
 
   # Standard link action to the destroy action of a given record.
   def link_action_destroy(record)
-    link_action ti(:"link.delete"), 'delete', path_args(record),
+    link_action ti(:"link.delete"), 'remove', path_args(record),
                 :confirm => ti(:confirm_delete),
                 :method => :delete
   end
@@ -147,24 +146,25 @@ module StandardHelper
 
   # Standard link action to the new page.
   def link_action_add(url_options = {})
-    link_action ti(:"link.add"), 'add', new_polymorphic_url(path_args(model_class), url_options)
+    link_action ti(:"link.add"), 'plus', new_polymorphic_url(path_args(model_class), url_options)
   end
 
   # A generic helper method to create action links.
   # These link could be styled to look like buttons, for example.
   def link_action(label, icon = nil, url = {}, html_options = {})
+    add_css_class html_options, 'action btn'
     link_to(icon ? action_icon(icon, label) : label,
-            url,
-            {:class => 'action'}.merge(html_options))
+            url, html_options)
   end
 
   # Outputs an icon for an action with an optional label.
   def action_icon(icon, label = nil)
-    html = image_tag("actions/#{icon}.png", :size => '16x16')
+    html = content_tag(:i, "", :class => "icon-#{icon}")
+    #html = image_tag("actions/#{icon}.png", :size => '16x16')
     html << ' ' << label if label
     html
   end
-
+  
   # Translates the passed key by looking it up over the controller hierarchy. 
   # The key is searched in the following order:
   #  - {controller}.{current_partial}.{key}
@@ -216,6 +216,24 @@ module StandardHelper
   
   alias_method :ta, :translate_association
   
+  
+  # Returns the css class for the given flash level.
+  def flash_class(level)
+    case level
+    when :notice then 'success'
+    when :error then 'error'
+    when :alert then 'error'
+    end
+  end
+  
+  # Adds a class to the given options, even if there are already classes.
+  def add_css_class(options, classes)
+    if options[:class]
+      options[:class] += ' ' + classes
+    else
+      options[:class] = classes
+    end
+  end
   
   protected
 

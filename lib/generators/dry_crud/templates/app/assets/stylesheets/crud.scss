@@ -1,27 +1,33 @@
-$container_width: 800pt;
+$container_width: 1000px;
 $theme_color: #2580a2;
 
 body, div, p, td, th {
   font-family: Verdana, Geneva, Helvetica, Arial, sans-serif;
-  font-size: 11pt;
+  font-size: 13px;
 }
 
 body {
   text-align: center;
-  margin: 0pt;
+  margin: 0;
   background-color: #ddf;
 }
 
-#container {
-  padding: 20pt 20pt;
+.container {
+  padding: 20px 20px;
   margin: 0 auto;
   text-align: left;
-  width: $container_width;
+  max-width: $container_width;
+  min-width: $container_width - 200px;
   height: 100%;
   background-color: #f6f6ff;
-  -moz-box-shadow: 0px 0px 10px $theme_color;
-  -webkit-box-shadow: 0px 0px 10px $theme_color;
-  box-shadow: 0px 0px 10px $theme_color;
+  -moz-box-shadow: 0px 0px 5px $theme_color;
+  -webkit-box-shadow: 0px 0px 5px $theme_color;
+  box-shadow: 0px 0px 5px $theme_color;
+}
+
+#content {
+  clear: both;
+  padding-top: 5px;
 }
 
 h1 {
@@ -29,12 +35,16 @@ h1 {
   margin: 30px 0 15px 0;
 }
 
-tr.even {
-  background-color: #F0F0F0;
+.table thead tr:nth-child(odd), .table thead tr:nth-child(even) {
+  background-color: #D0D0D0;
 }
 
-tr.odd { 
+.table tr:nth-child(odd) {
   background-color: #F8F8F8;
+}
+
+.table tr:nth-child(even) { 
+  background-color: #F0F0F0;
 }
 
 td {
@@ -63,18 +73,18 @@ a img {
 }
 
 
-.list {
-  margin-top: 10pt;
+.table {
+  margin-top: 10px;
 }
 
-table.list {
+table.table {
   border-collapse: collapse;
   width: 100%;
   padding: 0;
 }
 
 /* div rendered if no entries available for list */
-div.list {}
+div.table {}
 
 table.list th {
   text-align: left;  
@@ -94,7 +104,7 @@ table.list td {
 }
 
 table.list td.action {
-  width: 20pt;
+  width: 20px;
   text-align: center;
 }
 
@@ -115,147 +125,213 @@ table.list td.action {
 
 .labeled {
   vertical-align: top;
-  margin: 1pt;
+  margin: 1px;
+  clear: both;
 }
 
-.labeled .caption {
-  font-style: italic;
-  width: 120pt;
-  padding-right: 5pt;
+.labeled label {
+  width: 120px;
+  padding-right: 5px;
+  padding-top: 5px;
   float: left;
 }
 
-.labeled .value {
-  margin-left: 125pt;
+label {
+  font-style: italic;
 }
 
-.labeled .value p {
-  margin: 0px;
+.labeled .subject {
+  margin-left: 130px;
 }
 
-.actions {
-  float: right;
+.labeled .subject p {
+  margin: 0;
+}
+
+.control-group {
+  clear: both;
+}
+
+.control-group label {
+  float: left;
+  width: 120px;
+  padding-top: 5px;
+  padding-right: 5px;
+}
+
+.controls {
+  margin-left: 130px;
+}
+
+.form-actions {
+  margin-left: 130px;
 }
 
 a.action {
-  margin-right: 5pt;
-  margin-left: 5pt;
+  padding: 0 5px;
 }
 
-a.action img {
+a[class^="icon-"] {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+a[class^="icon-"] img {
   vertical-align: text-top;
 }
 
-.icon {
+[class^="icon-"] {
   width: 16px;
   height: 16px;
-  display: block;
+  display: inline-block;
   background: no-repeat;
 }
 
-.icon.add { background-image: image-url('actions/add.png'); }
-.icon.delete { background-image: image-url('actions/delete.png'); }
-.icon.edit { background-image: image-url('actions/edit.png'); }
-.icon.list { background-image: image-url('actions/list.png'); }
-.icon.show { background-image: image-url('actions/show.png'); }
+.icon-plus { background-image: image-url('actions/add.png'); }
+.icon-remove { background-image: image-url('actions/delete.png'); }
+.icon-pencil { background-image: image-url('actions/edit.png'); }
+.icon-list { background-image: image-url('actions/list.png'); }
+.icon-zoom-in { background-image: image-url('actions/show.png'); }
 
 input, textarea {
   font-family: Verdana, Geneva, Helvetica, Arial, sans-serif;
-  font-size: 10pt;
+  font-size: 10px;
 }
 
 input[type=text], input[type=password] {
-  width: 180pt;
+  width: 180px;
 }
 
 input[type=number] {
-  width: 80pt;
+  width: 80px;
 }
 
 textarea {
-  width: 180pt;
-  height: 80pt;
+  width: 180px;
+  height: 80px;
 }
 
 .cancel {
   font-size: 80%;
-  margin-left: 7pt;
+  margin-left: 7px;
 }
 
 .required {
   font-size: 80%;
   vertical-align: top;
-  margin-left: 1pt;
+  margin-left: 1px;
 }
 
-#flash_notice, #flash_alert {
-  margin: 15pt;
-  padding: 5pt 10pt;
+.alert {
+  margin: 15px;
+  padding: 5px 10px;
 }
 
-#flash_notice {
+.alert-success {
   border: solid 2px #6a6;
   background-color: #afa;
 }
 
-#flash_alert {
+.alert-error {
   border: solid 2px #da9;
   background-color: #fec;
 }
 
+.close {
+  float: right;
+}
+
 #error_explanation {
-  border: solid 2pt #da9;
-  margin: 10pt;
-  padding: 5pt 10pt;
+  border: solid 2px #da9;
+  margin: 10px;
+  padding: 5px 10px;
   background-color: #fec;
 }
 
 #error_explanation h2 {
-  font-size: 11pt;
-  margin-top: 0pt;
+  font-size: 100%;
+  margin-top: 0px;
 }
 
 #error_explanation ul {
-  margin-bottom: 5pt;
+  margin-bottom: 5px;
 }
 
-.value div.field_with_errors {
+.controls div.field_with_errors {
   background-color: #da9;
   display: inline-block;
   padding: 1px 1px;
 }
 
-#menu {
-  background: #333;
-  -moz-box-shadow: 0px 3px 3px $theme_color;
-  -webkit-box-shadow: 0px 3px 3px $theme_color;
-  box-shadow: 0px 3px 3px $theme_color;
-  float: left;
-  list-style: none;
-  margin: -20pt;
-  padding: 0 20px;
-  width: $container_width + 10pt;
+.pull-right {
+  float: right;
 }
 
-#menu li {
+.pull-left {
+  float: left;
+}
+
+.navbar {
+  background: #333;
+  -moz-box-shadow: 0px 1px 1px $theme_color;
+  -webkit-box-shadow: 0px 1px 1px $theme_color;
+  box-shadow: 0px 1px 1px $theme_color;
+  padding: 0 20px;
+  max-width: $container_width;
+  min-width: $container_width - 200px;
+  height: 33px;
+  margin: -20px;
+}
+
+.brand {
+  float: left;
+  display: block;
+  font-weight: bold;
+  font-size: 130%;
+  color: #ddd;
+  padding: 5px;
+}
+
+a.brand:hover {
+  text-decoration: none;
+  color: #ddd;
+}
+
+.nav {
+  list-style: none;
+  margin: 0;
+  float: left;
+}
+
+.nav li {
   float: left;
   font-size: 110%;
   margin: 0;
   padding: 0;
 }
 
-#menu a {
+.nav a {
   background: #333 bottom right no-repeat;
   color: #ddd;
   display: block;
   float: left;
   margin: 0;
-  padding: 4px 12px;
+  padding: 8px 12px 8px;
   text-decoration: none;
 }
 
-#menu a:hover {
+.nav a:hover {
   background: $theme_color bottom center no-repeat;
   color: #fff;
-  padding-bottom: 4px;
+}
+
+footer {
+  margin: auto;
+  text-align: right;
+  max-width: $container_width;
+  min-width: $container_width - 200px;
+}
+
+footer * {
+  font-size: 80%;
 }
