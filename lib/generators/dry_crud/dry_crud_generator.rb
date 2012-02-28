@@ -11,7 +11,7 @@ class DryCrudGenerator < Rails::Generators::Base
 
   def install_dry_crud
     # copy everything in template subfolders
-    exclude = options[:templates] == 'haml' ? '.erb' : '.haml'
+    exclude = options[:templates].downcase == 'haml' ? '.erb' : '.haml'
     
     Dir.chdir(self.class.source_root) do
       Dir.glob(File.join('**', '**')).sort.each do |file_source|
