@@ -108,11 +108,8 @@ table.list td.action {
   text-align: center;
 }
 
-
-.clear {
-  clear: both;
-  height: 0;
-  overflow: hidden;
+label {
+  font-style: italic;
 }
 
 .right {
@@ -136,15 +133,11 @@ table.list td.action {
   float: left;
 }
 
-label {
-  font-style: italic;
-}
-
-.labeled .subject {
+.labeled .value {
   margin-left: 130px;
 }
 
-.labeled .subject p {
+.labeled .value p {
   margin: 0;
 }
 

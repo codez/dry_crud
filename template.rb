@@ -7,7 +7,7 @@ run 'bundle update dry_crud' if out !~ /dry_crud/
 
 # generate dry_crud with erb or haml
 templates = ask("Which template engine do you use? [ERB|haml]")
-if "haml".start_with?(templates.downcase)
+if templates.present? && "haml".start_with?(templates.downcase)
   gem 'haml'
   generate 'dry_crud', '-t haml'
 else

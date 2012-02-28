@@ -1,5 +1,5 @@
 <% if flash[level].present? %>
-  <div data-alert="alert" class="alert alert-<%= flash_class(level) %>">
+  <div class="alert alert-<%= flash_class(level) %>">
     <a class="close" href="#" data-dismiss="alert">&times;</a>
     <div>
     <%= raw flash[level] %>

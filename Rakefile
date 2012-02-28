@@ -77,7 +77,7 @@ namespace :test do
     task :customize => :generate_crud do
       # add pagination
       file_replace(File.join(TEST_APP_ROOT, 'app', 'controllers', 'list_controller.rb'), 
-                   "@entries = list_entries", "@entries = list_entries.page(params[:page]).per(5)")
+                   "@entries = list_entries", "@entries = list_entries.page(params[:page]).per(10)")
       file_replace(File.join(TEST_APP_ROOT, 'app', 'views', 'list', 'index.html.erb'), 
                    "<%= render 'list' %>", "<%= paginate @entries %>\n\n<%= render 'list' %>")
       file_replace(File.join(TEST_APP_ROOT, 'app', 'views', 'list', 'index.html.haml'), 

@@ -21,27 +21,27 @@ class StandardHelperTest < ActionView::TestCase
     result = labeled("label") { "value" }
 
     assert result.html_safe?
-    assert_dom_equal "<div class='labeled'> <label> label </label> <div class='subject'> value </div> </div>", result.squish
+    assert_dom_equal "<div class='labeled'> <label>label</label> <div class='value'>value</div> </div>", result.squish
   end
 
   test "labeled text empty" do
     result = labeled("label", "")
 
     assert result.html_safe?
-    assert_dom_equal "<div class='labeled'> <label> label </label> <div class='subject'> #{EMPTY_STRING} </div> </div>", result.squish
+    assert_dom_equal "<div class='labeled'> <label>label</label> <div class='value'>#{EMPTY_STRING}</div> </div>", result.squish
   end
 
   test "labeled text as content" do
     result = labeled("label", "value <unsafe>")
 
     assert result.html_safe?
-    assert_dom_equal "<div class='labeled'> <label> label </label> <div class='subject'> value &lt;unsafe&gt; </div> </div>", result.squish
+    assert_dom_equal "<div class='labeled'> <label>label</label> <div class='value'>value &lt;unsafe&gt;</div> </div>", result.squish
   end
 
   test "labeled attr" do
     result = labeled_attr('foo', :size)
     assert result.html_safe?
-    assert_dom_equal "<div class='labeled'> <label> Size </label> <div class='subject'> 3 chars </div> </div>", result.squish
+    assert_dom_equal "<div class='labeled'> <label>Size</label> <div class='value'>3 chars</div> </div>", result.squish
   end
 
   test "format Fixnums" do
