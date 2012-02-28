@@ -1,22 +1,18 @@
 = DRY CRUD
 
-DRY CRUD generates simple and extendable controller, views and helpers that support you to DRY up the CRUD code in your Rails project. Start with these elements and build a clean base to efficiently develop your application upon. First, you need to install the gem with
+DRY CRUD generates simple and extendable controller, views and helpers that support you to DRY up the CRUD code in your Rails project. Start with these elements and build a clean base to efficiently develop your application upon. 
 
-  gem install dry_crud
+Create your Rails application directly with the DRY CRUD application template:
 
-In order to use the generator, you have to register the gem in your Rails application's +Gemfile+. Add the following lines:
-
-  group :development do
-    gem 'dry_crud'
-  end
-
-Don't worry, it's a simple development dependency. You may even savely remove it after you have run in once. So now, you should run the generator to get the goodies:
+  rails new [APP_NAME] -m https://raw.github.com/codez/dry_crud/master/template.rb
+  
+If your application already exists or you prefer the DIY way, then install the Gem (<tt>gem install dry_crud</tt>), add it to your Gemfile and run the generator. You may remove the Gemfile entry again afterwards, it is not required anymore.
 
   rails generate dry_crud
   
 If you prefer HAML templates instead of ERB, run
 
-  rails generate dry_crud -t HAML
+  rails generate dry_crud -t haml
 
 To integrate DRY CRUD into your code, only a few additions are required:
 
