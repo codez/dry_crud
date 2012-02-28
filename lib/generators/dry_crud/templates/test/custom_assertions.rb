@@ -37,7 +37,7 @@ module CustomAssertions
     record.valid?
     full_message = build_message(message,
         "? expected to be valid, but has the following errors: \n ?.",
-       record, record.errors.full_messages.join("\n"))
+       record.to_s, record.errors.full_messages.join("\n"))
     assert_block(full_message) { record.valid? }
   end
 
@@ -46,19 +46,19 @@ module CustomAssertions
   # attributes are expected to have errors. If no invalid attributes are
   # specified, only the invalidity of the record is asserted.
   def assert_not_valid(record, *invalid_attrs)
-    message = build_message("", "? expected to be invalid, but is valid.", record)
+    message = build_message("", "? expected to be invalid, but is valid.", record.to_s)
     assert_block(message) { !record.valid? }
 
     # assert that the given attributes have errors.
     invalid_attrs.each do |a|
-      message = build_message("", "Attribute <?> expected to be invalid, but is valid.", a)
+      message = build_message("", "Attribute <?> expected to be invalid, but is valid.", a.to_s)
       assert_block(message) { record.errors[a].present? }
     end
 
     if invalid_attrs.present?
       # assert that no other than the invalid attributes have errors.
       record.errors.each do |a, error|
-        message = build_message("", "Attribute <?> not declared as invalid attribute, but has the following error: \n?.", a, error)
+        message = build_message("", "Attribute <?> not declared as invalid attribute, but has the following error: \n?.", a.to_s, error)
         assert_block(message) { invalid_attrs.include?(a) }
       end
     end
