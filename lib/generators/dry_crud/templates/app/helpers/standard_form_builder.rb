@@ -118,7 +118,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   def labeled(attr, field_html = nil, &block)
     field_html = capture(&block) if block_given?
     content_tag(:div, 
-                label(attr) + 
+                label(attr, :class => 'control-label') + 
                 content_tag(:div, field_html, :class => 'controls'), 
                 :class => 'control-group')
   end

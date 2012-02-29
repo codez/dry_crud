@@ -1,0 +1,257 @@
+$container_width: 1000px;
+$theme_color: #2580a2;
+
+body, div, p, td, th {
+  font-family: Verdana, Geneva, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+}
+
+body {
+  text-align: center;
+  margin: 0;
+  background-color: #ddf;
+}
+
+.container {
+  padding: 20px 20px;
+  margin: 0 auto;
+  text-align: left;
+  max-width: $container_width;
+  min-width: $container_width - 200px;
+  height: 100%;
+  background-color: #f6f6ff;
+  -moz-box-shadow: 0px 0px 5px $theme_color;
+  -webkit-box-shadow: 0px 0px 5px $theme_color;
+  box-shadow: 0px 0px 5px $theme_color;
+}
+
+#content {
+  clear: both;
+  padding-top: 5px;
+}
+
+h1 {
+  font-size: 150%;
+  margin: 30px 0 15px 0;
+}
+
+.table thead tr:nth-child(odd), .table thead tr:nth-child(even) {
+  background-color: #D0D0D0;
+}
+
+.table tr:nth-child(odd) {
+  background-color: #F8F8F8;
+}
+
+.table tr:nth-child(even) { 
+  background-color: #F0F0F0;
+}
+
+td {
+  vertical-align: top;
+}
+
+td p {
+  margin: 0;
+}
+
+a {
+  color: #2580a2;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:visited {
+  color:  #2580a2;
+}
+
+a img {
+  border: none;
+}
+
+.table {
+  margin-top: 10px;
+}
+
+table.table {
+  border-collapse: collapse;
+  width: 100%;
+  padding: 0;
+}
+
+/* div rendered if no entries available for list */
+div.table {}
+
+table.list th {
+  text-align: left;  
+  background-color: $theme_color;
+  color: white;
+  font-weight: bold;
+  padding: 2px 4px;
+}
+
+table.list th a {
+  color: white;  
+  text-decoration: none;
+}
+
+table.list td {
+  padding: 2px 4px;  
+}
+
+table.list td.action {
+  width: 20px;
+  text-align: center;
+}
+
+label {
+  font-style: italic;
+}
+
+.form-actions {
+  margin-left: 130px;
+}
+
+a.action {
+  padding: 0 5px;
+}
+
+a[class^="icon-"] {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+a[class^="icon-"] img {
+  vertical-align: text-top;
+}
+
+[class^="icon-"] {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  background: no-repeat;
+}
+
+.icon-plus { background-image: image-url('actions/add.png'); }
+.icon-remove { background-image: image-url('actions/delete.png'); }
+.icon-pencil { background-image: image-url('actions/edit.png'); }
+.icon-list { background-image: image-url('actions/list.png'); }
+.icon-zoom-in { background-image: image-url('actions/show.png'); }
+
+input, textarea {
+  font-family: Verdana, Geneva, Helvetica, Arial, sans-serif;
+  font-size: 10px;
+}
+
+input[type=text], input[type=password] {
+  width: 180px;
+}
+
+input[type=number] {
+  width: 80px;
+}
+
+textarea {
+  width: 180px;
+  height: 80px;
+}
+
+.cancel {
+  font-size: 80%;
+  margin-left: 7px;
+}
+
+.alert {
+  margin: 15px;
+  padding: 5px 10px;
+}
+
+.alert-success {
+  border: solid 2px #6a6;
+  background-color: #afa;
+}
+
+.alert-error {
+  border: solid 2px #da9;
+  background-color: #fec;
+}
+
+.close {
+  float: right;
+}
+
+.pull-right {
+  float: right;
+}
+
+.pull-left {
+  float: left;
+}
+
+.navbar {
+  background: #333;
+  -moz-box-shadow: 0px 1px 1px $theme_color;
+  -webkit-box-shadow: 0px 1px 1px $theme_color;
+  box-shadow: 0px 1px 1px $theme_color;
+  padding: 0 20px;
+  max-width: $container_width;
+  min-width: $container_width - 200px;
+  height: 33px;
+  margin: -20px;
+}
+
+.brand {
+  float: left;
+  display: block;
+  font-weight: bold;
+  font-size: 130%;
+  color: #ddd;
+  padding: 5px;
+}
+
+a.brand:hover {
+  text-decoration: none;
+  color: #ddd;
+}
+
+.nav {
+  list-style: none;
+  margin: 0;
+  float: left;
+}
+
+.nav li {
+  float: left;
+  font-size: 110%;
+  margin: 0;
+  padding: 0;
+}
+
+.nav a {
+  background: #333 bottom right no-repeat;
+  color: #ddd;
+  display: block;
+  float: left;
+  margin: 0;
+  padding: 8px 12px 8px;
+  text-decoration: none;
+}
+
+.nav a:hover {
+  background: $theme_color bottom center no-repeat;
+  color: #fff;
+}
+
+footer {
+  margin: auto;
+  text-align: right;
+  max-width: $container_width;
+  min-width: $container_width - 200px;
+}
+
+footer * {
+  font-size: 80%;
+}

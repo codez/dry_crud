@@ -73,24 +73,32 @@ namespace :test do
       end
     end
    
+    desc "Initializes the test application with a couple of classes"
+    task :init => [:populate, 
+                   :customize]
+                   
     desc "Customize some of the functionality provided by dry_crud"
-    task :customize => :generate_crud do
-      # add pagination
+    task :customize => ['test:app:add_pagination'
+                        #'test:app:use_bootstrap'
+                       ]
+    
+    desc "Adds pagination to the test app"
+    task :add_pagination => :generate_crud do
       file_replace(File.join(TEST_APP_ROOT, 'app', 'controllers', 'list_controller.rb'), 
                    "@entries = list_entries", "@entries = list_entries.page(params[:page]).per(10)")
       file_replace(File.join(TEST_APP_ROOT, 'app', 'views', 'list', 'index.html.erb'), 
                    "<%= render 'list' %>", "<%= paginate @entries %>\n\n<%= render 'list' %>")
       file_replace(File.join(TEST_APP_ROOT, 'app', 'views', 'list', 'index.html.haml'), 
                    "= render 'list'", "= paginate @entries\n\n= render 'list'")
-                   
-       # add bootstrap css
-       #FileUtils.cd(TEST_APP_ROOT) { sh "rails g bootstrap:install" }
-       #FileUtils.rm(File.join(TEST_APP_ROOT, 'app', 'assets', 'stylesheets', 'crud.scss'))
+    end
+    
+    desc "Use Boostrap in the test app"
+    task :use_bootstrap => :generate_crud do
+       file_replace(File.join(TEST_APP_ROOT, 'app', 'assets', 'stylesheets', 'application.css'), " *= require_self", "*= require twitter/bootstrap\n *= require_self")
+       file_replace(File.join(TEST_APP_ROOT, 'app', 'assets', 'javascripts', 'application.js'), "//= require_tree .", "//= require twitter/bootstrap\n//= require_tree .")
+       FileUtils.rm(File.join(TEST_APP_ROOT, 'app', 'assets', 'stylesheets', 'sample.scss'))
     end
    
-    desc "Initializes the test application with a couple of classes"
-    task :init => [:populate, :customize] do
-    end
   end
 end
 

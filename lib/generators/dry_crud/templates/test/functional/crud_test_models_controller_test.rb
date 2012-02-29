@@ -168,8 +168,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
   
   def test_models_label
-    assert_equal 'Crud test models', @controller.models_label
-    assert_equal 'Crud test model', @controller.models_label(false)
+    assert_equal 'Crud Test Models', @controller.models_label
+    assert_equal 'Crud Test Model', @controller.models_label(false)
   end
 
   protected

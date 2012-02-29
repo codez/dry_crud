@@ -98,24 +98,24 @@ class StandardFormBuilderTest < ActionView::TestCase
   end
 
   test "label creates captionized label" do
-  	assert_match /label for.+Gugus dada/, form.label(:gugus_dada)
+  	assert_match /label [^>]*for.+Gugus dada/, form.label(:gugus_dada)
   	assert form.label(:gugus_dada).html_safe?
   end
 
   test "classic label still works" do
-  	assert_match /label for.+hoho/, form.label(:gugus_dada, "hoho")
+  	assert_match /label [^>]*for.+hoho/, form.label(:gugus_dada, "hoho")
   	assert form.label(:gugus_dada, "hoho").html_safe?
   end
 
   test "labeled_text_field create label" do
-    assert_match /label for.+input/m, form.labeled_string_field(:name)
+    assert_match /label [^>]*for.+input/m, form.labeled_string_field(:name)
     assert form.labeled_string_field(:name).html_safe?
   end
 
   test "labeled field creates label" do
   	result = form.labeled("gugus", "<input type='text' name='gugus' />")
   	assert result.html_safe?
-  	assert_match /label for.+input/m, result
+  	assert_match /label [^>]*for.+input/m, result
   end
 
   test "required mark is shown" do
