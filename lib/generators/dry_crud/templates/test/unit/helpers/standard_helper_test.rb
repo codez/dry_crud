@@ -90,11 +90,7 @@ class StandardHelperTest < ActionView::TestCase
     assert_equal :integer, column_type(m, :children)
     assert_equal :integer, column_type(m, :companion_id)
     assert_equal nil, column_type(m, :companion)
-    if ActiveRecord::Base.connection.adapter_name == 'SQLite' && defined?(JRUBY_VERSION)
-      assert_equal :decimal, column_type(m, :rating)
-    else 
-      assert_equal :float, column_type(m, :rating)
-    end
+    assert_equal :float, column_type(m, :rating)
     assert_equal :decimal, column_type(m, :income)
     assert_equal :date, column_type(m, :birthdate)
     assert_equal :time, column_type(m, :gets_up_at)
@@ -215,7 +211,7 @@ class StandardHelperTest < ActionView::TestCase
 
     assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
     assert_match /input .*?name="_method" .*?type="hidden" .*?value="put"/, f
-    assert_match /div id='error_explanation'/, f
+    assert_match /div[^>]* id='error_explanation'/, f
     assert_match /div class="field_with_errors"\>.*?\<input .*?name="crud_test_model\[name\]" .*?type="text"/, f
     assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
     assert_match /option selected="selected" value="1910">1910<\/option>/, f

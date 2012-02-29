@@ -123,7 +123,7 @@ task :site => :rdoc do
   end
 end
 
-if RUBY_VERSION == '1.8.7'
+if RUBY_VERSION == '1.8.7' && RUBY_PLATFORM != 'java'
 	require 'rcov/rcovtask'
 	Rcov::RcovTask.new do |test| 
 	    test.libs << "test/test_app/test"
