@@ -15,8 +15,8 @@ gem 'simplecov', :platforms => :ruby_19
 gem 'sqlite3', :platforms => :ruby
 
 platforms :jruby do
-  gem 'jdbc-sqlite3' #, '3.6.14.2.056'
-  gem 'activerecord-jdbcsqlite3-adapter' #, '1.2.2'
+  gem 'jdbc-sqlite3'
+  gem 'activerecord-jdbcsqlite3-adapter'
 end
 
 gem 'json'

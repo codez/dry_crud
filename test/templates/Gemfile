@@ -8,8 +8,7 @@ gem 'rails', '>= 3.2'
 gem 'sqlite3', :platforms => :ruby
 
 platforms :jruby do 
-  #gem 'activerecord-jdbc-adapter', '1.2.2'
-  gem 'jdbc-sqlite3' #, '3.6.14.2.056',
+  gem 'jdbc-sqlite3'
   gem 'activerecord-jdbcsqlite3-adapter'
 end
 
