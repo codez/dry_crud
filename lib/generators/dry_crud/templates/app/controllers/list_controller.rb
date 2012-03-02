@@ -190,7 +190,7 @@ class ListController < ApplicationController
     def self.included(controller)
       # Define a list of param keys that should be remembered for the list action.
       controller.class_attribute :remember_params
-      controller.remember_params = [:q, :sort, :sort_dir]
+      controller.remember_params = [:q, :sort, :sort_dir, :page]
 
       controller.before_filter :handle_remember_params, :only => [:index]
     end

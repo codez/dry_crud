@@ -85,7 +85,7 @@ table.table {
 /* div rendered if no entries available for list */
 div.table {}
 
-table.list th {
+table.table th {
   text-align: left;  
   background-color: $theme_color;
   color: white;
@@ -93,16 +93,16 @@ table.list th {
   padding: 2px 4px;
 }
 
-table.list th a {
+table.table th a {
   color: white;  
   text-decoration: none;
 }
 
-table.list td {
+table.table td {
   padding: 2px 4px;  
 }
 
-table.list td.action {
+table.table td.action {
   width: 20px;
   text-align: center;
 }
@@ -133,6 +133,7 @@ a[class^="icon-"] img {
   height: 16px;
   display: inline-block;
   background: no-repeat;
+  vertical-align: top;
 }
 
 .icon-plus { background-image: image-url('actions/add.png'); }

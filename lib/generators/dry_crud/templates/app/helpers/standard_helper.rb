@@ -122,33 +122,6 @@ module StandardHelper
 
   ######## ACTION LINKS ###################################################### :nodoc:
 
-  # Standard link action to the show page of a given record.
-  def link_action_show(record)
-    link_action ti(:"link.show"), 'zoom-in', path_args(record)
-  end
-
-  # Standard link action to the edit page of a given record.
-  def link_action_edit(record)
-    link_action ti(:"link.edit"), 'pencil', edit_polymorphic_path(path_args(record))
-  end
-
-  # Standard link action to the destroy action of a given record.
-  def link_action_destroy(record)
-    link_action ti(:"link.delete"), 'remove', path_args(record),
-                :confirm => ti(:confirm_delete),
-                :method => :delete
-  end
-
-  # Standard link action to the list page.
-  def link_action_index(url_options = {:returning => true})
-    link_action ti(:"link.list"), 'list', polymorphic_url(path_args(model_class), url_options)
-  end
-
-  # Standard link action to the new page.
-  def link_action_add(url_options = {})
-    link_action ti(:"link.add"), 'plus', new_polymorphic_url(path_args(model_class), url_options)
-  end
-
   # A generic helper method to create action links.
   # These link could be styled to look like buttons, for example.
   def link_action(label, icon = nil, url = {}, html_options = {})
@@ -160,7 +133,6 @@ module StandardHelper
   # Outputs an icon for an action with an optional label.
   def action_icon(icon, label = nil)
     html = content_tag(:i, "", :class => "icon-#{icon}")
-    #html = image_tag("actions/#{icon}.png", :size => '16x16')
     html << ' ' << label if label
     html
   end

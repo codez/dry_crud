@@ -85,12 +85,6 @@ In <tt>app/views/list/index.html.erb</tt>, add the following line for the pagina
    <%= will_paginate @entries %>
 
 And we are done again. All our controllers inheriting from +ListController+, including above +PeopleController+, now have paginated index views. Because our customization for the people table is in the separate <tt>_list</tt> partial, no further modifications are required. 
-If the current page should be remembered while viewing or editing an entry, just add :page to the remembered_params in <tt>ListController::Memory</tt>:
-
-  controller.remember_params = [:q, :sort, :sort_dir, :page]
-  
-In this case, you should also pass the parameter <tt>page=1</tt> with a hidden field in your <tt>list/_search.html.erb</tt> to start displaying search results at page one.
-
 
 ==== Special formatting for selected attributes
 

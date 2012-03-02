@@ -1,5 +1,4 @@
-= crud_table do |t|
-  - t.col(t.attr_header(:name)) {|e| link_to e.name, admin_country_cities_path(e) }
-  - t.attr :code 
-  - action_col(t) { |e| link_table_action_edit(e) }
-  - action_col(t) { |e| link_table_action_destroy(e) }
+= crud_table :name, :code do |t|
+  - action_col_show(t) {|e| admin_country_cities_path(e) }
+  - action_col_edit(t)
+  - action_col_destroy(t)
