@@ -113,11 +113,29 @@ class StandardFormBuilderTest < ActionView::TestCase
   end
 
   test "labeled field creates label" do
-  	result = form.labeled("gugus", "<input type='text' name='gugus' />")
+  	result = form.labeled("gugus", "<input type='text' name='gugus' />".html_safe)
   	assert result.html_safe?
-  	assert_match /label [^>]*for.+input/m, result
+  	assert_match /label [^>]*for.+<input/m, result
   end
-
+  
+  test "labeled field creates label and block" do
+    result = form.labeled("gugus") { "<input type='text' name='gugus' />".html_safe }
+    assert result.html_safe?
+    assert_match /label [^>]*for.+<input/m, result
+  end
+  
+  test "labeled field creates label with caption" do
+    result = form.labeled("gugus", 'Caption', "<input type='text' name='gugus' />".html_safe)
+    assert result.html_safe?
+    assert_match /label [^>]*for.+>Caption<\/label>.*<input/m, result
+  end
+  
+  test "labeled field creates label with caption and block" do
+    result = form.labeled("gugus", 'Caption') { "<input type='text' name='gugus' />".html_safe }
+    assert result.html_safe?
+    assert_match /label [^>]*for.+>Caption<\/label>.*<input/m, result
+  end
+  
   test "required mark is shown" do
     assert_equal StandardFormBuilder::REQUIRED_MARK, form.required_mark(:name)
     assert_equal "", form.required_mark(:rating)

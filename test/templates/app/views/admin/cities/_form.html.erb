@@ -1,1 +1,5 @@
-<%= crud_form :name %>
+<%= crud_form do |f| %>
+  <%= f.labeled(:name, 'Called') do %>
+    <%= f.input_field :name %>
+  <% end %>
+<% end %>

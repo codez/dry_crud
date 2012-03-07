@@ -10,7 +10,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   attr_reader :template
 
   delegate :association, :column_type, :column_property, :captionize, 
-           :content_tag, :ta, :add_css_class, :to => :template
+           :content_tag, :capture, :ta, :add_css_class, :to => :template
 
   # Render multiple input fields together with a label for the given attributes.
   def labeled_input_fields(*attrs)
@@ -115,11 +115,21 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   # Render a label for the given attribute with the passed field html section.
-  def labeled(attr, field_html = nil, &block)
-    field_html = capture(&block) if block_given?
+  # The following parameters may be specified:
+  #   labeled(:attr) { #content }
+  #   labeled(:attr, content)
+  #   labeled(:attr, 'Caption') { #content }
+  #   labeled(:attr, 'Caption', content)
+  def labeled(attr, caption_or_content = nil, content = nil, &block)
+    if block_given?
+      content = capture(&block)
+    elsif content.nil?
+      content = caption_or_content
+      caption_or_content = nil
+    end
     content_tag(:div, 
-                label(attr, :class => 'control-label') + 
-                content_tag(:div, field_html, :class => 'controls'), 
+                label(attr, caption_or_content, :class => 'control-label') + 
+                content_tag(:div, content, :class => 'controls'), 
                 :class => 'control-group')
   end
 
