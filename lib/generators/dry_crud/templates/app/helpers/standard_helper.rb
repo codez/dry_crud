@@ -35,6 +35,8 @@ module StandardHelper
       send(format_attr_method, obj)
     elsif assoc = association(obj, attr, :belongs_to)
       format_assoc(obj, assoc)
+    elsif assoc = (association(obj, attr, :has_and_belongs_to_many) || association(obj, attr, :has_many))
+      format_many_assoc(obj, assoc)
     else
       format_type(obj, attr)
     end
@@ -52,10 +54,13 @@ module StandardHelper
 
   # Transform the given text into a form as used by labels or table headers.
   def captionize(text, clazz = nil)
-    if clazz.respond_to?(:human_attribute_name)
+    text = text.to_s
+    if text.end_with?('_ids')
+      clazz.human_attribute_name(text[0..-5].pluralize)
+    elsif clazz.respond_to?(:human_attribute_name)
       clazz.human_attribute_name(text)
     else
-      text.to_s.humanize.titleize
+      text.humanize.titleize
     end
   end
 
@@ -117,6 +122,19 @@ module StandardHelper
 
   def cancel_link(object)
     link_to(ti(:"button.cancel"), polymorphic_path(object), :class => 'cancel')
+  end
+
+  # Renders a simple unordered list, which will
+  # simply render all passed items or yield them
+  # to your block.
+  def simple_ul(items,ul_options={},&blk)
+    content_tag(:ul,ul_options) do
+      items.collect do |item|
+        content_tag(:li) do
+          block_given? ? (yield item) : item.to_s
+        end
+      end.join("\n").html_safe
+    end
   end
 
 
@@ -240,10 +258,26 @@ module StandardHelper
     end
   end
 
-  # Formats an active record association
+  # Formats an active record belongs_to association
   def format_assoc(obj, assoc)
     if assoc_val = obj.send(assoc.name)
       link_to_unless(no_assoc_link?(assoc, assoc_val), assoc_val, assoc_val)
+    else
+      ta(:no_entry, assoc)
+    end
+  end
+
+  # Formats an active record has_and_belongs_to_many or
+  # has_many association
+  def format_many_assoc(obj, assoc)
+    assoc_vals = obj.send(assoc.name)
+    if assoc_vals.size == 1
+      assoc_val = assoc_vals.first
+      link_to_unless(no_assoc_link?(assoc, assoc_val), assoc_val, assoc_val)
+    elsif assoc_vals.present?
+      simple_ul(assoc_vals) do |li|
+        link_to_unless(no_assoc_link?(assoc, li), li, li)
+      end
     else
       ta(:no_entry, assoc)
     end
@@ -261,9 +295,21 @@ module StandardHelper
   # found.
   def association(obj, attr, macro = nil)
     if obj.class.respond_to?(:reflect_on_association)
-      name = attr.to_s =~ /_id$/ ? attr.to_s[0..-4].to_sym : attr
+      name = assoc_and_id_attr(attr).first.to_sym
       assoc = obj.class.reflect_on_association(name)
       assoc if assoc && (macro.nil? || assoc.macro == macro)
+    end
+  end
+
+  # Returns the name of the attr and it's corresponding field
+  def assoc_and_id_attr(attr)
+    attr = attr.to_s
+    attr, attr_id = if attr.end_with?('_id')
+      [attr[0..-4], attr]
+    elsif attr.end_with?('_ids')
+      [attr[0..-5].pluralize, attr]
+    else
+      [attr, "#{attr}_id"]
     end
   end
 

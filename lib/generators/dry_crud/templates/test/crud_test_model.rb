@@ -2,6 +2,8 @@
 class CrudTestModel < ActiveRecord::Base #:nodoc:
 
   belongs_to :companion, :class_name => 'CrudTestModel'
+  has_and_belongs_to_many :others, :class_name => 'OtherCrudTestModel'
+  has_many :mores, :class_name => 'OtherCrudTestModel', :foreign_key => :more_id
 
   validates :name, :presence => true
   validates :rating, :inclusion => { :in => 1..10 }
@@ -16,6 +18,15 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
     remarks.size
   end
   
+end
+
+class OtherCrudTestModel < ActiveRecord::Base #:nodoc:
+  has_and_belongs_to_many :others, :class_name => 'CrudTestModel'
+  belongs_to :more, :foreign_key => :more_id, :class_name => 'CrudTestModel'
+
+  def to_s
+    name
+  end
 end
 
 # Controller for the dummy model.
@@ -162,6 +173,14 @@ module CrudTestHelper
           t.timestamps
         end
       end
+      ActiveRecord::Base.connection.create_table :other_crud_test_models, :force => true do |t|
+        t.string   :name, :null => false, :limit => 50
+        t.integer  :more_id
+      end
+      ActiveRecord::Base.connection.create_table :crud_test_models_other_crud_test_models, :force => true do |t|
+        t.belongs_to :crud_test_model
+        t.belongs_to :other_crud_test_model
+      end
 
       CrudTestModel.reset_column_information
     end
@@ -170,7 +189,7 @@ module CrudTestHelper
   # Removes the crud_test_models table from the database.
   def reset_db
     c = ActiveRecord::Base.connection
-    [:crud_test_models].each do |table|
+    [:crud_test_models, :other_crud_test_models, :crud_test_models_other_crud_test_models].each do |table|
       if c.table_exists?(table)
         c.drop_table(table) rescue nil
       end
@@ -180,6 +199,7 @@ module CrudTestHelper
   # Creates 6 dummy entries for the crud_test_models table.
   def create_test_data
     (1..6).inject(nil) {|prev, i| create(i, prev) }
+    (1..6).inject(nil) {|prev, i| create_other(i, [prev,OtherCrudTestModel.first].compact) }
   end
 
   # Fixture-style accessor method to get CrudTestModel instances by name
@@ -213,6 +233,11 @@ module CrudTestHelper
                           :last_seen => "#{2000 + 10 * index}-#{index}-#{index} 1#{index}:2#{index}",
                           :human => index % 2 == 0,
                           :remarks => "#{c} #{str(index + 1)} #{str(index + 2)}\n" * (index % 3 + 1))
+  end
+
+  def create_other(index, others)
+    c = str(index)
+    OtherCrudTestModel.create!(:name => c, :other_ids => others.collect(&:id), :more_id => others.first.try(:id))
   end
 
   def str(index)
