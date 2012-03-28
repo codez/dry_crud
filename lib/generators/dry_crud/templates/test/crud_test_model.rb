@@ -57,6 +57,24 @@ class CrudTestModelsController < CrudController #:nodoc:
     end
   end
 
+  def show
+    super do |format,object|
+      format.js { render :text => 'show_js' }
+    end
+  end
+
+  def new
+    super do |format,object|
+      format.js { render :text => 'new_js' }
+    end
+  end
+
+  def index
+    super do |format,object|
+      format.js { render :text => 'index_js' }
+    end
+  end
+
   protected
 
   def list_entries

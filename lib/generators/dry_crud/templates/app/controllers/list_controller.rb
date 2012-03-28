@@ -18,9 +18,9 @@ class ListController < ApplicationController
   # List all entries of this model.
   #   GET /entries
   #   GET /entries.json
-  def index
+  def index(&block)
     @entries = list_entries
-    respond_with @entries
+    respond_with(@entries,block)
   end
 
   protected
@@ -44,8 +44,11 @@ class ListController < ApplicationController
   end
 
   # Convenience method to respond to various formats with the given object.
-  def respond_with(object)
+  def respond_with(object,block=nil)
     respond_to do |format|
+      block.call(format,object) if block
+      return if performed?
+
       format.html { render_with_callback action_name }
       format.json  { render :json => object }
     end
