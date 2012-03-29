@@ -72,17 +72,16 @@ This only displays these three attributes in the table. All other templates, as 
 
 ==== Adapt general behavior
 
-Next, let's adapt a part of the general behavior used in all CRUD controllers. As an example, we include pagination with will_paginate[http://wiki.github.com/mislav/will_paginate/] in all our overview tables: 
+Next, let's adapt a part of the general behavior used in all CRUD controllers. As an example, we include pagination with kaminari[https://github.com/amatsuda/kaminari] in all our overview tables: 
 
-In <tt>app/controllers/list_controller.rb</tt>, change the index action to
+In <tt>app/controllers/list_controller.rb</tt>, change the list_entries method to
 
-  def index
-    @entries = list_entries.paginate(:page => params[:page])
-    respond_with @entries   
+  def list_entries
+    model_scope.page(params[:page])
   end
 
 In <tt>app/views/list/index.html.erb</tt>, add the following line for the pagination links:
-   <%= will_paginate @entries %>
+   <%= paginate entries %>
 
 And we are done again. All our controllers inheriting from +ListController+, including above +PeopleController+, now have paginated index views. Because our customization for the people table is in the separate <tt>_list</tt> partial, no further modifications are required. 
 
@@ -123,7 +122,7 @@ In <tt>app/controllers/people_controller.rb</tt>:
   end
   
   def delete_picture
-    if !perform_delete_picture(@entry.picture)
+    if !perform_delete_picture(entry.picture)
       flash.alert = 'Could not delete picture' 
       false
     end
@@ -135,7 +134,7 @@ In <tt>app/controllers/people_controller.rb</tt>:
   before_render_form :set_hometowns
   
   def set_hometowns
-    @hometowns = City.where(:country => @entry.country)
+    @hometowns = City.where(:country => entry.country)
   end
 
 === Standard Tables and Forms
@@ -194,7 +193,7 @@ In case you define nested resources, your +CrudController+ subclass should know.
 
   self.nesting = :my_namspace, ParentResource
   
-This declaration is for a controller nested in +parent_resources+ within a +:my_namespace+ scope. +ParentResource+ is the corresponding +ActiveRecord+ model. The request param +:parent_resource_id+ is used to load the parent entry, which in turn is used to filter the entries listed and created in your controller.
+This declaration is for a controller nested in +parent_resources+ within a +:my_namespace+ scope. +ParentResource+ is the corresponding +ActiveRecord+ model. The request param +:parent_resource_id+ is used to load the parent entry, which in turn is used to filter the entries listed and created in your controller. For all parent resources, a corresponding instance variable is created.
 
 The <tt>ListController::Nesting</tt> module defines this basic behaviour. For more complex setups, have a look there and adjust it to your needs.
 

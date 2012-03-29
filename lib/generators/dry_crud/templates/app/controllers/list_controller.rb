@@ -29,7 +29,8 @@ class ListController < ApplicationController
     get_model_ivar(true) || set_model_ivar(list_entries)
   end
 
-  # The base relation used to filter the entries
+  # The base relation used to filter the entries. 
+  # This method may be adapted as long it returns an ActiveRecord::Relation.
   def list_entries
     model_scope
   end
