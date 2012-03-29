@@ -85,8 +85,8 @@ namespace :test do
     desc "Adds pagination to the test app"
     task :add_pagination => :generate_crud do
       list_ctrl = File.join(TEST_APP_ROOT, 'app', 'controllers', 'list_controller.rb')
-      file_replace(list_ctrl, "@entries = list_entries", 
-                              "@entries = list_entries.page(params[:page]).per(10)")
+      file_replace(list_ctrl, /def list_entries\n\s+model_scope\s*\n/, 
+                              "def list_entries\n    model_scope.page(params[:page]).per(10)")
       file_replace(File.join(TEST_APP_ROOT, 'app', 'views', 'list', 'index.html.erb'), 
                    "<%= render 'list' %>", "<%= paginate @entries %>\n\n<%= render 'list' %>")
       file_replace(File.join(TEST_APP_ROOT, 'app', 'views', 'list', 'index.html.haml'), 

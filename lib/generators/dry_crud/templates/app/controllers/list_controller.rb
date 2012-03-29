@@ -6,7 +6,7 @@
 # the user the same list as he left it.
 class ListController < ApplicationController
 
-  helper_method :model_class, :models_label, :path_args
+  helper_method :model_class, :models_label, :entries, :path_args
 
   delegate :model_class, :models_label, :to => 'self.class'
 
@@ -19,13 +19,17 @@ class ListController < ApplicationController
   #   GET /entries
   #   GET /entries.json
   def index(&block)
-    @entries = list_entries
-    customizable_respond_with(@entries, block)
+    customizable_respond_with(entries, block)
   end
 
   protected
+  
+  # Helper method to access the entries to be displayed in the current index page in an uniform way.
+  def entries
+    @entries ||= set_model_ivar(list_entries)
+  end
 
-  # The entries to be displayed in the current index page.
+  # The base relation used to filter the entries
   def list_entries
     model_scope
   end
@@ -59,6 +63,28 @@ class ListController < ApplicationController
   def render_with_callback(action)
     run_callbacks(:"render_#{action}")
     render action unless performed?
+  end
+  
+  # Get the instance variable named after the given model. 
+  # Returns the instance variable of the current model if none is given.
+  # If the collection variable is required, pass true as the second argument.
+  def get_model_ivar(model = model_class, plural = false)
+    name = model_class.name.underscore
+    name = name.pluralize if plural
+    instance_variable_get(:"@#{name}")
+  end
+  
+  # Sets an instance variable with the underscored class name if the given value.
+  # If the value is a collection, sets the plural name.
+  def set_model_ivar(value)
+    name = if value.respond_to?(:klass) # ActiveRecord::Relation
+      value.klass.name.pluralize
+    elsif value.respond_to?(:each) # Array
+      value.first.klass.name.pluralize
+    else
+      value.class.name
+    end
+    instance_variable_set(:"@#{name.underscore}", value)
   end
 
   class << self
@@ -283,7 +309,7 @@ class ListController < ApplicationController
     # Loads the parent entry for the given ActiveRecord class.
     # By default, performs a find with the class_name_id param.
     def parent_entry(clazz)
-      clazz.find(params["#{clazz.name.underscore}_id"])
+      set_model_ivar(clazz.find(params["#{clazz.name.underscore}_id"]))
     end
     
     # An array of objects used in url_for and related functions.

@@ -31,6 +31,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_equal 6, assigns(:entries).size
     assert_equal assigns(:entries).sort_by(&:name), assigns(:entries)
     assert_equal Hash.new, session[:list_params]
+    assert_equal assigns(:entries), assigns(:crud_test_models)
+    assert_respond_to assigns(:crud_test_models), :klass
   end
 
   def test_index_js
@@ -122,7 +124,13 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_new
     super
     assert assigns(:companions)
+    assert_equal @controller.send(:entry), assigns(:crud_test_model)
     assert_equal [:before_render_new, :before_render_form], @controller.called_callbacks
+  end
+  
+  def test_show
+    super
+    assert_equal @controller.send(:entry), assigns(:crud_test_model)
   end
 
   def test_show_with_custom
@@ -138,11 +146,13 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_edit
     super
+    assert_equal @controller.send(:entry), assigns(:crud_test_model)
     assert_equal [:before_render_edit, :before_render_form], @controller.called_callbacks
   end
 
   def test_update
     super
+    assert_equal @controller.send(:entry), assigns(:crud_test_model)
     assert_equal [:before_update, :before_save, :after_save, :after_update], @controller.called_callbacks
   end
 

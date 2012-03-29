@@ -117,7 +117,7 @@ class CrudController < ListController
 
   # Main accessor method for the handled model entry.
   def entry
-    @entry ||= params[:id] ? find_entry : build_entry
+    @entry ||= set_model_ivar(params[:id] ? find_entry : build_entry)
   end
   
   # Creates a new model entry.
