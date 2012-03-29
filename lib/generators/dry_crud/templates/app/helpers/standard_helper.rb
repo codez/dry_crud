@@ -109,17 +109,17 @@ module StandardHelper
         form.labeled_input_fields(*attrs)
       end
 
-      content << content_tag(:div, 
-                             form.button(ti(:"button.save"), :class => 'btn btn-primary') + 
-                             ' ' + 
-                             cancel_link(object),
-                             :class => 'form-actions')
+      content << content_tag(:div, :class => 'form-actions') do
+        form.button(ti(:"button.save"), :class => 'btn btn-primary') + 
+        ' ' + 
+        cancel_link(object)
+      end
       content.html_safe
     end
   end
 
   def cancel_link(object)
-    link_to(ti(:"button.cancel"), polymorphic_path(object), :class => 'cancel')
+    link_to(ti(:"button.cancel"), polymorphic_path(object, :returning => true), :class => 'cancel')
   end
 
   # Renders a simple unordered list, which will
@@ -243,7 +243,7 @@ module StandardHelper
     case column_type(obj, attr)
       when :time    then f(val.to_time)
       when :date    then f(val.to_date)
-      when :datetime, :timestamp then "#{f(val.to_date)} #{f(val.to_time)}"
+      when :datetime, :timestamp then "#{f(val.to_date)} #{f(val.time)}"
       when :text    then val.present? ? simple_format(h(val)) : EMPTY_STRING
       when :decimal then f(val.to_s.to_f)
       else f(val)
