@@ -171,13 +171,13 @@ module CrudControllerTestHelper
   def nesting_params
     params = {}
     # for nested controllers, add parent ids to each request
-    Array(@controller.nesting).reverse.inject(test_entry) do |parent_assoc,p|
+    Array(@controller.nesting).reverse.inject(test_entry) do |parent, p|
       if p.is_a?(Class) && p < ActiveRecord::Base
         assoc = p.name.underscore
-        params["#{assoc}_id"] = parent_assoc.send(:"#{assoc}_id")
-        parent_assoc.send(assoc)
+        params["#{assoc}_id"] = parent.send(:"#{assoc}_id")
+        parent.send(assoc)
       else
-        parent_assoc
+        parent
       end
     end
     params

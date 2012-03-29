@@ -138,14 +138,13 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     elsif content.nil?
       content = caption_or_content
       caption_or_content = nil
-    else
-      caption_or_content ||= captionize(attr,@object.class)
     end
+    caption_or_content ||= captionize(attr, @object.class)
 
-    content_tag(:div, 
-                label(attr, caption_or_content, :class => 'control-label') + 
-                content_tag(:div, content, :class => 'controls'), 
-                :class => 'control-group')
+    content_tag(:div, :class => 'control-group') do
+      label(attr, caption_or_content, :class => 'control-label') +
+      content_tag(:div, content, :class => 'controls') 
+    end
   end
 
   # Depending if the given attribute must be present, return

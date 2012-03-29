@@ -1,5 +1,3 @@
 - @title = ti(:country_title, :country => @parents.last)
 
-= crud_table *default_attrs do |t|
-  - action_col_edit(t)
-  - action_col_destroy(t)
+= render 'crud/list'

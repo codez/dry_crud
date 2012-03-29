@@ -20,17 +20,17 @@ class Admin::CitiesControllerTest < ActionController::TestCase
     assert_equal test_entry.country.cities, @controller.send(:model_scope)
     assert_equal [:admin, test_entry.country, 2], @controller.send(:path_args, 2)
   end
-
-  def test_show
-    get :show, test_params(:id => test_entry.id)
-    assert_redirected_to_index
-  end
-  
-  def test_show_with_non_existing_id_raises_RecordNotFound #not
-    get :show, test_params(:id => 9999)
-    assert_redirected_to_index
-  end
-  
+# 
+  # def test_show
+    # get :show, test_params(:id => test_entry.id)
+    # assert_redirected_to_index
+  # end
+#   
+  # def test_show_with_non_existing_id_raises_RecordNotFound #not
+    # get :show, test_params(:id => 9999)
+    # assert_redirected_to_index
+  # end
+#   
   def test_create
     super
     assert_equal test_entry.country, assigns(:entry).country

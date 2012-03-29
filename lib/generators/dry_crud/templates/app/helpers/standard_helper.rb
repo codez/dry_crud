@@ -55,10 +55,8 @@ module StandardHelper
   # Transform the given text into a form as used by labels or table headers.
   def captionize(text, clazz = nil)
     text = text.to_s
-    if text.end_with?('_ids')
-      clazz.human_attribute_name(text[0..-5].pluralize)
-    elsif clazz.respond_to?(:human_attribute_name)
-      clazz.human_attribute_name(text)
+    if clazz.respond_to?(:human_attribute_name)
+      clazz.human_attribute_name(text.end_with?('_ids') ? text[0..-5].pluralize : text)
     else
       text.humanize.titleize
     end

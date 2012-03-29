@@ -155,7 +155,7 @@ input[type=number] {
   width: 80px;
 }
 
-textarea {
+textarea, select[multiple] {
   width: 180px;
   height: 80px;
 }
