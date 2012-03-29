@@ -8,13 +8,13 @@ module CrudControllerTestHelper
     get :index, test_params
     assert_response :success
     assert_template 'index'
-    assert_present assigns(:entries)
+    assert_present entries
   end
 
   def test_index_json
     get :index, test_params(:format => 'json')
     assert_response :success
-    assert_present assigns(:entries)
+    assert_present entries
     assert @response.body.starts_with?("[{"), @response.body
   end
 
@@ -25,39 +25,39 @@ module CrudControllerTestHelper
 
     get :index, test_params(:q => val[0..((val.size + 1)/ 2)])
     assert_response :success
-    assert_present assigns(:entries)
-    assert assigns(:entries).include?(test_entry)
+    assert_present entries
+    assert entries.include?(test_entry)
   end
 
   def test_index_sort_asc
     col = model_class.column_names.first
     get :index, test_params(:sort => col, :sort_dir => 'asc')
     assert_response :success
-    assert_present assigns(:entries)
-    sorted = assigns(:entries).sort_by &(col.to_sym)
-    assert_equal sorted, assigns(:entries)
+    assert_present entries
+    sorted = entries.sort_by &(col.to_sym)
+    assert_equal sorted, entries
   end
 
   def test_index_sort_desc
     col = model_class.column_names.first
     get :index, test_params(:sort => col, :sort_dir => 'desc')
     assert_response :success
-    assert_present assigns(:entries)
-    sorted = assigns(:entries).sort_by &(col.to_sym)
-    assert_equal sorted.reverse, assigns(:entries)
+    assert_present entries
+    sorted = entries.sort_by &(col.to_sym)
+    assert_equal sorted.reverse, entries
   end
 
   def test_show
     get :show, test_params(:id => test_entry.id)
     assert_response :success
     assert_template 'show'
-    assert_equal test_entry, assigns(:entry)
+    assert_equal test_entry, entry
   end
 
   def test_show_json
     get :show, test_params(:id => test_entry.id, :format => 'json')
     assert_response :success
-    assert_equal test_entry, assigns(:entry)
+    assert_equal test_entry, entry
     assert @response.body.starts_with?("{")
   end
 
@@ -71,15 +71,15 @@ module CrudControllerTestHelper
     get :new, test_params
     assert_response :success
     assert_template 'new'
-    assert assigns(:entry).new_record?
+    assert entry.new_record?
   end
 
   def test_create
     assert_difference("#{model_class.name}.count") do
       post :create, test_params(model_identifier => test_entry_attrs)
     end
-    assert_redirected_to_show assigns(:entry)
-    assert ! assigns(:entry).new_record?
+    assert_redirected_to_show entry
+    assert ! entry.new_record?
     assert_test_attrs_equal
   end
 
@@ -95,7 +95,7 @@ module CrudControllerTestHelper
     get :edit, test_params(:id => test_entry.id)
     assert_response :success
     assert_template 'edit'
-    assert_equal test_entry, assigns(:entry)
+    assert_equal test_entry, entry
   end
 
   def test_update
@@ -103,7 +103,7 @@ module CrudControllerTestHelper
       put :update, test_params(:id => test_entry.id, model_identifier => test_entry_attrs)
     end
     assert_test_attrs_equal
-    assert_redirected_to_show assigns(:entry)
+    assert_redirected_to_show entry
   end
 
   def test_update_json
@@ -141,7 +141,7 @@ module CrudControllerTestHelper
 
   def assert_test_attrs_equal
     test_entry_attrs.each do |key, value|
-      actual = assigns(:entry).send(key)
+      actual = entry.send(key)
       assert_equal value, actual, "#{key} is expected to be <#{value.inspect}>, got <#{actual.inspect}>"
     end
   end
@@ -152,6 +152,14 @@ module CrudControllerTestHelper
 
   def model_identifier
     @controller.model_identifier
+  end
+  
+  def entry
+    @controller.send(:entry)
+  end
+  
+  def entries
+    @controller.send(:entries)
   end
 
   # Test object used in several tests

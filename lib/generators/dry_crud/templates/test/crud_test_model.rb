@@ -83,7 +83,7 @@ class CrudTestModelsController < CrudController #:nodoc:
 
   # custom callback
   def handle_name
-    if @entry.name == 'illegal'
+    if entry.name == 'illegal'
       flash[:error] = "illegal name"
       return false
     end

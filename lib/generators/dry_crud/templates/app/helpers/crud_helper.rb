@@ -12,7 +12,7 @@ module CrudHelper
     standard_form(path_args(entry), *attrs, &block)
   end
 
-  # Create a table of the @entries variable with the default or
+  # Create a table of the entries with the default or
   # the passed attributes in its columns. An options hash may be given
   # as the last argument.
   def crud_table(*attrs, &block)

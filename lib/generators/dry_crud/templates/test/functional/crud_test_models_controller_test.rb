@@ -28,10 +28,10 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_index
     super
-    assert_equal 6, assigns(:entries).size
-    assert_equal assigns(:entries).sort_by(&:name), assigns(:entries)
+    assert_equal 6, entries.size
+    assert_equal entries.sort_by(&:name), entries
     assert_equal Hash.new, session[:list_params]
-    assert_equal assigns(:entries), assigns(:crud_test_models)
+    assert_equal entries, assigns(:crud_test_models)
     assert_respond_to assigns(:crud_test_models), :klass
   end
 
@@ -39,12 +39,12 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     get :index, test_params(:format => 'js')
     assert_response :success
     assert_equal 'index js', @response.body
-    assert_present assigns(:entries)
+    assert_present entries
   end
 
   def test_index_search
     super
-    assert_equal 1, assigns(:entries).size
+    assert_equal 1, entries.size
     assert_equal({:q => 'AAAA'}, session[:list_params]['/crud_test_models'])
   end
 
@@ -52,18 +52,18 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     get :index, :filter => true
     assert_response :success
     assert_template 'index'
-    assert_present assigns(:entries)
-    assert_equal 2, assigns(:entries).size
-    assert_equal assigns(:entries).sort_by(&:children).reverse, assigns(:entries)
+    assert_present entries
+    assert_equal 2, entries.size
+    assert_equal entries.sort_by(&:children).reverse, entries
   end
 
   def test_index_search_with_custom_options
     get :index, :q => 'DDD', :filter => true
     assert_response :success
     assert_template 'index'
-    assert_present assigns(:entries)
-    assert_equal 1, assigns(:entries).size
-    assert_equal [CrudTestModel.find_by_name('BBBBB')], assigns(:entries)
+    assert_present entries
+    assert_equal 1, entries.size
+    assert_equal [CrudTestModel.find_by_name('BBBBB')], entries
     assert_equal({:q => 'DDD'}, session[:list_params]['/crud_test_models'])
   end
 
@@ -71,9 +71,9 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     get :index, :sort => 'children', :sort_dir => 'asc'
     assert_response :success
     assert_template 'index'
-    assert_present assigns(:entries)
-    assert_equal 6, assigns(:entries).size
-    assert_equal CrudTestModel.all.sort_by(&:children), assigns(:entries)
+    assert_present entries
+    assert_equal 6, entries.size
+    assert_equal CrudTestModel.all.sort_by(&:children), entries
     assert_equal({:sort => 'children', :sort_dir => 'asc'}, session[:list_params]['/crud_test_models'])
   end
 
@@ -81,14 +81,14 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     get :index, :sort => 'chatty', :sort_dir => 'desc'
     assert_response :success
     assert_template 'index'
-    assert_present assigns(:entries)
-    assert_equal 6, assigns(:entries).size
+    assert_present entries
+    assert_equal 6, entries.size
     assert_equal({:sort => 'chatty', :sort_dir => 'desc'}, session[:list_params]['/crud_test_models'])
 
     sorted = CrudTestModel.all.sort_by(&:chatty)
 
     # sort order is ambiguous, use index
-    names = assigns(:entries).collect(&:name)
+    names = entries.collect(&:name)
     assert names.index('BBBBB') < names.index('AAAAA')
     assert names.index('BBBBB') < names.index('DDDDD')
     assert names.index('EEEEE') < names.index('AAAAA')
@@ -101,9 +101,9 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     get :index, :q => 'DDD', :sort => 'chatty', :sort_dir => 'asc'
     assert_response :success
     assert_template 'index'
-    assert_present assigns(:entries)
-    assert_equal 3, assigns(:entries).size
-    assert_equal ['CCCCC', 'DDDDD', 'BBBBB'], assigns(:entries).collect(&:name)
+    assert_present entries
+    assert_equal 3, entries.size
+    assert_equal ['CCCCC', 'DDDDD', 'BBBBB'], entries.collect(&:name)
     assert_equal({:sort => 'chatty', :sort_dir => 'asc', :q => 'DDD'}, session[:list_params]['/crud_test_models'])
   end
 
@@ -113,9 +113,9 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     get :index, :returning => true
     assert_response :success
     assert_template 'index'
-    assert_present assigns(:entries)
-    assert_equal 3, assigns(:entries).size
-    assert_equal ['BBBBB', 'DDDDD', 'CCCCC'], assigns(:entries).collect(&:name)
+    assert_present entries
+    assert_equal 3, entries.size
+    assert_equal ['BBBBB', 'DDDDD', 'CCCCC'], entries.collect(&:name)
     assert_equal 'DDD', @controller.params[:q]
     assert_equal 'chatty', @controller.params[:sort]
     assert_equal 'desc', @controller.params[:sort_dir]
@@ -167,10 +167,10 @@ class CrudTestModelsControllerTest < ActionController::TestCase
       post :create, :crud_test_model => {:name => 'illegal', :children => 2}
     end
     assert_template 'new'
-    assert assigns(:entry).new_record?
+    assert entry.new_record?
     assert assigns(:companions)
     assert flash[:error].present?
-    assert_equal 'illegal', assigns(:entry).name
+    assert_equal 'illegal', entry.name
     assert_equal [:before_render_new, :before_render_form], @controller.called_callbacks
   end
 

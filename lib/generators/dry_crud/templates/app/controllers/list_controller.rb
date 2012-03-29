@@ -26,7 +26,7 @@ class ListController < ApplicationController
   
   # Helper method to access the entries to be displayed in the current index page in an uniform way.
   def entries
-    @entries ||= set_model_ivar(list_entries)
+    get_model_ivar(true) || set_model_ivar(list_entries)
   end
 
   # The base relation used to filter the entries
@@ -65,10 +65,9 @@ class ListController < ApplicationController
     render action unless performed?
   end
   
-  # Get the instance variable named after the given model. 
-  # Returns the instance variable of the current model if none is given.
+  # Get the instance variable named after the model_class. 
   # If the collection variable is required, pass true as the second argument.
-  def get_model_ivar(model = model_class, plural = false)
+  def get_model_ivar(plural = false)
     name = model_class.name.underscore
     name = name.pluralize if plural
     instance_variable_get(:"@#{name}")

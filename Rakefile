@@ -88,9 +88,9 @@ namespace :test do
       file_replace(list_ctrl, /def list_entries\n\s+model_scope\s*\n/, 
                               "def list_entries\n    model_scope.page(params[:page]).per(10)")
       file_replace(File.join(TEST_APP_ROOT, 'app', 'views', 'list', 'index.html.erb'), 
-                   "<%= render 'list' %>", "<%= paginate @entries %>\n\n<%= render 'list' %>")
+                   "<%= render 'list' %>", "<%= paginate entries %>\n\n<%= render 'list' %>")
       file_replace(File.join(TEST_APP_ROOT, 'app', 'views', 'list', 'index.html.haml'), 
-                   "= render 'list'", "= paginate @entries\n\n= render 'list'")
+                   "= render 'list'", "= paginate entries\n\n= render 'list'")
     end
     
     desc "Use Boostrap in the test app"

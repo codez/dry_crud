@@ -13,6 +13,8 @@ class CrudHelperTest < ActionView::TestCase
   include StandardHelper
   include ListHelper
   include CrudTestHelper
+  
+  attr_reader :entries
 
   setup :reset_db, :setup_db, :create_test_data
   teardown :reset_db
