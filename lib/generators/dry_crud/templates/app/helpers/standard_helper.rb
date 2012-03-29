@@ -35,7 +35,7 @@ module StandardHelper
       send(format_attr_method, obj)
     elsif assoc = association(obj, attr, :belongs_to)
       format_assoc(obj, assoc)
-    elsif assoc = (association(obj, attr, :has_and_belongs_to_many) || association(obj, attr, :has_many))
+    elsif assoc = association(obj, attr, :has_many, :has_and_belongs_to_many)
       format_many_assoc(obj, assoc)
     else
       format_type(obj, attr)
@@ -67,7 +67,7 @@ module StandardHelper
   # Renders a list of attributes with label and value for a given object.
   # Optionally surrounded with a div.
   def render_attrs(obj, *attrs)
-    attrs.collect { |a| labeled_attr(obj, a) }.join("\n").html_safe
+    safe_join(attrs) { |a| labeled_attr(obj, a) }
   end
 
   # Renders the formatted content of the given attribute with a label.
@@ -127,17 +127,24 @@ module StandardHelper
   # Renders a simple unordered list, which will
   # simply render all passed items or yield them
   # to your block.
-  def simple_ul(items,ul_options={},&blk)
-    content_tag(:ul,ul_options) do
-      items.collect do |item|
-        content_tag(:li) do
-          block_given? ? (yield item) : item.to_s
-        end
-      end.join("\n").html_safe
+  def simple_list(items,ul_options={},&blk)
+    content_tag_nested(:ul, items, ul_options) do |item|
+      content_tag(:li, block_given? ? yield(item) : f(item))
     end
   end
-
-
+  
+  # render a content tag with the collected contents rendered
+  # by &block for each item in collection.
+  def content_tag_nested(tag, collection, options = {}, &block)
+    content_tag(tag, safe_join(collection, &block), options)
+  end
+  
+  # Overridden method that takes a block that is executed for each item in array
+  # before appending the results.
+  def safe_join(array, sep = $,, &block)
+    super(block_given? ? array.collect(&block) : array, sep)
+  end
+  
   ######## ACTION LINKS ###################################################### :nodoc:
 
   # A generic helper method to create action links.
@@ -260,27 +267,29 @@ module StandardHelper
 
   # Formats an active record belongs_to association
   def format_assoc(obj, assoc)
-    if assoc_val = obj.send(assoc.name)
-      link_to_unless(no_assoc_link?(assoc, assoc_val), assoc_val, assoc_val)
+    if val = obj.send(assoc.name)
+      assoc_link(assoc, val)
     else
       ta(:no_entry, assoc)
     end
   end
 
   # Formats an active record has_and_belongs_to_many or
-  # has_many association
+  # has_many association.
   def format_many_assoc(obj, assoc)
-    assoc_vals = obj.send(assoc.name)
-    if assoc_vals.size == 1
-      assoc_val = assoc_vals.first
-      link_to_unless(no_assoc_link?(assoc, assoc_val), assoc_val, assoc_val)
-    elsif assoc_vals.present?
-      simple_ul(assoc_vals) do |li|
-        link_to_unless(no_assoc_link?(assoc, li), li, li)
-      end
+    values = obj.send(assoc.name)
+    if values.size == 1
+      assoc_link(assoc, values.first)
+    elsif values.present?
+      simple_list(values) { |val| assoc_link(assoc, val) }
     else
       ta(:no_entry, assoc)
     end
+  end
+
+  # Renders a link to the given association entry.
+  def assoc_link(assoc, val)
+    link_to_unless(no_assoc_link?(assoc, val), val.to_s, val)
   end
 
   # Returns true if no link should be created when formatting the given association.
@@ -293,11 +302,11 @@ module StandardHelper
   # is given, the association must be of this type, otherwise, any association
   # is returned. Returns nil if no association (or not of the given macro) was
   # found.
-  def association(obj, attr, macro = nil)
+  def association(obj, attr, *macros)
     if obj.class.respond_to?(:reflect_on_association)
       name = assoc_and_id_attr(attr).first.to_sym
       assoc = obj.class.reflect_on_association(name)
-      assoc if assoc && (macro.nil? || assoc.macro == macro)
+      assoc if assoc && (macros.blank? || macros.include?(assoc.macro))
     end
   end
 

@@ -58,20 +58,14 @@ class CrudTestModelsController < CrudController #:nodoc:
   end
 
   def show
-    super do |format,object|
-      format.js { render :text => 'show_js' }
-    end
-  end
-
-  def new
-    super do |format,object|
-      format.js { render :text => 'new_js' }
+    super do |format, object|
+      format.html { render :text => 'custom html' } if object.name == 'BBBBB'
     end
   end
 
   def index
-    super do |format,object|
-      format.js { render :text => 'index_js' }
+    super do |format, object|
+      format.js { render :text => 'index js'}
     end
   end
 
@@ -217,7 +211,7 @@ module CrudTestHelper
   # Creates 6 dummy entries for the crud_test_models table.
   def create_test_data
     (1..6).inject(nil) {|prev, i| create(i, prev) }
-    (1..6).inject(nil) {|prev, i| create_other(i, [prev,OtherCrudTestModel.first].compact) }
+    (1..6).each {|i| create_other(i) }
   end
 
   # Fixture-style accessor method to get CrudTestModel instances by name
@@ -253,8 +247,9 @@ module CrudTestHelper
                           :remarks => "#{c} #{str(index + 1)} #{str(index + 2)}\n" * (index % 3 + 1))
   end
 
-  def create_other(index, others)
+  def create_other(index)
     c = str(index)
+    others = CrudTestModel.all[index..(index+2)]
     OtherCrudTestModel.create!(:name => c, :other_ids => others.collect(&:id), :more_id => others.first.try(:id))
   end
 

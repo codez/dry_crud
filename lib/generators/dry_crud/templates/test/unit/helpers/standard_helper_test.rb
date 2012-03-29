@@ -140,7 +140,47 @@ class StandardHelperTest < ActionView::TestCase
     assert_equal "<p>AAAAA BBBBB CCCCC\n<br />AAAAA BBBBB CCCCC\n</p>", format_type(m, :remarks)
     assert format_type(m, :remarks).html_safe?
   end
+  
+  test "format belongs to column without content" do
+    m = crud_test_models(:AAAAA)
+    assert_equal t(:'global.associations.no_entry'), format_attr(m, :companion)
+  end
+  
+  test "format belongs to column with content" do
+    m = crud_test_models(:BBBBB)
+    assert_equal "AAAAA", format_attr(m, :companion)
+  end
+  
+  test "format has_many column with content" do
+    m = crud_test_models(:CCCCC)
+    assert_equal "<ul><li>AAAAA</li><li>BBBBB</li></ul>", format_attr(m, :others)
+  end
+  
+  test "content_tag_nested escapes safe correctly" do
+    html = content_tag_nested(:div, ['a', 'b']) { |e| content_tag(:span, e) }
+    assert_equal "<div><span>a</span><span>b</span></div>", html
+  end
 
+  test "content_tag_nested escapes unsafe correctly" do
+    html = content_tag_nested(:div, ['a', 'b']) { |e| "<#{e}>" }
+    assert_equal "<div>&lt;a&gt;&lt;b&gt;</div>", html
+  end
+  
+  test "content_tag_nested without block" do
+    html = content_tag_nested(:div, ['a', 'b']) 
+    assert_equal "<div>ab</div>", html
+  end
+  
+  test "safe_join without block" do
+    html = safe_join(['<a>', '<b>'.html_safe]) 
+    assert_equal "&lt;a&gt;<b>", html
+  end
+  
+  test "safe_join with block" do
+    html = safe_join(['a', 'b']) { |e| content_tag(:span, e) } 
+    assert_equal "<span>a</span><span>b</span>", html
+  end
+  
   test "empty table should render message" do
     result = table([]) { }
     assert result.html_safe?

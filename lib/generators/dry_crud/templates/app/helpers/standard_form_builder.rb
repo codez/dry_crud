@@ -9,15 +9,14 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   attr_reader :template
 
-  delegate :association, :column_type, :column_property, :captionize, 
-           :content_tag, :capture, :ta, :add_css_class, :assoc_and_id_attr,:to => :template
+  delegate :association, :column_type, :column_property, :captionize, :ta,
+           :content_tag, :safe_join, :capture, :add_css_class, :assoc_and_id_attr,
+           :to => :template
 
   # Render multiple input fields together with a label for the given attributes.
   def labeled_input_fields(*attrs)
     options = attrs.extract_options!
-    attrs.collect do |a|
-      labeled_input_field(a, options.clone)
-    end.join("\n").html_safe
+    safe_join(attrs) { |a| labeled_input_field(a, options.clone) }
   end
 
   # Render a corresponding input field for the given attribute.
@@ -105,7 +104,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   def belongs_to_field(attr, html_options = {})
     list = association_entries(attr, html_options)
     if list.present?
-      collection_select(attr, list, :id, :to_s, select_options(attr), html_options)
+      collection_select(attr, list, :id, :to_s, html_options[:multiple] ? {} : select_options(attr), html_options)
     else
       ta(:none_available, association(@object, attr))
     end
@@ -118,13 +117,8 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   # define an instance variable with the pluralized name of the association.
   def has_many_field(attr, html_options = {})
     html_options[:multiple] = true
-    add_css_class(html_options,'multiselect')
-    list = association_entries(attr, html_options)
-    if list.present?
-      collection_select(attr,list,:id,:to_s,{},html_options)
-    else
-      ta(:none_available, association(@object, attr))
-    end
+    add_css_class(html_options, 'multiselect')
+    belongs_to_field(attr, html_options)
   end
 
   # Renders a marker if the given attr has to be present.
@@ -182,20 +176,19 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   # Returns true if attr is a non-polymorphic belongs_to association,
   # for which an input field may be automatically rendered.
   def belongs_to_association?(attr, type)
-    if type == :integer || type.nil?
-      assoc = association(@object, attr, :belongs_to)
-      assoc.present? && assoc.options[:polymorphic].nil?
-    else
-      false
-    end
+    association_kind?(attr, type, :belongs_to)
   end
 
   # Returns true if attr is a non-polymorphic has_many or
   # has_and_belongs_to_many association, for which an input field
   # may be automatically rendered.
   def has_many_association?(attr, type)
-    if type.nil?
-      assoc = association(@object, attr, :has_and_belongs_to_many) || association(@object, attr, :has_many)
+    association_kind?(attr, type, :has_and_belongs_to_many, :has_many)
+  end
+  
+  def association_kind?(attr, type, *macros)
+    if type == :integer || type.nil?
+      assoc = association(@object, attr, *macros) 
       assoc.present? && assoc.options[:polymorphic].nil?
     else
       false

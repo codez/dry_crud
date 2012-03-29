@@ -11,7 +11,7 @@ class StandardTableBuilder
   # Delegate called methods to template.
   # including StandardHelper would lead to problems with indirectly called methods.
   delegate :content_tag, :format_attr, :column_type, :association,
-           :captionize, :add_css_class, :to => :template
+           :captionize, :add_css_class, :content_tag_nested, :to => :template
 
   def initialize(entries, template, options = {})
     @entries = entries
@@ -58,7 +58,7 @@ class StandardTableBuilder
     add_css_class options, 'table'
     content_tag :table, options do
       content_tag(:thead, html_header) + 
-      content_tag(:tbody, safe_join(entries) { |e| html_row(e) })
+      content_tag_nested(:tbody, entries) { |e| html_row(e) }
     end
   end
 
@@ -81,25 +81,17 @@ class StandardTableBuilder
   private
 
   def html_header
-    content_tag :tr do
-      safe_join(cols) { |c| c.html_header }
-    end
+    content_tag_nested(:tr, cols) { |c| c.html_header }
   end
 
   def html_row(entry)
-    content_tag :tr do
-      safe_join(cols) { |c| c.html_cell(entry) }
-    end
+    content_tag_nested(:tr, cols) { |c| c.html_cell(entry) }
   end
 
   def entry_class
     entries.first.class
   end
   
-  def safe_join(collection, &block)
-    collection.collect(&block).join.html_safe
-  end
-
   # Helper class to store column information.
   class Col < Struct.new(:header, :html_options, :template, :block) #:nodoc:
 

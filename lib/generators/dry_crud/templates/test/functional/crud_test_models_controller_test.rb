@@ -36,7 +36,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_index_js
     get :index, test_params(:format => 'js')
     assert_response :success
-    assert_equal 'index_js', @response.body
+    assert_equal 'index js', @response.body
     assert_present assigns(:entries)
   end
 
@@ -125,18 +125,10 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_equal [:before_render_new, :before_render_form], @controller.called_callbacks
   end
 
-  def test_new_js
-    get :new, test_params(:format => 'js')
+  def test_show_with_custom
+    get :show, test_params(:id => crud_test_models(:BBBBB).id)
     assert_response :success
-    assert_equal 'new_js', @response.body
-    assert assigns(:entry).new_record?
-  end
-
-  def test_show_js
-    get :show, test_params(:id => test_entry.id, :format => 'js')
-    assert_response :success
-    assert_equal 'show_js', @response.body
-    assert_equal test_entry, assigns(:entry)
+    assert_equal 'custom html', @response.body
   end
 
   def test_create
