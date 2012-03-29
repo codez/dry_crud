@@ -10,7 +10,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   attr_reader :template
 
   delegate :association, :column_type, :column_property, :captionize, 
-           :content_tag, :capture, :ta, :add_css_class, :to => :template
+           :content_tag, :capture, :ta, :add_css_class, :assoc_and_id_attr,:to => :template
 
   # Render multiple input fields together with a label for the given attributes.
   def labeled_input_fields(*attrs)
@@ -29,6 +29,8 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
       text_area(attr, html_options)
     elsif belongs_to_association?(attr, type)
       belongs_to_field(attr, html_options)
+    elsif has_many_association?(attr, type)
+      has_many_field(attr, html_options)
     elsif attr.to_s.include?('password')
       password_field(attr, html_options)
     else
@@ -109,6 +111,22 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
+  # Render a multi select element for a :has_many or :has_and_belongs_to_many
+  # association defined by attr.
+  # Use additional html_options for the select element.
+  # To pass a custom element list, specify the list with the :list key or
+  # define an instance variable with the pluralized name of the association.
+  def has_many_field(attr, html_options = {})
+    html_options[:multiple] = true
+    add_css_class(html_options,'multiselect')
+    list = association_entries(attr, html_options)
+    if list.present?
+      collection_select(attr,list,:id,:to_s,{},html_options)
+    else
+      ta(:none_available, association(@object, attr))
+    end
+  end
+
   # Renders a marker if the given attr has to be present.
   def required_mark(attr)
     required?(attr) ? REQUIRED_MARK : ''
@@ -126,7 +144,10 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     elsif content.nil?
       content = caption_or_content
       caption_or_content = nil
+    else
+      caption_or_content ||= captionize(attr,@object.class)
     end
+
     content_tag(:div, 
                 label(attr, caption_or_content, :class => 'control-label') + 
                 content_tag(:div, content, :class => 'controls'), 
@@ -169,6 +190,18 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
+  # Returns true if attr is a non-polymorphic has_many or
+  # has_and_belongs_to_many association, for which an input field
+  # may be automatically rendered.
+  def has_many_association?(attr, type)
+    if type.nil?
+      assoc = association(@object, attr, :has_and_belongs_to_many) || association(@object, attr, :has_many)
+      assoc.present? && assoc.options[:polymorphic].nil?
+    else
+      false
+    end
+  end
+
   # Returns the list of association entries, either from options[:list],
   # the instance variable with the pluralized association name or all
   # entries of the association klass.
@@ -184,10 +217,16 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     list
   end
 
+  def has_many_list(attr, options)
+    association_entries(attr, options) do
+      find_has_many_association(@object, attr)
+    end
+  end
+
   # Returns true if the given attribute must be present.
   def required?(attr)
     attr = attr.to_s
-    attr, attr_id = attr.end_with?('_id') ? [attr[0..-4], attr] : [attr, "#{attr}_id"]
+    attr, attr_id = assoc_and_id_attr(attr)
     validators = @object.class.validators_on(attr) +
                  @object.class.validators_on(attr_id)
     validators.any? {|v| v.kind == :presence }

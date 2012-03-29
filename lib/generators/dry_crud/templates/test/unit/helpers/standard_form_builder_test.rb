@@ -53,6 +53,16 @@ class StandardFormBuilderTest < ActionView::TestCase
     assert form.belongs_to_field(:companion_id).html_safe?
   end
 
+  test "input_field dispatches has_and_belongs_to_many attr to select field" do
+    assert_equal form.has_many_field(:other_ids), form.input_field(:other_ids)
+    assert form.has_many_field(:other_ids).html_safe?
+  end
+
+  test "input_field dispatches has_many attr to select field" do
+    assert_equal form.has_many_field(:more_ids), form.input_field(:more_ids)
+    assert form.has_many_field(:more_ids).html_safe?
+  end
+
   test "input_fields concats multiple fields" do
   	result = form.labeled_input_fields(:name, :remarks, :children)
   	assert result.html_safe?
@@ -89,6 +99,56 @@ class StandardFormBuilderTest < ActionView::TestCase
   test "belongs_to_field with empty list" do
     @companions = []
     f = form.belongs_to_field(:companion_id)
+    assert_match /none available/m, f
+    assert_equal 0, f.scan('</option>').size
+  end
+
+  test "has_and_belongs_to_many_field has all options by default" do
+    f = form.has_many_field(:other_ids)
+    assert_equal 6, f.scan('</option>').size
+  end
+
+  test "has_and_belongs_to_many_field with :list option" do
+    list = OtherCrudTestModel.all
+    f = form.has_many_field(:other_ids, :list => [list.first, list.second])
+    assert_equal 2, f.scan('</option>').size
+  end
+
+  test "has_and_belongs_to_many_field with instance variable" do
+    list = OtherCrudTestModel.all
+    @others = [list.first, list.second]
+    f = form.has_many_field(:other_ids)
+    assert_equal 2, f.scan('</option>').size
+  end
+
+  test "has_and_belongs_to_many_field with empty list" do
+    @others = []
+    f = form.has_many_field(:other_ids)
+    assert_match /none available/m, f
+    assert_equal 0, f.scan('</option>').size
+  end
+
+  test "has_many_field has all options by default" do
+    f = form.has_many_field(:more_ids)
+    assert_equal 6, f.scan('</option>').size
+  end
+
+  test "has_many_field with :list option" do
+    list = OtherCrudTestModel.all
+    f = form.has_many_field(:more_ids, :list => [list.first, list.second])
+    assert_equal 2, f.scan('</option>').size
+  end
+
+  test "has_many_field with instance variable" do
+    list = OtherCrudTestModel.all
+    @mores = [list.first, list.second]
+    f = form.has_many_field(:more_ids)
+    assert_equal 2, f.scan('</option>').size
+  end
+
+  test "has_many_field with empty list" do
+    @mores = []
+    f = form.has_many_field(:more_ids)
     assert_match /none available/m, f
     assert_equal 0, f.scan('</option>').size
   end

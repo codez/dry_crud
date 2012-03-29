@@ -181,6 +181,12 @@ Even +belongs_to+ associations are automatically rendered with a select field. B
 
 Yes, it's bad practice to use finder logic in your views! Define the variable <tt>@hometowns</tt> in your controller instead (as shown in the example above), and you do not even have to specify the <tt>:list</tt> option.
 
+Optionally, also +has_and_belongs_to_many+ and +has_many+ associations can be rendered with a multi-select field. Similar to a +belongs_to+ association, all entries from the associated model are used, but can be overwritten using the <tt>:list</tt> option:
+  <%= f.has_and_belongs_to_many_field :visited_cities, :list => City.where(:is_touristic => true) %>
+
+And yes again, the same regarding bad practice for the +belongs_to+ finder logic in views applies here as well.
+
+<b>Note:</b> +has_and_belongs_to_many+ and +has_many+ associations are not automatically rendered in a form, as they are not included in the default_attrs list, and you have to explicitly include them. You might also want to stylize the multi-select form, for example with the jquery-ui base multiselect: http://www.quasipartikel.at/multiselect/
 
 === Nested Resources
 

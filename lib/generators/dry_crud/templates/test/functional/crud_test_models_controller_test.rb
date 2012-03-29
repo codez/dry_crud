@@ -33,6 +33,13 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_equal Hash.new, session[:list_params]
   end
 
+  def test_index_js
+    get :index, test_params(:format => 'js')
+    assert_response :success
+    assert_equal 'index_js', @response.body
+    assert_present assigns(:entries)
+  end
+
   def test_index_search
     super
     assert_equal 1, assigns(:entries).size
@@ -116,6 +123,20 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     super
     assert assigns(:companions)
     assert_equal [:before_render_new, :before_render_form], @controller.called_callbacks
+  end
+
+  def test_new_js
+    get :new, test_params(:format => 'js')
+    assert_response :success
+    assert_equal 'new_js', @response.body
+    assert assigns(:entry).new_record?
+  end
+
+  def test_show_js
+    get :show, test_params(:id => test_entry.id, :format => 'js')
+    assert_response :success
+    assert_equal 'show_js', @response.body
+    assert_equal test_entry, assigns(:entry)
   end
 
   def test_create

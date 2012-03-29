@@ -28,16 +28,16 @@ class CrudController < ListController
   # Show one entry of this model.
   #   GET /entries/1
   #   GET /entries/1.json
-  def show
-    respond_with entry
+  def show(&block)
+    respond_with(entry,block)
   end
 
   # Display a form to create a new entry of this model.
   #   GET /entries/new
   #   GET /entries/new.json
-  def new
+  def new(&block)
     assign_attributes
-    respond_with entry
+    respond_with(entry,block)
   end
 
   # Create a new entry of this model from the passed params.
