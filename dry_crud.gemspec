@@ -16,7 +16,7 @@ DRY_CRUD_GEMSPEC = Gem::Specification.new do |spec|
 Generates simple and extendable controller, views and helpers that support you to DRY up the CRUD code in your Rails project. Start with these elements and build a clean base to efficiently develop your application upon.
 END
 
-  spec.add_dependency 'rails', '=> 3.2'
+  spec.add_dependency 'rails', '>= 3.2'
 
   readmes = FileList.new('*') do |list|
     list.exclude(/(^|[^.a-z])[a-z]+/) 
