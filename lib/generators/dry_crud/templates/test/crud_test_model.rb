@@ -1,6 +1,8 @@
 # A dummy model used for general testing.
 class CrudTestModel < ActiveRecord::Base #:nodoc:
 
+  attr_protected nil
+
   belongs_to :companion, :class_name => 'CrudTestModel'
   has_and_belongs_to_many :others, :class_name => 'OtherCrudTestModel'
   has_many :mores, :class_name => 'OtherCrudTestModel', :foreign_key => :more_id
@@ -21,6 +23,9 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
 end
 
 class OtherCrudTestModel < ActiveRecord::Base #:nodoc:
+
+  attr_protected nil
+
   has_and_belongs_to_many :others, :class_name => 'CrudTestModel'
   belongs_to :more, :foreign_key => :more_id, :class_name => 'CrudTestModel'
 
