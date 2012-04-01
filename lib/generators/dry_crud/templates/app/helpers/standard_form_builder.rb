@@ -26,9 +26,9 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     type = column_type(@object, attr)
     if type == :text
       text_area(attr, html_options)
-    elsif belongs_to_association?(attr, type)
+    elsif association_kind?(attr, type, :belongs_to)
       belongs_to_field(attr, html_options)
-    elsif has_many_association?(attr, type)
+    elsif association_kind?(attr, type, :has_and_belongs_to_many, :has_many)
       has_many_field(attr, html_options)
     elsif attr.to_s.include?('password')
       password_field(attr, html_options)
@@ -44,7 +44,6 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   # Render a number field.
   def number_field(attr, html_options = {})
-    add_css_class html_options, 'span1'
     html_options[:size] ||= 10
     super(attr, html_options)
   end
@@ -81,19 +80,16 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   # Render a field to select a date. You might want to customize this.
   def date_field(attr, html_options = {})
-    add_css_class html_options, 'span1'
     date_select(attr, {}, html_options)
   end
 
   # Render a field to enter a time. You might want to customize this.
   def time_field(attr, html_options = {})
-    add_css_class html_options, 'span1'
     time_select(attr, {}, html_options)
   end
   
   # Render a field to enter a date and time. You might want to customize this.
   def datetime_field(attr, html_options = {})
-    add_css_class html_options, 'span1'
     datetime_select(attr, {}, html_options)
   end
   
@@ -104,7 +100,12 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   def belongs_to_field(attr, html_options = {})
     list = association_entries(attr, html_options)
     if list.present?
-      collection_select(attr, list, :id, :to_s, html_options[:multiple] ? {} : select_options(attr), html_options)
+      collection_select(attr, 
+                        list, 
+                        :id, 
+                        :to_s, 
+                        html_options[:multiple] ? {} : select_options(attr), 
+                        html_options)
     else
       ta(:none_available, association(@object, attr))
     end
@@ -172,19 +173,8 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   protected
 
-  # Returns true if attr is a non-polymorphic belongs_to association,
-  # for which an input field may be automatically rendered.
-  def belongs_to_association?(attr, type)
-    association_kind?(attr, type, :belongs_to)
-  end
-
-  # Returns true if attr is a non-polymorphic has_many or
-  # has_and_belongs_to_many association, for which an input field
-  # may be automatically rendered.
-  def has_many_association?(attr, type)
-    association_kind?(attr, type, :has_and_belongs_to_many, :has_many)
-  end
-  
+  # Returns true if attr is a non-polymorphic association.
+  # If one or more macros are given, the association must be of this kind.
   def association_kind?(attr, type, *macros)
     if type == :integer || type.nil?
       assoc = association(@object, attr, *macros) 
@@ -209,19 +199,16 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     list
   end
 
-  def has_many_list(attr, options)
-    association_entries(attr, options) do
-      find_has_many_association(@object, attr)
-    end
-  end
-
   # Returns true if the given attribute must be present.
   def required?(attr)
     attr = attr.to_s
     attr, attr_id = assoc_and_id_attr(attr)
     validators = @object.class.validators_on(attr) +
                  @object.class.validators_on(attr_id)
-    validators.any? {|v| v.kind == :presence }
+    validators.any? do |v| 
+      v.kind == :presence && 
+      !v.options.key?(:if) && !v.options.key?(:unless)
+    end
   end
 
   private
