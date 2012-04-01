@@ -1,6 +1,6 @@
 class Country < ActiveRecord::Base
 
-  attr_accessible :name, :code
+  attr_protected nil
 
   has_many :cities, :dependent => :destroy
 

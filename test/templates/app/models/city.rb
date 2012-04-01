@@ -1,6 +1,6 @@
 class City < ActiveRecord::Base
 
-  attr_accessible :name, :country_id
+  attr_protected nil
 
   belongs_to :country
   has_many :people
