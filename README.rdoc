@@ -180,12 +180,12 @@ Even +belongs_to+ associations are automatically rendered with a select field. B
 
 Yes, it's bad practice to use finder logic in your views! Define the variable <tt>@hometowns</tt> in your controller instead (as shown in the example above), and you do not even have to specify the <tt>:list</tt> option.
 
-Optionally, also +has_and_belongs_to_many+ and +has_many+ associations can be rendered with a multi-select field. Similar to a +belongs_to+ association, all entries from the associated model are used, but can be overwritten using the <tt>:list</tt> option:
-  <%= f.has_and_belongs_to_many_field :visited_cities, :list => City.where(:is_touristic => true) %>
+Optionally, +has_and_belongs_to_many+ and +has_many+ associations can be rendered with a multi-select field. Similar to a +belongs_to+ association, all entries from the associated model are used, but can be overwritten using the <tt>:list</tt> option:
+  <%= f.has_many_field :visited_cities, :list => City.where(:is_touristic => true) %>
 
-And yes again, the same regarding bad practice for the +belongs_to+ finder logic in views applies here as well.
+And yes again, the same advice for where to put finder logic applies here as well.
 
-<b>Note:</b> +has_and_belongs_to_many+ and +has_many+ associations are not automatically rendered in a form, as they are not included in the default_attrs list, and you have to explicitly include them. You might also want to stylize the multi-select form, for example with the jquery-ui base multiselect: http://www.quasipartikel.at/multiselect/
+<b>Note:</b> +has_and_belongs_to_many+ and +has_many+ associations are not automatically rendered in a form, you have to explicitly include these attributes. You might also want to stylize the multi-select widget, for example with a {jQuery UI Multiselect}[http://www.quasipartikel.at/multiselect/].
 
 === Nested Resources
 
@@ -226,22 +226,22 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 === Controller:
 
-{controller/crud_controller.rb}[http://codez.ch/dry_crud/?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on +ListController+.
+{controller/crud_controller.rb}[http://codez.ch/dry_crud/CrudController.html]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on +ListController+.
 
-{controller/list_controller.rb}[http://codez.ch/dry_crud/?q=ListController]:: Abstract controller providing a basic list action. Use this controller if you require read-only functionality. There are two sub-modules that provide search and sort functionality for the table displayed in the list action. A third sub-module remembers the list parameters in order to return to an identical list.
+{controller/list_controller.rb}[http://codez.ch/dry_crud/ListController.html]:: Abstract controller providing a basic list action. Use this controller if you require read-only functionality. There are two sub-modules that provide search and sort functionality for the table displayed in the list action. A third sub-module remembers the list parameters in order to return to an identical list.
 
 
 === Helpers:
 
-{helpers/standard_helper.rb}[http://codez.ch/dry_crud/?q=StandardHelper]:: A view helper to standardize often used functions like formatting, tables, forms or action links. This helper is ideally defined in the +ApplicationController+. It is required to use the +StandardTableBuilder+ and the +StandardFormBuilder+.
+{helpers/standard_helper.rb}[http://codez.ch/dry_crud/StandardHelper.html]:: A view helper to standardize often used functions like formatting, tables, forms or action links. This helper is ideally defined in the +ApplicationController+. It is required to use the +StandardTableBuilder+ and the +StandardFormBuilder+.
 
-{helpers/crud_helper.rb}[http://codez.ch/dry_crud/?q=CrudHelper]:: A small helper for +CrudController+ to render tables and forms with a default set of attributes.
+{helpers/crud_helper.rb}[http://codez.ch/dry_crud/CrudHelper.html]:: A small helper for +CrudController+ to render tables and forms with a default set of attributes.
 
-{helpers/list_helper.rb}[http://codez.ch/dry_crud/?q=ListHelper]:: A small helper for +ListController+ to render the list table with a default set of attributes.
+{helpers/list_helper.rb}[http://codez.ch/dry_crud/ListHelper.html]:: A small helper for +ListController+ to render the list table with a default set of attributes.
 
-{helpers/standard_table_builder.rb}[http://codez.ch/dry_crud/?q=StandardTableBuilder]:: A simple helper object to easily define tables listing several rows of the same data type.
+{helpers/standard_table_builder.rb}[http://codez.ch/dry_crud/StandardTableBuilder.html]:: A simple helper object to easily define tables listing several rows of the same data type.
 
-{helpers/standard_form_builder.rb}[http://codez.ch/dry_crud/?q=StandardFormBuilder]:: A form builder that automatically selects the corresponding input type for ActiveRecord columns. Input elements are rendered together with a label by default.
+{helpers/standard_form_builder.rb}[http://codez.ch/dry_crud/StandardFormBuilder.html]:: A form builder that automatically selects the corresponding input type for ActiveRecord columns. Input elements are rendered together with a label by default.
 
 
 === Views:
@@ -295,11 +295,11 @@ app/assets/images/action/*.png:: Some sample action icons from the {Open Icon Li
 
 === Tests:
 
-{test/crud_test_model.rb}[http://codez.ch/dry_crud/?q=CrudTestHelper]:: A dummy model to run CRUD tests against.
+{test/crud_test_model.rb}[http://codez.ch/dry_crud/CrudTestHelper.html]:: A dummy model to run CRUD tests against.
 
-{test/custom_assertions.rb}[http://codez.ch/dry_crud/?q=CustomAssertions]:: A handful of convenient assertions. Include this module into your <tt>test_helper.rb</tt> file.
+{test/custom_assertions.rb}[http://codez.ch/dry_crud/CustomAssertions.html]:: A handful of convenient assertions. Include this module into your <tt>test_helper.rb</tt> file.
 
-{test/functionals/crud_controller_test_helper.rb}[http://codez.ch/dry_crud/?q=CrudControllerTestHelper]:: A module to include into the functional tests for your +CrudController+ subclasses. Contains a handful of CRUD functionality tests for the provided implementation. So for each new CRUD controller, you get 20 tests for free.
+{test/functionals/crud_controller_test_helper.rb}[http://codez.ch/dry_crud/CrudControllerTestHelper.html]:: A module to include into the functional tests for your +CrudController+ subclasses. Contains a handful of CRUD functionality tests for the provided implementation. So for each new CRUD controller, you get 20 tests for free.
 
 test/several other tests:: Testing the provided implementation and a great base to test your adaptions of the CRUD code.
 
