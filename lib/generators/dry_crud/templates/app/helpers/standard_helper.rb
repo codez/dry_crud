@@ -216,8 +216,8 @@ module StandardHelper
   def flash_class(level)
     case level
     when :notice then 'success'
-    when :error then 'error'
     when :alert then 'error'
+    else level.to_s
     end
   end
   
