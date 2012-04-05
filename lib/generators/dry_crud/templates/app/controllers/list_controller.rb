@@ -87,7 +87,7 @@ class ListController < ApplicationController
     
   end
   
-
+  # Provide before_render callbacks.
   module Callbacks
     
     def self.included(controller)

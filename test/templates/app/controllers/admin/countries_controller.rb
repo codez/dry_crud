@@ -6,14 +6,14 @@ class Admin::CountriesController < AjaxController
 
   def show
     super do |format|
-      format.html { redirect_to index_path, flash.to_hash }
+      format.html { redirect_to index_url, flash.to_hash }
     end
   end
   
   protected
   
-  def show_path
-    index_path
+  def show_url
+    index_url
   end
 
 end

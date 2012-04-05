@@ -108,12 +108,14 @@ class CrudController < ListController
     "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
   end
 
-  def index_path
-    polymorphic_path(path_args(model_class), :returning => true)
+  # The url of the index action. Includes a :returning param to use the remember_params.
+  def index_url
+    polymorphic_url(path_args(model_class), :returning => true)
   end
   
-  def show_path
-    path_args(entry)
+  # Url of the show action. May delegate to index_url if a subclass has no show action.
+  def show_url
+    polymorphic_url(path_args(entry))
   end
 
   
@@ -140,7 +142,7 @@ class CrudController < ListController
     @@helper = Object.new.extend(ActionView::Helpers::TranslationHelper).
                           extend(ActionView::Helpers::OutputSafetyHelper)
     
-    delegate :action_name, :controller_name, :full_entry_label, :show_path, :index_path,
+    delegate :action_name, :controller_name, :full_entry_label, :show_url, :index_url,
              :to => :controller
     
     def initialize(controller, resources, options = {})
@@ -177,9 +179,9 @@ class CrudController < ListController
       elsif options[:location]
         options[:location]
       elsif resource.respond_to?(:persisted?) && resource.persisted?
-        show_path
+        show_url
       else
-        index_path
+        index_url
       end
     end
     
