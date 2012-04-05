@@ -93,19 +93,18 @@ class ListController < ApplicationController
     def self.included(controller)
       controller.extend ActiveModel::Callbacks
       controller.extend ClassMethods
-      controller.class_attribute :render_callbacks
-      controller.render_callbacks = []
+      controller.alias_method_chain :render, :callbacks
       
       controller.define_render_callbacks :index
     end
        
     # Helper method to run before_render callbacks and render the action.
     # If a callback renders or redirects, the action is not rendered.
-    def render(*args, &block)
-      options = _normalize_render(*args, &block)
-      action = options[:template]
-      run_callbacks(:"render_#{action}") if render_callbacks.include?(action.to_sym)
-      super unless performed?
+    def render_with_callbacks(*args, &block)
+      callback = "render_#{_normalize_render(*args, &block)[:template]}"
+      run_callbacks(callback) if methods.include?("_#{callback}_callbacks")
+      
+      render_without_callbacks(*args, &block) unless performed?
     end
     
     protected
@@ -122,7 +121,6 @@ class ListController < ApplicationController
     module ClassMethods
       # Defines before callbacks for the render actions.
       def define_render_callbacks(*actions)
-        render_callbacks.push *actions
         args = actions.collect {|a| :"render_#{a}" }
         args << {:only => :before,
                  :terminator => "result == false || performed?"}
