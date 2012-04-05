@@ -102,7 +102,7 @@ class ListController < ApplicationController
     # If a callback renders or redirects, the action is not rendered.
     def render_with_callbacks(*args, &block)
       callback = "render_#{_normalize_render(*args, &block)[:template]}"
-      run_callbacks(callback) if methods.include?("_#{callback}_callbacks")
+      run_callbacks(callback) if respond_to?(:"_run_#{callback}_callbacks", true)
       
       render_without_callbacks(*args, &block) unless performed?
     end
