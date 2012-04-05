@@ -19,13 +19,12 @@ class Admin::CitiesControllerTest < ActionController::TestCase
     assert_equal [:admin, test_entry.country], @controller.send(:parents)
     assert_equal test_entry.country, assigns(:country)
     assert_equal test_entry.country, @controller.send(:parent)
-    assert_equal test_entry.country.cities, @controller.send(:model_scope)
+    assert_equal test_entry.country.cities.to_a, @controller.send(:model_scope).to_a
     assert_equal [:admin, test_entry.country, 2], @controller.send(:path_args, 2)
   end
 
   def test_show
     super
-    
     assert_equal @controller.send(:entry), assigns(:city)
     assert_equal [:admin, test_entry.country], @controller.send(:parents)
     assert_equal test_entry.country, assigns(:country)

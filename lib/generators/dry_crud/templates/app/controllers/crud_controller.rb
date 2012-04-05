@@ -6,8 +6,6 @@
 # overriding the entire method.
 class CrudController < ListController
 
-  include ERB::Util
-
   helper_method :entry, :full_entry_label
 
   delegate :model_identifier, :to => 'self.class'
@@ -29,7 +27,7 @@ class CrudController < ListController
   #   GET /entries/1
   #   GET /entries/1.json
   def show(&block)
-    customizable_respond_with(entry, block)
+    respond_with(entry, &block)
   end
 
   # Display a form to create a new entry of this model.
@@ -37,56 +35,37 @@ class CrudController < ListController
   #   GET /entries/new.json
   def new(&block)
     assign_attributes
-    customizable_respond_with(entry, block)
+    respond_with(entry, &block)
   end
 
   # Create a new entry of this model from the passed params.
   # There are before and after create callbacks to hook into the action.
   # To customize the response, you may overwrite this action and call
-  # super with a block that gets success and format parameters.
+  # super with a block that gets the format parameter.
   #   POST /entries
   #   POST /entries.json
   def create(&block)
     assign_attributes
     created = with_callbacks(:create, :save) { entry.save }
-
-    customizable_respond_to(created, block) do |format|
-      if created
-        format.html { redirect_to_show success_notice }
-        format.json  { render :json => entry, :status => :created, :location => path_args(entry) }
-      else
-        format.html { render_with_callback 'new'  }
-        format.json  { render :json => entry.errors, :status => :unprocessable_entity }
-      end
-    end
+    respond_with(entry, :success => created, &block)
   end
 
   # Display a form to edit an exisiting entry of this model.
   #   GET /entries/1/edit
-  def edit
-    entry
-    render_with_callback 'edit'
+  def edit(&block)
+    respond_with(entry, &block)
   end
 
   # Update an existing entry of this model from the passed params.
   # There are before and after update callbacks to hook into the action.
   # To customize the response, you may overwrite this action and call
-  # super with a block that gets success and format parameters.
+  # super with a block that gets the format parameter.
   #   PUT /entries/1
   #   PUT /entries/1.json
   def update(&block)
     assign_attributes
     updated = with_callbacks(:update, :save) { entry.save }
-
-    customizable_respond_to(updated, block) do |format|
-      if updated
-        format.html { redirect_to_show success_notice }
-        format.json  { head :ok }
-      else
-        format.html { render_with_callback 'edit'  }
-        format.json  { render :json => entry.errors, :status => :unprocessable_entity }
-      end
-    end
+    respond_with(entry, :success => updated, &block)
   end
 
   # Destroy an existing entry of this model.
@@ -97,19 +76,7 @@ class CrudController < ListController
   #   DELETE /entries/1.json
   def destroy(&block)
     destroyed = run_callbacks(:destroy) { entry.destroy }
-
-    customizable_respond_to(destroyed, block) do |format|
-      if destroyed
-        format.html { redirect_to_index success_notice }
-        format.json  { head :ok }
-      else
-        format.html { 
-          flash.alert = entry.errors.full_messages.join('<br/>')
-          request.env["HTTP_REFERER"].present? ? redirect_to(:back) : redirect_to_show
-        }
-        format.json  { render :json => entry.errors, :status => :unprocessable_entity }
-      end
-    end
+    respond_with(entry, :success => destroyed, &block)
   end
 
   protected
@@ -138,51 +105,19 @@ class CrudController < ListController
 
   # A label for the current entry, including the model name.
   def full_entry_label
-    "#{models_label(false)} <i>#{h(entry)}</i>".html_safe
+    "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
   end
 
-  # Redirects to the show action of a single entry.
-  def redirect_to_show(options = {})
-    redirect_to path_args(entry), options
+  def index_path
+    polymorphic_path(path_args(model_class), :returning => true)
+  end
+  
+  def show_path
+    path_args(entry)
   end
 
-  # Redirects to the main action of this controller.
-  def redirect_to_index(options = {})
-    redirect_to polymorphic_path(path_args(model_class), :returning => true), options
-  end
-
-  # Helper method the run the given block in between the before and after
-  # callbacks of the given kinds.
-  def with_callbacks(*kinds, &block)
-    kinds.reverse.inject(block) do |b, kind| 
-      lambda { run_callbacks(kind, &b) }
-    end.call
-  end
   
   private
-  
-  # Convenience method to respond to various formats if the performed
-  # action may succeed or fail. It is possible to pass a custom_block and respond
-  # in custom ways for certain cases. If no response is performed in the
-  # given block, the default responses in the main block are executed.
-  def customizable_respond_to(success, custom_block = nil)
-    respond_to do |format|
-      custom_block.call(success, format) if custom_block
-      return if performed?
-      
-      yield format
-    end
-  end
-  
-  # Create an I18n flash notice if the action was successfull.
-  # Uses the key {controller_name}.{action_name}.flash.success
-  # or crud.{action_name}.flash.success as fallback.
-  def success_notice
-    key = "#{action_name}.flash.success"
-    {:notice => t(:"#{controller_name}.#{key}", 
-                  :model => full_entry_label, 
-                  :default => :"crud.#{key}")}
-  end
 
   class << self
     # The identifier of the model used for form parameters.
@@ -197,5 +132,92 @@ class CrudController < ListController
       before_render_edit *methods
     end
   end
+  
+  # Custom Responder that adds a flash message on success and
+  # redirects to the right locations.
+  class Responder < ActionController::Responder
+    
+    @@helper = Object.new.extend(ActionView::Helpers::TranslationHelper).
+                          extend(ActionView::Helpers::OutputSafetyHelper)
+    
+    delegate :action_name, :controller_name, :full_entry_label, :show_path, :index_path,
+             :to => :controller
+    
+    def initialize(controller, resources, options = {})
+      super(controller, with_path_args(resources, controller), options)
+    end
+    
+    protected
+    
+    # This is the common success behavior for formats associated with browsing, like :html, :iphone and so forth.
+    def navigation_behavior(*args)
+      set_flash
+      super
+    end
+    
+    # Sets a flash notice on success for put, post and delete
+    # and an alert on delete failure.
+    def set_flash
+      if !get? && !has_errors?
+        controller.flash[:notice] ||= success_notice
+      elsif delete? && has_errors?
+        controller.flash[:alert] ||= failure_notice
+      end
+    end
+    
+    # Check whether the resource has errors.
+    def has_errors?
+      options[:success] == false || super
+    end
+    
+    # The location to redirect after successfull processing.
+    def navigation_location
+      if delete? && has_errors? && request.env["HTTP_REFERER"].present?
+        :back
+      elsif options[:location]
+        options[:location]
+      elsif resource.respond_to?(:persisted?) && resource.persisted?
+        show_path
+      else
+        index_path
+      end
+    end
+    
+    # Create an I18n flash notice for a successfull action.
+    # Uses the key {controller_name}.{action_name}.flash.success
+    # or crud.{action_name}.flash.success as fallback.
+    def success_notice
+      flash_message('success')
+    end
+    
+    # Create an I18n flash alert for a failed action.
+    # Uses the key {controller_name}.{action_name}.flash.failure
+    # or crud.{action_name}.flash.failure as fallback.
+    def failure_notice
+      if resource.errors.present?
+        @@helper.safe_join(resource.errors.full_messages, '<br/>'.html_safe)
+      else
+        flash_message('failure')
+      end
+    end
+    
+    # Translates the flash message, considering _html keys as well.
+    def flash_message(state)
+      scope = "#{action_name}.flash.#{state}"
+      keys = [:"#{controller_name}.#{scope}_html", 
+              :"#{controller_name}.#{scope}",
+              :"crud.#{scope}_html",
+              :"crud.#{scope}"]
+      @@helper.t(keys.shift, :model => full_entry_label, :default => keys)
+    end
+    
+    # Wraps the resources with the path_args for correct nesting.
+    def with_path_args(resources, controller)
+      resources.size == 1 ? Array(controller.send(:path_args, resources.first)) : resources
+    end
+    
+  end
 
+  self.responder = Responder
+  
 end

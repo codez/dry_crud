@@ -32,11 +32,11 @@
   <%= render :partial => 'layouts/flash', :collection => [:notice, :alert], :as => :level %>
 
   <div class="actions btn-toolbar">
-    <div class="pull-left">
-      <%= yield :tools %>
-    </div>
     <div class="pull-right">
       <%= yield :actions %>
+    </div>
+    <div class="pull-left">
+      <%= yield :tools %>
     </div>
   </div>
 

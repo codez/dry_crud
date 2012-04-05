@@ -61,3 +61,4 @@ en:
     destroy:
       flash:
         success: "%{model} was successfully deleted."
+        failure: "%{model} could not be deleted."

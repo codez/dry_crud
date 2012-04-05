@@ -6,6 +6,8 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   belongs_to :companion, :class_name => 'CrudTestModel'
   has_and_belongs_to_many :others, :class_name => 'OtherCrudTestModel'
   has_many :mores, :class_name => 'OtherCrudTestModel', :foreign_key => :more_id
+  
+  before_destroy :protect_if_companion
 
   validates :name, :presence => true
   validates :rating, :inclusion => { :in => 1..10 }
@@ -18,6 +20,15 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
 
   def chatty
     remarks.size
+  end
+  
+  private
+  
+  def protect_if_companion
+    if companion.present?
+      errors.add(:base, 'Cannot destroy model with companion')
+      false
+    end
   end
   
 end
@@ -43,6 +54,7 @@ class CrudTestModelsController < CrudController #:nodoc:
 
   before_create :possibly_redirect
   before_create :handle_name
+  before_destroy :handle_name
 
   before_render_new :possibly_redirect
   before_render_new :set_companions
@@ -56,21 +68,21 @@ class CrudTestModelsController < CrudController #:nodoc:
   # than just the test route for this controller
   layout false
   
-  def destroy
-    super do |success, format|
-      format.html { redirect_to_index :notice => 'model is gone' } if success
-    end
-  end
-
-  def show
-    super do |format, object|
-      format.html { render :text => 'custom html' } if object.name == 'BBBBB'
-    end
-  end
-
   def index
-    super do |format, object|
+    super do |format|
       format.js { render :text => 'index js'}
+    end
+  end
+  
+  def show
+    super do |format|
+      format.html { render :text => 'custom html' } if entry.name == 'BBBBB'
+    end
+  end
+
+  def create
+    super do |format|
+      flash[:notice] = 'model got created' if entry.persisted?
     end
   end
 
@@ -89,8 +101,8 @@ class CrudTestModelsController < CrudController #:nodoc:
   # custom callback
   def handle_name
     if entry.name == 'illegal'
-      flash[:error] = "illegal name"
-      return false
+      flash[:alert] = "illegal name"
+      false
     end
   end
 

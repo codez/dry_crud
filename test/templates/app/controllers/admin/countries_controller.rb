@@ -5,10 +5,15 @@ class Admin::CountriesController < AjaxController
   self.search_columns = :name, :code
 
   def show
-    respond_to do |format|
-      format.html { redirect_to_index flash.to_hash }
-      format.json  { render :json => entry }
+    super do |format|
+      format.html { redirect_to index_path, flash.to_hash }
     end
+  end
+  
+  protected
+  
+  def show_path
+    index_path
   end
 
 end

@@ -12,6 +12,7 @@ class ListController < ApplicationController
 
   hide_action :model_class, :models_label, :inheritable_root_controller
 
+  respond_to :html, :json
 
   ##############  ACTIONS  ############################################
 
@@ -19,7 +20,7 @@ class ListController < ApplicationController
   #   GET /entries
   #   GET /entries.json
   def index(&block)
-    customizable_respond_with(entries, block)
+    respond_with(entries, &block)
   end
 
   protected
@@ -48,24 +49,6 @@ class ListController < ApplicationController
     last
   end
 
-  # Convenience method to respond to various formats with the given object.
-  def customizable_respond_with(object, custom_block=nil)
-    respond_to do |format|
-      custom_block.call(format, object) if custom_block
-      return if performed?
-
-      format.html { render_with_callback action_name }
-      format.json  { render :json => object }
-    end
-  end
-
-  # Helper method to run before_render callbacks and render the action.
-  # If a callback renders or redirects, the action is not rendered.
-  def render_with_callback(action)
-    run_callbacks(:"render_#{action}")
-    render action unless performed?
-  end
-  
   # Get the instance variable named after the model_class. 
   # If the collection variable is required, pass true as the second argument.
   def get_model_ivar(plural = false)
@@ -88,9 +71,6 @@ class ListController < ApplicationController
   end
 
   class << self
-    # Callbacks
-    include ActiveModel::Callbacks
-   
     # The ActiveRecord class of the model.
     def model_class
       @model_class ||= controller_name.classify.constantize
@@ -105,16 +85,53 @@ class ListController < ApplicationController
       model_class.model_name.human(opts)
     end
     
-    # Defines before callbacks for the render actions.
-    def define_render_callbacks(*actions)
-      args = actions.collect {|a| :"render_#{a}" }
-      args << {:only => :before,
-               :terminator => "result == false || performed?"}
-      define_model_callbacks *args
-    end
   end
   
-  define_render_callbacks :index
+
+  module Callbacks
+    
+    def self.included(controller)
+      controller.extend ActiveModel::Callbacks
+      controller.extend ClassMethods
+      controller.class_attribute :render_callbacks
+      controller.render_callbacks = []
+      
+      controller.define_render_callbacks :index
+    end
+       
+    # Helper method to run before_render callbacks and render the action.
+    # If a callback renders or redirects, the action is not rendered.
+    def render(*args, &block)
+      options = _normalize_render(*args, &block)
+      action = options[:template]
+      run_callbacks(:"render_#{action}") if render_callbacks.include?(action.to_sym)
+      super unless performed?
+    end
+    
+    protected
+    
+    
+    # Helper method the run the given block in between the before and after
+    # callbacks of the given kinds.
+    def with_callbacks(*kinds, &block)
+      kinds.reverse.inject(block) do |b, kind| 
+        lambda { run_callbacks(kind, &b) }
+      end.call
+    end
+    
+    module ClassMethods
+      # Defines before callbacks for the render actions.
+      def define_render_callbacks(*actions)
+        render_callbacks.push *actions
+        args = actions.collect {|a| :"render_#{a}" }
+        args << {:only => :before,
+                 :terminator => "result == false || performed?"}
+        define_model_callbacks *args
+      end
+    end
+  end
+
+  include Callbacks
 
   # The search functionality for the index table.
   # Extracted into an own module for convenience.
