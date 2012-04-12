@@ -12,21 +12,21 @@
   <![endif]-->
 
   <%= stylesheet_link_tag 'application', :media => 'all' %>
-  
+
   <!-- fav and touch icons -->
   <link href="images/favicon.ico" rel="shortcut icon">
   <link href="images/apple-touch-icon.png" rel="apple-touch-icon">
   <link href="images/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72">
   <link href="images/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114">
-  
+
   <%= yield :head %>
 </head>
 <body>
-  
+
 
 <div class="container">
   <%= render 'layouts/nav' %>
-  
+
   <h1><%= @title %></h1>
 
   <%= render :partial => 'layouts/flash', :collection => [:notice, :alert], :as => :level %>
@@ -43,13 +43,13 @@
   <div id="content">
     <%= yield %>
   </div>
-  
+
 </div>
 
 <footer>
   <p>&copy; Company <%= Time.now.year %></p>
 </footer>
-  
+
 <!-- Javascript placed at the end of the document so the pages load faster -->
 <%= javascript_include_tag 'application' %>
 <%= javascript_tag yield(:javascripts) if content_for?(:javascripts) %>

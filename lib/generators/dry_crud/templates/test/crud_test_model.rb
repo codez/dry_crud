@@ -6,7 +6,7 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   belongs_to :companion, :class_name => 'CrudTestModel'
   has_and_belongs_to_many :others, :class_name => 'OtherCrudTestModel'
   has_many :mores, :class_name => 'OtherCrudTestModel', :foreign_key => :more_id
-  
+
   before_destroy :protect_if_companion
 
   validates :name, :presence => true
@@ -21,16 +21,16 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   def chatty
     remarks.size
   end
-  
+
   private
-  
+
   def protect_if_companion
     if companion.present?
       errors.add(:base, 'Cannot destroy model with companion')
       false
     end
   end
-  
+
 end
 
 class OtherCrudTestModel < ActiveRecord::Base #:nodoc:
@@ -67,13 +67,13 @@ class CrudTestModelsController < CrudController #:nodoc:
   # don't use the standard layout as it may require different routes
   # than just the test route for this controller
   layout false
-  
+
   def index
     super do |format|
       format.js { render :text => 'index js'}
     end
   end
-  
+
   def show
     super do |format|
       format.html { render :text => 'custom html' } if entry.name == 'BBBBB'
@@ -153,11 +153,11 @@ module CrudTestHelper
   def model_class
     CrudTestModel
   end
-  
+
   def controller_name
     'crud_test_models'
   end
-  
+
   def action_name
     'index'
   end
@@ -165,7 +165,7 @@ module CrudTestHelper
   def params
     {}
   end
-  
+
   def path_args(entry)
     entry
   end
@@ -173,11 +173,11 @@ module CrudTestHelper
   def sortable?(attr)
     true
   end
-  
+
   def h(text)
     ERB::Util.h(text)
   end
-  
+
   protected
 
   # Sets up the test database with a crud_test_models table.
@@ -256,9 +256,9 @@ module CrudTestHelper
                           :income => 10000000 * index + 0.1 * index,
                           :birthdate => "#{1900 + 10 * index}-#{index}-#{index}",
                           # store entire date to avoid time zone issues
-                          :gets_up_at => RUBY_VERSION.include?('1.9.') ? 
+                          :gets_up_at => RUBY_VERSION.include?('1.9.') ?
                                             Time.local(2000,1,1,index,index) :
-                                            Time.utc(2000,1,1,index,index),  
+                                            Time.utc(2000,1,1,index,index),
                           :last_seen => "#{2000 + 10 * index}-#{index}-#{index} 1#{index}:2#{index}",
                           :human => index % 2 == 0,
                           :remarks => "#{c} #{str(index + 1)} #{str(index + 2)}\n" * (index % 3 + 1))
@@ -288,5 +288,5 @@ module CrudTestHelper
 
     c.execute("BEGIN") if start_transaction
   end
-  
+
 end

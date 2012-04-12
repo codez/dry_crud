@@ -87,7 +87,7 @@ class CrudController < ListController
   def entry
     get_model_ivar || set_model_ivar(params[:id] ? find_entry : build_entry)
   end
-  
+
   # Creates a new model entry.
   def build_entry
     model_scope.new
@@ -97,7 +97,7 @@ class CrudController < ListController
   def find_entry
     model_scope.find(params[:id])
   end
-  
+
   # Assigns the attributes from the params to the model entry.
   def assign_attributes
     entry.attributes = params[model_identifier]
@@ -112,13 +112,13 @@ class CrudController < ListController
   def index_url
     polymorphic_url(path_args(model_class), :returning => true)
   end
-  
+
   # Url of the show action. May delegate to index_url if a subclass has no show action.
   def show_url
     polymorphic_url(path_args(entry))
   end
 
-  
+
   private
 
   class << self
@@ -134,29 +134,29 @@ class CrudController < ListController
       before_render_edit *methods
     end
   end
-  
+
   # Custom Responder that adds a flash message on success and
   # redirects to the right locations.
   class Responder < ActionController::Responder
-    
+
     @@helper = Object.new.extend(ActionView::Helpers::TranslationHelper).
                           extend(ActionView::Helpers::OutputSafetyHelper)
-    
+
     delegate :action_name, :controller_name, :full_entry_label, :show_url, :index_url,
              :to => :controller
-    
+
     def initialize(controller, resources, options = {})
       super(controller, with_path_args(resources, controller), options)
     end
-    
+
     protected
-    
+
     # This is the common success behavior for formats associated with browsing, like :html, :iphone and so forth.
     def navigation_behavior(*args)
       set_flash
       super
     end
-    
+
     # Sets a flash notice on success for put, post and delete
     # and an alert on delete failure.
     def set_flash
@@ -166,12 +166,12 @@ class CrudController < ListController
         controller.flash[:alert] ||= failure_notice
       end
     end
-    
+
     # Check whether the resource has errors.
     def has_errors?
       options[:success] == false || super
     end
-    
+
     # The location to redirect after successfull processing.
     def navigation_location
       if delete? && has_errors? && request.env["HTTP_REFERER"].present?
@@ -184,14 +184,14 @@ class CrudController < ListController
         index_url
       end
     end
-    
+
     # Create an I18n flash notice for a successfull action.
     # Uses the key {controller_name}.{action_name}.flash.success
     # or crud.{action_name}.flash.success as fallback.
     def success_notice
       flash_message('success')
     end
-    
+
     # Create an I18n flash alert for a failed action.
     # Uses the key {controller_name}.{action_name}.flash.failure
     # or crud.{action_name}.flash.failure as fallback.
@@ -202,24 +202,24 @@ class CrudController < ListController
         flash_message('failure')
       end
     end
-    
+
     # Translates the flash message, considering _html keys as well.
     def flash_message(state)
       scope = "#{action_name}.flash.#{state}"
-      keys = [:"#{controller_name}.#{scope}_html", 
+      keys = [:"#{controller_name}.#{scope}_html",
               :"#{controller_name}.#{scope}",
               :"crud.#{scope}_html",
               :"crud.#{scope}"]
       @@helper.t(keys.shift, :model => full_entry_label, :default => keys)
     end
-    
+
     # Wraps the resources with the path_args for correct nesting.
     def with_path_args(resources, controller)
       resources.size == 1 ? Array(controller.send(:path_args, resources.first)) : resources
     end
-    
+
   end
 
   self.responder = Responder
-  
+
 end

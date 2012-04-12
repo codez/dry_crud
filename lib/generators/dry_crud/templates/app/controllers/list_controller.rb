@@ -24,39 +24,39 @@ class ListController < ApplicationController
   end
 
   protected
-  
+
   # Helper method to access the entries to be displayed in the current index page in an uniform way.
   def entries
     get_model_ivar(true) || set_model_ivar(list_entries)
   end
 
-  # The base relation used to filter the entries. 
+  # The base relation used to filter the entries.
   # This method may be adapted as long it returns an ActiveRecord::Relation.
   def list_entries
     model_scope
   end
-  
+
   # The scope where model entries will be listed and created.
-  # This is mainly used for nested models to provide the 
+  # This is mainly used for nested models to provide the
   # required context.
   def model_scope
     model_class.scoped
   end
-  
+
   # The path arguments to link to the given entry.
   # If the controller is nested, this provides the required context.
   def path_args(last)
     last
   end
 
-  # Get the instance variable named after the model_class. 
+  # Get the instance variable named after the model_class.
   # If the collection variable is required, pass true as the second argument.
   def get_model_ivar(plural = false)
     name = model_class.name.underscore
     name = name.pluralize if plural
     instance_variable_get(:"@#{name}")
   end
-  
+
   # Sets an instance variable with the underscored class name if the given value.
   # If the value is a collection, sets the plural name.
   def set_model_ivar(value)
@@ -81,43 +81,43 @@ class ListController < ApplicationController
       opts = {:count => (plural ? 3 : 1)}
       opts[:default] = model_class.model_name.human.titleize
       opts[:default] = opts[:default].pluralize if plural
-      
+
       model_class.model_name.human(opts)
     end
-    
+
   end
-  
+
   # Provide before_render callbacks.
   module Callbacks
-    
+
     def self.included(controller)
       controller.extend ActiveModel::Callbacks
       controller.extend ClassMethods
       controller.alias_method_chain :render, :callbacks
-      
+
       controller.define_render_callbacks :index
     end
-       
+
     # Helper method to run before_render callbacks and render the action.
     # If a callback renders or redirects, the action is not rendered.
     def render_with_callbacks(*args, &block)
       callback = "render_#{_normalize_render(*args, &block)[:template]}"
       run_callbacks(callback) if respond_to?(:"_run_#{callback}_callbacks", true)
-      
+
       render_without_callbacks(*args, &block) unless performed?
     end
-    
+
     protected
-    
-    
+
+
     # Helper method the run the given block in between the before and after
     # callbacks of the given kinds.
     def with_callbacks(*kinds, &block)
-      kinds.reverse.inject(block) do |b, kind| 
+      kinds.reverse.inject(block) do |b, kind|
         lambda { run_callbacks(kind, &b) }
       end.call
     end
-    
+
     module ClassMethods
       # Defines before callbacks for the render actions.
       def define_render_callbacks(*actions)
@@ -155,12 +155,12 @@ class ListController < ApplicationController
     def search_condition
       if search_support? && params[:q].present?
         terms = params[:q].split(/\s+/).collect { |t| "%#{t}%" }
-        clause = search_columns.collect do |f| 
+        clause = search_columns.collect do |f|
           col = f.to_s.include?('.') ? f : "#{model_class.table_name}.#{f}"
           "#{col} LIKE ?"
         end.join(" OR ")
         clause = terms.collect {|t| "(#{clause})" }.join(" AND ")
-        
+
          ["(#{clause})"] + terms.collect {|t| [t] * search_columns.size }.flatten
       end
     end
@@ -272,7 +272,7 @@ class ListController < ApplicationController
       session[:list_params] ||= {}
       session[:list_params][remember_key] ||= {}
     end
-    
+
     # Params are stored by request path to play nice when a controller
     # is used in different routes.
     def remember_key
@@ -289,27 +289,27 @@ class ListController < ApplicationController
   # namespace, may define this attribute as follows:
   #   self.nesting = :admin, Country
   module Nesting
-    
+
     # Adds the :nesting class attribute and parent helper methods
     # to the including controller.
     def self.included(controller)
       controller.class_attribute :nesting
-      
+
       controller.helper_method :parent, :parents
-      
+
       controller.alias_method_chain :model_scope, :nesting
       controller.alias_method_chain :path_args, :nesting
     end
-    
+
     protected
-    
+
     # Returns the direct parent ActiveRecord of the current request, if any.
     def parent
       parents.select {|p| p.is_a?(ActiveRecord::Base) }.last
     end
-    
+
     # Returns the parent entries of the current request, if any.
-    # These are ActiveRecords or namespace symbols, corresponding 
+    # These are ActiveRecords or namespace symbols, corresponding
     # to the defined nesting attribute.
     def parents
       @parents ||= Array(nesting).collect do |p|
@@ -320,18 +320,18 @@ class ListController < ApplicationController
         end
       end
     end
-    
+
     # Loads the parent entry for the given ActiveRecord class.
     # By default, performs a find with the class_name_id param.
     def parent_entry(clazz)
       set_model_ivar(clazz.find(params["#{clazz.name.underscore}_id"]))
     end
-    
+
     # An array of objects used in url_for and related functions.
     def path_args_with_nesting(last)
       parents + [last]
     end
-    
+
     # Uses the parent entry (if any) to constrain the model scope.
     def model_scope_with_nesting
       if parent.present?
@@ -340,13 +340,13 @@ class ListController < ApplicationController
         model_scope_without_nesting
       end
     end
-    
+
     # The model scope for the current parent resource.
     def parent_scope
       parent.send(model_class.name.underscore.pluralize)
     end
   end
-  
+
   include Nesting
-  
+
 end

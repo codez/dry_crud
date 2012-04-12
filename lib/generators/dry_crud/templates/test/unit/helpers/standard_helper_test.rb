@@ -12,7 +12,7 @@ class StandardHelperTest < ActionView::TestCase
   def format_size(obj)
     "#{f(obj.size)} items"
   end
-  
+
   def format_string_size(obj)
     "#{f(obj.size)} chars"
   end
@@ -79,7 +79,7 @@ class StandardHelperTest < ActionView::TestCase
   test "format attr with custom format_string_size method" do
     assert_equal "4 chars", format_attr("abcd", :size)
   end
-  
+
   test "format attr with custom format_size method" do
     assert_equal "2 items", format_attr([1,2], :size)
   end
@@ -124,12 +124,12 @@ class StandardHelperTest < ActionView::TestCase
     m = crud_test_models(:AAAAA)
     assert_equal '1910-01-01', format_type(m, :birthdate)
   end
-  
+
   test "format time column" do
     m = crud_test_models(:AAAAA)
     assert_equal '01:01', format_type(m, :gets_up_at)
   end
-  
+
   test "format datetime column" do
     m = crud_test_models(:AAAAA)
     assert_equal "2010-01-01 11:21", format_type(m, :last_seen)
@@ -140,22 +140,22 @@ class StandardHelperTest < ActionView::TestCase
     assert_equal "<p>AAAAA BBBBB CCCCC\n<br />AAAAA BBBBB CCCCC\n</p>", format_type(m, :remarks)
     assert format_type(m, :remarks).html_safe?
   end
-  
+
   test "format belongs to column without content" do
     m = crud_test_models(:AAAAA)
     assert_equal t(:'global.associations.no_entry'), format_attr(m, :companion)
   end
-  
+
   test "format belongs to column with content" do
     m = crud_test_models(:BBBBB)
     assert_equal "AAAAA", format_attr(m, :companion)
   end
-  
+
   test "format has_many column with content" do
     m = crud_test_models(:CCCCC)
     assert_equal "<ul><li>AAAAA</li><li>BBBBB</li></ul>", format_attr(m, :others)
   end
-  
+
   test "content_tag_nested escapes safe correctly" do
     html = content_tag_nested(:div, ['a', 'b']) { |e| content_tag(:span, e) }
     assert_equal "<div><span>a</span><span>b</span></div>", html
@@ -165,22 +165,22 @@ class StandardHelperTest < ActionView::TestCase
     html = content_tag_nested(:div, ['a', 'b']) { |e| "<#{e}>" }
     assert_equal "<div>&lt;a&gt;&lt;b&gt;</div>", html
   end
-  
+
   test "content_tag_nested without block" do
-    html = content_tag_nested(:div, ['a', 'b']) 
+    html = content_tag_nested(:div, ['a', 'b'])
     assert_equal "<div>ab</div>", html
   end
-  
+
   test "safe_join without block" do
-    html = safe_join(['<a>', '<b>'.html_safe]) 
+    html = safe_join(['<a>', '<b>'.html_safe])
     assert_equal "&lt;a&gt;<b>", html
   end
-  
+
   test "safe_join with block" do
-    html = safe_join(['a', 'b']) { |e| content_tag(:span, e) } 
+    html = safe_join(['a', 'b']) { |e| content_tag(:span, e) }
     assert_equal "<span>a</span><span>b</span>", html
   end
-  
+
   test "empty table should render message" do
     result = table([]) { }
     assert result.html_safe?
@@ -261,47 +261,47 @@ class StandardHelperTest < ActionView::TestCase
     assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
     assert_match /button .*?type="submit">Save<\/button>/, f
   end
-  
+
   test "translate inheritable lookup" do
     # current controller is :crud_test_models, action is :index
     @controller = CrudTestModelsController.new
 
     I18n.backend.store_translations :en, :global => { :test_key => 'global' }
     assert_equal 'global', ti(:test_key)
-    
+
     I18n.backend.store_translations :en, :list => {  :global => {:test_key => 'list global'} }
     assert_equal 'list global', ti(:test_key)
-    
+
     I18n.backend.store_translations :en, :list => {  :index => {:test_key => 'list index'} }
     assert_equal 'list index', ti(:test_key)
-    
+
     I18n.backend.store_translations :en, :crud => {  :global => {:test_key => 'crud global'} }
     assert_equal 'crud global', ti(:test_key)
-    
+
     I18n.backend.store_translations :en, :crud => {  :index => {:test_key => 'crud index'} }
     assert_equal 'crud index', ti(:test_key)
-    
+
     I18n.backend.store_translations :en, :crud_test_models => {  :global => {:test_key => 'test global'} }
     assert_equal 'test global', ti(:test_key)
-    
+
     I18n.backend.store_translations :en, :crud_test_models => {  :index => {:test_key => 'test index'} }
     assert_equal 'test index', ti(:test_key)
   end
-  
+
   test "translate association lookup" do
     assoc = CrudTestModel.reflect_on_association(:companion)
-    
+
     I18n.backend.store_translations :en, :global => { :associations => {:test_key => 'global'} }
     assert_equal 'global', ta(:test_key, assoc)
-    
+
     I18n.backend.store_translations :en, :activerecord => { :associations => { :crud_test_model => {:test_key => 'model'} } }
     assert_equal 'model', ta(:test_key, assoc)
-    
+
     I18n.backend.store_translations :en, :activerecord => { :associations => { :models => {
     :crud_test_model => { :companion => {:test_key => 'companion'} } } } }
     assert_equal 'companion', ta(:test_key, assoc)
-    
+
     assert_equal 'global', ta(:test_key)
   end
-  
+
 end

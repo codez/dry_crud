@@ -4,7 +4,7 @@ class CreatePeopleAndCities < ActiveRecord::Migration
       t.string :name, :null => false
       t.string :code, :null => :false, :limit => 3
     end
-    
+
     create_table :cities do |t|
       t.string :name, :null => false
       t.integer :country_id, :null => false

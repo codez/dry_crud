@@ -63,7 +63,7 @@ module CustomAssertions
       end
     end
   end
-  
+
   # The method used to by Test::Unit to format arguments in
   # #build_message. Prints ActiveRecord objects in a simpler format.
   # Only works for Ruby 1.9

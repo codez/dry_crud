@@ -11,17 +11,17 @@ module ListHelper
     # only use default attrs if no attrs and no block are given
     attributes = (block_given? || attrs.present?) ? attrs : default_attrs
     table(entries, options) do |t|
-  	  t.sortable_attrs(*attributes)	
-  	  yield t if block_given?
+      t.sortable_attrs(*attributes)
+      yield t if block_given?
     end
   end
 
   # The default attributes to use in attrs, list and form partials.
   # These are all defined attributes except certain special ones like 'id' or 'position'.
-  def default_attrs	
+  def default_attrs
     attrs = model_class.column_names.collect(&:to_sym)
     attrs - [:id, :position, :password]
   end
-  
-  
+
+
 end

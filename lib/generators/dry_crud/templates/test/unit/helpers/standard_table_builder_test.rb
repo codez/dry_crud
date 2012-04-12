@@ -61,7 +61,7 @@ class StandardTableBuilderTest < ActionView::TestCase
       <thead>
       <tr><th>Upcase</th><th>Size</th></tr>
       </thead>
-	  <tbody>
+    <tbody>
       <tr><td>FOO</td><td>3 chars</td></tr>
       <tr><td>BAHR</td><td>4 chars</td></tr>
       </tbody>
@@ -105,7 +105,7 @@ class StandardTableBuilderTest < ActionView::TestCase
 
     assert_dom_equal dom, table.to_html
   end
-  
+
   test "empty entries collection renders empty table" do
     dom = <<-FIN
       <table class="table">
@@ -117,8 +117,8 @@ class StandardTableBuilderTest < ActionView::TestCase
       </table>
     FIN
     dom.gsub!(/[\n\t]/, "").gsub!(/\s{2,}/, "")
-    
- 	table = StandardTableBuilder.new([], self)
+
+   table = StandardTableBuilder.new([], self)
     table.col('head', :class => 'left') { |e| link_to e, "/" }
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }

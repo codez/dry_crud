@@ -9,9 +9,9 @@ class Admin::CountriesController < AjaxController
       format.html { redirect_to index_url, flash.to_hash }
     end
   end
-  
+
   protected
-  
+
   def show_url
     index_url
   end

@@ -13,7 +13,7 @@ class CrudHelperTest < ActionView::TestCase
   include StandardHelper
   include ListHelper
   include CrudTestHelper
-  
+
   attr_reader :entries
 
   setup :reset_db, :setup_db, :create_test_data
@@ -91,7 +91,7 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /select .*?name="crud_test_model\[companion_id\]"/, f
     assert_match /textarea .*?name="crud_test_model\[remarks\]"/, f
   end
-  
+
   def entry
     @entry ||= CrudTestModel.first
   end

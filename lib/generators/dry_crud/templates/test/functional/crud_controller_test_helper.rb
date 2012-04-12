@@ -134,7 +134,7 @@ module CrudControllerTestHelper
   def assert_redirected_to_index
     assert_redirected_to test_params(:action => 'index', :returning => true)
   end
-  
+
   def assert_redirected_to_show(entry)
     assert_redirected_to test_params(:action => 'show', :id => entry.id)
   end
@@ -153,11 +153,11 @@ module CrudControllerTestHelper
   def model_identifier
     @controller.model_identifier
   end
-  
+
   def entry
     @controller.send(:entry)
   end
-  
+
   def entries
     @controller.send(:entries)
   end
@@ -171,11 +171,11 @@ module CrudControllerTestHelper
   def test_entry_attrs
     raise "Implement this method in your test class"
   end
-  
+
   def test_params(params = {})
     nesting_params.merge(params)
   end
-  
+
   def nesting_params
     params = {}
     # for nested controllers, add parent ids to each request

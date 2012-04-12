@@ -24,9 +24,9 @@ class Admin::CountriesControllerTest < ActionController::TestCase
     get :show, test_params(:id => test_entry.id)
     assert_redirected_to_index
   end
-  
+
   protected
-  
+
   def assert_redirected_to_show(entry)
     assert_redirected_to_index
   end

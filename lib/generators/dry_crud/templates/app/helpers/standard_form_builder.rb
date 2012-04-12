@@ -47,7 +47,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     html_options[:size] ||= 10
     super(attr, html_options)
   end
-  
+
   # Render a standard string field with column contraints.
   def string_field(attr, html_options = {})
     html_options[:maxlength] ||= column_property(@object, attr, :limit)
@@ -87,12 +87,12 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   def time_field(attr, html_options = {})
     time_select(attr, {}, html_options)
   end
-  
+
   # Render a field to enter a date and time. You might want to customize this.
   def datetime_field(attr, html_options = {})
     datetime_select(attr, {}, html_options)
   end
-  
+
   # Render a select element for a :belongs_to association defined by attr.
   # Use additional html_options for the select element.
   # To pass a custom element list, specify the list with the :list key or
@@ -100,11 +100,11 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   def belongs_to_field(attr, html_options = {})
     list = association_entries(attr, html_options)
     if list.present?
-      collection_select(attr, 
-                        list, 
-                        :id, 
-                        :to_s, 
-                        html_options[:multiple] ? {} : select_options(attr), 
+      collection_select(attr,
+                        list,
+                        :id,
+                        :to_s,
+                        html_options[:multiple] ? {} : select_options(attr),
                         html_options)
     else
       ta(:none_available, association(@object, attr))
@@ -144,7 +144,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
     content_tag(:div, :class => 'control-group') do
       label(attr, caption_or_content, :class => 'control-label') +
-      content_tag(:div, content, :class => 'controls') 
+      content_tag(:div, content, :class => 'controls')
     end
   end
 
@@ -155,7 +155,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     required?(attr) ? { :prompt => ta(:please_select, assoc) } :
                       { :include_blank => ta(:no_entry, assoc) }
   end
-  
+
   # Dispatch methods starting with 'labeled_' to render a label and the corresponding
   # input field. E.g. labeled_boolean_field(:checked, :class => 'bold')
   def method_missing(name, *args)
@@ -177,7 +177,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   # If one or more macros are given, the association must be of this kind.
   def association_kind?(attr, type, *macros)
     if type == :integer || type.nil?
-      assoc = association(@object, attr, *macros) 
+      assoc = association(@object, attr, *macros)
       assoc.present? && assoc.options[:polymorphic].nil?
     else
       false
@@ -205,8 +205,8 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     attr, attr_id = assoc_and_id_attr(attr)
     validators = @object.class.validators_on(attr) +
                  @object.class.validators_on(attr_id)
-    validators.any? do |v| 
-      v.kind == :presence && 
+    validators.any? do |v|
+      v.kind == :presence &&
       !v.options.key?(:if) && !v.options.key?(:unless)
     end
   end

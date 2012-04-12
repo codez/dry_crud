@@ -22,7 +22,7 @@ module StandardHelper
   end
 
   # Formats an arbitrary attribute of the given ActiveRecord object.
-  # If no specific format_{type}_{attr} or format_{attr} method is found, 
+  # If no specific format_{type}_{attr} or format_{attr} method is found,
   # formats the value as follows:
   # If the value is an associated model, renders the label of this object.
   # Otherwise, calls format_type.
@@ -98,7 +98,7 @@ module StandardHelper
     options[:builder] ||= StandardFormBuilder
     options[:html] ||= {}
     add_css_class options[:html], 'form-horizontal'
-    
+
     form_for(object, options) do |form|
       record = object.is_a?(Array) ? object.last : object
       content = render('shared/error_messages', :errors => record.errors, :object => record)
@@ -110,8 +110,8 @@ module StandardHelper
       end
 
       content << content_tag(:div, :class => 'form-actions') do
-        form.button(ti(:"button.save"), :class => 'btn btn-primary') + 
-        ' ' + 
+        form.button(ti(:"button.save"), :class => 'btn btn-primary') +
+        ' ' +
         cancel_link(object)
       end
       content.html_safe
@@ -130,19 +130,19 @@ module StandardHelper
       content_tag(:li, block_given? ? yield(item) : f(item))
     end
   end
-  
+
   # render a content tag with the collected contents rendered
   # by &block for each item in collection.
   def content_tag_nested(tag, collection, options = {}, &block)
     content_tag(tag, safe_join(collection, &block), options)
   end
-  
+
   # Overridden method that takes a block that is executed for each item in array
   # before appending the results.
   def safe_join(array, sep = $,, &block)
     super(block_given? ? array.collect(&block) : array, sep)
   end
-  
+
   ######## ACTION LINKS ###################################################### :nodoc:
 
   # A generic helper method to create action links.
@@ -159,8 +159,8 @@ module StandardHelper
     html << ' ' << label if label
     html
   end
-  
-  # Translates the passed key by looking it up over the controller hierarchy. 
+
+  # Translates the passed key by looking it up over the controller hierarchy.
   # The key is searched in the following order:
   #  - {controller}.{current_partial}.{key}
   #  - {controller}.{current_action}.{key}
@@ -184,15 +184,15 @@ module StandardHelper
       current = current.superclass
     end
     defaults << :"global.#{key}"
-    
+
     variables[:default] ||= defaults
     t(defaults.shift, variables)
   end
-  
+
   alias_method :ti, :translate_inheritable
 
   # Translates the passed key for an active record association. This helper is used
-  # for rendering association dependent keys in forms like :no_entry, :none_available or 
+  # for rendering association dependent keys in forms like :no_entry, :none_available or
   # :please_select.
   # The key is looked up in the following order:
   #  - activerecord.associations.models.{model_name}.{association_name}.{key}
@@ -208,10 +208,10 @@ module StandardHelper
     end
     t(primary, variables)
   end
-  
+
   alias_method :ta, :translate_association
-  
-  
+
+
   # Returns the css class for the given flash level.
   def flash_class(level)
     case level
@@ -220,7 +220,7 @@ module StandardHelper
     else level.to_s
     end
   end
-  
+
   # Adds a class to the given options, even if there are already classes.
   def add_css_class(options, classes)
     if options[:class]
@@ -229,7 +229,7 @@ module StandardHelper
       options[:class] = classes
     end
   end
-  
+
   protected
 
   # Helper methods that are not directly called from templates.

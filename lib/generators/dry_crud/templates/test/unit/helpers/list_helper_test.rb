@@ -11,7 +11,7 @@ class ListHelperTest < ActionView::TestCase
   include StandardHelper
   include CrudTestHelper
   include CustomAssertions
-  
+
   attr_reader :entries
 
   setup :reset_db, :setup_db, :create_test_data

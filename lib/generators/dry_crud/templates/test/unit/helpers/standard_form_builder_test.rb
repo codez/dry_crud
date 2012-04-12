@@ -64,18 +64,18 @@ class StandardFormBuilderTest < ActionView::TestCase
   end
 
   test "input_fields concats multiple fields" do
-  	result = form.labeled_input_fields(:name, :remarks, :children)
-  	assert result.html_safe?
-  	assert result.include?(form.input_field(:name))
-  	assert result.include?(form.input_field(:remarks))
-  	assert result.include?(form.input_field(:children))
+    result = form.labeled_input_fields(:name, :remarks, :children)
+    assert result.html_safe?
+    assert result.include?(form.input_field(:name))
+    assert result.include?(form.input_field(:remarks))
+    assert result.include?(form.input_field(:children))
   end
 
   test "labeld_input_field adds required mark" do
-  	result = form.labeled_input_field(:name)
-  	assert result.include?(StandardFormBuilder::REQUIRED_MARK)
-  	result = form.labeled_input_field(:remarks)
-  	assert !result.include?(StandardFormBuilder::REQUIRED_MARK)
+    result = form.labeled_input_field(:name)
+    assert result.include?(StandardFormBuilder::REQUIRED_MARK)
+    result = form.labeled_input_field(:remarks)
+    assert !result.include?(StandardFormBuilder::REQUIRED_MARK)
   end
 
   test "belongs_to_field has all options by default" do
@@ -158,13 +158,13 @@ class StandardFormBuilderTest < ActionView::TestCase
   end
 
   test "label creates captionized label" do
-  	assert_match /label [^>]*for.+Gugus dada/, form.label(:gugus_dada)
-  	assert form.label(:gugus_dada).html_safe?
+    assert_match /label [^>]*for.+Gugus dada/, form.label(:gugus_dada)
+    assert form.label(:gugus_dada).html_safe?
   end
 
   test "classic label still works" do
-  	assert_match /label [^>]*for.+hoho/, form.label(:gugus_dada, "hoho")
-  	assert form.label(:gugus_dada, "hoho").html_safe?
+    assert_match /label [^>]*for.+hoho/, form.label(:gugus_dada, "hoho")
+    assert form.label(:gugus_dada, "hoho").html_safe?
   end
 
   test "labeled_text_field create label" do
@@ -173,29 +173,29 @@ class StandardFormBuilderTest < ActionView::TestCase
   end
 
   test "labeled field creates label" do
-  	result = form.labeled("gugus", "<input type='text' name='gugus' />".html_safe)
-  	assert result.html_safe?
-  	assert_match /label [^>]*for.+<input/m, result
+    result = form.labeled("gugus", "<input type='text' name='gugus' />".html_safe)
+    assert result.html_safe?
+    assert_match /label [^>]*for.+<input/m, result
   end
-  
+
   test "labeled field creates label and block" do
     result = form.labeled("gugus") { "<input type='text' name='gugus' />".html_safe }
     assert result.html_safe?
     assert_match /label [^>]*for.+<input/m, result
   end
-  
+
   test "labeled field creates label with caption" do
     result = form.labeled("gugus", 'Caption', "<input type='text' name='gugus' />".html_safe)
     assert result.html_safe?
     assert_match /label [^>]*for.+>Caption<\/label>.*<input/m, result
   end
-  
+
   test "labeled field creates label with caption and block" do
     result = form.labeled("gugus", 'Caption') { "<input type='text' name='gugus' />".html_safe }
     assert result.html_safe?
     assert_match /label [^>]*for.+>Caption<\/label>.*<input/m, result
   end
-  
+
   test "required mark is shown" do
     assert_equal StandardFormBuilder::REQUIRED_MARK, form.required_mark(:name)
     assert_equal "", form.required_mark(:rating)

@@ -57,7 +57,7 @@ class StandardTableBuilder
   def to_html
     add_css_class options, 'table'
     content_tag :table, options do
-      content_tag(:thead, html_header) + 
+      content_tag(:thead, html_header) +
       content_tag_nested(:tbody, entries) { |e| html_row(e) }
     end
   end
@@ -91,7 +91,7 @@ class StandardTableBuilder
   def entry_class
     entries.first.class
   end
-  
+
   # Helper class to store column information.
   class Col < Struct.new(:header, :html_options, :template, :block) #:nodoc:
 
