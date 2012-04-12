@@ -1,4 +1,4 @@
-= render_attrs @entry, *default_attrs
+= render_attrs entry, *default_attrs
 = labeled(ti(:i_think_its), ti(:nice))
 = labeled(ti(:check_google)) do
-	= link_to ti(:"link.maps"), "http://map.google.com/?q=#{@entry.name}"
+  = link_to ti(:"link.maps"), "http://map.google.com/?q=#{entry.name}"

@@ -80,7 +80,7 @@ class CrudHelperTest < ActionView::TestCase
       capture { crud_form }
     end
 
-    assert_match /form .*?action="\/crud_test_models\/#{@entry.id}"/, f
+    assert_match /form .*?action="\/crud_test_models\/#{entry.id}"/, f
     assert_match /input .*?name="crud_test_model\[name\]" .*?type="text"/, f
     assert_match /input .*?name="crud_test_model\[whatever\]" .*?type="text"/, f
     assert_match /input .*?name="crud_test_model\[children\]" .*?type="number"/, f

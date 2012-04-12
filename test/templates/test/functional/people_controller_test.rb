@@ -24,9 +24,37 @@ class PeopleControllerTest < ActionController::TestCase
 
   def test_index_search
     super
-  	assert_equal 1, entries.size
+    assert_equal 1, entries.size
+  end
+  
+  def test_show_js
+    get :show, :id => test_entry.id, :format => :js
+    assert_response :success
+    assert_template 'show'
+    assert_match /\$\('#content'\)/, response.body
   end
 
+  def test_edit_js
+    get :edit, :id => test_entry.id, :format => :js
+    assert_response :success
+    assert_template 'edit'
+    assert_match /\$\('#content'\)/, response.body
+  end
+  
+  def test_update_js
+    put :update, :id => test_entry.id, :format => :js, :person => {:name => 'New Name'}
+    assert_response :success
+    assert_template 'update'
+    assert_match /\$\('#content'\)/, response.body
+  end
+  
+  def test_update_fail_js
+    put :update, :id => test_entry.id, :format => :js, :person => {:name => ' '}
+    assert_response :success
+    assert_template 'update'
+    assert_match /alert/, response.body
+  end
+  
   protected
 
   def test_entry
