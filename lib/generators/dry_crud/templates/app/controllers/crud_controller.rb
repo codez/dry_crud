@@ -136,14 +136,14 @@ class CrudController < ListController
   end
 
   # Custom Responder that adds a flash message on success and
-  # redirects to the right locations.
+  # redirects to the right locations. An additional :success option
+  # is used to handle action callback chain halts.
   class Responder < ActionController::Responder
 
     @@helper = Object.new.extend(ActionView::Helpers::TranslationHelper).
                           extend(ActionView::Helpers::OutputSafetyHelper)
 
-    delegate :action_name, :controller_name, :full_entry_label, :show_url, :index_url,
-             :to => :controller
+    delegate :action_name, :controller_name, :to => :controller
 
     def initialize(controller, resources, options = {})
       super(controller, with_path_args(resources, controller), options)
@@ -163,25 +163,32 @@ class CrudController < ListController
       if !get? && !has_errors?
         controller.flash[:notice] ||= success_notice
       elsif delete? && has_errors?
-        controller.flash[:alert] ||= failure_notice
+        controller.flash[:alert] ||= failure_alert
       end
     end
 
     # Check whether the resource has errors.
+    # Additionally checks the :success option.
     def has_errors?
       options[:success] == false || super
     end
 
     # The location to redirect after successfull processing.
+    # Redirects :back if a delete failed, to the show_url if the
+    # resource exists and to index_url otherwise.
     def navigation_location
       if delete? && has_errors? && request.env["HTTP_REFERER"].present?
         :back
       elsif options[:location]
         options[:location]
-      elsif resource.respond_to?(:persisted?) && resource.persisted?
-        show_url
+      elsif controller.respond_to?(:index_url)
+        if resource.respond_to?(:persisted?) && resource.persisted?
+          controller.send(:show_url)
+        else
+          controller.send(:index_url)
+        end
       else
-        index_url
+        super
       end
     end
 
@@ -195,7 +202,7 @@ class CrudController < ListController
     # Create an I18n flash alert for a failed action.
     # Uses the key {controller_name}.{action_name}.flash.failure
     # or crud.{action_name}.flash.failure as fallback.
-    def failure_notice
+    def failure_alert
       if resource.errors.present?
         @@helper.safe_join(resource.errors.full_messages, '<br/>'.html_safe)
       else
@@ -210,7 +217,8 @@ class CrudController < ListController
               :"#{controller_name}.#{scope}",
               :"crud.#{scope}_html",
               :"crud.#{scope}"]
-      @@helper.t(keys.shift, :model => full_entry_label, :default => keys)
+      model = controller.respond_to?(:full_entry_label) ? controller.send(:full_entry_label) : entry.to_s
+      @@helper.t(keys.shift, :model => model, :default => keys)
     end
 
     # Wraps the resources with the path_args for correct nesting.
