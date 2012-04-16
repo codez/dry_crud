@@ -157,16 +157,6 @@ class CrudController < ListController
       super
     end
 
-    # Sets a flash notice on success for put, post and delete
-    # and an alert on delete failure.
-    def set_flash
-      if !get? && !has_errors?
-        controller.flash[:notice] ||= success_notice
-      elsif delete? && has_errors?
-        controller.flash[:alert] ||= failure_alert
-      end
-    end
-
     # Check whether the resource has errors.
     # Additionally checks the :success option.
     def has_errors?
@@ -192,25 +182,19 @@ class CrudController < ListController
       end
     end
 
-    # Create an I18n flash notice for a successfull action.
-    # Uses the key {controller_name}.{action_name}.flash.success
-    # or crud.{action_name}.flash.success as fallback.
-    def success_notice
-      flash_message('success')
-    end
-
-    # Create an I18n flash alert for a failed action.
-    # Uses the key {controller_name}.{action_name}.flash.failure
-    # or crud.{action_name}.flash.failure as fallback.
-    def failure_alert
-      if resource.errors.present?
-        @@helper.safe_join(resource.errors.full_messages, '<br/>'.html_safe)
-      else
-        flash_message('failure')
+    # Sets a flash notice on success for put, post and delete
+    # and an alert on delete failure.
+    def set_flash
+      if !get? && !has_errors?
+        controller.flash[:notice] ||= flash_message('success')
+      elsif delete? && has_errors?
+        controller.flash[:alert] ||= resource_error_messages.presence || flash_message('failure')
       end
     end
-
-    # Translates the flash message, considering _html keys as well.
+    
+    # Get an I18n flash message, considering _html keys as well.
+    # Uses the key {controller_name}.{action_name}.flash.{state}
+    # or crud.{action_name}.flash.{state} as fallback.
     def flash_message(state)
       scope = "#{action_name}.flash.#{state}"
       keys = [:"#{controller_name}.#{scope}_html",
@@ -219,6 +203,11 @@ class CrudController < ListController
               :"crud.#{scope}"]
       model = controller.respond_to?(:full_entry_label) ? controller.send(:full_entry_label) : entry.to_s
       @@helper.t(keys.shift, :model => model, :default => keys)
+    end
+
+    # Error messages of the resource.
+    def resource_error_messages
+      @@helper.safe_join(resource.errors.full_messages, '<br/>'.html_safe)
     end
 
     # Wraps the resources with the path_args for correct nesting.

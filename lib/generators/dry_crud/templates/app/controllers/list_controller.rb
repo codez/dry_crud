@@ -101,14 +101,14 @@ class ListController < ApplicationController
     # Helper method to run before_render callbacks and render the action.
     # If a callback renders or redirects, the action is not rendered.
     def render_with_callbacks(*args, &block)
-      callback = "render_#{_normalize_render(*args, &block)[:template]}"
+      options = _normalize_render(*args, &block)
+      callback = "render_#{options[:template]}"
       run_callbacks(callback) if respond_to?(:"_run_#{callback}_callbacks", true)
 
       render_without_callbacks(*args, &block) unless performed?
     end
 
     protected
-
 
     # Helper method the run the given block in between the before and after
     # callbacks of the given kinds.
