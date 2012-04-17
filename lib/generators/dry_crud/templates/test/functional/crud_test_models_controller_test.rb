@@ -142,6 +142,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_create
     super
     assert_match /model got created/, flash[:notice]
+    assert_blank flash[:alert]
     assert_equal [:before_create, :before_save, :after_save, :after_create], @controller.called_callbacks
   end
 
@@ -154,7 +155,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_update
     super
     assert_match /successfully updated/, flash[:notice]
-    assert flash[:notice].html_safe
+    assert flash[:notice].html_safe?
+    assert_blank flash[:alert]
     assert_equal @controller.send(:entry), assigns(:crud_test_model)
     assert_equal [:before_update, :before_save, :after_save, :after_update], @controller.called_callbacks
   end
@@ -163,7 +165,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     super
     assert_equal [:before_destroy, :after_destroy], @controller.called_callbacks
     assert_match 'successfully deleted', flash[:notice]
-    assert flash[:notice].html_safe
+    assert flash[:notice].html_safe?
   end
 
   def test_create_with_before_callback
@@ -174,7 +176,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'new'
     assert entry.new_record?
     assert assigns(:companions)
-    assert flash[:alert].present?
+    assert_present flash[:alert]
     assert_equal 'illegal', entry.name
     assert_equal [:before_render_new, :before_render_form], @controller.called_callbacks
   end
@@ -203,7 +205,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'new'
     assert entry.new_record?
     assert assigns(:companions)
-    assert flash[:alert].blank?
+    assert_blank flash[:notice]
+    assert_blank flash[:alert]
     assert_blank entry.name
     assert_equal [:before_create, :before_save, :before_render_new, :before_render_form], @controller.called_callbacks
   end
@@ -241,6 +244,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_destroy_failure
     assert_no_difference("#{model_class.name}.count") do
+      @request.env['HTTP_REFERER'] = crud_test_model_url(crud_test_models(:BBBBB))
       delete :destroy, test_params(:id => crud_test_models(:BBBBB).id)
     end
     assert_redirected_to_show(entry)
@@ -254,7 +258,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_no_difference("#{model_class.name}.count") do
       delete :destroy, test_params(:id => e.id)
     end
-    assert_redirected_to_show(e)
+    assert_redirected_to_index
     assert_match /illegal name/, flash[:alert]
     assert_blank flash[:notice]
   end

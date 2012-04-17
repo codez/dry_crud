@@ -27,7 +27,7 @@ class Admin::CountriesControllerTest < ActionController::TestCase
 
   protected
 
-  def assert_redirected_to_show(entry)
+  def assert_redirected_to_show2(entry)
     assert_redirected_to_index
   end
 

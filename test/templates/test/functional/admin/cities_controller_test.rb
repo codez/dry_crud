@@ -39,11 +39,11 @@ class Admin::CitiesControllerTest < ActionController::TestCase
   def test_destroy_with_inhabitants
     ny = cities(:ny)
     assert_no_difference('City.count') do
-      request.env["HTTP_REFERER"]
+      @request.env["HTTP_REFERER"] = admin_country_city_url(ny.country, ny)
       delete :destroy, :country_id => ny.country_id, :id => ny.id
     end
-    assert_redirected_to :action => 'show'
-    assert flash.alert
+    assert_redirected_to [:admin, ny.country, ny]
+    assert_present flash[:alert]
   end
 
   protected

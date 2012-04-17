@@ -28,15 +28,15 @@
 
       = render :partial => 'layouts/flash', :collection => [:notice, :alert], :as => :level
 
-      .actions.btn-toolbar.clearfix
-        .pull-left=yield :tools
+      .actions.btn-toolbar
         .pull-right= yield :actions
+        .pull-left= yield :tools
 
       #content= yield
 
     %footer
       %p
-        &copy; MyCompany #{Time.now.year}
+        &copy; code!z #{Time.now.year}
 
   = javascript_include_tag 'application'
   = javascript_tag yield(:javascripts) if content_for?(:javascripts)

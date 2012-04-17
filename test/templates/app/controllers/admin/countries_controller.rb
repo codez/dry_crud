@@ -10,10 +10,4 @@ class Admin::CountriesController < AjaxController
     end
   end
 
-  protected
-
-  def show_url
-    index_url
-  end
-
 end

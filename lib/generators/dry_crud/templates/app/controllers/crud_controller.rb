@@ -6,12 +6,7 @@
 # overriding the entire method.
 class CrudController < ListController
 
-  helper_method :entry, :full_entry_label
-
   delegate :model_identifier, :to => 'self.class'
-
-  hide_action :model_identifier, :run_callbacks
-
 
   # Defines before and after callback hooks for create, update, save and destroy actions.
   define_model_callbacks :create, :update, :save, :destroy
@@ -19,6 +14,17 @@ class CrudController < ListController
   # Defines before callbacks for the render actions. A virtual callback
   # unifiying render_new and render_edit, called render_form, is defined further down.
   define_render_callbacks :show, :new, :edit
+
+  after_save :set_success_notice
+  after_destroy :set_success_notice
+
+  helper_method :entry, :full_entry_label
+  
+  hide_action :model_identifier, :run_callbacks
+  
+  # Simple helper object to give access to required view helper methods.
+  @@helper = Object.new.extend(ActionView::Helpers::TranslationHelper).
+                        extend(ActionView::Helpers::OutputSafetyHelper)
 
 
   ##############  ACTIONS  ############################################
@@ -76,7 +82,9 @@ class CrudController < ListController
   #   DELETE /entries/1.json
   def destroy(&block)
     destroyed = run_callbacks(:destroy) { entry.destroy }
-    respond_with(entry, :success => destroyed, &block)
+    flash[:alert] ||= error_messages.presence || flash_message(:failure) unless destroyed
+    location = !destroyed && request.env["HTTP_REFERER"].presence || index_url
+    respond_with(entry, :success => destroyed, :location => location, &block)
   end
 
   protected
@@ -108,18 +116,34 @@ class CrudController < ListController
     "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
   end
 
-  # The url of the index action. Includes a :returning param to use the remember_params.
+  # Url of the index page to return to
   def index_url
     polymorphic_url(path_args(model_class), :returning => true)
   end
 
-  # Url of the show action. May delegate to index_url if a subclass has no show action.
-  def show_url
-    polymorphic_url(path_args(entry))
+  private
+
+  def set_success_notice
+    flash[:notice] ||= flash_message(:success)
   end
 
+  # Get an I18n flash message, considering _html keys as well.
+  # Uses the key {controller_name}.{action_name}.flash.{state}
+  # or crud.{action_name}.flash.{state} as fallback.
+  def flash_message(state)
+    scope = "#{action_name}.flash.#{state}"
+    keys = [:"#{controller_name}.#{scope}_html",
+            :"#{controller_name}.#{scope}",
+            :"crud.#{scope}_html",
+            :"crud.#{scope}"]
+    @@helper.t(keys.shift, :model => full_entry_label, :default => keys)
+  end
+  
+  # Html safe error messages of the current entry.
+  def error_messages
+    @@helper.safe_join(entry.errors.full_messages, '<br/>'.html_safe)
+  end
 
-  private
 
   class << self
     # The identifier of the model used for form parameters.
@@ -135,15 +159,9 @@ class CrudController < ListController
     end
   end
 
-  # Custom Responder that adds a flash message on success and
-  # redirects to the right locations. An additional :success option
-  # is used to handle action callback chain halts.
+  # Custom Responder that handles the controller's path_args. 
+  # An additional :success option is used to handle action callback chain halts.
   class Responder < ActionController::Responder
-
-    @@helper = Object.new.extend(ActionView::Helpers::TranslationHelper).
-                          extend(ActionView::Helpers::OutputSafetyHelper)
-
-    delegate :action_name, :controller_name, :to => :controller
 
     def initialize(controller, resources, options = {})
       super(controller, with_path_args(resources, controller), options)
@@ -151,63 +169,9 @@ class CrudController < ListController
 
     protected
 
-    # This is the common success behavior for formats associated with browsing, like :html, :iphone and so forth.
-    def navigation_behavior(*args)
-      set_flash
-      super
-    end
-
-    # Check whether the resource has errors.
-    # Additionally checks the :success option.
+    # Check whether the resource has errors. Additionally checks the :success option.
     def has_errors?
       options[:success] == false || super
-    end
-
-    # The location to redirect after successfull processing.
-    # Redirects :back if a delete failed, to the show_url if the
-    # resource exists and to index_url otherwise.
-    def navigation_location
-      if delete? && has_errors? && request.env["HTTP_REFERER"].present?
-        :back
-      elsif options[:location]
-        options[:location]
-      elsif controller.respond_to?(:index_url)
-        if resource.respond_to?(:persisted?) && resource.persisted?
-          controller.send(:show_url)
-        else
-          controller.send(:index_url)
-        end
-      else
-        super
-      end
-    end
-
-    # Sets a flash notice on success for put, post and delete
-    # and an alert on delete failure.
-    def set_flash
-      if !get? && !has_errors?
-        controller.flash[:notice] ||= flash_message('success')
-      elsif delete? && has_errors?
-        controller.flash[:alert] ||= resource_error_messages.presence || flash_message('failure')
-      end
-    end
-    
-    # Get an I18n flash message, considering _html keys as well.
-    # Uses the key {controller_name}.{action_name}.flash.{state}
-    # or crud.{action_name}.flash.{state} as fallback.
-    def flash_message(state)
-      scope = "#{action_name}.flash.#{state}"
-      keys = [:"#{controller_name}.#{scope}_html",
-              :"#{controller_name}.#{scope}",
-              :"crud.#{scope}_html",
-              :"crud.#{scope}"]
-      model = controller.respond_to?(:full_entry_label) ? controller.send(:full_entry_label) : entry.to_s
-      @@helper.t(keys.shift, :model => model, :default => keys)
-    end
-
-    # Error messages of the resource.
-    def resource_error_messages
-      @@helper.safe_join(resource.errors.full_messages, '<br/>'.html_safe)
     end
 
     # Wraps the resources with the path_args for correct nesting.

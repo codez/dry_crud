@@ -146,32 +146,37 @@ module CrudControllerTestHelper
     end
   end
 
+  # The model class under test.
   def model_class
     @controller.model_class
   end
-
+  
+  # The param key for model attributes.
   def model_identifier
     @controller.model_identifier
   end
 
+  # The entry as set by the controller.
   def entry
     @controller.send(:entry)
   end
 
+  # The entries as set by the controller.
   def entries
     @controller.send(:entries)
   end
 
-  # Test object used in several tests
+  # Test object used in several tests.
   def test_entry
     raise "Implement this method in your test class"
   end
 
-  # Attribute hash used in several tests
+  # Attribute hash used in several tests.
   def test_entry_attrs
     raise "Implement this method in your test class"
   end
 
+  # The params to pass to an action, including required nesting params.
   def test_params(params = {})
     nesting_params.merge(params)
   end
