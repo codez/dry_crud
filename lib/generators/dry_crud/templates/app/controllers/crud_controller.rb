@@ -82,7 +82,7 @@ class CrudController < ListController
   #   DELETE /entries/1.json
   def destroy(&block)
     destroyed = run_callbacks(:destroy) { entry.destroy }
-    flash[:alert] ||= error_messages.presence || flash_message(:failure) unless destroyed
+    flash[:alert] ||= error_messages.presence || flash_message(:failure) if !destroyed && request.format == :html
     location = !destroyed && request.env["HTTP_REFERER"].presence || index_url
     respond_with(entry, :success => destroyed, :location => location, &block)
   end
@@ -123,8 +123,9 @@ class CrudController < ListController
 
   private
 
+  # Set a success flash notice when we got a HTML request.
   def set_success_notice
-    flash[:notice] ||= flash_message(:success)
+    flash[:notice] ||= flash_message(:success) if request.format == :html
   end
 
   # Get an I18n flash message, considering _html keys as well.
