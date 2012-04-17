@@ -1,6 +1,6 @@
 class PeopleController < AjaxController
 
-  self.search_columns = [:name, :children, :rating, :income, :birthdate, :remarks]
+  self.search_columns = [:name, :children, :rating, :income, :birthdate, :remarks, 'cities.name']
 
   self.sort_mappings = {:city_id => 'cities.name'}
 

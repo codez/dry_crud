@@ -98,6 +98,14 @@ namespace :test do
        file_replace(File.join(TEST_APP_ROOT, 'app', 'assets', 'stylesheets', 'application.css'), " *= require_self", "*= require twitter/bootstrap\n *= require_self")
        file_replace(File.join(TEST_APP_ROOT, 'app', 'assets', 'javascripts', 'application.js'), "//= require_tree .", "//= require twitter/bootstrap\n//= require_tree .")
        FileUtils.rm(File.join(TEST_APP_ROOT, 'app', 'assets', 'stylesheets', 'sample.scss'))
+       
+       layouts = File.join(TEST_APP_ROOT, 'app', 'views', 'layouts')
+       FileUtils.mv(File.join(layouts, 'bootstrap.html.erb'),
+                    File.join(layouts, 'application.html.erb'), 
+                    :force => true) if File.exists?(File.join(layouts, 'bootstrap.html.erb'))
+       FileUtils.mv(File.join(layouts, 'bootstrap.html.haml'),
+                    File.join(layouts, 'application.html.haml'), 
+                    :force => true) if File.exists?(File.join(layouts, 'bootstrap.html.haml'))
     end
    
   end

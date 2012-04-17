@@ -142,7 +142,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     end
     caption_or_content ||= captionize(attr, @object.class)
 
-    content_tag(:div, :class => 'control-group') do
+    content_tag(:div, :class => "control-group#{' error' if @object.errors.has_key?(attr)}") do
       label(attr, caption_or_content, :class => 'control-label') +
       content_tag(:div, content, :class => 'controls')
     end

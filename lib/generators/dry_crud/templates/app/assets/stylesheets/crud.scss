@@ -9,7 +9,7 @@
 
 .labeled {
   vertical-align: top;
-  padding-bottom: 5px;
+  padding: 2px 0 2px;
   clear: both;
 }
 
@@ -27,19 +27,35 @@
   margin: 0;
 }
 
+#content {
+  clear: both;
+  padding-top: 5px;
+  width: 100%;
+}
+
+table.table td.action {
+  width: 20px;
+  text-align: center;
+}
+
 .control-group {
   clear: both;
+  padding: 2px 0 2px;
 }
 
 .control-group label {
   float: left;
   width: 120px;
-  padding-top: 5px;
   padding-right: 5px;
 }
 
 .controls {
   margin-left: 130px;
+}
+
+.cancel {
+  font-size: 80%;
+  margin-left: 7px;
 }
 
 .required {
@@ -57,8 +73,3 @@
   margin-bottom: 5px;
 }
 
-.controls div.field_with_errors {
-  background-color: #da9;
-  display: inline-block;
-  padding: 1px 1px;
-}
