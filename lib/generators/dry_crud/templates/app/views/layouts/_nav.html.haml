@@ -1,3 +1,5 @@
-.navbar
-  = link_to 'MyApp', root_path, :class => 'brand'
-  %ul.nav= render 'layouts/menu'
+= link_to 'MyApp', root_path, :class => 'brand'
+%ul.nav
+  %li= link_to "Link1", "/path1"
+  %li= link_to "Link2", "/path2"
+  %li= link_to "Link3", "/path3"

@@ -25,7 +25,9 @@
 
 
 <div class="container">
-  <%= render 'layouts/nav' %>
+  <div class="navbar">
+    <%= render 'layouts/nav' %>
+  </div>
 
   <h1><%= @title %></h1>
 
@@ -47,7 +49,7 @@
 </div>
 
 <footer>
-  <p>&copy; code!z <%= Time.now.year %></p>
+  <p>&copy; code!z <%= Time.zone.now.year %></p>
 </footer>
 
 <!-- Javascript placed at the end of the document so the pages load faster -->

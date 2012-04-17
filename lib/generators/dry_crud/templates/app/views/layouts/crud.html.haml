@@ -22,7 +22,7 @@
 
   %body
     .container
-      = render 'layouts/nav'
+      .navbar= render 'layouts/nav'
 
       %h1= @title
 
@@ -36,7 +36,7 @@
 
     %footer
       %p
-        &copy; code!z #{Time.now.year}
+        &copy; code!z #{Time.zone.now.year}
 
   = javascript_include_tag 'application'
   = javascript_tag yield(:javascripts) if content_for?(:javascripts)
