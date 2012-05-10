@@ -158,9 +158,11 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   # Dispatch methods starting with 'labeled_' to render a label and the corresponding
   # input field. E.g. labeled_boolean_field(:checked, :class => 'bold')
+  # To add an additional help text, use the help option.
+  # E.g. labeled_boolean_field(:checked, :help => 'Some Help')
   def method_missing(name, *args)
     if field_method = labeled_field_method?(name)
-      labeled(args.first, send(field_method, *args) + required_mark(args.first))
+      build_labeled_field(field_method,*args)
     else
       super(name, *args)
     end
@@ -169,6 +171,11 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   # Overriden to fullfill contract with method_missing 'labeled_' methods.
   def respond_to?(name)
     labeled_field_method?(name).present? || super(name)
+  end
+
+  # Generates a help block for fields
+  def help_block(text)
+    content_tag(:p, text, :class => 'help-block')
   end
 
   protected
@@ -219,6 +226,14 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
       field_method = name.to_s[prefix.size..-1]
       field_method if respond_to?(field_method)
     end
+  end
+
+ def build_labeled_field(field_method,*args)
+    options = args.extract_options!
+    help = options.delete(:help)
+    text = send(field_method, *(args<<options)) + required_mark(args.first)
+    text << help_block(help) if help.present?
+    labeled(args.first, text)
   end
 
 end

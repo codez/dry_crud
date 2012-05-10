@@ -78,6 +78,12 @@ class StandardFormBuilderTest < ActionView::TestCase
     assert !result.include?(StandardFormBuilder::REQUIRED_MARK)
   end
 
+  test "labeld_input_field adds help text" do
+    result = form.labeled_input_field(:name, :help => 'Some Help')
+    assert result.include?(form.help_block('Some Help'))
+    assert result.include?(StandardFormBuilder::REQUIRED_MARK)
+  end
+
   test "belongs_to_field has all options by default" do
     f = form.belongs_to_field(:companion_id)
     assert_equal 7, f.scan('</option>').size
