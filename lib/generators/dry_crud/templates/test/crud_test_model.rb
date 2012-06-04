@@ -86,7 +86,7 @@ class CrudTestModelsController < CrudController #:nodoc:
     end
   end
 
-  protected
+  private
 
   def list_entries
     entries = super
@@ -178,7 +178,7 @@ module CrudTestHelper
     ERB::Util.h(text)
   end
 
-  protected
+  private
 
   # Sets up the test database with a crud_test_models table.
   # Look at the source to view the column definition.

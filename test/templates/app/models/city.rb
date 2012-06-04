@@ -16,7 +16,7 @@ class City < ActiveRecord::Base
     "#{name} (#{country.code})"
   end
 
-  protected
+  private
 
   def protect_with_inhabitants
     if people.exists?

@@ -4,7 +4,7 @@ class PeopleController < AjaxController
 
   self.sort_mappings = {:city_id => 'cities.name'}
 
-  protected
+  private
 
   def list_entries
     super.includes(:city => :country).order('people.name, countries.code, cities.name')

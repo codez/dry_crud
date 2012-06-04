@@ -230,7 +230,7 @@ module StandardHelper
     end
   end
 
-  protected
+  private
 
   # Helper methods that are not directly called from templates.
 

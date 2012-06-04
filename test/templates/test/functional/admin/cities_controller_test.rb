@@ -46,7 +46,7 @@ class Admin::CitiesControllerTest < ActionController::TestCase
     assert_present flash[:alert]
   end
 
-  protected
+  private
 
   def test_entry
     cities(:rj)

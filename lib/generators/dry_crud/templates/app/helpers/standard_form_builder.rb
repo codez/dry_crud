@@ -162,7 +162,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   # E.g. labeled_boolean_field(:checked, :help => 'Some Help')
   def method_missing(name, *args)
     if field_method = labeled_field_method?(name)
-      build_labeled_field(field_method,*args)
+      build_labeled_field(field_method, *args)
     else
       super(name, *args)
     end
@@ -178,7 +178,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     content_tag(:p, text, :class => 'help-block')
   end
 
-  protected
+  private
 
   # Returns true if attr is a non-polymorphic association.
   # If one or more macros are given, the association must be of this kind.
@@ -228,7 +228,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
- def build_labeled_field(field_method,*args)
+ def build_labeled_field(field_method, *args)
     options = args.extract_options!
     help = options.delete(:help)
     text = send(field_method, *(args<<options)) + required_mark(args.first)

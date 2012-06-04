@@ -54,9 +54,9 @@ class PeopleControllerTest < ActionController::TestCase
     assert_template 'update'
     assert_match /alert/, response.body
   end
-
-  protected
-
+  
+  private
+  
   def test_entry
     people(:john)
   end

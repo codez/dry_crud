@@ -87,7 +87,7 @@ class CrudController < ListController
     respond_with(entry, :success => destroyed, :location => location, &block)
   end
 
-  protected
+  private
 
   #############  CUSTOMIZABLE HELPER METHODS  ##############################
 
@@ -168,7 +168,7 @@ class CrudController < ListController
       super(controller, with_path_args(resources, controller), options)
     end
 
-    protected
+    private
 
     # Check whether the resource has errors. Additionally checks the :success option.
     def has_errors?

@@ -278,7 +278,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_equal 'Crud Test Model', @controller.models_label(false)
   end
 
-  protected
+  private
 
   def special_routing
     @routes = ActionDispatch::Routing::RouteSet.new

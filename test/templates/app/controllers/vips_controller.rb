@@ -4,7 +4,7 @@ class VipsController < ListController
 
   self.sort_mappings = {:city_id => 'cities.name'}
 
-  protected
+  private
 
   class << self
     def model_class

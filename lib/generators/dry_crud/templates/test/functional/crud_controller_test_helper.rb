@@ -129,7 +129,7 @@ module CrudControllerTestHelper
     assert_equal "", @response.body.strip
   end
 
-  protected
+  private
 
   def assert_redirected_to_index
     assert_redirected_to test_params(:action => 'index', :returning => true)

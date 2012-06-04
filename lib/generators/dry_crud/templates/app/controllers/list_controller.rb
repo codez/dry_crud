@@ -23,7 +23,7 @@ class ListController < ApplicationController
     respond_with(entries, &block)
   end
 
-  protected
+  private
 
   # Helper method to access the entries to be displayed in the current index page in an uniform way.
   def entries
@@ -109,7 +109,7 @@ class ListController < ApplicationController
       render_without_callbacks(*args, &block) unless performed?
     end
 
-    protected
+    private
 
     # Helper method the run the given block in between the before and after
     # callbacks of the given kinds.
@@ -145,7 +145,7 @@ class ListController < ApplicationController
       controller.alias_method_chain :list_entries, :search
     end
 
-    protected
+    private
 
     # Enhance the list entries with an optional search criteria
     def list_entries_with_search
@@ -192,7 +192,7 @@ class ListController < ApplicationController
       controller.alias_method_chain :list_entries, :sort
     end
 
-    protected
+    private
 
     # Enhance the list entries with an optional sort order.
     def list_entries_with_sort
@@ -302,7 +302,7 @@ class ListController < ApplicationController
       controller.alias_method_chain :path_args, :nesting
     end
 
-    protected
+    private
 
     # Returns the direct parent ActiveRecord of the current request, if any.
     def parent
