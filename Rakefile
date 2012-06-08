@@ -42,7 +42,7 @@ namespace :test do
     task :generate_crud => [:create, :environment] do
       require File.join(GENERATOR_ROOT, 'dry_crud_generator')
     
-      DryCrudGenerator.new('', {:force => true, :templates => ENV['HAML'] ? 'haml' : 'erb'}, :destination_root => TEST_APP_ROOT).invoke_all
+      DryCrudGenerator.new([], {:force => true, :templates => ENV['HAML'] ? 'haml' : 'erb'}, :destination_root => TEST_APP_ROOT).invoke_all
     end
    
     desc "Populates the test application with some models and controllers"
