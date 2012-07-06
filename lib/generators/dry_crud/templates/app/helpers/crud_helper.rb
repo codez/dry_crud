@@ -53,8 +53,8 @@ module CrudHelper
   def action_col_destroy(table, &block)
     action_col(table) do |e|
       link_table_action('remove', action_path(e, &block),
-                        :confirm => ti(:confirm_delete),
-                        :method => :delete)
+                        :data => { :confirm => ti(:confirm_delete),
+                                   :method => :delete })
     end
   end
 
@@ -90,8 +90,8 @@ module CrudHelper
   def link_action_destroy(path = nil)
     path ||= path_args(entry)
     link_action ti(:"link.delete"), 'remove', path,
-                :confirm => ti(:confirm_delete),
-                :method => :delete
+                :data => { :confirm => ti(:confirm_delete),
+                           :method => :delete }
   end
 
   # Standard link action to the list page.
