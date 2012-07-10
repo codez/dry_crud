@@ -4,6 +4,7 @@ gem 'rails', '>= 3.2'
 
 gem 'rake'
 gem 'rdoc'
+gem 'rspec-rails'
 
 gem 'rcov', :platforms => :ruby_18
 gem 'simplecov', :platforms => :ruby_19

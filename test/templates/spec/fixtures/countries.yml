@@ -1,0 +1,11 @@
+ch:
+    name: Switzerland
+    code: CH
+    
+usa:
+    name: USA
+    code: USA
+    
+br:
+    name: Brazil
+    code: BR

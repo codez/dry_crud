@@ -3,6 +3,7 @@ require 'rails/generators'
 class DryCrudGenerator < Rails::Generators::Base
 
   class_options %w(templates -t) => 'erb'
+  class_options %w(tests) => 'testunit'
 
 
   def self.source_root
@@ -11,12 +12,19 @@ class DryCrudGenerator < Rails::Generators::Base
 
   def install_dry_crud
     # copy everything in template subfolders
-    exclude = options[:templates].downcase == 'haml' ? '.erb' : '.haml'
+    exclude_template = options[:templates].downcase == 'haml' ? '.erb' : '.haml'
+    puts options[:tests].downcase 
+    puts exclude_test_dir = case options[:tests].downcase 
+      when 'rspec' then 'test'
+      when 'all' then 'exclude_nothing'
+      else 'spec'
+    end
 
     Dir.chdir(self.class.source_root) do
       Dir.glob(File.join('**', '**')).sort.each do |file_source|
         if !File.directory?(file_source) &&
-           !file_source.end_with?(exclude) &&
+           !file_source.end_with?(exclude_template) &&
+           !file_source.start_with?(exclude_test_dir) &&
            file_source != 'INSTALL'
           copy_file(file_source)
         end

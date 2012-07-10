@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rake/testtask'
+require 'rspec/core/rake_task'
 require 'rubygems/package_task' 
 require 'rdoc/task' 
 
@@ -11,15 +12,25 @@ GENERATOR_ROOT = File.join(File.dirname(__FILE__), 'lib', 'generators', 'dry_cru
 task :default => :test
 
 desc "Run all tests"
-task :test => ['test:app:init'] do
-  Rake::TestTask.new do |test| 
+task :test => ['test:unit', 'test:spec']
+
+
+namespace :test do
+
+  desc "Run Test::Unit tests"
+  Rake::TestTask.new(:unit => 'test:app:init') do |test| 
     test.libs << "test/test_app/test" 
     test.test_files = Dir[ "test/test_app/test/**/*_test.rb" ] 
     test.verbose = true
   end
-end
+  
+  desc "Run RSpec tests"
+  RSpec::Core::RakeTask.new(:spec => 'test:app:init') do |t|
+    t.ruby_opts = "-I test/test_app/spec"
+    t.pattern = "test/test_app/spec/**/*_spec.rb"
+  end
 
-namespace :test do
+
   namespace :app do
     task :environment do
       ENV['RAILS_ROOT'] = TEST_APP_ROOT
@@ -34,6 +45,7 @@ namespace :test do
         sh "rails new #{TEST_APP_ROOT} --skip-bundle"
         FileUtils.cp(File.join(File.dirname(__FILE__), 'test', 'templates', 'Gemfile'), TEST_APP_ROOT)
         sh "cd #{TEST_APP_ROOT}; bundle install" # update Gemfile.lock
+        sh "cd #{TEST_APP_ROOT}; rails g rspec:install"
         FileUtils.rm_f(File.join(TEST_APP_ROOT, 'test', 'performance', 'browsing_test.rb'))
       end
     end
@@ -42,7 +54,10 @@ namespace :test do
     task :generate_crud => [:create, :environment] do
       require File.join(GENERATOR_ROOT, 'dry_crud_generator')
     
-      DryCrudGenerator.new([], {:force => true, :templates => ENV['HAML'] ? 'haml' : 'erb'}, :destination_root => TEST_APP_ROOT).invoke_all
+      DryCrudGenerator.new([], {:force => true, 
+                                :templates => ENV['HAML'] ? 'haml' : 'erb', 
+                                :tests => 'all'},
+                               :destination_root => TEST_APP_ROOT).invoke_all
     end
    
     desc "Populates the test application with some models and controllers"
@@ -65,7 +80,10 @@ namespace :test do
       Dir.glob(File.join(TEST_APP_ROOT, 'app', 'views', '**', "*.#{exclude}")).each do |f|
         FileUtils.rm(f)
       end
-      
+    end
+    
+    desc "Insert seed data into the test database"
+    task :seed => :populate do
       # migrate the database
       FileUtils.cd(TEST_APP_ROOT) do
         sh "rake db:migrate db:seed RAILS_ENV=development --trace"
@@ -74,7 +92,7 @@ namespace :test do
     end
    
     desc "Initializes the test application with a couple of classes"
-    task :init => [:populate, 
+    task :init => [:seed, 
                    :customize]
                    
     desc "Customize some of the functionality provided by dry_crud"

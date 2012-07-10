@@ -1,0 +1,11 @@
+bern:
+    name: Bern
+    country: ch
+    
+ny:
+    name: New York
+    country: usa
+    
+rj:
+    name: Rio de Janeiro
+    country: br
