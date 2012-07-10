@@ -13,8 +13,8 @@ class DryCrudGenerator < Rails::Generators::Base
   def install_dry_crud
     # copy everything in template subfolders
     exclude_template = options[:templates].downcase == 'haml' ? '.erb' : '.haml'
-    puts options[:tests].downcase 
-    puts exclude_test_dir = case options[:tests].downcase 
+    
+    exclude_test_dir = case options[:tests].downcase 
       when 'rspec' then 'test'
       when 'all' then 'exclude_nothing'
       else 'spec'
@@ -28,6 +28,11 @@ class DryCrudGenerator < Rails::Generators::Base
            file_source != 'INSTALL'
           copy_file(file_source)
         end
+      end
+      
+      unless exclude_test_dir == 'spec'
+        copy_file(File.join('test', 'crud_test_model.rb'), 
+                  File.join('spec', 'support', 'crud_test_model.rb'))
       end
     end
 

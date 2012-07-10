@@ -44,7 +44,7 @@ namespace :test do
       unless File.exist?(TEST_APP_ROOT)
         sh "rails new #{TEST_APP_ROOT} --skip-bundle"
         FileUtils.cp(File.join(File.dirname(__FILE__), 'test', 'templates', 'Gemfile'), TEST_APP_ROOT)
-        sh "cd #{TEST_APP_ROOT}; bundle install" # update Gemfile.lock
+        sh "cd #{TEST_APP_ROOT}; bundle install --local" # update Gemfile.lock
         sh "cd #{TEST_APP_ROOT}; rails g rspec:install"
         FileUtils.rm_f(File.join(TEST_APP_ROOT, 'test', 'performance', 'browsing_test.rb'))
       end
@@ -64,6 +64,10 @@ namespace :test do
     task :populate => :generate_crud do
       # copy test app templates
       FileUtils.cp_r(File.join(File.dirname(__FILE__), 'test', 'templates', '.'), TEST_APP_ROOT)
+      
+      # copy shared fixtures
+      FileUtils.cp_r(File.join(File.dirname(__FILE__), 'test', 'templates', 'test', 'fixtures'),
+                     File.join(TEST_APP_ROOT, 'spec'))
       
       # replace some unused files
       FileUtils.rm_f(File.join(TEST_APP_ROOT, 'public', 'index.html'))

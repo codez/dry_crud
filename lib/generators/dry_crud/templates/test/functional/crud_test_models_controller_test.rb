@@ -280,18 +280,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   private
 
-  def special_routing
-    @routes = ActionDispatch::Routing::RouteSet.new
-    _routes = @routes
-
-    @controller.singleton_class.send(:include, _routes.url_helpers)
-    @controller.view_context_class = Class.new(@controller.view_context_class) do
-      include _routes.url_helpers
-    end
-
-    @routes.draw { resources :crud_test_models }
-  end
-
   def test_entry
     crud_test_models(:AAAAA)
   end
