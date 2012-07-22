@@ -11,7 +11,7 @@ module StandardHelper
   def f(value)
     case value
       when Fixnum then number_with_delimiter(value)
-      when Float, BigDecimal then number_with_precision(value, :precision => 2)
+      when Float, BigDecimal then number_with_precision(value, :precision => 2, :delimiter => ',')
       when Date   then l(value)
       when Time   then l(value, :format => :time)
       when true   then t(:"global.yes")

@@ -17,6 +17,8 @@ shared_examples "crud controller" do |options|
 
   include CrudControllerTestHelper
 
+  render_views
+
   subject { response }
   
   let(:model_class)      { controller.send(:model_class) }

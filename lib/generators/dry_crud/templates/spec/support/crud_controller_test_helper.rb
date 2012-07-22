@@ -75,7 +75,6 @@ module CrudControllerTestHelper
       it { should render_template(template || example.metadata[:action]) }
     end
     
-    
     def it_should_set_attrs
       it "should set params as entry attributes" do
         actual = {}
