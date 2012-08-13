@@ -142,7 +142,13 @@ class CrudTestModelsController < CrudController #:nodoc:
   end
 
 end
-
+  
+REGEXP_ROWS = /<tr.+?<\/tr>/m
+REGEXP_HEADERS = /<th.+?<\/th>/m
+REGEXP_SORT_HEADERS = /<th><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m
+REGEXP_ACTION_CELL = /<td class=\"action\"><a href.+?<\/a><\/td>/m
+  
+  
 # A simple test helper to prepare the test database with a CrudTestModel model.
 # This helper is used to test the CrudController and various helpers
 # without the need for an application based model.

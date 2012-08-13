@@ -4,11 +4,6 @@ require 'custom_assertions'
 
 class CrudHelperTest < ActionView::TestCase
 
-  REGEXP_ROWS = /<tr.+?<\/tr>/m
-  REGEXP_HEADERS = /<th.+?<\/th>/m
-  REGEXP_SORT_HEADERS = /<th><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m
-  REGEXP_ACTION_CELL = /<td class=\"action\"><a href.+?<\/a><\/td>/m
-
   include CustomAssertions
   include StandardHelper
   include ListHelper
@@ -69,6 +64,7 @@ class CrudHelperTest < ActionView::TestCase
     end
 
     assert_count 7, REGEXP_ROWS, t
+    assert_count 3, REGEXP_SORT_HEADERS, t
     assert_count 4, REGEXP_HEADERS, t
     assert_count 6, /<span>.+?<\/span>/m, t
     assert_count 0, REGEXP_ACTION_CELL, t      # no show, edit, delete links

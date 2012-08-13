@@ -4,10 +4,6 @@ require 'custom_assertions'
 
 class ListHelperTest < ActionView::TestCase
 
-  REGEXP_ROWS = /<tr.+?<\/tr>/m
-  REGEXP_HEADERS = /<th.+?<\/th>/m
-  REGEXP_SORT_HEADERS = /<th><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m
-
   include StandardHelper
   include CrudTestHelper
   include CustomAssertions
