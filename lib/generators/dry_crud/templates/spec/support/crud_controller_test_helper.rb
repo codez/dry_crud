@@ -1,7 +1,19 @@
-
+# Contains assertions for testing common crud controller use cases.
+# See crud_controller_examples for use cases.
 module CrudControllerTestHelper
   extend ActiveSupport::Concern
 
+  # Performs a request based on the metadata of the action example under test.
+  def perform_request
+    m = example.metadata
+    example_params = respond_to?(:params) ? send(:params) : {}
+    params = scope_params.merge(:format => m[:format])
+    params.merge!(:id => test_entry.id) if m[:id]
+    params.merge!(example_params)
+    send(m[:method], m[:action], params)
+  end
+
+  # The params defining the nesting of the test entry.
   def scope_params
     params = {}
     # for nested controllers, add parent ids to each request
@@ -16,19 +28,11 @@ module CrudControllerTestHelper
     end
     params
   end
-
-  def perform_request
-    m = example.metadata
-    example_params = respond_to?(:params) ? send(:params) : {}
-    params = scope_params.merge(:format => m[:format])
-    params.merge!(:id => test_entry.id) if m[:id]
-    params.merge!(example_params)
-    send(m[:method], m[:action], params)
-  end
-    
   
   module ClassMethods
     
+    # Describe a certain action and provide some usefull metadata.
+    # Tests whether this action is configured to be skipped.
     def describe_action(method, action, metadata = {}, &block)
       describe("#{method.to_s.upcase} #{action}", 
                {:if => described_class.instance_methods.include?(action.to_s), 
@@ -47,10 +51,12 @@ module CrudControllerTestHelper
       skips.include?(contexts)
     end
     
+    # Test the response status, default 200.
     def it_should_respond(status = 200)
       its(:status) { should == status }
     end
     
+    # Test that entries are assigned.
     def it_should_assign_entries
       it "should assign entries" do
         entries.should be_present
@@ -61,6 +67,7 @@ module CrudControllerTestHelper
       end
     end
     
+    # Test that entry is assigned.
     def it_should_assign_entry
       it "should assign entry" do
         entry.should == test_entry
@@ -71,10 +78,12 @@ module CrudControllerTestHelper
       end
     end
     
+    # Test that the given template or the main template of the action under test is rendered. 
     def it_should_render(template = nil)
       it { should render_template(template || example.metadata[:action]) }
     end
     
+    # Test that test_entry_attrs are set on entry.
     def it_should_set_attrs
       it "should set params as entry attributes" do
         actual = {}
@@ -85,14 +94,17 @@ module CrudControllerTestHelper
       end
     end
     
+    # Test that the response redirects to the index action.
     def it_should_redirect_to_index
       it { should redirect_to scope_params.merge(:action => 'index', :returning => true) } 
     end
     
+    # Test that the response redirects to the show action of the current entry.
     def it_should_redirect_to_show
       it { should redirect_to scope_params.merge(:action => 'show', :id => entry.id) } 
     end
     
+    # Test that the given flash type is present.
     def it_should_have_flash(type, message = nil)
       context "flash" do
         subject { flash }
@@ -102,7 +114,8 @@ module CrudControllerTestHelper
         end
       end
     end
-        
+
+    # Test that not flash of the given type is present.
     def it_should_not_have_flash(type)
       context "flash" do
         subject { flash }
@@ -110,6 +123,7 @@ module CrudControllerTestHelper
       end
     end
     
+    # Test that the current entry is persistend and valid, or not.
     def it_should_persist_entry(bool = true)
       context "entry" do
         subject { entry }

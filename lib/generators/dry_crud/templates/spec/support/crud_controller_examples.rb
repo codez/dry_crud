@@ -1,11 +1,5 @@
 require 'support/crud_controller_test_helper'
 
-# A set of examples to include into the tests for your crud controller subclasses.
-# Simply #let :test_entry and :test_entry_attrs to test the basic
-# crud functionality. 
-# If single examples do not match with you implementation, you may skip
-# them by passing a skip parameter with context arrays:
-#   include_examples 'crud controller', :skip => [%w(index html sort) %w(destroy json)]
 RSpec.configure do |c|
   c.before :failing => true do
     model_class.any_instance.stub(:save).and_return(false)
@@ -13,6 +7,12 @@ RSpec.configure do |c|
   end
 end
 
+# A set of examples to include into the tests for your crud controller subclasses.
+# Simply #let :test_entry and :test_entry_attrs to test the basic
+# crud functionality. 
+# If single examples do not match with you implementation, you may skip
+# them by passing a skip parameter with context arrays:
+#   include_examples 'crud controller', :skip => [%w(index html sort) %w(destroy json)]
 shared_examples "crud controller" do |options|
 
   include CrudControllerTestHelper
