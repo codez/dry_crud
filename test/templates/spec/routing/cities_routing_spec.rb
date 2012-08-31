@@ -1,6 +1,6 @@
+require 'spec_helper'
 
 describe Admin::CitiesController do
-
   it "should route index" do
     { :get => 'admin/countries/1/cities' }.should route_to({:controller => 'admin/cities', :action => 'index', :country_id => '1'})
   end
