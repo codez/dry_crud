@@ -65,15 +65,15 @@ describe StandardHelper do
     
     context "Floats" do
       it "should add two digits" do
-        f(1.0).should == '1.00'
+        f(1.0).should == '1.000'
       end
       
       it "should truncate to two digits" do
-        f(3.14159).should == '3.14'
+        f(3.14159).should == '3.142'
       end
       
       it "should add delimiters" do
-        f(12345.6789).should == '12,345.68'
+        f(12345.6789).should == '12,345.679'
       end
     end
     
@@ -161,11 +161,11 @@ describe StandardHelper do
     end
     
     it "should format floats" do
-      format_type(model, :rating).should == '1.10'
+      format_type(model, :rating).should == '1.100'
     end
       
     it "should format decimals" do
-      format_type(model, :income).should == '10,000,000.10'
+      format_type(model, :income).should == '10,000,000.100'
     end
 
     it "should format dates" do

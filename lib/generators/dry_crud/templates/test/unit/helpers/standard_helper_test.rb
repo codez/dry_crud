@@ -51,9 +51,9 @@ class StandardHelperTest < ActionView::TestCase
   end
 
   test "format Floats" do
-    assert_equal "1.00", f(1.0)
-    assert_equal "1.20", f(1.2)
-    assert_equal "3.14", f(3.14159)
+    assert_equal "1.000", f(1.0)
+    assert_equal "1.200", f(1.2)
+    assert_equal "3.142", f(3.14159)
   end
 
   test "format Booleans" do
@@ -73,7 +73,7 @@ class StandardHelperTest < ActionView::TestCase
   end
 
   test "format attr with fallthrough to f" do
-    assert_equal "12.23", format_attr("12.23424", :to_f)
+    assert_equal "12.234", format_attr("12.23424", :to_f)
   end
 
   test "format attr with custom format_string_size method" do
@@ -109,15 +109,15 @@ class StandardHelperTest < ActionView::TestCase
 
   test "format float column" do
     m = crud_test_models(:AAAAA)
-    assert_equal '1.10', format_type(m, :rating)
+    assert_equal '1.100', format_type(m, :rating)
 
     m.rating = 3.145001   # you never know with these floats..
-    assert_equal '3.15', format_type(m, :rating)
+    assert_equal '3.145', format_type(m, :rating)
   end
 
   test "format decimal column" do
     m = crud_test_models(:AAAAA)
-    assert_equal '10,000,000.10', format_type(m, :income)
+    assert_equal '10,000,000.100', format_type(m, :income)
   end
 
   test "format date column" do
