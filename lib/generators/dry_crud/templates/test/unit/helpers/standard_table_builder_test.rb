@@ -5,10 +5,11 @@ class StandardTableBuilderTest < ActionView::TestCase
   # set dummy helper class for ActionView::TestCase
   self.helper_class = StandardHelper
 
-  attr_reader :table
+  attr_reader :table, :entries
 
   def setup
-    @table = StandardTableBuilder.new(["foo", "bahr"], self)
+    @entries = %w(foo bahr)
+    @table = StandardTableBuilder.new(entries, self)
   end
 
   def format_size(obj)
@@ -28,7 +29,7 @@ class StandardTableBuilderTest < ActionView::TestCase
 
     dom = '<tr><td>FOO</td><td>3 chars</td></tr>'
 
-    assert_dom_equal dom, table.send(:html_row, "foo")
+    assert_dom_equal dom, table.send(:html_row, entries.first)
   end
 
   test "custom row" do
@@ -36,7 +37,7 @@ class StandardTableBuilderTest < ActionView::TestCase
 
     dom = '<tr><td class="hula">Weights 3 kg</td></tr>'
 
-    assert_dom_equal dom, table.send(:html_row, "foo")
+    assert_dom_equal dom, table.send(:html_row, entries.first)
   end
 
   test "attr col output" do
