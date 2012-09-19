@@ -35,7 +35,7 @@ module CrudControllerTestHelper
     # Tests whether this action is configured to be skipped.
     def describe_action(method, action, metadata = {}, &block)
       describe("#{method.to_s.upcase} #{action}", 
-               {:if => described_class.instance_methods.include?(action.to_s), 
+               {:if => described_class.instance_methods.collect(&:to_s).include?(action.to_s), 
                 :method => method, 
                 :action => action}.
                merge(metadata), 
@@ -48,7 +48,7 @@ module CrudControllerTestHelper
       skips = Array(options[:skip])
       skips = [skips] if skips.blank? || !skips.first.is_a?(Array)
       
-      skips.include?(contexts)
+      skips.any? {|skip| skip == contexts.take(skip.size) }
     end
     
     # Test the response status, default 200.

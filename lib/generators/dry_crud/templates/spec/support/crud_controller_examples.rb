@@ -115,7 +115,7 @@ shared_examples "crud controller" do |options|
   end
   
   describe_action :get, :new, :unless => skip?(options, %w(new)) do
-    context "plain", :unless => skip?(options, %w(index plain)) do
+    context "plain", :unless => skip?(options, %w(new plain)) do
       it_should_respond
       it_should_render
       it_should_persist_entry(false)
