@@ -210,34 +210,11 @@ class StandardHelperTest < ActionView::TestCase
   test "standard form for existing entry" do
     e = crud_test_models('AAAAA')
     f = with_test_routing do
-      f = capture { standard_form(e, :name, :children, :birthdate, :human, :class => 'special') }
+      f = capture { standard_form(e, :class => 'special') {|f|} }
     end
 
     assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
     assert_match /input .*?name="_method" .*?type="hidden" .*?value="put"/, f
-    assert_match /input .*?name="crud_test_model\[name\]" .*?type="text" .*?value="AAAAA"/, f
-    assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
-    assert_match /option selected="selected" value="1910">1910<\/option>/, f
-    assert_match /option selected="selected" value="1">January<\/option>/, f
-    assert_match /option selected="selected" value="1">1<\/option>/, f
-    assert_match /input .*?name="crud_test_model\[children\]" .*?type="number" .*?value=\"9\"/, f
-    assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
-    assert_match /button .*?type="submit">Save<\/button>/, f
-  end
-
-  test "standard form for new entry" do
-    e = CrudTestModel.new
-    f = with_test_routing do
-      f = capture { standard_form(e, :name, :children, :birthdate, :human, :html => {:class => 'special'}) }
-    end
-
-    assert_match /form .*?action="\/crud_test_models" .?class="special form-horizontal" .*?method="post"/, f
-    assert_match /input .*?name="crud_test_model\[name\]" .*?type="text"/, f
-    assert_no_match /input .*?name="crud_test_model\[name\]" .*?type="text" .*?value=/, f
-    assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
-    assert_match /input .*?name="crud_test_model\[children\]" .*?type="number"/, f
-    assert_no_match /input .*?name="crud_test_model\[children\]" .*?type="text" .*?value=/, f
-    assert_match /button .*?type="submit">Save<\/button>/, f
   end
 
   test "standard form with errors" do
@@ -246,7 +223,7 @@ class StandardHelperTest < ActionView::TestCase
     assert !e.valid?
 
     f = with_test_routing do
-      f = capture { standard_form(e, :name, :children, :birthdate, :human) }
+      f = capture { standard_form(e) {|f| f.labeled_input_fields(:name, :birthdate) } }
     end
 
     assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
@@ -257,9 +234,6 @@ class StandardHelperTest < ActionView::TestCase
     assert_match /option selected="selected" value="1910">1910<\/option>/, f
     assert_match /option selected="selected" value="1">January<\/option>/, f
     assert_match /option selected="selected" value="1">1<\/option>/, f
-    assert_match /input .*?name="crud_test_model\[children\]" .*?type="number" .*?value=\"9\"/, f
-    assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
-    assert_match /button .*?type="submit">Save<\/button>/, f
   end
 
   test "translate inheritable lookup" do

@@ -71,9 +71,9 @@ class CrudHelperTest < ActionView::TestCase
   end
 
 
-  test "crud form" do
+  test "entry form" do
     f = with_test_routing do
-      capture { crud_form }
+      capture { entry_form }
     end
 
     assert_match /form .*?action="\/crud_test_models\/#{entry.id}"/, f
@@ -88,6 +88,21 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /textarea .*?name="crud_test_model\[remarks\]"/, f
   end
 
+  test "crud form" do
+    e = crud_test_models('AAAAA')
+    f = with_test_routing do
+      f = capture { crud_form(e, :name, :children, :birthdate, :human, :class => 'special') }
+    end
+
+    assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
+    assert_match /input .*?name="_method" .*?type="hidden" .*?value="put"/, f
+    assert_match /input .*?name="crud_test_model\[name\]" .*?type="text" .*?value="AAAAA"/, f
+    assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
+    assert_match /input .*?name="crud_test_model\[children\]" .*?type="number" .*?value=\"9\"/, f
+    assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
+    assert_match /button .*?type="submit">Save<\/button>/, f
+  end
+  
   def entry
     @entry ||= CrudTestModel.first
   end

@@ -279,7 +279,7 @@ describe StandardHelper do
   describe "#standard_form" do
     subject do
       with_test_routing do
-        capture { standard_form(entry, :name, :children, :birthdate, :human, :html => {:class => 'special'}) }
+        capture { standard_form(entry, :html => {:class => 'special'}) {|f| f.labeled_input_fields :name, :birthdate } }
       end
     end
     
@@ -293,23 +293,8 @@ describe StandardHelper do
       it { should match(/option selected="selected" value="1910">1910<\/option>/) }
       it { should match(/option selected="selected" value="1">January<\/option>/) }
       it { should match(/option selected="selected" value="1">1<\/option>/) }
-      it { should match(/input .*?name="crud_test_model\[children\]" .*?type="number" .*?value=\"9\"/) }
-      it { should match(/input .*?name="crud_test_model\[human\]" .*?type="checkbox"/) }
-      it { should match(/button .*?type="submit">Save<\/button>/) }
     end
    
-    context "for new entry" do
-      let(:entry) { CrudTestModel.new }
-      
-      it { should match(/form .*?action="\/crud_test_models" .?class="special form-horizontal" .*?method="post"/) }
-      it { should match(/input .*?name="crud_test_model\[name\]" .*?type="text"/) }
-      it { should_not match(/input .*?name="crud_test_model\[name\]" .*?type="text" .*?value=/) }
-      it { should match(/select .*?name="crud_test_model\[birthdate\(1i\)\]"/) }
-      it { should match(/input .*?name="crud_test_model\[children\]" .*?type="number"/) }
-      it { should_not match(/input .*?name="crud_test_model\[children\]" .*?type="number" .*?value=/) }
-      it { should match(/button .*?type="submit">Save<\/button>/) }
-    end
-    
     context "for invalid entry" do
       let(:entry) do
         e = crud_test_models(:AAAAA)
