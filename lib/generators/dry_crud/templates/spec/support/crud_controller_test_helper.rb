@@ -84,13 +84,14 @@ module CrudControllerTestHelper
     end
     
     # Test that test_entry_attrs are set on entry.
-    def it_should_set_attrs
+    def it_should_set_attrs(action = nil)
       it "should set params as entry attributes" do
+        attrs = send("#{action}_entry_attrs")
         actual = {}
-        test_entry_attrs.keys.each do |key|
+        attrs.keys.each do |key|
           actual[key] = entry.attributes[key.to_s]
         end
-        actual.should == test_entry_attrs
+        actual.should == attrs
       end
     end
     

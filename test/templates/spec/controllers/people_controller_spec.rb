@@ -13,6 +13,8 @@ describe PeopleController do
                             :children => 2, 
                             :income => 120, 
                             :city_id => cities(:rj).id} }
+  alias_method :new_entry_attrs, :test_entry_attrs
+  alias_method :edit_entry_attrs, :test_entry_attrs
   
   it "should load fixtures" do
     Person.count.should == 2

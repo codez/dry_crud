@@ -8,7 +8,7 @@ RSpec.configure do |c|
 end
 
 # A set of examples to include into the tests for your crud controller subclasses.
-# Simply #let :test_entry and :test_entry_attrs to test the basic
+# Simply #let :test_entry, :new_entry_attrs and :edit_entry_attrs to test the basic
 # crud functionality. 
 # If single examples do not match with you implementation, you may skip
 # them by passing a skip parameter with context arrays:
@@ -122,13 +122,13 @@ shared_examples "crud controller" do |options|
     end
     
     context "with params", :unless => skip?(options, 'new', 'with params') do
-      let(:params) { { model_identifier => test_entry_attrs } }
-      it_should_set_attrs
+      let(:params) { { model_identifier => new_entry_attrs } }
+      it_should_set_attrs(:new)
     end
   end
   
   describe_action :post, :create, :unless => skip?(options, %w(create)) do
-    let(:params) { { model_identifier => test_entry_attrs } }
+    let(:params) { { model_identifier => new_entry_attrs } }
     
     it "should add entry to database", :perform_request => false do
       expect { perform_request }.to change { model_class.count }.by(1)
@@ -137,7 +137,7 @@ shared_examples "crud controller" do |options|
     context "html", :format => :html, :unless => skip?(options, %w(create html)) do
       context "with valid params", :unless => skip?(options, %w(create html valid)) do
         it_should_redirect_to_show
-        it_should_set_attrs
+        it_should_set_attrs(:new)
         it_should_persist_entry
         it_should_have_flash(:notice)
       end
@@ -145,7 +145,7 @@ shared_examples "crud controller" do |options|
       context "with invalid params", :failing => true, :unless => skip?(options, %w(create html invalid)) do
         it_should_render('new')
         it_should_persist_entry(false)
-        it_should_set_attrs
+        it_should_set_attrs(:new)
         it_should_not_have_flash(:notice)
       end
     end
@@ -153,14 +153,14 @@ shared_examples "crud controller" do |options|
     context "json", :format => :json, :unless => skip?(options, %w(create json)) do
       context "with valid params", :unless => skip?(options, %w(create json valid)) do
         it_should_respond(201)
-        it_should_set_attrs
+        it_should_set_attrs(:new)
         its(:body) { should start_with('{') }
         it_should_persist_entry
       end
       
       context "with invalid params", :failing => true, :unless => skip?(options, %w(create json invalid)) do
         it_should_respond(422)
-        it_should_set_attrs
+        it_should_set_attrs(:new)
         its(:body) { should match(/"errors":\{/) }
         it_should_persist_entry(false)
       end
@@ -174,7 +174,7 @@ shared_examples "crud controller" do |options|
   end
   
   describe_action :put, :update, :id => true, :unless => skip?(options, %w(update)) do
-    let(:params) { {model_identifier => test_entry_attrs} }
+    let(:params) { {model_identifier => edit_entry_attrs} }
     
     it "should update entry in database", :perform_request => false do
       expect { perform_request }.to change { model_class.count }.by(0)
@@ -182,7 +182,7 @@ shared_examples "crud controller" do |options|
     
     context ".html", :format => :html, :unless => skip?(options, %w(update html)) do
       context "with valid params", :unless => skip?(options, %w(update html valid)) do
-        it_should_set_attrs
+        it_should_set_attrs(:edit)
         it_should_redirect_to_show
         it_should_persist_entry
         it_should_have_flash(:notice)
@@ -190,7 +190,7 @@ shared_examples "crud controller" do |options|
       
       context "with invalid params", :failing => true, :unless => skip?(options, %w(update html invalid)) do
         it_should_render('edit')
-        it_should_set_attrs
+        it_should_set_attrs(:edit)
         it_should_not_have_flash(:notice)
       end
     end
@@ -198,14 +198,14 @@ shared_examples "crud controller" do |options|
     context ".json", :format => :json, :unless => skip?(options, %w(udpate json)) do
       context "with valid params", :unless => skip?(options, %w(udpate json valid)) do
         it_should_respond(204)
-        it_should_set_attrs
+        it_should_set_attrs(:edit)
         its(:body) { should match(/s*/) }
         it_should_persist_entry
       end
       
       context "with invalid params", :failing => true, :unless => skip?(options, %w(update json invalid)) do
         it_should_respond(422)
-        it_should_set_attrs
+        it_should_set_attrs(:edit)
         its(:body) { should match(/"errors":\{/) }
       end
     end

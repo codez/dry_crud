@@ -111,7 +111,7 @@ class CrudController < ListController
 
   # Assigns the attributes from the params to the model entry.
   def assign_attributes
-    entry.attributes = params[model_identifier]
+    entry.attributes = model_params
   end
 
   # A label for the current entry, including the model name.
@@ -146,6 +146,11 @@ class CrudController < ListController
   # Html safe error messages of the current entry.
   def error_messages
     @@helper.safe_join(entry.errors.full_messages, '<br/>'.html_safe)
+  end
+  
+  # The form params for this model.
+  def model_params
+    params[model_identifier]
   end
 
 

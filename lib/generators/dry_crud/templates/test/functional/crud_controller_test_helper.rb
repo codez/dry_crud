@@ -76,16 +76,16 @@ module CrudControllerTestHelper
 
   def test_create
     assert_difference("#{model_class.name}.count") do
-      post :create, test_params(model_identifier => test_entry_attrs)
+      post :create, test_params(model_identifier => new_entry_attrs)
     end
     assert_redirected_to_show entry
     assert ! entry.new_record?
-    assert_test_attrs_equal
+    assert_attrs_equal(new_entry_attrs)
   end
 
   def test_create_json
     assert_difference("#{model_class.name}.count") do
-      post :create, test_params(model_identifier => test_entry_attrs, :format => 'json')
+      post :create, test_params(model_identifier => new_entry_attrs, :format => 'json')
     end
     assert_response :success
     assert @response.body.starts_with?("{")
@@ -100,15 +100,15 @@ module CrudControllerTestHelper
 
   def test_update
     assert_no_difference("#{model_class.name}.count") do
-      put :update, test_params(:id => test_entry.id, model_identifier => test_entry_attrs)
+      put :update, test_params(:id => test_entry.id, model_identifier => edit_entry_attrs)
     end
-    assert_test_attrs_equal
+    assert_attrs_equal(edit_entry_attrs)
     assert_redirected_to_show entry
   end
 
   def test_update_json
     assert_no_difference("#{model_class.name}.count") do
-      put :update, test_params(:id => test_entry.id, model_identifier => test_entry_attrs, :format => 'json')
+      put :update, test_params(:id => test_entry.id, model_identifier => edit_entry_attrs, :format => 'json')
     end
     assert_response :success
     assert_equal "", @response.body.strip
@@ -139,8 +139,8 @@ module CrudControllerTestHelper
     assert_redirected_to test_params(:action => 'show', :id => entry.id)
   end
 
-  def assert_test_attrs_equal
-    test_entry_attrs.each do |key, value|
+  def assert_attrs_equal(attrs)
+    attrs.each do |key, value|
       actual = entry.send(key)
       assert_equal value, actual, "#{key} is expected to be <#{value.inspect}>, got <#{actual.inspect}>"
     end
@@ -174,6 +174,16 @@ module CrudControllerTestHelper
   # Attribute hash used in several tests.
   def test_entry_attrs
     raise "Implement this method in your test class"
+  end
+  
+  # Attribute hash used in edit/update tests.
+  def edit_entry_attrs
+    test_entry_attrs
+  end
+
+  # Attribute hash used in new/create tests.
+  def new_entry_attrs
+    test_entry_attrs
   end
 
   # The params to pass to an action, including required nesting params.
