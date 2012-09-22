@@ -97,14 +97,9 @@ module StandardHelper
     add_css_class options[:html], 'form-horizontal'
 
     form_for(object, options) do |form|
-      record = object.is_a?(Array) ? object.last : object
-      content = render('shared/error_messages', :errors => record.errors, :object => record)
+      content = form.error_messages
       content << capture(form, &block)
     end
-  end
-
-  def cancel_link(object)
-    link_to(ti(:"button.cancel"), polymorphic_path(object, :returning => true), :class => 'cancel')
   end
 
   # Renders a simple unordered list, which will
