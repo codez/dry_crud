@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 describe ListHelper do
 
   include StandardHelper
@@ -22,11 +21,11 @@ describe ListHelper do
         with_test_routing { list_table }
       end
       
-      it "should have 7 rows" do
+      it "has 7 rows" do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
       
-      it "should have 13 sortable headers" do
+      it "has 13 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 13
       end
     end
@@ -36,11 +35,11 @@ describe ListHelper do
         with_test_routing { list_table(:name, :children, :companion_id) }
       end
       
-      it "should have 7 rows" do
+      it "has 7 rows" do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
       
-      it "should have 3 sortable headers" do
+      it "has 3 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 3
       end
     end
@@ -55,19 +54,19 @@ describe ListHelper do
         end
       end
       
-      it "should have 7 rows" do
+      it "has 7 rows" do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
       
-      it "should have 4 headers" do
+      it "has 4 headers" do
         subject.scan(REGEXP_HEADERS).size.should == 4
       end
       
-      it "should have 0 sortable headers" do
+      it "has 0 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 0
       end
       
-      it "should have 6 spans" do
+      it "has 6 spans" do
         subject.scan(/<span>.+?<\/span>/).size.should == 6
       end
     end
@@ -81,19 +80,19 @@ describe ListHelper do
         end
       end
       
-      it "should have 7 rows" do
+      it "has 7 rows" do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
       
-      it "should have 4 headers" do
+      it "has 4 headers" do
         subject.scan(REGEXP_HEADERS).size.should == 4
       end
       
-      it "should have 3 sortable headers" do
+      it "has 3 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 3
       end
       
-      it "should have 6 spans" do
+      it "has 6 spans" do
         subject.scan(/<span>.+?<\/span>/).size.should == 6
       end
     end
@@ -104,11 +103,11 @@ describe ListHelper do
         with_test_routing { list_table }
       end
 
-      it "should have 12 sortable headers" do
+      it "has 12 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 12
       end
       
-      it "should have 1 ascending sort headers" do
+      it "has 1 ascending sort headers" do
         subject.scan(/<th><a .*?sort_dir=desc.*?>Children<\/a> &darr;<\/th>/).size.should == 1
       end
     end
@@ -119,11 +118,11 @@ describe ListHelper do
         with_test_routing { list_table }
       end
 
-      it "should have 12 sortable headers" do
+      it "has 12 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 12
       end
       
-      it "should have 1 descending sort headers" do
+      it "has 1 descending sort headers" do
         subject.scan(/<th><a .*?sort_dir=asc.*?>Children<\/a> &uarr;<\/th>/).size.should == 1
       end
     end
@@ -134,18 +133,18 @@ describe ListHelper do
         with_test_routing { list_table(:name, :children, :chatty) }
       end
 
-      it "should have 2 sortable headers" do
+      it "has 2 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 2
       end
       
-      it "should have 1 ascending sort headers" do
+      it "has 1 ascending sort headers" do
         subject.scan(/<th><a .*?sort_dir=desc.*?>Chatty<\/a> &darr;<\/th>/).size.should == 1
       end
     end
   end
   
   describe "#default_attrs" do
-    it "should not contain id" do
+    it "do not contain id" do
       default_attrs.should == [:name, :whatever, :children, :companion_id, :rating, :income,
                                :birthdate, :gets_up_at, :last_seen, :human, :remarks,
                                :created_at, :updated_at]
