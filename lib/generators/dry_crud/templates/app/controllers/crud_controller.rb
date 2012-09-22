@@ -48,12 +48,13 @@ class CrudController < ListController
   # There are before and after create callbacks to hook into the action.
   # To customize the response, you may overwrite this action and call
   # super with a block that gets the format parameter.
+  # Specify a :location option if you wish to do a custom redirect.
   #   POST /entries
   #   POST /entries.json
-  def create(&block)
+  def create(options = {}, &block)
     assign_attributes
     created = with_callbacks(:create, :save) { entry.save }
-    respond_with(entry, :success => created, &block)
+    respond_with(entry, options.reverse_merge(:success => created), &block)
   end
 
   # Display a form to edit an exisiting entry of this model.
@@ -66,25 +67,27 @@ class CrudController < ListController
   # There are before and after update callbacks to hook into the action.
   # To customize the response, you may overwrite this action and call
   # super with a block that gets the format parameter.
+  # Specify a :location option if you wish to do a custom redirect.
   #   PUT /entries/1
   #   PUT /entries/1.json
-  def update(&block)
+  def update(options = {}, &block)
     assign_attributes
     updated = with_callbacks(:update, :save) { entry.save }
-    respond_with(entry, :success => updated, &block)
+    respond_with(entry, options.reverse_merge(:success => updated), &block)
   end
 
   # Destroy an existing entry of this model.
   # There are before and after destroy callbacks to hook into the action.
   # To customize the response, you may overwrite this action and call
   # super with a block that gets success and format parameters.
+  # Specify a :location option if you wish to do a custom redirect.
   #   DELETE /entries/1
   #   DELETE /entries/1.json
-  def destroy(&block)
+  def destroy(options = {}, &block)
     destroyed = run_callbacks(:destroy) { entry.destroy }
     flash[:alert] ||= error_messages.presence || flash_message(:failure) if !destroyed && request.format == :html
     location = !destroyed && request.env["HTTP_REFERER"].presence || index_url
-    respond_with(entry, :success => destroyed, :location => location, &block)
+    respond_with(entry, options.reverse_merge(:success => destroyed, :location => location), &block)
   end
 
   private
