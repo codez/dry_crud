@@ -162,10 +162,10 @@ To render custom columns, use the :col method:
 
 Forms work very similar. In the most simple case, you just have to specify which attributes of a model to create input fields for, and you get a complete form with error messages, labeled input fields according the column types and a save button:
 
-  <%= standard_form(@person, :firstname, :lastname, :age, :city) -%>
+  <%= crud_form(@person, :firstname, :lastname, :age, :city) -%>
 
 Of course, custom input fields may be defined as well:
-  <%= standard_form(@person, :url => custom_update_person_path(@person.id)) do |f| %>
+  <%= crud_form(@person, :url => custom_update_person_path(@person.id)) do |f| %>
     <%= f.labeled_input_fields :firstname, :lastname %>
     <%= f.labeled(:sex) do %>
       <%= f.radio_button :sex, true %> female
