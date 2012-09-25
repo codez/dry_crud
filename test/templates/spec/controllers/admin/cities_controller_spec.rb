@@ -8,6 +8,8 @@ describe Admin::CitiesController do
   
   let(:test_entry)       { cities(:rj) }
   let(:test_entry_attrs) { {:name => 'Rejkiavik'} }
+  alias_method :new_entry_attrs, :test_entry_attrs
+  alias_method :edit_entry_attrs, :test_entry_attrs
 
   it "should load fixtures" do
     City.count.should == 3

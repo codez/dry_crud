@@ -8,6 +8,8 @@ describe Admin::CountriesController do
   
   let(:test_entry)       { countries(:usa) }
   let(:test_entry_attrs) { {:name => 'United States of America', :code => 'US'} }
+  alias_method :new_entry_attrs, :test_entry_attrs
+  alias_method :edit_entry_attrs, :test_entry_attrs
   
   it "should load fixtures" do
     Country.count.should == 3

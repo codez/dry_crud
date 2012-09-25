@@ -17,6 +17,8 @@ module CrudHelper
   # An options hash may be given as the last argument.
   def crud_form(object, *attrs, &block)
     options = attrs.extract_options!
+    cancel_url = get_cancel_url(object, options)
+    
     standard_form(object, options) do |form|
       content = if block_given?
         capture(form, &block)
@@ -24,11 +26,7 @@ module CrudHelper
         form.labeled_input_fields(*attrs)
       end
 
-      content << content_tag(:div, :class => 'form-actions') do
-        form.button(ti(:"button.save"), :class => 'btn btn-primary') +
-        ' ' +
-        cancel_link(object)
-      end
+      content << form.standard_actions(cancel_url)
       content.html_safe
     end
   end
@@ -130,6 +128,20 @@ module CrudHelper
   end
 
   private
+
+  # Get the cancel url for the given object considering options:
+  # 1. Use :cancel_url_new or :cancel_url_edit option, if present
+  # 2. Use :cancel_url option, if present
+  # 3. Use polymorphic_path(object)
+  def get_cancel_url(object, options)
+    record = Array(object).last
+    cancel_url = options.delete(:cancel_url)
+    cancel_url_new = options.delete(:cancel_url_new)
+    cancel_url_edit = options.delete(:cancel_url_edit)
+    url = record.new_record? ? cancel_url_new : cancel_url_edit
+    url || cancel_url || polymorphic_path(object, :returning => true)
+  end
+
 
   # If a block is given, call it to get the path for the current row entry.
   # Otherwise, return the standard path args.

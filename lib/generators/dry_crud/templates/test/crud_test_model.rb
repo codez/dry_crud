@@ -1,8 +1,8 @@
 # A dummy model used for general testing.
 class CrudTestModel < ActiveRecord::Base #:nodoc:
 
-  attr_protected nil
-
+  attr_accessible :name, :whatever, :children, :rating, :income, :birthdate, :gets_up_at, :last_seen, :human, :remarks
+          
   belongs_to :companion, :class_name => 'CrudTestModel'
   has_and_belongs_to_many :others, :class_name => 'OtherCrudTestModel'
   has_many :mores, :class_name => 'OtherCrudTestModel', :foreign_key => :more_id
@@ -98,6 +98,12 @@ class CrudTestModelsController < CrudController #:nodoc:
 
   private
 
+  def build_entry
+    entry = super
+    entry.companion_id = model_params.delete(:companion_id) if model_params
+    entry
+  end
+
   # custom callback
   def handle_name
     if entry.name == 'illegal'
@@ -105,6 +111,17 @@ class CrudTestModelsController < CrudController #:nodoc:
       false
     end
   end
+
+  # callback to redirect if @should_redirect is set
+  def possibly_redirect
+    redirect_to :action => 'index' if should_redirect && !performed?
+    !should_redirect
+  end
+
+  def set_companions
+    @companions = CrudTestModel.all :conditions => {:human => true}
+  end
+
 
   # create callback methods that record the before/after callbacks
   [:create, :update, :save, :destroy].each do |a|
@@ -123,16 +140,6 @@ class CrudTestModelsController < CrudController #:nodoc:
   # handle the called callbacks
   def method_missing(sym, *args)
     called_callback(sym.to_s[HANDLE_PREFIX.size..-1].to_sym) if sym.to_s.starts_with?(HANDLE_PREFIX)
-  end
-
-  # callback to redirect if @should_redirect is set
-  def possibly_redirect
-    redirect_to :action => 'index' if should_redirect && !performed?
-    !should_redirect
-  end
-
-  def set_companions
-    @companions = CrudTestModel.all :conditions => {:human => true}
   end
 
   # records a callback
@@ -266,9 +273,8 @@ module CrudTestHelper
 
   def create(index, companion)
     c = str(index)
-    CrudTestModel.create!(:name => c,
+    m = CrudTestModel.new(:name => c,
                           :children => 10 - index,
-                          :companion => companion,
                           :rating => "#{index}.#{index}".to_f,
                           :income => 10000000 * index + 0.1 * index,
                           :birthdate => "#{1900 + 10 * index}-#{index}-#{index}",
@@ -279,6 +285,9 @@ module CrudTestHelper
                           :last_seen => "#{2000 + 10 * index}-#{index}-#{index} 1#{index}:2#{index}",
                           :human => index % 2 == 0,
                           :remarks => "#{c} #{str(index + 1)} #{str(index + 2)}\n" * (index % 3 + 1))
+    m.companion = companion
+    m.save!
+    m
   end
 
   def create_other(index)

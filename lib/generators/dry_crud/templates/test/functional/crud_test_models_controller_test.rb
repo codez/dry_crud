@@ -284,7 +284,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     crud_test_models(:AAAAA)
   end
 
-  def test_entry_attrs
+  def new_entry_attrs
     {:name => 'foo',
      :children => 42,
      :companion_id => 3,
@@ -295,4 +295,13 @@ class CrudTestModelsControllerTest < ActionController::TestCase
      :remarks => "some custom\n\tremarks"}
   end
 
+  def edit_entry_attrs
+    {:name => 'foo',
+     :children => 42,
+     :rating => 8.5,
+     :income => 2.42,
+     :birthdate => '31-12-1999'.to_date,
+     :human => true,
+     :remarks => "some custom\n\tremarks"}
+  end
 end

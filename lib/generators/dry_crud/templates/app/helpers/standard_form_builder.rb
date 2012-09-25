@@ -9,7 +9,7 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
 
   attr_reader :template
 
-  delegate :association, :column_type, :column_property, :captionize, :ta,
+  delegate :association, :column_type, :column_property, :captionize, :ti, :ta, :link_to,
            :content_tag, :safe_join, :capture, :add_css_class, :assoc_and_id_attr,
            :to => :template
 
@@ -121,6 +121,21 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
     add_css_class(html_options, 'multiselect')
     belongs_to_field(attr, html_options)
   end
+  
+  # Render the error messages for the current form.
+  def error_messages
+    @template.render('shared/error_messages', :errors => @object.errors, :object => @object)
+  end
+  
+  # Render a submit button and a cancel link for this form.
+  def standard_actions(cancel_url, submit_label = ti(:"button.save"))
+    content_tag(:div, :class => 'form-actions') do
+      button(submit_label, :class => 'btn btn-primary') +
+      ' ' +
+      link_to(ti(:"button.cancel"), cancel_url, :class => 'cancel')
+    end
+  end
+  
 
   # Renders a marker if the given attr has to be present.
   def required_mark(attr)
