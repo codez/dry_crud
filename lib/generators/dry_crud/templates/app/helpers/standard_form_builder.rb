@@ -130,12 +130,19 @@ class StandardFormBuilder < ActionView::Helpers::FormBuilder
   # Render a submit button and a cancel link for this form.
   def standard_actions(cancel_url, submit_label = ti(:"button.save"))
     content_tag(:div, :class => 'form-actions') do
-      button(submit_label, :class => 'btn btn-primary') +
-      ' ' +
-      link_to(ti(:"button.cancel"), cancel_url, :class => 'cancel')
+      safe_join([submit_button(submit_label), cancel_link(cancel_url)], ' ')
     end
   end
   
+  # Render a standard submit button with the given label.
+  def submit_button(label = ti(:"button.save"))
+    button(label, :class => 'btn btn-primary')
+  end
+  
+  # Render a cancel link pointing to the given url.
+  def cancel_link(url)
+    link_to(ti(:"button.cancel"), url, :class => 'cancel')
+  end
 
   # Renders a marker if the given attr has to be present.
   def required_mark(attr)
