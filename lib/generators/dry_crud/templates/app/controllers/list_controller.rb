@@ -52,7 +52,7 @@ class ListController < ApplicationController
   # Get the instance variable named after the model_class.
   # If the collection variable is required, pass true as the second argument.
   def get_model_ivar(plural = false)
-    name = model_class.name.underscore
+    name = ivar_name(model_class)
     name = name.pluralize if plural
     instance_variable_get(:"@#{name}")
   end
@@ -61,13 +61,17 @@ class ListController < ApplicationController
   # If the value is a collection, sets the plural name.
   def set_model_ivar(value)
     name = if value.respond_to?(:klass) # ActiveRecord::Relation
-      value.klass.name.pluralize
+      ivar_name(value.klass).pluralize
     elsif value.respond_to?(:each) # Array
-      value.first.klass.name.pluralize
+      ivar_name(value.first.klass).pluralize
     else
-      value.class.name
+      ivar_name(value.class)
     end
-    instance_variable_set(:"@#{name.underscore}", value)
+    instance_variable_set(:"@#{name}", value)
+  end
+  
+  def ivar_name(klass) 
+    klass.model_name.param_key
   end
 
   class << self
@@ -102,7 +106,6 @@ class ListController < ApplicationController
     # If a callback renders or redirects, the action is not rendered.
     def render_with_callbacks(*args, &block)
       options = _normalize_render(*args, &block)
-      p options if options[:location] == :back
       callback = "render_#{options[:template]}"
       run_callbacks(callback) if respond_to?(:"_run_#{callback}_callbacks", true)
 

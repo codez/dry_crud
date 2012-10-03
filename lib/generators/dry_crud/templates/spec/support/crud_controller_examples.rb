@@ -24,8 +24,8 @@ shared_examples "crud controller" do |options|
   let(:model_class)      { controller.send(:model_class) }
   let(:model_identifier) { controller.model_identifier }
   let(:test_params)      { scope_params }
-  let(:entry)            { assigns(model_identifier) }
-  let(:entries)          { assigns(model_identifier.to_s.pluralize.to_sym) }
+  let(:entry)            { assigns(controller.send(:ivar_name, model_class)) }
+  let(:entries)          { assigns(controller.send(:ivar_name, model_class).pluralize) }
   let(:sort_column)      { model_class.column_names.first }
   let(:search_value) do
     field = controller.search_columns.first
@@ -35,20 +35,20 @@ shared_examples "crud controller" do |options|
 
   before do
     m = example.metadata
-    perform_request if m[:perform_request] != false && m[:action] && m[:method]
+    perform_combined_request if m[:perform_request] != false && m[:action] && m[:method]
   end
-
+  
+  
   describe_action :get, :index, :unless => skip?(options, 'index') do
-    
     context ".html", :format => :html, :unless => skip?(options, %w(index html)) do
     
-      context 'plain', :unless => skip?(options, %w(index html plain)) do
+      context 'plain', :unless => skip?(options, %w(index html plain)), :combine => 'ihp' do
         it_should_respond
         it_should_assign_entries
         it_should_render
       end
       
-      context "search", :if => described_class.search_columns.present?, :unless => skip?(options, %w(index html search)) do
+      context "search", :if => described_class.search_columns.present?, :unless => skip?(options, %w(index html search)), :combine => 'ihse' do
         let(:params) { {:q => search_value} }
         
         it_should_respond
@@ -59,7 +59,7 @@ shared_examples "crud controller" do |options|
       end
       
       context "sort", :unless => skip?(options, %w(index html sort)) do
-        context "ascending", :unless => skip?(options, %w(index html sort ascending)) do
+        context "ascending", :unless => skip?(options, %w(index html sort ascending)), :combine => 'ihso' do
           let(:params) { {:sort => sort_column, :sort_dir => 'asc'} } 
           
           it_should_respond
@@ -69,7 +69,7 @@ shared_examples "crud controller" do |options|
           end
         end
         
-        context "descending", :unless => skip?(options, %w(index html sort descending)) do
+        context "descending", :unless => skip?(options, %w(index html sort descending)), :combine => 'ihsd' do
           let(:params) { {:sort => sort_column, :sort_dir => 'desc'} } 
       
           it_should_respond
@@ -81,18 +81,17 @@ shared_examples "crud controller" do |options|
       end
     end
     
-    context ".json", :format => :json, :unless => skip?(options, %w(index json)) do
+    context ".json", :format => :json, :unless => skip?(options, %w(index json)), :combine => 'ij' do
       it_should_respond
       it_should_assign_entries
       its(:body) { should start_with('[{') }
     end
-    
   end
   
   describe_action :get, :show, :id => true, :unless => skip?(options, 'show') do
 
     context ".html", :format => :html, :unless => skip?(options, %w(show html)) do
-      context "plain", :unless => skip?(options, %w(show html plain)) do
+      context "plain", :unless => skip?(options, %w(show html plain)), :combine => 'sh' do
         it_should_respond
         it_should_assign_entry
         it_should_render
@@ -107,7 +106,7 @@ shared_examples "crud controller" do |options|
       end
     end
     
-    context ".json", :format => :json, :unless => skip?(options, %w(show json)) do
+    context ".json", :format => :json, :unless => skip?(options, %w(show json)), :combine => 'sj' do
       it_should_respond
       it_should_assign_entry
       its(:body) { should start_with('{') }
@@ -115,7 +114,7 @@ shared_examples "crud controller" do |options|
   end
   
   describe_action :get, :new, :unless => skip?(options, %w(new)) do
-    context "plain", :unless => skip?(options, %w(new plain)) do
+    context "plain", :unless => skip?(options, %w(new plain)), :combine => 'n' do
       it_should_respond
       it_should_render
       it_should_persist_entry(false)
@@ -135,14 +134,14 @@ shared_examples "crud controller" do |options|
     end
     
     context "html", :format => :html, :unless => skip?(options, %w(create html)) do
-      context "with valid params", :unless => skip?(options, %w(create html valid)) do
+      context "with valid params", :unless => skip?(options, %w(create html valid)), :combine => 'ch' do
         it_should_redirect_to_show
         it_should_set_attrs(:new)
         it_should_persist_entry
         it_should_have_flash(:notice)
       end
       
-      context "with invalid params", :failing => true, :unless => skip?(options, %w(create html invalid)) do
+      context "with invalid params", :failing => true, :unless => skip?(options, %w(create html invalid)), :combine => 'chi' do
         it_should_render('new')
         it_should_persist_entry(false)
         it_should_set_attrs(:new)
@@ -151,14 +150,14 @@ shared_examples "crud controller" do |options|
     end
     
     context "json", :format => :json, :unless => skip?(options, %w(create json)) do
-      context "with valid params", :unless => skip?(options, %w(create json valid)) do
+      context "with valid params", :unless => skip?(options, %w(create json valid)), :combine => 'cjv' do
         it_should_respond(201)
         it_should_set_attrs(:new)
         its(:body) { should start_with('{') }
         it_should_persist_entry
       end
       
-      context "with invalid params", :failing => true, :unless => skip?(options, %w(create json invalid)) do
+      context "with invalid params", :failing => true, :unless => skip?(options, %w(create json invalid)), :combine => 'cji' do
         it_should_respond(422)
         it_should_set_attrs(:new)
         its(:body) { should match(/"errors":\{/) }
@@ -167,7 +166,7 @@ shared_examples "crud controller" do |options|
     end
   end
   
-  describe_action :get, :edit, :id => true, :unless => skip?(options, %w(edit)) do
+  describe_action :get, :edit, :id => true, :unless => skip?(options, %w(edit)), :combine => 'edit' do
     it_should_respond
     it_should_render
     it_should_assign_entry
@@ -181,14 +180,14 @@ shared_examples "crud controller" do |options|
     end
     
     context ".html", :format => :html, :unless => skip?(options, %w(update html)) do
-      context "with valid params", :unless => skip?(options, %w(update html valid)) do
+      context "with valid params", :unless => skip?(options, %w(update html valid)), :combine => 'uhv' do
         it_should_set_attrs(:edit)
         it_should_redirect_to_show
         it_should_persist_entry
         it_should_have_flash(:notice)
       end
       
-      context "with invalid params", :failing => true, :unless => skip?(options, %w(update html invalid)) do
+      context "with invalid params", :failing => true, :unless => skip?(options, %w(update html invalid)), :combine => 'uhi' do
         it_should_render('edit')
         it_should_set_attrs(:edit)
         it_should_not_have_flash(:notice)
@@ -196,14 +195,14 @@ shared_examples "crud controller" do |options|
     end
     
     context ".json", :format => :json, :unless => skip?(options, %w(udpate json)) do
-      context "with valid params", :unless => skip?(options, %w(udpate json valid)) do
+      context "with valid params", :unless => skip?(options, %w(udpate json valid)), :combine => 'ujv' do
         it_should_respond(204)
         it_should_set_attrs(:edit)
         its(:body) { should match(/s*/) }
         it_should_persist_entry
       end
       
-      context "with invalid params", :failing => true, :unless => skip?(options, %w(update json invalid)) do
+      context "with invalid params", :failing => true, :unless => skip?(options, %w(update json invalid)), :combine => 'uji' do
         it_should_respond(422)
         it_should_set_attrs(:edit)
         its(:body) { should match(/"errors":\{/) }
@@ -218,20 +217,24 @@ shared_examples "crud controller" do |options|
     end
     
     context ".html", :format => :html, :unless => skip?(options, %w(destroy html)) do
-      it_should_redirect_to_index
-      it_should_have_flash(:notice)
+      context "successfull", :combine => 'dhs' do
+        it_should_redirect_to_index
+        it_should_have_flash(:notice)
+      end
       
-      context "with failure", :failing => true do
+      context "with failure", :failing => true, :combine => 'dhf' do
         it_should_redirect_to_index
         it_should_have_flash(:alert)
       end
     end
     
     context ".json", :format => :json, :unless => skip?(options, %w(destroy json)) do
-      it_should_respond(204)
-      its(:body) { should match(/s*/) }
+      context "successfull", :combine => 'djs' do
+        it_should_respond(204)
+        its(:body) { should match(/s*/) }
+      end
       
-      context "with failure", :failing => true do
+      context "with failure", :failing => true, :combine => 'djf' do
         it_should_respond(422)
         its(:body) { should match(/"errors":\{/) }
       end
@@ -239,4 +242,3 @@ shared_examples "crud controller" do |options|
   end
   
 end
-

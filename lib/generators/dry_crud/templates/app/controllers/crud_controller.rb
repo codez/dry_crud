@@ -158,7 +158,7 @@ class CrudController < ListController
     # The identifier of the model used for form parameters.
     # I.e., the symbol of the underscored model name.
     def model_identifier
-      @model_identifier ||= model_class.name.underscore.to_sym
+      @model_identifier ||= model_class.model_name.param_key
     end
 
     # Convenience callback to apply a callback on both form actions (new and edit).

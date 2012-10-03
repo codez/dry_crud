@@ -13,6 +13,27 @@ module CrudControllerTestHelper
     send(m[:method], m[:action], params)
   end
 
+  def perform_combined_request
+    if stack = example.metadata[:combine]
+      @@current_stack ||= nil
+      if stack == @@current_stack
+        @response = @@current_response
+        @templates = @@current_templates
+        @controller = @@current_controller
+        @request = @@current_request
+        return
+      end
+      @@current_stack = stack
+    end
+    
+    perform_request
+    
+    @@current_response = @response
+    @@current_request = @request
+    @@current_controller = @controller
+    @@current_templates = @templates
+  end
+
   # The params defining the nesting of the test entry.
   def scope_params
     params = {}
@@ -62,20 +83,12 @@ module CrudControllerTestHelper
       it "should assign entries" do
         entries.should be_present
       end
-      
-      it "should provide entries method" do
-        controller.send(:entries).should be(entries)
-      end
     end
     
     # Test that entry is assigned.
     def it_should_assign_entry
       it "should assign entry" do
         entry.should == test_entry
-      end
-      
-      it "should provide entry method" do
-        controller.send(:entry).should be(entry)
       end
     end
     

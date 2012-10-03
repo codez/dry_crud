@@ -4,13 +4,13 @@ describe StandardHelper do
   
   include CrudTestHelper
 
-  before do 
+  before(:all) do 
     reset_db
     setup_db
     create_test_data
   end
   
-  after { reset_db }
+  after(:all) { reset_db }
 
   # define some test format_ methods
   def format_size(obj)

@@ -8,18 +8,19 @@ describe CrudTestModelsController do
 
   include CrudTestHelper
 
-  before do 
+  before(:all) do 
     reset_db
     setup_db
     create_test_data
-    special_routing
   end
   
-  after { reset_db }
-
-  #it_should_behave_like 'crud controller'
-  include_examples 'crud controller', {}
+  after(:all) { reset_db }
   
+  before { special_routing }
+  
+  
+  include_examples 'crud controller', {}
+
   let(:test_entry) { crud_test_models(:AAAAA) } 
   let(:new_entry_attrs) do
     {:name => 'foo',
