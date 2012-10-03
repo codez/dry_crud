@@ -74,7 +74,7 @@ describe CrudTestModelsController do
   
   describe_action :get, :index do
     context '.html', :format => :html do
-      context 'plain' do
+      context 'plain', :combine => 'ihp' do
         it "should contain all entries" do
           entries.size.should == 6
         end
@@ -92,15 +92,17 @@ describe CrudTestModelsController do
       context "search" do
         let(:params) { {:q => search_value} }
       
-        it "entries should only contain test_entry" do
-          entries.should == [test_entry]
+        context "regular", :combine => 'ihse' do
+          it "entries should only contain test_entry" do
+            entries.should == [test_entry]
+          end
+          
+          it "session should have query list param" do
+            session[:list_params]['/crud_test_models.html'].should == {:q => 'AAAA'}
+          end
         end
         
-        it "session should have query list param" do
-          session[:list_params]['/crud_test_models.html'].should == {:q => 'AAAA'}
-        end
-        
-        context "with custom options" do
+        context "with custom options", :combine => 'ihsec' do
           let(:params) { {:q => 'DDD', :filter => true} }
           
           it_should_respond
@@ -116,7 +118,7 @@ describe CrudTestModelsController do
       end
       
       context "sort" do
-        context "for given column" do
+        context "for given column", :combine => 'ihsog' do
           let(:params) { {:sort => 'children', :sort_dir => 'asc'} }
           
           it_should_respond
@@ -130,7 +132,7 @@ describe CrudTestModelsController do
           end
         end
         
-        context "for virtual column" do
+        context "for virtual column", :combine => 'ihsov' do
           let(:params) { {:sort => 'chatty', :sort_dir => 'desc'} }
           
           it_should_respond
@@ -150,7 +152,7 @@ describe CrudTestModelsController do
           end
         end
         
-        context "with search" do
+        context "with search", :combine => 'ihsose' do
           let(:params) { {:q => 'DDD', :sort => 'chatty', :sort_dir => 'asc'} }
         
           it_should_respond
@@ -165,7 +167,7 @@ describe CrudTestModelsController do
         end
       end
             
-      context "with custom options" do
+      context "with custom options", :combine => 'ihsoco' do
         let(:params) { {:filter => true} }
         
         it_should_respond
@@ -198,7 +200,7 @@ describe CrudTestModelsController do
       end
     end
     
-    context ".js", :format => :js do
+    context ".js", :format => :js, :combine => 'ijs' do
       it_should_respond
       it_should_assign_entries
       its(:body) { should == 'index js' }
@@ -206,12 +208,14 @@ describe CrudTestModelsController do
   end
   
   describe_action :get, :new do
-    it "should assign companions" do
-      assigns(:companions).should be_present
-    end
-    
-    it "should have called two render callbacks" do
-      controller.called_callbacks.should == [:before_render_new, :before_render_form]
+    context "plain", :combine => 'new' do
+      it "should assign companions" do
+        assigns(:companions).should be_present
+      end
+      
+      it "should have called two render callbacks" do
+        controller.called_callbacks.should == [:before_render_new, :before_render_form]
+      end
     end
     
     context "with before_render callback redirect", :perform_request => false do
@@ -241,21 +245,23 @@ describe CrudTestModelsController do
         expect { perform_request }.to change { CrudTestModel.count }.by(0)
       end
       
-      it_should_respond
-      it_should_render('new')
-      it_should_persist_entry(false)
-      it_should_have_flash(:alert)
-      
-      it "should set entry name" do
-        entry.name.should == 'illegal'
-      end
-      
-      it "should assign companions" do
-        assigns(:companions).should be_present
-      end
-      
-      it "should have called the correct callbacks" do
-        controller.called_callbacks.should == [:before_render_new, :before_render_form]
+      context "plain", :combine => 'chcp' do
+        it_should_respond
+        it_should_render('new')
+        it_should_persist_entry(false)
+        it_should_have_flash(:alert)
+        
+        it "should set entry name" do
+          entry.name.should == 'illegal'
+        end
+        
+        it "should assign companions" do
+          assigns(:companions).should be_present
+        end
+        
+        it "should have called the correct callbacks" do
+          controller.called_callbacks.should == [:before_render_new, :before_render_form]
+        end
       end
       
       context "redirect", :perform_request => false do
@@ -282,18 +288,20 @@ describe CrudTestModelsController do
           expect { perform_request }.to change { CrudTestModel.count }.by(0)
         end
         
-        it_should_respond
-        it_should_render('new')
-        it_should_persist_entry(false)
-        it_should_not_have_flash(:notice)
-        it_should_not_have_flash(:alert)
-              
-        it "should assign companions" do
-          assigns(:companions).should be_present
-        end
-        
-        it "should have called the correct callbacks" do
-          controller.called_callbacks.should == [:before_create, :before_save, :before_render_new, :before_render_form]
+        context "plain", :combine => 'chip' do
+          it_should_respond
+          it_should_render('new')
+          it_should_persist_entry(false)
+          it_should_not_have_flash(:notice)
+          it_should_not_have_flash(:alert)
+                
+          it "should assign companions" do
+            assigns(:companions).should be_present
+          end
+          
+          it "should have called the correct callbacks" do
+            controller.called_callbacks.should == [:before_create, :before_save, :before_render_new, :before_render_form]
+          end
         end
       end
       
@@ -302,20 +310,22 @@ describe CrudTestModelsController do
           expect { perform_request }.to change { CrudTestModel.count }.by(0)
         end
         
-        it_should_respond(422)
-        it_should_persist_entry(false)
-        it_should_not_have_flash(:notice)
-        it_should_not_have_flash(:alert)
-              
-        it "should not assign companions" do
-          assigns(:companions).should be_nil
+        context "plain", :combine => 'cjcb' do
+          it_should_respond(422)
+          it_should_persist_entry(false)
+          it_should_not_have_flash(:notice)
+          it_should_not_have_flash(:alert)
+                
+          it "should not assign companions" do
+            assigns(:companions).should be_nil
+          end
+          
+          it "should have called the correct callbacks" do
+            controller.called_callbacks.should == [:before_create, :before_save]
+          end
+          
+          its(:body) { should match(/errors/) }
         end
-        
-        it "should have called the correct callbacks" do
-          controller.called_callbacks.should == [:before_create, :before_save]
-        end
-        
-        its(:body) { should match(/errors/) }
       end
     end
     
@@ -337,7 +347,7 @@ describe CrudTestModelsController do
     context "with invalid params" do
       let(:params) { {:crud_test_model => {:rating => 20}} }
       
-      context ".html" do
+      context ".html", :combine => 'uhivp' do
         it_should_respond
         it_should_render('edit')
         it_should_not_have_flash(:notice)
@@ -355,7 +365,7 @@ describe CrudTestModelsController do
         end
       end
       
-      context ".json", :format => :json do
+      context ".json", :format => :json, :combine => 'ujivp' do
         it_should_respond(422)
         it_should_not_have_flash(:notice)
         
@@ -391,7 +401,7 @@ describe CrudTestModelsController do
         it_should_not_have_flash(:notice)
       end
       
-      context ".json", :format => :json do
+      context ".json", :format => :json, :combine => 'djf' do
         it_should_respond(422)
         it_should_not_have_flash(:notice)
         its(:body) { should match(/errors/) }
