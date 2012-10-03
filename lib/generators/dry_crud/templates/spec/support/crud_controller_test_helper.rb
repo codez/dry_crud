@@ -13,6 +13,8 @@ module CrudControllerTestHelper
     send(m[:method], m[:action], params)
   end
 
+  # If a combine key is given in metadata, only the first request for all examples
+  # with the same key will be performed.
   def perform_combined_request
     if stack = example.metadata[:combine]
       @@current_stack ||= nil
@@ -21,17 +23,18 @@ module CrudControllerTestHelper
         @templates = @@current_templates
         @controller = @@current_controller
         @request = @@current_request
-        return
+      else
+        perform_request
+        
+        @@current_stack = stack
+        @@current_response = @response
+        @@current_request = @request
+        @@current_controller = @controller
+        @@current_templates = @templates
       end
-      @@current_stack = stack
+    else
+      perform_request
     end
-    
-    perform_request
-    
-    @@current_response = @response
-    @@current_request = @request
-    @@current_controller = @controller
-    @@current_templates = @templates
   end
 
   # The params defining the nesting of the test entry.
