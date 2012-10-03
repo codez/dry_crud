@@ -91,7 +91,11 @@ class StandardTableBuilder
   end
 
   def entry_class
-    entries.first.class
+    if entries.respond_to?(:klass)
+      entries.klass
+    else 
+      entries.first.class
+    end
   end
 
   # Helper class to store column information.
@@ -100,7 +104,7 @@ class StandardTableBuilder
     delegate :content_tag, :to => :template
 
     def content(entry)
-      block.call(entry)
+      entry.nil? ? '' : template.capture(entry, &block)
     end
 
     def html_header
