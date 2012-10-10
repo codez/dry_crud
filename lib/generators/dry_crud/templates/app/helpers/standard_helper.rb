@@ -79,6 +79,7 @@ module StandardHelper
   # If entries is empty, an appropriate message is rendered.
   # An options hash may be given as the last argument.
   def table(entries, *attrs, &block)
+    entries.inspect # force evaluation of relations
     if entries.present?
       StandardTableBuilder.table(entries, self, attrs.extract_options!) do |t|
         t.attrs(*attrs)
