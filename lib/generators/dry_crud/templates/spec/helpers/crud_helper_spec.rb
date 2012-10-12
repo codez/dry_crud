@@ -33,8 +33,8 @@ describe CrudHelper do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 13
       end
       
-      it "has 18 action cells" do
-        subject.scan(REGEXP_ACTION_CELL).size.should == 18
+      it "has 12 action cells" do
+        subject.scan(REGEXP_ACTION_CELL).size.should == 12
       end
     end
     
@@ -59,15 +59,15 @@ describe CrudHelper do
       end
       
       it "has 4 headers" do
-        subject.scan(REGEXP_HEADERS).size.should == 4
+        subject.scan(REGEXP_HEADERS).size.should == 6
       end
       
       it "has 6 custom col spans" do
         subject.scan(/<span>.+?<\/span>/m).size.should == 6
       end
       
-      it "has 0 action cells" do
-        subject.scan(REGEXP_ACTION_CELL).size.should == 0
+      it "has 12 action cells" do
+        subject.scan(REGEXP_ACTION_CELL).size.should == 12
       end
     end
     
@@ -88,8 +88,8 @@ describe CrudHelper do
         subject.scan(/<span>.+?<\/span>/m).size.should == 6
       end
       
-      it "has 0 action cells" do
-        subject.scan(REGEXP_ACTION_CELL).size.should == 0
+      it "has 12 action cells" do
+        subject.scan(REGEXP_ACTION_CELL).size.should == 12
       end
     end
   end

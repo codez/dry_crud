@@ -23,7 +23,7 @@ class CrudHelperTest < ActionView::TestCase
 
     assert_count 7, REGEXP_ROWS, t
     assert_count 13, REGEXP_SORT_HEADERS, t
-    assert_count 18, REGEXP_ACTION_CELL, t      # show, edit, delete links
+    assert_count 12, REGEXP_ACTION_CELL, t      # edit, delete links
   end
 
   test "custom crud table with attributes" do
@@ -35,7 +35,7 @@ class CrudHelperTest < ActionView::TestCase
 
     assert_count 7, REGEXP_ROWS, t
     assert_count 3, REGEXP_SORT_HEADERS, t
-    assert_count 18, REGEXP_ACTION_CELL, t      # show, edit, delete links
+    assert_count 12, REGEXP_ACTION_CELL, t      # edit, delete links
   end
 
   test "custom crud table with block" do
@@ -49,9 +49,9 @@ class CrudHelperTest < ActionView::TestCase
     end
 
     assert_count 7, REGEXP_ROWS, t
-    assert_count 4, REGEXP_HEADERS, t
+    assert_count 6, REGEXP_HEADERS, t
     assert_count 6, /<span>.+?<\/span>/m, t
-    assert_count 0, REGEXP_ACTION_CELL, t      # no show, edit, delete links
+    assert_count 12, REGEXP_ACTION_CELL, t      # edit, delete links
   end
 
   test "custom crud table with attributes and block" do
@@ -65,9 +65,9 @@ class CrudHelperTest < ActionView::TestCase
 
     assert_count 7, REGEXP_ROWS, t
     assert_count 3, REGEXP_SORT_HEADERS, t
-    assert_count 4, REGEXP_HEADERS, t
+    assert_count 6, REGEXP_HEADERS, t
     assert_count 6, /<span>.+?<\/span>/m, t
-    assert_count 0, REGEXP_ACTION_CELL, t      # no show, edit, delete links
+    assert_count 12, REGEXP_ACTION_CELL, t      # edit, delete links
   end
 
 

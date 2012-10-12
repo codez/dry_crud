@@ -3,11 +3,13 @@
 # is included in CrudController.
 module CrudHelper
 
-  # Renders a standard form for the current entry with :default_attrs or the
+  # Renders a crud form for the current entry with default_attrs or the
   # given attribute array. An options hash may be given as the last argument.
   # If a block is given, a custom form may be rendered and attrs is ignored.
   def entry_form(*attrs, &block)
-    attrs = attrs_or_default(attrs) { default_attrs - [:created_at, :updated_at] }
+    options = attrs.extract_options!
+    attrs = default_attrs - [:created_at, :updated_at] if attrs.blank?
+    attrs << options
     crud_form(path_args(entry), *attrs, &block)
   end
 
@@ -31,31 +33,46 @@ module CrudHelper
     end
   end
 
-  # Create a table of the entries with the default or
-  # the passed attributes in its columns. An options hash may be given
-  # as the last argument.
+  # Create a table of the current entries with the default or the passed 
+  # attributes in its columns. 
+  # If attrs are present, the first column will link to the show
+  # action. Edit and destroy actions are appended to the end of each row.
+  # If a block is given, the column defined there will be inserted
+  # between the given attributes and the actions.
+  # An options hash for the table builder may be given as the last argument.
   def crud_table(*attrs, &block)
-    if block_given?
-      list_table(*attrs, &block)
-    else
-      attrs = attrs_or_default(attrs) { default_attrs }
-      list_table(*attrs) do |t|
-         add_table_actions(t)
-      end
+    options = attrs.extract_options!
+    attributes = (block_given? || attrs.present?) ? attrs : default_attrs
+    first = attributes.shift
+    table(entries, options) do |t|
+       col_show(t, first) if first
+       t.sortable_attrs(*attributes)
+       yield t if block_given?
+       add_table_actions(t)
     end
   end
 
   # Adds a set of standard action link column (show, edit, destroy) to the given table.
   def add_table_actions(table)
-    action_col_show(table)
     action_col_edit(table)
     action_col_destroy(table)
+  end
+  
+  # Renders the passed attr with a link to the show action for
+  # the current entry.
+  # A block may be given to define the link path for the row entry.
+  def col_show(table, attr, &block)
+    table.attr(attr, table.sort_header(attr)) do |e| 
+      link_to(format_attr(e, attr), action_path(e, &block))
+    end
   end
 
   # Action link to show the row entry inside a table.
   # A block may be given to define the link path for the row entry.
   def action_col_show(table, &block)
-    action_col(table) { |e| link_table_action('zoom-in', action_path(e, &block)) }
+    action_col(table) do |e| 
+      link_table_action('zoom-in', action_path(e, &block))
+    end
   end
 
   # Action link to edit inside a table.
@@ -142,18 +159,10 @@ module CrudHelper
     url || cancel_url || polymorphic_path(object, :returning => true)
   end
 
-
   # If a block is given, call it to get the path for the current row entry.
   # Otherwise, return the standard path args.
   def action_path(e, &block)
     block_given? ? yield(e) : path_args(e)
-  end
-
-  # Returns default attrs for a crud table if no others are passed.
-  def attrs_or_default(attrs)
-    options = attrs.extract_options!
-    attrs = yield if attrs.blank?
-    attrs << options
   end
 
 end

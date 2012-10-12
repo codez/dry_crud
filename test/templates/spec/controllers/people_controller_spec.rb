@@ -6,7 +6,7 @@ describe PeopleController do
   
   render_views
   
-  include_examples 'crud controller'
+  include_examples 'crud controller', {}
   
   let(:test_entry)       { people(:john) }
   let(:test_entry_attrs) { {:name => 'Fischers Fritz', 

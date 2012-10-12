@@ -48,9 +48,10 @@ class StandardTableBuilder
   # Define a column for the given attribute and an optional header.
   # If no header is given, the attribute name is used. The cell will
   # contain the formatted attribute value for the current entry.
-  def attr(a, header = nil)
+  def attr(a, header = nil, &block)
     header ||= attr_header(a)
-    col(header, :class => align_class(a)) { |e| format_attr(e, a) }
+    block ||= lambda { |e| format_attr(e, a) }
+    col(header, :class => align_class(a), &block)
   end
 
   # Renders the table as HTML.
