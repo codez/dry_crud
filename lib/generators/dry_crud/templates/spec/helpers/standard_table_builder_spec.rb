@@ -1,7 +1,8 @@
 require 'spec_helper'
 
-# describe a helper module to get a nice view context to pass to StandardTableBuilder
-describe StandardHelper do
+describe 'StandardTableBuilder' do
+  
+  include StandardHelper
   
   let(:entries) { %w(foo bahr) }
   let(:table)   { StandardTableBuilder.new(entries, self) } 
