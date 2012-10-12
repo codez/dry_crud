@@ -7,3 +7,6 @@ rvm:
   - jruby-18mode
   # - jruby-19mode
   
+env:
+  - HAML=1
+  - NO_HAML=0
