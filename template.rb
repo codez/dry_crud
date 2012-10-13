@@ -5,14 +5,22 @@ gem 'dry_crud'
 out = run "gem list dry_crud", :capture => true
 run 'bundle update dry_crud' if out !~ /dry_crud/
 
-# generate dry_crud with erb or haml
+# ask user for options
 templates = ask("Which template engine do you use? [ERB|haml]")
+tests = ask("Which testing framework do you use? [TESTUNIT|rspec]")
+options = ""
+
 if templates.present? && "haml".start_with?(templates.downcase)
   gem 'haml'
-  generate 'dry_crud', '-t haml'
-else
-  generate 'dry_crud'
+  options << " --templates haml"
 end
+
+if tests.present? && "rspec".start_with?(tests.downcase)
+  options << " --tests rspec"
+end
+
+# generate dry_crud with erb or haml
+generate 'dry_crud', options
 
 # remove gem from Gemfile
 gsub_file 'Gemfile', /gem .dry_crud./, ""

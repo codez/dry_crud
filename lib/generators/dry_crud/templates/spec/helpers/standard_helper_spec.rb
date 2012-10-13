@@ -13,11 +13,11 @@ describe StandardHelper do
   after(:all) { reset_db }
 
   # define some test format_ methods
-  def format_size(obj)
+  def format_size(obj) #:nodoc:
     "#{f(obj.size)} items"
   end
 
-  def format_string_size(obj)
+  def format_string_size(obj) #:nodoc:
     "#{f(obj.size)} chars"
   end
 

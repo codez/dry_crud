@@ -7,7 +7,7 @@ describe 'StandardTableBuilder' do
   let(:entries) { %w(foo bahr) }
   let(:table)   { StandardTableBuilder.new(entries, self) } 
 
-  def format_size(obj)
+  def format_size(obj) #:nodoc:
     "#{obj.size} chars"
   end
 

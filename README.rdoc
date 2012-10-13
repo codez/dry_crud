@@ -1,18 +1,18 @@
 = DRY CRUD
 
+{<img src="https://secure.travis-ci.org/codez/dry_crud.png" />}[http://travis-ci.org/codez/dry_crud]
+
 DRY CRUD generates simple and extendable controller, views and helpers that support you to DRY up the CRUD code in your Rails project. Start with these elements and build a clean base to efficiently develop your application upon. 
 
 Create your Rails application directly with the DRY CRUD application template:
 
-  rails new [APP_NAME] -m https://raw.github.com/codez/dry_crud/master/template.rb
+  rails new APP_NAME -m https://raw.github.com/codez/dry_crud/master/template.rb
   
 If your application already exists or you prefer the DIY way, then install the Gem (<tt>gem install dry_crud</tt>), add it to your Gemfile and run the generator. You may remove the Gemfile entry again afterwards, it is not required anymore.
 
-  rails generate dry_crud
+  rails generate dry_crud [--templates haml] [--tests rspec]
   
-If you prefer HAML templates instead of ERB, run
-
-  rails generate dry_crud -t haml
+By default, DRY CRUD generates ERB templates and Test::Unit tests. Pass the options above to generate HAML templates and/or RSpec examples instead.
 
 To integrate DRY CRUD into your code, only a few additions are required:
 
@@ -286,7 +286,9 @@ views/shared/_error_messages.html.erb:: Partial to display the validation errors
 
 views/layouts/crud.html.erb:: An example layout showing how to use the <tt>@title</tt> and +flash+. Most probably you want to merge this with your <tt>application.html.erb</tt> or adapt the main CRUD templates, so you wont need this file.
 
-views/layouts/_menu.html.erb:: An empty file to put your menu items into. Included from <tt>crud.html.erb</tt>.
+views/layouts/_flash.html.erb:: An simple partial to display the various flash messages. Included from <tt>crud.html.erb</tt>.
+
+views/layouts/_nav.html.erb:: An empty file to put your navigation into. Included from <tt>crud.html.erb</tt>.
 
 app/assets/stylesheets/crud.scss:: A simple SCSS with all the classes and ids used in the CRUD code. 
 
@@ -299,9 +301,22 @@ app/assets/images/action/*.png:: Some sample action icons from the {Open Icon Li
 
 {test/custom_assertions.rb}[http://codez.ch/dry_crud/CustomAssertions.html]:: A handful of convenient assertions. Include this module into your <tt>test_helper.rb</tt> file.
 
-{test/functionals/crud_controller_test_helper.rb}[http://codez.ch/dry_crud/CrudControllerTestHelper.html]:: A module to include into the functional tests for your +CrudController+ subclasses. Contains a handful of CRUD functionality tests for the provided implementation. So for each new CRUD controller, you get 20 tests for free.
+{test/functional/crud_controller_test_helper.rb}[http://codez.ch/dry_crud/CrudControllerTestHelper.html]:: A module to include into the functional tests for your +CrudController+ subclasses. Contains a handful of CRUD functionality tests for the provided implementation. So for each new CRUD controller, you get 20 tests for free.
+
+test/functional/crud_test_models_controller_test.rb:: Functional tests for the basic +CrudController+ functionality.
 
 test/several other tests:: Testing the provided implementation and a great base to test your adaptions of the CRUD code.
 
 
-{<img src="https://secure.travis-ci.org/codez/dry_crud.png" />}[http://travis-ci.org/codez/dry_crud]
+=== Specs:
+
+spec/support/crud_controller_examples.rb:: A whole set of shared exampled to include into your controller specs. See <tt>spec/controllers/crud_test_models_controller_spec.rb</tt> for usage. So for each new CRUD controller, you get all the basic specs for free.
+
+spec/support/crud_controller_test_helper.rb:: Convenience methods used by the crud controller examples.
+
+{spec/support/crud_test_model.rb}[http://codez.ch/dry_crud/CrudTestHelper.html]:: A dummy model to run CRUD tests against.
+
+spec/controllers/crud_test_models_controller_spec.rb:: Controller specs to test the basic +CrudController+ functionality.
+
+spec/helpers/*_spec.rb:: The specs for all the helpers included in DRY CRUD.
+
