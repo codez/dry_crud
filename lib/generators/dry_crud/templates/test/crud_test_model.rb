@@ -1,8 +1,6 @@
 # A dummy model used for general testing.
 class CrudTestModel < ActiveRecord::Base #:nodoc:
 
-  attr_accessible :name, :whatever, :children, :rating, :income, :birthdate, :gets_up_at, :last_seen, :human, :remarks
-          
   belongs_to :companion, :class_name => 'CrudTestModel'
   has_and_belongs_to_many :others, :class_name => 'OtherCrudTestModel'
   has_many :mores, :class_name => 'OtherCrudTestModel', :foreign_key => :more_id
@@ -12,7 +10,7 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   validates :name, :presence => true
   validates :rating, :inclusion => { :in => 1..10 }
 
-  default_scope order('name')
+  default_scope { order('name') }
 
   def to_s
     name
@@ -34,8 +32,6 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
 end
 
 class OtherCrudTestModel < ActiveRecord::Base #:nodoc:
-
-  attr_protected nil
 
   has_and_belongs_to_many :others, :class_name => 'CrudTestModel'
   belongs_to :more, :foreign_key => :more_id, :class_name => 'CrudTestModel'
@@ -119,7 +115,7 @@ class CrudTestModelsController < CrudController #:nodoc:
   end
 
   def set_companions
-    @companions = CrudTestModel.all :conditions => {:human => true}
+    @companions = CrudTestModel.where(:human => true)
   end
 
 

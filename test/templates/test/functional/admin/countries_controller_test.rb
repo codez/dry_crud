@@ -13,10 +13,10 @@ class Admin::CountriesControllerTest < ActionController::TestCase
 
   def test_index
     super
-    assert_equal Country.order('name').all, entries
+    assert_equal Country.order('name').to_a, entries
     assert_equal [:admin], @controller.send(:parents)
     assert_nil @controller.send(:parent)
-    assert_equal Country.scoped, @controller.send(:model_scope)
+    assert_equal Country.all, @controller.send(:model_scope)
     assert_equal [:admin,2], @controller.send(:path_args, 2)
   end
 

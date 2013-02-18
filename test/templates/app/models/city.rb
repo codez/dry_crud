@@ -1,7 +1,5 @@
 class City < ActiveRecord::Base
 
-  attr_protected nil
-
   belongs_to :country
   has_many :people
 
@@ -10,7 +8,7 @@ class City < ActiveRecord::Base
 
   before_destroy :protect_with_inhabitants
 
-  default_scope includes(:country).order('countries.code, cities.name')
+  default_scope { includes(:country).references(:countries).order('countries.code, cities.name') }
 
   def to_s
     "#{name} (#{country.code})"

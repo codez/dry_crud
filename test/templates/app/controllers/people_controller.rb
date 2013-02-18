@@ -7,7 +7,7 @@ class PeopleController < AjaxController
   private
 
   def list_entries
-    super.includes(:city => :country).order('people.name, countries.code, cities.name')
+    super.includes(:city => :country).references(:cities, :countries).order('people.name, countries.code, cities.name')
   end
 
 end

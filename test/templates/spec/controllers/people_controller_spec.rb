@@ -22,7 +22,7 @@ describe PeopleController do
   
   describe_action :get, :index do 
     it "should be ordered by default scope" do
-      entries == Person.includes(:city => :country).order('people.name, countries.code, cities.name')
+      entries == Person.includes(:city => :country).references(:cities, :countries).order('people.name, countries.code, cities.name')
     end
     
     it "should set parents" do
@@ -34,7 +34,7 @@ describe PeopleController do
     end
     
     it "should use correct model_scope" do
-      controller.send(:model_scope).should == Person.scoped
+      controller.send(:model_scope).should == Person.all
     end
     
     it "should have correct path args" do

@@ -14,11 +14,11 @@ class PeopleControllerTest < ActionController::TestCase
   def test_index
     super
     assert_equal 2, entries.size
-    assert_equal Person.includes(:city => :country).order('people.name, countries.code, cities.name').all, entries
+    assert_equal Person.includes(:city => :country).references(:cities, :countries).order('people.name, countries.code, cities.name').to_a, entries
 
     assert_equal [], @controller.send(:parents)
     assert_nil @controller.send(:parent)
-    assert_equal Person.scoped, @controller.send(:model_scope)
+    assert_equal Person.all, @controller.send(:model_scope)
     assert_equal [2], @controller.send(:path_args, 2)
   end
 

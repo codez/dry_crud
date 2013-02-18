@@ -40,7 +40,7 @@ class CrudController < ListController
   #   GET /entries/new
   #   GET /entries/new.json
   def new(&block)
-    assign_attributes
+    assign_attributes if params[model_identifier]
     respond_with(entry, &block)
   end
 
@@ -150,7 +150,11 @@ class CrudController < ListController
   
   # The form params for this model.
   def model_params
-    params[model_identifier]
+    params.require(model_identifier).permit(permitted_attrs)
+  end
+  
+  def permitted_attrs
+    []
   end
 
 

@@ -13,7 +13,7 @@ class VipsController < ListController
   end
 
   def list_entries
-    super.where('rating > 5').includes(:city => :country).order('people.name, countries.code, cities.name')
+    super.where('rating > 5').includes(:city => :country).references(:cities, :countries).order('people.name, countries.code, cities.name')
   end
 
 end

@@ -40,7 +40,7 @@ class ListController < ApplicationController
   # This is mainly used for nested models to provide the
   # required context.
   def model_scope
-    model_class.scoped
+    model_class
   end
 
   # The path arguments to link to the given entry.

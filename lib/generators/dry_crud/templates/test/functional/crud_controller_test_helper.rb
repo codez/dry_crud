@@ -8,13 +8,13 @@ module CrudControllerTestHelper
     get :index, test_params
     assert_response :success
     assert_template 'index'
-    assert_present entries
+    assert entries.present?
   end
 
   def test_index_json
     get :index, test_params(:format => 'json')
     assert_response :success
-    assert_present entries
+    assert entries.present?
     assert @response.body.starts_with?("[{"), @response.body
   end
 
@@ -25,7 +25,7 @@ module CrudControllerTestHelper
 
     get :index, test_params(:q => val[0..((val.size + 1)/ 2)])
     assert_response :success
-    assert_present entries
+    assert entries.present?
     assert entries.include?(test_entry)
   end
 
@@ -33,7 +33,7 @@ module CrudControllerTestHelper
     col = model_class.column_names.first
     get :index, test_params(:sort => col, :sort_dir => 'asc')
     assert_response :success
-    assert_present entries
+    assert entries.present?
     sorted = entries.sort_by &(col.to_sym)
     assert_equal sorted, entries
   end
@@ -42,7 +42,7 @@ module CrudControllerTestHelper
     col = model_class.column_names.first
     get :index, test_params(:sort => col, :sort_dir => 'desc')
     assert_response :success
-    assert_present entries
+    assert entries.present?
     sorted = entries.sort_by &(col.to_sym)
     assert_equal sorted.reverse, entries
   end

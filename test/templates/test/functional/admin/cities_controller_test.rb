@@ -43,7 +43,7 @@ class Admin::CitiesControllerTest < ActionController::TestCase
       delete :destroy, :country_id => ny.country_id, :id => ny.id
     end
     assert_redirected_to [:admin, ny.country, ny]
-    assert_present flash[:alert]
+    assert flash[:alert].present?
   end
 
   private

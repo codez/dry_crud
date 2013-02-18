@@ -29,7 +29,7 @@ describe Admin::CountriesController do
     end
     
     it "should use correct model_scope" do
-      controller.send(:model_scope).should == Country.scoped
+      controller.send(:model_scope).should == Country.all
     end
     
     it "should have correct path args" do

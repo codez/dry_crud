@@ -6,7 +6,7 @@ TestApp::Application.routes.draw do
     end
   end
 
-  match 'vips' => 'vips#index', :as => :vips
+  get 'vips' => 'vips#index', :as => :vips
 
   namespace :admin do
     resources :countries do
