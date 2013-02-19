@@ -35,7 +35,7 @@ module CrudControllerTestHelper
     assert_response :success
     assert entries.present?
     sorted = entries.sort_by &(col.to_sym)
-    assert_equal sorted, entries
+    assert_equal sorted, entries.to_a
   end
 
   def test_index_sort_desc

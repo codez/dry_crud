@@ -3,6 +3,8 @@ class Admin::CountriesController < AjaxController
   self.nesting = :admin
 
   self.search_columns = :name, :code
+  
+  self.permitted_attrs = [:name, :code]
 
   def show
     super do |format|

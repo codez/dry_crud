@@ -62,7 +62,10 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   def test_entry_attrs
-    {:name => 'Fischers Fritz', :children => 2, :income => 120, :city_id => cities(:rj).id}
+    {:name => 'Fischers Fritz', 
+     :children => 2, 
+     :income => 120, 
+     :city_id => cities(:rj).id}
   end
 
 end

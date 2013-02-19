@@ -6,6 +6,8 @@
 # overriding the entire method.
 class CrudController < ListController
 
+  class_attribute :permitted_attrs
+
   delegate :model_identifier, :to => 'self.class'
 
   # Defines before and after callback hooks for create, update, save and destroy actions.
@@ -22,10 +24,6 @@ class CrudController < ListController
   
   hide_action :model_identifier, :run_callbacks
   
-  # Simple helper object to give access to required view helper methods.
-  @@helper = Object.new.extend(ActionView::Helpers::TranslationHelper).
-                        extend(ActionView::Helpers::OutputSafetyHelper)
-
 
   ##############  ACTIONS  ############################################
 
@@ -131,7 +129,7 @@ class CrudController < ListController
     flash[:notice] ||= flash_message(:success) if request.format == :html
   end
 
-  # Get an I18n flash message, considering _html keys as well.
+  # Get an I18n flash message.
   # Uses the key {controller_name}.{action_name}.flash.{state}
   # or crud.{action_name}.flash.{state} as fallback.
   def flash_message(state)
@@ -140,12 +138,12 @@ class CrudController < ListController
             :"#{controller_name}.#{scope}",
             :"crud.#{scope}_html",
             :"crud.#{scope}"]
-    @@helper.t(keys.shift, :model => full_entry_label, :default => keys)
+    I18n.t(keys.shift, :model => full_entry_label, :default => keys)
   end
   
   # Html safe error messages of the current entry.
   def error_messages
-    @@helper.safe_join(entry.errors.full_messages, '<br/>'.html_safe)
+    entry.errors.full_messages.collect { |i| ERB::Util.html_escape(i) }.join('<br/>').html_safe
   end
   
   # The form params for this model.
@@ -153,10 +151,6 @@ class CrudController < ListController
     params.require(model_identifier).permit(permitted_attrs)
   end
   
-  def permitted_attrs
-    []
-  end
-
 
   class << self
     # The identifier of the model used for form parameters.

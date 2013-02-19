@@ -47,6 +47,8 @@ class CrudTestModelsController < CrudController #:nodoc:
 
   self.search_columns = [:name, :whatever, :remarks]
   self.sort_mappings = {:chatty => 'length(remarks)'}
+  self.permitted_attrs = [:name, :password, :whatever, :children, :companion_id, :rating, :income, 
+                          :birthdate, :gets_up_at, :last_seen, :human, :remarks]
 
   before_create :possibly_redirect
   before_create :handle_name
@@ -96,7 +98,7 @@ class CrudTestModelsController < CrudController #:nodoc:
 
   def build_entry
     entry = super
-    entry.companion_id = model_params.delete(:companion_id) if model_params
+    entry.companion_id = model_params.delete(:companion_id) if params[model_identifier]
     entry
   end
 

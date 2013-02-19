@@ -155,7 +155,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_update
     super
     assert_match /successfully updated/, flash[:notice]
-    assert flash[:notice].html_safe?
     assert flash[:alert].blank?
     assert_equal @controller.send(:entry), assigns(:crud_test_model)
     assert_equal [:before_update, :before_save, :after_save, :after_update], @controller.called_callbacks
@@ -165,7 +164,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     super
     assert_equal [:before_destroy, :after_destroy], @controller.called_callbacks
     assert_match 'successfully deleted', flash[:notice]
-    assert flash[:notice].html_safe?
   end
 
   def test_create_with_before_callback
@@ -175,7 +173,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_response :success
     assert_template 'new'
     assert entry.new_record?
-    assert assigns(:companions)
+    assert assigns(:companions).present?
     assert flash[:alert].present?
     assert_equal 'illegal', entry.name
     assert_equal [:before_render_new, :before_render_form], @controller.called_callbacks
@@ -205,8 +203,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'new'
     assert entry.new_record?
     assert assigns(:companions)
-    assert flash[:notice].blank?
-    assert flash[:alert].blank?
+    assert flash[:notice].blank?, flash[:notice]
+    assert flash[:alert].blank?, flash[:alert]
     assert entry.name.blank?
     assert_equal [:before_create, :before_save, :before_render_new, :before_render_form], @controller.called_callbacks
   end
