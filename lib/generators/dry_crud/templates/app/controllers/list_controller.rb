@@ -227,7 +227,7 @@ class ListController < ApplicationController
 
     # The sort direction, either 'asc' or 'desc'.
     def sort_dir
-      params[:sort_dir] == 'desc' ? 'desc' : 'asc'
+      params[:sort_dir] == 'desc' ? 'DESC' : 'ASC'
     end
 
     # Returns true if the passed attribute is sortable.

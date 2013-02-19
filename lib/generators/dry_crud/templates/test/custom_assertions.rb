@@ -66,7 +66,11 @@ module CustomAssertions
   
   def build_message(msg, default, *args)
     # TODO: handle minitest format
-    message(msg) { default }
+    message(msg) do
+      args.each_with_object(default) do |a, m|
+        m.sub!(/\?/, a.to_s)
+      end
+    end
   end
 
   # The method used to by Test::Unit to format arguments in

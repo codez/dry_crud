@@ -43,8 +43,8 @@ module CrudControllerTestHelper
     get :index, test_params(:sort => col, :sort_dir => 'desc')
     assert_response :success
     assert entries.present?
-    sorted = entries.sort_by &(col.to_sym)
-    assert_equal sorted.reverse, entries
+    sorted = entries.to_a.sort_by &(col.to_sym)
+    assert_equal sorted.reverse, entries.to_a
   end
 
   def test_show

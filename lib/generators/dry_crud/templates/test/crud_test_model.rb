@@ -47,7 +47,7 @@ class CrudTestModelsController < CrudController #:nodoc:
 
   self.search_columns = [:name, :whatever, :remarks]
   self.sort_mappings = {:chatty => 'length(remarks)'}
-  self.permitted_attrs = [:name, :password, :whatever, :children, :companion_id, :rating, :income, 
+  self.permitted_attrs = [:name, :password, :whatever, :children, :companion_id, :rating, :income,
                           :birthdate, :gets_up_at, :last_seen, :human, :remarks]
 
   before_create :possibly_redirect
@@ -147,14 +147,15 @@ class CrudTestModelsController < CrudController #:nodoc:
   end
 
 end
-  
+
 #:nodoc:
 REGEXP_ROWS = /<tr.+?<\/tr>/m  #:nodoc:
 REGEXP_HEADERS = /<th.+?<\/th>/m  #:nodoc:
 REGEXP_SORT_HEADERS = /<th><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m  #:nodoc:
-REGEXP_ACTION_CELL = /<td class=\"action\"><a href.+?<\/a><\/td>/m  #:nodoc:
-  
-  
+REGEXP_ACTION_CELL = /<td class=\"action\"><a .*?href.+?<\/a><\/td>/m  #:nodoc:
+
+
+
 # A simple test helper to prepare the test database with a CrudTestModel model.
 # This helper is used to test the CrudController and various helpers
 # without the need for an application based model.
