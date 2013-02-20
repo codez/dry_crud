@@ -205,17 +205,27 @@ class ListController < ApplicationController
       def sort_mappings=(hash)
         self.sort_mappings_with_indifferent_access = hash.with_indifferent_access
       end
+
+      controller.class_attribute :sort_mappings_with_indifferent_access
+
+      # Define a default sort expression that is always appendend to the
+      # current sort params
+      controller.class_attribute :default_sort
+
+      controller.helper_method :sortable?
+
+      controller.alias_method_chain :list_entries, :sort
     end
 
     private
 
     # Enhance the list entries with an optional sort order.
     def list_entries_with_sort
+      scope = list_entries_without_sort.order(default_sort)
       if params[:sort].present? && sortable?(params[:sort])
-        list_entries_without_sort.reorder(sort_expression)
-      else
-        list_entries_without_sort
+        scope = scope.order(sort_expression)
       end
+      scope
     end
 
     # Return the sort expression to be used in the list query.

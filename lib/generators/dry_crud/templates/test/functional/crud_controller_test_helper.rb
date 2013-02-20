@@ -150,7 +150,7 @@ module CrudControllerTestHelper
   def model_class
     @controller.model_class
   end
-  
+
   # The param key for model attributes.
   def model_identifier
     @controller.model_identifier
@@ -175,7 +175,7 @@ module CrudControllerTestHelper
   def test_entry_attrs
     raise "Implement this method in your test class"
   end
-  
+
   # Attribute hash used in edit/update tests.
   def edit_entry_attrs
     test_entry_attrs
