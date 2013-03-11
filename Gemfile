@@ -7,12 +7,23 @@ gem 'rake'
 gem 'rdoc'
 gem 'rspec-rails'
 
+
+gem 'haml'
+gem 'sass'
+
+gem 'jquery-rails'
+gem 'turbolinks'
+gem 'sprockets-rails', github: 'rails/sprockets-rails'
+gem 'sass-rails',      github: 'rails/sass-rails'
+gem 'coffee-rails',    github: 'rails/coffee-rails'
+
+gem 'kaminari'
+
+
+# platform specific gems
+
 gem 'rcov', :platforms => :ruby_18
 gem 'simplecov', :platforms => :ruby_19
-
-
-# Bundle edge Rails instead:
-# gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3', :platforms => :ruby
 
@@ -22,10 +33,4 @@ platforms :jruby do
   gem 'jruby-openssl'
 end
 
-gem 'haml'
-gem 'sass'
 
-gem 'jquery-rails'
-gem 'turbolinks'
-
-gem 'kaminari'
