@@ -373,7 +373,7 @@ describe CrudTestModelsController do
       let(:test_entry) { crud_test_models(:BBBBB) }
       context ".html" do
         it "should not delete entry from database", :perform_request => false do
-          expect { perform_request }.to change { CrudTestModel.count }.by(0)
+          expect { perform_request }.not_to change { CrudTestModel.count }
         end
 
         it "should redirect to referer", :perform_request => false do
@@ -398,7 +398,7 @@ describe CrudTestModelsController do
         end
 
         it "should not delete entry from database" do
-          expect { perform_request }.to change { CrudTestModel.count }.by(0)
+          expect { perform_request }.not_to change { CrudTestModel.count }
         end
 
         it "should redirect to index" do

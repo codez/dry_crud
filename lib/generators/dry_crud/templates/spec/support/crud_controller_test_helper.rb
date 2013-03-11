@@ -124,20 +124,15 @@ module CrudControllerTestHelper
 
     # Test that the given flash type is present.
     def it_should_have_flash(type, message = nil)
-      context "flash" do
-        subject { flash }
-
-        its([type]) do
-          should(message ? match(message) : be_present)
-        end
+      it "flash(#{type}) is set" do
+        flash[type].should(message ? match(message) : be_present)
       end
     end
 
     # Test that not flash of the given type is present.
     def it_should_not_have_flash(type)
-      context "flash" do
-        subject { flash }
-        its([type]) { should be_blank }
+      it "flash(#{type}) is nil" do
+        flash[type].should be_blank
       end
     end
 
