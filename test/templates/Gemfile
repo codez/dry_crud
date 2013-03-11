@@ -1,13 +1,13 @@
 source 'http://rubygems.org'
 
-gem 'rails',     github: 'rails/rails'
+gem 'rails', github: 'rails/rails'
+gem 'arel',  github: 'rails/arel'
+gem 'activerecord-deprecated_finders', github: 'rails/activerecord-deprecated_finders'
 
-# Bundle edge Rails instead:
-# gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3', :platforms => :ruby
 
-platforms :jruby do 
+platforms :jruby do
   gem 'jdbc-sqlite3'
   gem 'activerecord-jdbcsqlite3-adapter'
 end
@@ -23,15 +23,18 @@ gem 'rspec-rails'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails'     #, '~> 3.2.3'
-  gem 'coffee-rails'   #, '~> 3.2.1'
+  gem 'sprockets-rails', github: 'rails/sprockets-rails'
+  gem 'sass-rails',      github: 'rails/sass-rails'
+  gem 'coffee-rails',    github: 'rails/coffee-rails'
+
   gem 'uglifier'       #, '>= 1.0.3'
-  gem 'bootstrap-sass-rails'
-  gem 'turbolinks'
+  #gem 'bootstrap-sass-rails'
   gem 'therubyracer', :require => RUBY_PLATFORM.include?('linux') && 'v8'
 end
 
 gem 'jquery-rails'
+gem 'turbolinks'
+
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
