@@ -17,7 +17,9 @@ describe Admin::CitiesController do
 
   describe_action :get, :index do
     it "should be ordered by default scope" do
-      entries == test_entry.country.cities.order('countries.code, cities.name')
+      entries == test_entry.country.cities.includes(:country).
+                                           references(:countries).
+                                           order('countries.code, cities.name')
     end
 
     it "should set parents" do

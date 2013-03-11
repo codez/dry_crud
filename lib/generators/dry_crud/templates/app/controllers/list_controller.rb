@@ -208,7 +208,7 @@ class ListController < ApplicationController
 
       controller.class_attribute :sort_mappings_with_indifferent_access
 
-      # Define a default sort expression that is always appendend to the
+      # Define a default sort expression that is always appended to the
       # current sort params
       controller.class_attribute :default_sort
 

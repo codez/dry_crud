@@ -8,7 +8,6 @@ class City < ActiveRecord::Base
 
   before_destroy :protect_with_inhabitants
 
-  default_scope { includes(:country).references(:countries).order('countries.code, cities.name') }
 
   def to_s
     "#{name} (#{country.code})"
