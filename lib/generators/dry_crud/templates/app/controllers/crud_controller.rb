@@ -21,9 +21,9 @@ class CrudController < ListController
   after_destroy :set_success_notice
 
   helper_method :entry, :full_entry_label
-  
+
   hide_action :model_identifier, :run_callbacks
-  
+
 
   ##############  ACTIONS  ############################################
 
@@ -138,19 +138,19 @@ class CrudController < ListController
             :"#{controller_name}.#{scope}",
             :"crud.#{scope}_html",
             :"crud.#{scope}"]
-    I18n.t(keys.shift, :model => full_entry_label, :default => keys)
+    I18n.t(keys.shift, :model => full_entry_label, :default => keys).html_safe
   end
-  
+
   # Html safe error messages of the current entry.
   def error_messages
     entry.errors.full_messages.collect { |i| ERB::Util.html_escape(i) }.join('<br/>').html_safe
   end
-  
+
   # The form params for this model.
   def model_params
     params.require(model_identifier).permit(permitted_attrs)
   end
-  
+
 
   class << self
     # The identifier of the model used for form parameters.
@@ -166,7 +166,7 @@ class CrudController < ListController
     end
   end
 
-  # Custom Responder that handles the controller's path_args. 
+  # Custom Responder that handles the controller's path_args.
   # An additional :success option is used to handle action callback chain halts.
   class Responder < ActionController::Responder
 

@@ -1,4 +1,4 @@
-# Translations of all crud strings. 
+# Translations of all crud strings.
 # See also StandardHelper#translate_inheritable and #translate_association.
 
 en:
@@ -28,7 +28,7 @@ en:
       add: Add
       delete: Delete
       list: List
-      
+
     errors:
       header:
         one: "1 error prohibited this entry from being saved:"
