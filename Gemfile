@@ -25,5 +25,6 @@ gem 'haml'
 gem 'sass'
 
 gem 'jquery-rails'
+gem 'turbolinks'
 
 gem 'kaminari'
