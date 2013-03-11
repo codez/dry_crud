@@ -22,6 +22,7 @@ platforms :jruby do
 end
 
 gem 'haml'
+gem 'sass'
 
 gem 'jquery-rails'
 
