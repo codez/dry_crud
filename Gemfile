@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
-gem 'rails',     github: 'rails/rails'
-gem 'arel',      github: 'rails/arel'
+gem 'rails', '4.0.0.rc1'
+gem 'arel',  '4.0.0'
 
 gem 'rake'
 gem 'rdoc'
@@ -14,9 +14,9 @@ gem 'sass'
 gem 'jquery-rails'
 gem 'turbolinks'
 
-gem 'sprockets-rails', github: 'rails/sprockets-rails'
-gem 'sass-rails',      github: 'rails/sass-rails'
-gem 'coffee-rails',    github: 'rails/coffee-rails'
+gem 'sprockets-rails', '2.0.0.rc4'
+#gem 'sass-rails'
+#gem 'coffee-rails'
 
 gem 'kaminari'
 
@@ -27,6 +27,7 @@ gem 'rcov', :platforms => :ruby_18
 gem 'simplecov', :platforms => :ruby_19
 
 gem 'sqlite3', :platforms => :ruby
+gem 'therubyracer', :platforms => :ruby
 
 platforms :jruby do
   gem 'jdbc-sqlite3'
