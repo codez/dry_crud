@@ -31,7 +31,7 @@ group :assets do
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
   gem 'bootstrap-sass-rails'
-  #gem 'therubyracer'
+  gem 'therubyracer', :require => RUBY_PLATFORM.include?('linux') && 'v8'
 end
 
 gem 'jquery-rails'
