@@ -1,25 +1,21 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.0.0.rc1'
-gem 'arel',  '4.0.0'
+gem 'rails', '>= 4.0.0'
 
 gem 'rake'
-gem 'rdoc'
+gem 'sdoc'
 gem 'rspec-rails'
 
-
 gem 'haml'
-gem 'sass'
 
 gem 'jquery-rails'
-gem 'turbolinks'
-
-gem 'sprockets-rails', '2.0.0.rc4'
-#gem 'sass-rails'
-#gem 'coffee-rails'
+gem 'sass-rails'
+gem 'coffee-rails'
 
 gem 'kaminari'
 
+gem 'turbolinks'
+gem 'jbuilder', '~> 1.2'
 
 # platform specific gems
 
