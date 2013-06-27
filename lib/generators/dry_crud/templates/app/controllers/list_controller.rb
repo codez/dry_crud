@@ -205,16 +205,6 @@ class ListController < ApplicationController
       def sort_mappings=(hash)
         self.sort_mappings_with_indifferent_access = hash.with_indifferent_access
       end
-
-      controller.class_attribute :sort_mappings_with_indifferent_access
-
-      # Define a default sort expression that is always appended to the
-      # current sort params
-      controller.class_attribute :default_sort
-
-      controller.helper_method :sortable?
-
-      controller.alias_method_chain :list_entries, :sort
     end
 
     private
