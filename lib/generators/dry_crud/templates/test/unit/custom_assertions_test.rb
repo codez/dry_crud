@@ -11,7 +11,7 @@ class CustomAssertionsTest < ActiveSupport::TestCase
   setup :reset_db, :setup_db, :create_test_data
   teardown :reset_db
 
-  AssertionException = RUBY_VERSION.to_f == 1.9 ?
+  AssertionException = RUBY_VERSION.to_f >= 1.9 ?
                         MiniTest::Assertion :
                         Test::Unit::AssertionFailedError
 

@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '>= 4.0.0'
+gem 'rails'
 
 gem 'rake'
 gem 'sdoc'
@@ -15,7 +15,7 @@ gem 'coffee-rails'
 gem 'kaminari'
 
 gem 'turbolinks'
-gem 'jbuilder', '~> 1.2'
+gem 'jbuilder'
 
 # platform specific gems
 

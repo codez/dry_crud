@@ -1,0 +1,17 @@
+
+gem 'sqlite3', :platforms => :ruby
+
+platforms :jruby do
+  gem 'jdbc-sqlite3'
+  gem 'activerecord-jdbcsqlite3-adapter'
+end
+
+gem 'haml'
+
+gem 'kaminari'
+
+gem 'rspec-rails'
+
+#gem 'bootstrap-sass-rails'
+
+gem 'therubyracer', :require => RUBY_PLATFORM.include?('linux') && 'v8'
