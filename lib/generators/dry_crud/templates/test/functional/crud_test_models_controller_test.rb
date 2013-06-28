@@ -203,8 +203,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'new'
     assert entry.new_record?
     assert assigns(:companions)
-    assert flash[:notice].blank?, flash[:notice]
-    assert flash[:alert].blank?, flash[:alert]
+    assert flash[:notice].blank?, flash[:notice].to_s
+    assert flash[:alert].blank?, flash[:alert].to_s
     assert entry.name.blank?
     assert_equal [:before_create, :before_save, :before_render_new, :before_render_form], @controller.called_callbacks
   end

@@ -10,7 +10,7 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   validates :name, :presence => true
   validates :rating, :inclusion => { :in => 1..10 }
 
-  default_scope { order('name') }
+  attr_protected nil if Rails.version < '4.0'
 
   def to_s
     name
@@ -36,6 +36,8 @@ class OtherCrudTestModel < ActiveRecord::Base #:nodoc:
   has_and_belongs_to_many :others, :class_name => 'CrudTestModel'
   belongs_to :more, :foreign_key => :more_id, :class_name => 'CrudTestModel'
 
+  attr_protected nil if Rails.version < '4.0'
+
   def to_s
     name
   end
@@ -47,6 +49,7 @@ class CrudTestModelsController < CrudController #:nodoc:
 
   self.search_columns = [:name, :whatever, :remarks]
   self.sort_mappings = {:chatty => 'length(remarks)'}
+  self.default_sort = 'name'
   self.permitted_attrs = [:name, :password, :whatever, :children, :companion_id, :rating, :income,
                           :birthdate, :gets_up_at, :last_seen, :human, :remarks]
 

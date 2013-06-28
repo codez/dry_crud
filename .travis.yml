@@ -8,24 +8,18 @@ rvm:
   - jruby-19mode
 
 env:
-  - "rails=3.2 HAML=1"
-  - "rails=3.2"
-  - "rails=4.0 HAML=1"
-  - "rails=4.0"
+  - "HAML=1"
+  - "NO_HAML=0"
 
-#gemfile:
-#  - Gemfile
-#  - test/ci/rails3_2.gemfile
+gemfile:
+  - Gemfile
+  - test/ci/rails3_2.gemfile
 
 matrix:
   exclude:
-    - env: "rails=4.0"
+    - gemfile: Gemfile
       rvm: 1.8.7
-    - env: "rails=4.0 HAML=1"
-      rvm: 1.8.7
-    - env: "rails=4.0"
-      rvm: jruby-18mode
-    - env: "rails=4.0 HAML=1"
+    - gemfile: Gemfile
       rvm: jruby-18mode
   allow_failures:
     - rvm: jruby-18mode

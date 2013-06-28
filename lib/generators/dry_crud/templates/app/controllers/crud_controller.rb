@@ -6,8 +6,10 @@
 # overriding the entire method.
 class CrudController < ListController
 
+<% if Rails.version >= '4.0' -%>
   class_attribute :permitted_attrs
 
+<% end -%>
   delegate :model_identifier, :to => 'self.class'
 
   # Defines before and after callback hooks for create, update, save and destroy actions.
@@ -83,8 +85,11 @@ class CrudController < ListController
   #   DELETE /entries/1.json
   def destroy(options = {}, &block)
     destroyed = run_callbacks(:destroy) { entry.destroy }
-    flash[:alert] ||= error_messages.presence || flash_message(:failure) if !destroyed && request.format == :html
-    location = !destroyed && request.env["HTTP_REFERER"].presence || index_url
+    unless destroyed
+      flash[:alert] ||= error_messages.presence || flash_message(:failure) if request.format == :html
+      location = request.env["HTTP_REFERER"].presence
+    end
+    location ||= index_url
     respond_with(entry, options.reverse_merge(:success => destroyed, :location => location), &block)
   end
 
@@ -148,7 +153,11 @@ class CrudController < ListController
 
   # The form params for this model.
   def model_params
+<% if Rails.version < '4.0' -%>
+    params[model_identifier]
+<% else -%>
     params.require(model_identifier).permit(permitted_attrs)
+<% end -%>
   end
 
 

@@ -8,6 +8,7 @@ class City < ActiveRecord::Base
 
   before_destroy :protect_with_inhabitants
 
+  attr_protected nil if Rails.version < '4.0'
 
   def to_s
     "#{name} (#{country.code})"

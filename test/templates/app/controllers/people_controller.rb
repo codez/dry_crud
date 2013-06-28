@@ -12,8 +12,9 @@ class PeopleController < AjaxController
   private
 
   def list_entries
-    super.includes(:city => :country).
-          references(:cities, :countries)
+    list = super.includes(:city => :country)
+    list = list.references(:cities, :countries) if list.respond_to?(:references)
+    list
   end
 
 end

@@ -15,9 +15,9 @@ class VipsController < ListController
   end
 
   def list_entries
-    super.where('rating > 5').
-          includes(:city => :country).
-          references(:cities, :countries)
+    list = super.where('rating > 5').includes(:city => :country)
+    list = list.references(:cities, :countries) if list.respond_to?(:references)
+    list
   end
 
 end

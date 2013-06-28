@@ -8,3 +8,4 @@ test/test_app
 tmp
 pkg
 rdoc
+*.gemfile.lock

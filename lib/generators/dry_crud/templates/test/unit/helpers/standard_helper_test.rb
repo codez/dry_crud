@@ -214,7 +214,7 @@ class StandardHelperTest < ActionView::TestCase
     end
 
     assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
-    assert_match /input .*?name="_method" .*?type="hidden" .*?value="patch"/, f
+    assert_match /input .*?name="_method" .*?type="hidden" .*?value="(patch|put)"/, f
   end
 
   test "standard form with errors" do
@@ -227,7 +227,7 @@ class StandardHelperTest < ActionView::TestCase
     end
 
     assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
-    assert_match /input .*?name="_method" .*?type="hidden" .*?value="patch"/, f
+    assert_match /input .*?name="_method" .*?type="hidden" .*?value="(patch|put)"/, f
     assert_match /div[^>]* id='error_explanation'/, f
     assert_match /div class="control-group error"\>.*?\<input .*?name="crud_test_model\[name\]" .*?type="text"/, f
     assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f

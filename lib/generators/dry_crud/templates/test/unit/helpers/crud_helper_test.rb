@@ -96,7 +96,7 @@ class CrudHelperTest < ActionView::TestCase
     end
 
     assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
-    assert_match /input .*?name="_method" .*?type="hidden" .*?value="patch"/, f
+    assert_match /input .*?name="_method" .*?type="hidden" .*?value="(patch|put)"/, f
     assert_match /input .*?name="crud_test_model\[name\]" .*?type="text" .*?value="AAAAA"/, f
     assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
     assert_match /input .*?name="crud_test_model\[children\]" .*?type="number" .*?value=\"9\"/, f
@@ -104,7 +104,7 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /button .*?type="submit">Save<\/button>/, f
     assert_match /a .*href="\/somewhere".*>Cancel<\/a>/, f
   end
-  
+
   def entry
     @entry ||= CrudTestModel.first
   end

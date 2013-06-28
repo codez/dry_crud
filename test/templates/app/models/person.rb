@@ -4,6 +4,8 @@ class Person < ActiveRecord::Base
 
   validates :name, :presence => true
 
+  attr_protected nil if Rails.version < '4.0'
+
   def to_s
     name
   end

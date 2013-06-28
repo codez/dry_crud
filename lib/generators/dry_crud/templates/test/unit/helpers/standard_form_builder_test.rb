@@ -15,7 +15,11 @@ class StandardFormBuilderTest < ActionView::TestCase
 
   def create_form
     @entry = CrudTestModel.first
+<% if Rails.version < '4.0' -%>
+    @form = StandardFormBuilder.new(:entry, @entry, self, {}, lambda {|form| form })
+<% else -%>
     @form = StandardFormBuilder.new(:entry, @entry, self, {})
+<% end -%>
   end
 
   test "input_field dispatches string attr to string_field" do

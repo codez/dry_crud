@@ -40,7 +40,11 @@ class ListController < ApplicationController
   # This is mainly used for nested models to provide the
   # required context.
   def model_scope
+<% if Rails.version < '4.0' -%>
+    model_class.scoped
+<% else -%>
     model_class.all
+<% end -%>
   end
 
   # The path arguments to link to the given entry.
@@ -63,7 +67,7 @@ class ListController < ApplicationController
     name = if value.respond_to?(:klass) # ActiveRecord::Relation
       ivar_name(value.klass).pluralize
     elsif value.respond_to?(:each) # Array
-      ivar_name(value.first.klass).pluralize
+      ivar_name(value.first.class).pluralize
     else
       ivar_name(value.class)
     end
@@ -211,11 +215,19 @@ class ListController < ApplicationController
 
     # Enhance the list entries with an optional sort order.
     def list_entries_with_sort
+<% if Rails.version < '4.0' -%>
+      scope = list_entries_without_sort
+<% else -%>
       scope = list_entries_without_sort.order(default_sort)
+<% end -%>
       if params[:sort].present? && sortable?(params[:sort])
         scope = scope.order(sort_expression)
       end
+<% if Rails.version < '4.0' -%>
+      scope.order(default_sort)
+<% else -%>
       scope
+<% end -%>
     end
 
     # Return the sort expression to be used in the list query.

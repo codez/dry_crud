@@ -15,7 +15,11 @@ describe 'StandardFormBuilder' do
   after(:all) { reset_db }
 
   let(:entry) { CrudTestModel.first }
+<% if Rails.version < '4.0' -%>
+  let(:form)  { StandardFormBuilder.new(:entry, entry, self, {}, lambda {|form| form }) }
+<% else -%>
   let(:form)  { StandardFormBuilder.new(:entry, entry, self, {}) }
+<% end -%>
 
   describe "#input_field" do
 

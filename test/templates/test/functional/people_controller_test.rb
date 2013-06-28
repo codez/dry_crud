@@ -14,7 +14,10 @@ class PeopleControllerTest < ActionController::TestCase
   def test_index
     super
     assert_equal 2, entries.size
-    assert_equal Person.includes(:city => :country).references(:cities, :countries).order('people.name, countries.code, cities.name').to_a, entries
+    expected = Person.includes(:city => :country).
+                      order('people.name, countries.code, cities.name')
+    expected = expected.references(:cities, :countries) if expected.respond_to?(:references)
+    assert_equal expected.to_a, entries
 
     assert_equal [], @controller.send(:parents)
     assert_nil @controller.send(:parent)
@@ -54,17 +57,17 @@ class PeopleControllerTest < ActionController::TestCase
     assert_template 'update'
     assert_match /alert/, response.body
   end
-  
+
   private
-  
+
   def test_entry
     people(:john)
   end
 
   def test_entry_attrs
-    {:name => 'Fischers Fritz', 
-     :children => 2, 
-     :income => 120, 
+    {:name => 'Fischers Fritz',
+     :children => 2,
+     :income => 120,
      :city_id => cities(:rj).id}
   end
 

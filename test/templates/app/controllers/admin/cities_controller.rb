@@ -12,7 +12,9 @@ class Admin::CitiesController < AjaxController
   private
 
   def list_entries
-    super.includes(:country).references(:countries)
+    list = super.includes(:country)
+    list = list.references(:countries) if list.respond_to?(:references)
+    list
   end
 
 end
