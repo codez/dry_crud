@@ -29,6 +29,3 @@ matrix:
     - gemfile: Gemfile
       rvm: jruby-18mode
       env: "NO_HAML=0"
-  allow_failures:
-    - rvm: jruby-18mode
-    - rvm: jruby-19mode
