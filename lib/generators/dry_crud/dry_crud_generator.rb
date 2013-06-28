@@ -35,7 +35,7 @@ class DryCrudGenerator < Rails::Generators::Base
       end
 
       unless exclude_test_dir == 'spec'
-        copy_file(File.join('test', 'crud_test_model.rb'),
+        template(File.join('test', 'crud_test_model.rb'),
                   File.join('spec', 'support', 'crud_test_model.rb'))
       end
     end

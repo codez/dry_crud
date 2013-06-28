@@ -6,8 +6,10 @@ class PeopleController < AjaxController
 
   self.sort_mappings = {:city_id => 'cities.name'}
 
-  self.permitted_attrs = [:name, :children, :city_id, :rating, :income,
-                          :birthdate, :gets_up_at, :last_seen, :remarks, :cool]
+  if respond_to?(:permitted_attrs)
+    self.permitted_attrs = [:name, :children, :city_id, :rating, :income,
+                            :birthdate, :gets_up_at, :last_seen, :remarks, :cool]
+  end
 
   private
 

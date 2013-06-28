@@ -4,10 +4,11 @@ class Admin::CitiesController < AjaxController
 
   self.search_columns = :name, 'countries.name'
 
-  self.permitted_attrs = [:name, :person_ids]
-
   self.default_sort = 'countries.code, cities.name'
 
+  if respond_to?(:permitted_attrs)
+    self.permitted_attrs = [:name, :person_ids]
+  end
 
   private
 

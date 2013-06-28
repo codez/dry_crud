@@ -50,8 +50,10 @@ class CrudTestModelsController < CrudController #:nodoc:
   self.search_columns = [:name, :whatever, :remarks]
   self.sort_mappings = {:chatty => 'length(remarks)'}
   self.default_sort = 'name'
+<% if Rails.version >= '4.0' -%>
   self.permitted_attrs = [:name, :password, :whatever, :children, :companion_id, :rating, :income,
                           :birthdate, :gets_up_at, :last_seen, :human, :remarks]
+<% end -%>
 
   before_create :possibly_redirect
   before_create :handle_name

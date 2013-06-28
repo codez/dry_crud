@@ -4,9 +4,11 @@ class Admin::CountriesController < AjaxController
 
   self.search_columns = :name, :code
 
-  self.permitted_attrs = [:name, :code]
-
   self.default_sort = 'countries.name'
+
+  if respond_to?(:permitted_attrs)
+    self.permitted_attrs = [:name, :code]
+  end
 
   def show
     super do |format|
