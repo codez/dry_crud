@@ -102,7 +102,7 @@ namespace :test do
                    :customize]
 
     desc "Customize some of the functionality provided by dry_crud"
-    task :customize => ['test:app:add_pagination'
+    task :customize => ['test:app:add_pagination',
                         #'test:app:use_bootstrap'
                        ]
 

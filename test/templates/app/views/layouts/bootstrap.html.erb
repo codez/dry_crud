@@ -11,11 +11,12 @@
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
   <![endif]-->
 
-  <%= stylesheet_link_tag 'application', :media => 'all' %>
+  <%= stylesheet_link_tag 'application', :media => 'all', 'data-turbolinks-track' => true %>
   <style type="text/css">
     body { padding-top: 70px; }
     h1 { margin-bottom: 10px; }
   </style>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 
   <!-- fav and touch icons -->
   <link href="images/favicon.ico" rel="shortcut icon">
@@ -34,7 +35,7 @@
     </div>
   </div>
 </div>
-  
+
 <div class="container">
 
   <h1><%= @title %></h1>
@@ -61,7 +62,6 @@
 </div>
 
 <!-- Javascript placed at the end of the document so the pages load faster -->
-<%= javascript_include_tag 'application' %>
 <%= javascript_tag yield(:javascripts) if content_for?(:javascripts) %>
 
 </body>

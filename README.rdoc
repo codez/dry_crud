@@ -52,7 +52,7 @@ Say you want to manage a +Person+ model. Create the following controller and ove
     self.permitted_attrs = [:firstname, :lastname, :birthday, :sex, :city_id]
   end
 
-The +permitted_attrs+ define the paramter attributes allowed when creating or updating a model entry (see {Strong Paramters}[http://api.rubyonrails.org/classes/ActionController/StrongParameters.html]).
+The +permitted_attrs+ define the parameter attributes allowed when creating or updating a model entry (see {Strong Paramters}[http://api.rubyonrails.org/classes/ActionController/StrongParameters.html]).
 
 <tt>app/models/person.rb</tt>:
   class Person
