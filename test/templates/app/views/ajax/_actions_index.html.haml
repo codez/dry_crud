@@ -1,6 +1,9 @@
 = render 'crud/actions_index'
 
-= link_action ti(:'link.ajax'), nil, {:action => 'ajax'}, :method => :get, :remote => true
+= action_link(ti(:'link.ajax'),
+              nil,
+              {:action => 'ajax'},
+              :method => :get, :remote => true)
 
 #response
 

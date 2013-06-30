@@ -157,7 +157,7 @@ class CrudController < ListController
     params[model_identifier]
 <% else -%>
     params.require(model_identifier).permit(permitted_attrs)
-<% end -%>
+<% end -%><%# > fixing rdoc -%>
   end
 
 

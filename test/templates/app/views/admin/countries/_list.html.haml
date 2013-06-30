@@ -1,3 +1,3 @@
 = crud_table do |t|
-  - col_show(t, :name) {|e| admin_country_cities_path(e) }
+  - t.attr_with_show_link(:name) {|e| admin_country_cities_path(e) }
   - t.sortable_attr(:code)

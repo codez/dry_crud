@@ -1,45 +1,76 @@
 require 'spec_helper'
 
-describe ListHelper do
+describe TableHelper do
 
-  include StandardHelper
+  include FormatHelper
+  include UtilityHelper
+  include I18nHelper
   include CrudTestHelper
-  
 
-  before(:all) do 
+  before(:all) do
     reset_db
     setup_db
     create_test_data
   end
-  
+
   after(:all) { reset_db }
-  
+
+  describe "#table" do
+    context "with empty data" do
+      subject { table([]) }
+
+      it { should be_html_safe }
+
+      it "should handle empty data" do
+        should match(/No entries/)
+      end
+    end
+
+    context "with data" do
+      subject { table(['foo', 'bar'], :size) {|t| t.attrs :upcase } }
+
+      it { should be_html_safe }
+
+      it "should render table" do
+        should match(/^\<table.*\<\/table\>$/)
+      end
+
+      it "should contain attrs" do
+        should match(/<th>Size<\/th>/)
+      end
+
+      it "should contain block" do
+        should match(/<th>Upcase<\/th>/)
+      end
+    end
+  end
+
   describe "#list_table" do
     let(:entries) { CrudTestModel.all }
-    
+
     context "default" do
       subject do
         with_test_routing { list_table }
       end
-      
+
       it "has 7 rows" do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
-      
+
       it "has 13 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 13
       end
     end
-    
+
     context "with custom attributes" do
       subject do
         with_test_routing { list_table(:name, :children, :companion_id) }
       end
-      
+
       it "has 7 rows" do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
-      
+
       it "has 3 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 3
       end
@@ -54,24 +85,24 @@ describe ListHelper do
           end
         end
       end
-      
+
       it "has 7 rows" do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
-      
+
       it "has 4 headers" do
         subject.scan(REGEXP_HEADERS).size.should == 4
       end
-      
+
       it "has 0 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 0
       end
-      
+
       it "has 6 spans" do
         subject.scan(/<span>.+?<\/span>/).size.should == 6
       end
     end
-    
+
     context "with custom attributes and block" do
       subject do
         with_test_routing do
@@ -80,24 +111,24 @@ describe ListHelper do
           end
         end
       end
-      
+
       it "has 7 rows" do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
-      
+
       it "has 4 headers" do
         subject.scan(REGEXP_HEADERS).size.should == 4
       end
-      
+
       it "has 3 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 3
       end
-      
+
       it "has 6 spans" do
         subject.scan(/<span>.+?<\/span>/).size.should == 6
       end
     end
-    
+
     context "with ascending sort params" do
       let(:params) { {:sort => 'children', :sort_dir => 'asc'} }
       subject do
@@ -107,12 +138,12 @@ describe ListHelper do
       it "has 12 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 12
       end
-      
+
       it "has 1 ascending sort headers" do
         subject.scan(/<th><a .*?sort_dir=desc.*?>Children<\/a> &darr;<\/th>/).size.should == 1
       end
     end
-    
+
     context "with descending sort params" do
       let(:params) { {:sort => 'children', :sort_dir => 'desc'} }
       subject do
@@ -122,12 +153,12 @@ describe ListHelper do
       it "has 12 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 12
       end
-      
+
       it "has 1 descending sort headers" do
         subject.scan(/<th><a .*?sort_dir=asc.*?>Children<\/a> &uarr;<\/th>/).size.should == 1
       end
     end
-    
+
     context "with custom column sort params" do
       let(:params) { {:sort => 'chatty', :sort_dir => 'asc'} }
       subject do
@@ -137,18 +168,88 @@ describe ListHelper do
       it "has 2 sortable headers" do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 2
       end
-      
+
       it "has 1 ascending sort headers" do
         subject.scan(/<th><a .*?sort_dir=desc.*?>Chatty<\/a> &darr;<\/th>/).size.should == 1
       end
     end
   end
-  
-  describe "#default_attrs" do
-    it "do not contain id" do
-      default_attrs.should == [:name, :whatever, :children, :companion_id, :rating, :income,
-                               :birthdate, :gets_up_at, :last_seen, :human, :remarks,
-                               :created_at, :updated_at]
+
+  describe "#crud_table" do
+    let(:entries) { CrudTestModel.all }
+
+    context "default" do
+      subject do
+        with_test_routing { crud_table }
       end
+
+      it "has 7 rows" do
+        subject.scan(REGEXP_ROWS).size.should == 7
+      end
+
+      it "has 13 sort headers" do
+        subject.scan(REGEXP_SORT_HEADERS).size.should == 13
+      end
+
+      it "has 12 action cells" do
+        subject.scan(REGEXP_ACTION_CELL).size.should == 12
+      end
+    end
+
+    context "with custom attrs" do
+      subject do
+        with_test_routing { crud_table(:name, :children, :companion_id) }
+      end
+
+      it "has 3 sort headers" do
+        subject.scan(REGEXP_SORT_HEADERS).size.should == 3
+      end
+    end
+
+    context "with custom block" do
+      subject do
+        with_test_routing do
+          crud_table do |t|
+            t.attrs :name, :children, :companion_id
+            t.col("head") {|e| content_tag :span, e.income.to_s }
+          end
+        end
+      end
+
+      it "has 4 headers" do
+        subject.scan(REGEXP_HEADERS).size.should == 6
+      end
+
+      it "has 6 custom col spans" do
+        subject.scan(/<span>.+?<\/span>/m).size.should == 6
+      end
+
+      it "has 12 action cells" do
+        subject.scan(REGEXP_ACTION_CELL).size.should == 12
+      end
+    end
+
+    context "with custom attributes and block" do
+      subject do
+        with_test_routing do
+          crud_table(:name, :children, :companion_id) do |t|
+            t.col("head") {|e| content_tag :span, e.income.to_s }
+          end
+        end
+      end
+
+      it "has 3 sort headers" do
+        subject.scan(REGEXP_SORT_HEADERS).size.should == 3
+      end
+
+      it "has 6 custom col spans" do
+        subject.scan(/<span>.+?<\/span>/m).size.should == 6
+      end
+
+      it "has 12 action cells" do
+        subject.scan(REGEXP_ACTION_CELL).size.should == 12
+      end
+    end
   end
+
 end

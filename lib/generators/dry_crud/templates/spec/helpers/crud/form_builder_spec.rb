@@ -1,9 +1,11 @@
 require 'spec_helper'
 
-describe 'StandardFormBuilder' do
+describe 'Crud::FormBuilder' do
 
-  include StandardHelper
-  include ListHelper
+  include FormatHelper
+  include FormHelper
+  include UtilityHelper
+  include I18nHelper
   include CrudTestHelper
 
   before(:all) do
@@ -16,9 +18,9 @@ describe 'StandardFormBuilder' do
 
   let(:entry) { CrudTestModel.first }
 <% if Rails.version < '4.0' -%>
-  let(:form)  { StandardFormBuilder.new(:entry, entry, self, {}, lambda {|form| form }) }
+  let(:form)  { Crud::FormBuilder.new(:entry, entry, self, {}, lambda {|form| form }) }
 <% else -%>
-  let(:form)  { StandardFormBuilder.new(:entry, entry, self, {}) }
+  let(:form)  { Crud::FormBuilder.new(:entry, entry, self, {}) }
 <% end -%>
 
   describe "#input_field" do
@@ -56,12 +58,12 @@ describe 'StandardFormBuilder' do
   describe "#labeled_input_field" do
     context "when required" do
       subject { form.labeled_input_field(:name) }
-      it { should include(StandardFormBuilder::REQUIRED_MARK) }
+      it { should include(Crud::FormBuilder::REQUIRED_MARK) }
     end
 
     context "when not required" do
       subject { form.labeled_input_field(:remarks) }
-      it { should_not include(StandardFormBuilder::REQUIRED_MARK) }
+      it { should_not include(Crud::FormBuilder::REQUIRED_MARK) }
     end
 
     context "with help text" do
@@ -187,7 +189,7 @@ describe 'StandardFormBuilder' do
 
   describe "#required_mark" do
     it "is shown for required attrs" do
-      form.required_mark(:name).should == StandardFormBuilder::REQUIRED_MARK
+      form.required_mark(:name).should == Crud::FormBuilder::REQUIRED_MARK
     end
 
     it "is not shown for optional attrs" do

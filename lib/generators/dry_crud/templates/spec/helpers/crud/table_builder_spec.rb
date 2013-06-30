@@ -1,11 +1,12 @@
 require 'spec_helper'
 
-describe 'StandardTableBuilder' do
-  
-  include StandardHelper
-  
+describe 'Crud::TableBuilder' do
+
+  include FormatHelper
+  include UtilityHelper
+
   let(:entries) { %w(foo bahr) }
-  let(:table)   { StandardTableBuilder.new(entries, self) } 
+  let(:table)   { Crud::TableBuilder.new(entries, self) }
 
   def format_size(obj) #:nodoc:
     "#{obj.size} chars"
@@ -16,7 +17,7 @@ describe 'StandardTableBuilder' do
     dom = '<tr><th>Upcase</th><th>Size</th></tr>'
     assert_dom_equal dom, table.send(:html_header)
   end
-  
+
   specify "single attr row" do
     table.attrs :upcase, :size
     dom = '<tr><td>FOO</td><td>3 chars</td></tr>'
@@ -31,10 +32,10 @@ describe 'StandardTableBuilder' do
 
   context "attr col" do
     let(:col) { table.cols.first }
-    
+
     context "output" do
       before { table.attrs :upcase }
-  
+
       it { col.html_header.should == "<th>Upcase</th>" }
       it { col.content('foo').should == "FOO" }
       it { col.html_cell('foo').should == "<td>FOO</td>" }
@@ -42,7 +43,7 @@ describe 'StandardTableBuilder' do
 
     context "content with custom format_size method" do
       before { table.attrs :size }
-      
+
       it { col.content("abcd").should == "4 chars" }
     end
   end
@@ -109,7 +110,7 @@ describe 'StandardTableBuilder' do
     FIN
     dom.gsub!(/[\n\t]/, "").gsub!(/\s{2,}/, "")
 
-    table = StandardTableBuilder.new([], self)
+    table = Crud::TableBuilder.new([], self)
     table.col('head', :class => 'left') { |e| link_to e, "/" }
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }

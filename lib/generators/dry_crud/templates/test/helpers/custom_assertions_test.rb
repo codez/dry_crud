@@ -1,6 +1,6 @@
 require 'test_helper'
-require 'custom_assertions'
-require 'crud_test_model'
+require 'support/custom_assertions'
+require 'support/crud_test_model'
 
 class CustomAssertionsTest < ActiveSupport::TestCase
 

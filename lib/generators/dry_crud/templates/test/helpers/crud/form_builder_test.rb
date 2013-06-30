@@ -1,12 +1,14 @@
 require 'test_helper'
-require 'crud_test_model'
+require 'support/crud_test_model'
 
-class StandardFormBuilderTest < ActionView::TestCase
+class Crud::FormBuilderTest < ActionView::TestCase
 
+  include FormatHelper
+  include I18nHelper
   include CrudTestHelper
 
   # set dummy helper class for ActionView::TestCase
-  self.helper_class = StandardHelper
+  self.helper_class = UtilityHelper
 
   attr_reader :form, :entry
 
@@ -16,9 +18,9 @@ class StandardFormBuilderTest < ActionView::TestCase
   def create_form
     @entry = CrudTestModel.first
 <% if Rails.version < '4.0' -%>
-    @form = StandardFormBuilder.new(:entry, @entry, self, {}, lambda {|form| form })
+    @form = Crud::FormBuilder.new(:entry, @entry, self, {}, lambda {|form| form })
 <% else -%>
-    @form = StandardFormBuilder.new(:entry, @entry, self, {})
+    @form = Crud::FormBuilder.new(:entry, @entry, self, {})
 <% end -%>
   end
 
@@ -77,15 +79,15 @@ class StandardFormBuilderTest < ActionView::TestCase
 
   test "labeld_input_field adds required mark" do
     result = form.labeled_input_field(:name)
-    assert result.include?(StandardFormBuilder::REQUIRED_MARK)
+    assert result.include?(Crud::FormBuilder::REQUIRED_MARK)
     result = form.labeled_input_field(:remarks)
-    assert !result.include?(StandardFormBuilder::REQUIRED_MARK)
+    assert !result.include?(Crud::FormBuilder::REQUIRED_MARK)
   end
 
   test "labeld_input_field adds help text" do
     result = form.labeled_input_field(:name, :help => 'Some Help')
     assert result.include?(form.help_block('Some Help'))
-    assert result.include?(StandardFormBuilder::REQUIRED_MARK)
+    assert result.include?(Crud::FormBuilder::REQUIRED_MARK)
   end
 
   test "belongs_to_field has all options by default" do
@@ -207,7 +209,7 @@ class StandardFormBuilderTest < ActionView::TestCase
   end
 
   test "required mark is shown" do
-    assert_equal StandardFormBuilder::REQUIRED_MARK, form.required_mark(:name)
+    assert_equal Crud::FormBuilder::REQUIRED_MARK, form.required_mark(:name)
     assert_equal "", form.required_mark(:rating)
     assert_equal "", form.required_mark(:anything)
   end

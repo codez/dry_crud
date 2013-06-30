@@ -44,7 +44,7 @@ class ListController < ApplicationController
     model_class.scoped
 <% else -%>
     model_class.all
-<% end -%>
+<% end -%><%# > fixing rdoc -%>
   end
 
   # The path arguments to link to the given entry.
@@ -215,19 +215,11 @@ class ListController < ApplicationController
 
     # Enhance the list entries with an optional sort order.
     def list_entries_with_sort
-<% if Rails.version < '4.0' -%>
-      scope = list_entries_without_sort
-<% else -%>
-      scope = list_entries_without_sort.order(default_sort)
-<% end -%>
-      if params[:sort].present? && sortable?(params[:sort])
-        scope = scope.order(sort_expression)
-      end
-<% if Rails.version < '4.0' -%>
-      scope.order(default_sort)
-<% else -%>
-      scope
-<% end -%>
+      clause = []
+      clause << sort_expression if sortable?(params[:sort])
+      clause << default_sort
+
+      list_entries_without_sort.order(clause.compact.join(', '))
     end
 
     # Return the sort expression to be used in the list query.
@@ -244,8 +236,9 @@ class ListController < ApplicationController
 
     # Returns true if the passed attribute is sortable.
     def sortable?(attr)
+      attr.present? && (
       model_class.column_names.include?(attr.to_s) ||
-      sort_mappings_with_indifferent_access.include?(attr)
+      sort_mappings_with_indifferent_access.include?(attr))
     end
   end
 

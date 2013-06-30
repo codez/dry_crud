@@ -2,42 +2,42 @@
 
 {<img src="https://secure.travis-ci.org/codez/dry_crud.png" />}[http://travis-ci.org/codez/dry_crud]
 
-DRY CRUD generates simple and extendable controller, views and helpers that support you to DRY up the CRUD code in your Rails project. Start with these elements and build a clean base to efficiently develop your application upon. 
+dry_crud generates simple and extendable controllers, views and helpers that support you to DRY up the CRUD code in your Rails projects. Start with these artifacts and build a clean base to efficiently develop your application upon.
 
-Create your Rails application directly with the DRY CRUD application template:
+Create your Rails application directly with the dry_crud application template:
 
   rails new APP_NAME -m https://raw.github.com/codez/dry_crud/master/template.rb
-  
+
 If your application already exists or you prefer the DIY way, then install the Gem (<tt>gem install dry_crud</tt>), add it to your Gemfile and run the generator. You may remove the Gemfile entry again afterwards, it is not required anymore.
 
   rails generate dry_crud [--templates haml] [--tests rspec]
-  
-By default, DRY CRUD generates ERB templates and Test::Unit tests. Pass the options above to generate HAML templates and/or RSpec examples instead.
 
-To integrate DRY CRUD into your code, only a few additions are required:
+By default, dry_crud generates ERB templates and Test::Unit tests. Pass the options above to generate HAML templates and/or RSpec examples instead.
 
-* For uniform CRUD functionality, just subclass your controllers from +CrudController+. 
+To integrate dry_crud into your code, only a few additions are required:
+
+* For uniform CRUD functionality, just subclass your controllers from +CrudController+.
 * Overwrite the <tt>:to_s</tt> method of your models for a human-friendly representation in captions.
 
-Version 1.5 and higher are built for Rails 3.2. As of Rails 3.1, views are inheritable as well, so a core functionality of DRY CRUD got into the Rails core itself. For Rails 3.0, use version 1.3.1 or refer to the rails-3.0 branch. If you need a version for Rails 2.3, please get version 0.6.0 of the gem or go to the rails-2.3 branch on Github. DRY CRUD 1.3 and above are fully compatible with Ruby 1.8.7, Ruby 1.9.2 and JRuby.
+Version 2.0 and higher are compatible with Rails 4 and Rails 3.2. dry_crud is tested with Ruby 1.8.7, 1.9.3, 2.0.0 and JRuby.
 
 == Overview
 
 In most Rails applications, you have some models that require basic CRUD (create, read, update, delete) functionality. There are various possibilities like Rails scaffolding, {Inherited Resources}[https://github.com/josevalim/inherited_resources] or {Dry Scaffold}[http://github.com/grimen/dry_scaffold]. Still, various parts in your application remain duplicated. While you might pull up common methods into a common superclass controller, most views still contain very similar code. And then you also have to remember the entire API of these frameworks.
 
-Enter DRY CRUD.
+Enter dry_crud.
 
 <b>
-The main idea of DRY CRUD is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. DRY CRUD generates various foundation classes that you may browse easily and adapt freely to your application's needs. For each model, you may transparently customize arbitrary parts or just fallback to the general behavior. This applies not only for controllers, but also for view templates and helpers. There is no black box your code depends on. You lay the foundation that fits your application best.
+The main idea of dry_crud is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. dry_crud generates various foundation classes that you may browse easily and adapt freely to your application's needs. For each model, you may transparently customize arbitrary parts or just fallback to the general behavior. This applies not only for controllers, but also for view templates and helpers. There is no black box your code depends on. You lay the foundation that fits your application best.
 </b>
 
-DRY CRUD is a Rails generator. All code resides in your application and is open for you to inspect and to extend. You may pick whatever you consider useful or adapt what is not sufficient. Even if you do not require any CRUD functionality, you might find some helpers simplifying your work. There are no runtime dependencies to the dry_crud gem. Having said this, DRY CRUD does not want to provide a maximum of functionality that requires a lot of configuration, but rather a clean and lightweight foundation to build your application's requirements upon. This is why DRY CRUD comes as a generator and not as a Rails plugin.
+dry_crud is a Rails generator. All code resides in your application and is open for you to inspect and to extend. You may pick whatever you consider useful or adapt what is not sufficient. Even if you do not require any CRUD functionality, you might find some helpers simplifying your work. There are no runtime dependencies to the dry_crud gem. Having said this, dry_crud does not want to provide a maximum of functionality that requires a lot of configuration, but rather a clean and lightweight foundation to build your application's requirements upon. This is why dry_crud comes as a generator and not as a Rails plugin.
 
-DRY CRUD does not depend on any other plugins, but easily allows you to integrate them in order to unify the behavior of your CRUD controllers. You might even use the plugins mentioned above to adapt your generated +CrudController+ base class. All classes come with thorough tests that provide you with a solid foundation for implementing your own adaptions.
+dry_crud does not depend on any other plugins, but easily allows you to integrate them in order to unify the behavior of your CRUD controllers. You might even use the plugins mentioned above to adapt your generated +CrudController+ base class. All classes come with thorough tests that provide you with a solid foundation for implementing your own adaptions.
 
-A basic CSS gets you started with your application's layout. For advanced needs, DRY CRUD supports the styles and classes used in {Bootstrap}[http://twitter.github.com/bootstrap/]. A great design never was so close.
+A basic CSS gets you started with your application's layout. For advanced needs, dry_crud supports the styles and classes used in {Bootstrap}[http://twitter.github.com/bootstrap/]. A great design never was so close.
 
-If you find yourself adapting the same parts of DRY CRUD for your applications over and over, please feel free to {fork me on Github}[http://github.com/codez/dry_crud].
+If you find yourself adapting the same parts of dry_crud for your applications over and over, please feel free to {fork me on Github}[http://github.com/codez/dry_crud].
 
 See the Examples section for some use cases and the Generated Files section below for details on the single classes and templates.
 
@@ -49,7 +49,10 @@ Say you want to manage a +Person+ model. Create the following controller and ove
 
 <tt>app/controllers/people_controller.rb</tt>:
   class PeopleController < CrudController
+    self.permitted_attrs = [:firstname, :lastname, :birthday, :sex, :city_id]
   end
+
+The +permitted_attrs+ define the paramter attributes allowed when creating or updating a model entry (see {Strong Paramters}[http://api.rubyonrails.org/classes/ActionController/StrongParameters.html]).
 
 <tt>app/models/person.rb</tt>:
   class Person
@@ -58,7 +61,7 @@ Say you want to manage a +Person+ model. Create the following controller and ove
     end
   end
 
-That's it. You have a sortable overview of all people, detail pages and forms to edit and create persons. Oh, and of course, you may delete persons as well. By default, all attributes are displayed and formatted according to their column type wherever they appear. This holds for the input fields as well.
+That's it. You have a sortable overview of all people, detail pages and forms to edit and create people. Of course, you may delete people as well. By default, all attributes are displayed and formatted according to their column type wherever they appear. This applies for the input fields as well.
 
 
 ==== Customize single views
@@ -72,7 +75,7 @@ This only displays these three attributes in the table. All other templates, as 
 
 ==== Adapt general behavior
 
-Next, let's adapt a part of the general behavior used in all CRUD controllers. As an example, we include pagination with kaminari[https://github.com/amatsuda/kaminari] in all our overview tables: 
+Next, let's adapt a part of the general behavior used in all CRUD controllers. As an example, we include pagination with kaminari[https://github.com/amatsuda/kaminari] in all our overview tables:
 
 In <tt>app/controllers/list_controller.rb</tt>, change the list_entries method to
 
@@ -83,7 +86,8 @@ In <tt>app/controllers/list_controller.rb</tt>, change the list_entries method t
 In <tt>app/views/list/index.html.erb</tt>, add the following line for the pagination links:
    <%= paginate entries %>
 
-And we are done again. All our controllers inheriting from +ListController+, including above +PeopleController+, now have paginated index views. Because our customization for the people table is in the separate <tt>_list</tt> partial, no further modifications are required. 
+And we are done. All our controllers inheriting from +ListController+, including above +PeopleController+, now have paginated index views. Because our customization for the people table is in the separate <tt>_list</tt> partial, no further modifications are required.
+
 
 ==== Special formatting for selected attributes
 
@@ -93,53 +97,35 @@ In <tt>app/helpers/people.rb</tt>:
   def format_person_sex(person)
     person.sex ? 'female' : 'male'
   end
-  
+
 Should you have attributes with the same name for multiple models that you want to be formatted the same way, you may define a helper method <tt>format_{attr}</tt> for these attributes.
 
-By the way: The method <tt>:f</tt> in +StandardHelper+ uniformly formats arbitrary values according to their class.
+By the way: The method <tt>:f</tt> in +FormatHelper+ uniformly formats arbitrary values according to their class.
 
 
-==== Filtering the index list
+==== Sorting and filtering the index list
 
-There is a simple search functionality (based on SQL LIKE queries) implemented in the +CrudController+. Define an array of columns in your controller's +search_columns+ class variable to make the entries searchable by these fields:
+The entries listed on the index page are automatically sortable by each displayed database column. To apply a default sorting order, define the following class attribute in the controller:
+
+In <tt>app/controllers/people_controller.rb</tt>:
+  self.default_sort = 'lastname, firstname'
+
+When you display computed values in your list table, you may define sort mappings to enable sorting of these columns:
+
+In <tt>app/controllers/people_controller.rb</tt>:
+  self.sort_mappings = {:age => 'birthday', :city_id => 'cities.name'}
+
+There is a simple search functionality (based on SQL LIKE queries) implemented in +ListController+. Define an array of columns in your controller's +search_columns+ class variable to make the entries searchable by these fields:
 
 In <tt>app/controllers/people_controller.rb</tt>:
   self.search_columns = [:firstname, :lastname]
 
-If you have columns defined, a search box will be displayed in the index view that let's you filter the displayed entries.
+If you have search columns defined, a search box will be displayed in the index view that enables filtering of the displayed entries.
 
-
-==== CRUD controller callbacks
-
-As a last example, let's say we have added a custom input field that must specially processed. Instead of overwriting the entire update action, it is possible to register callbacks for the +create+, +update+, +save+ (= +create+ and +update+) and +destroy+ actions. They work very similarliy like the callbacks on ActiveRecord. For each action, before and after callbacks are run. Before callbacks may also prevent the action from being executed when returning false. Here is some code:
-
-In <tt>app/controllers/people_controller.rb</tt>:
-  after_save :upload_picture
-  before_destroy :delete_picture
-	
-  def upload_picture
-    store_file(params[:person][:picture]) if params[:person][:picture]
-  end
-  
-  def delete_picture
-    if !perform_delete_picture(entry.picture)
-      flash.alert = 'Could not delete picture' 
-      false
-    end
-  end
-
-Beside these "action" callbacks, there is also a set of "before render" callbacks that are called whenever a certain view is rendered. They are available for the +index+, +show+, +new+, +edit+ and +form+ (= +new+ and +edit+) views. These callbacks are not only called for the corresponding action, but, for example, also when the +new+ view is going to be rendered from an unsuccessfull +create+ action. Say you need to prepare additional variables whenever the form is rendered:
-
-In <tt>app/controllers/people_controller.rb</tt>:
-  before_render_form :set_hometowns
-  
-  def set_hometowns
-    @hometowns = City.where(:country => entry.country)
-  end
 
 === Standard Tables and Forms
 
-DRY CRUD also provides two builder classes for update/create forms and tables for displaying entries of one model. They may be used all over your application to DRY up the form and table code. Normally, they are used with the corresponding methods from +StandardHelper+. When you define a view for a subclass of +CrudController+, you may also use the slightly enhanced +crud_table+ and +crud_form+ methods from +CrudHelper+.
+dry_crud also provides two builder classes for update/create forms and tables for displaying entries of one model. They may be used all over your application to DRY up the form and table code. Normally, they are used with the corresponding methods from +TableHelper+ and +FormHelper+. In there are generic helper methods and slightly enhanced ones for views of subclasses of +CrudController+.
 
 ==== Tables
 
@@ -157,6 +143,7 @@ To render custom columns, use the :col method:
         t.attr :street
         t.col('Map') {|entry| link_to(entry.city, "http://maps.google.com/?q=#{entry.city}" }
       end %>
+
 
 ==== Forms
 
@@ -187,20 +174,50 @@ And yes again, the same advice for where to put finder logic applies here as wel
 
 <b>Note:</b> +has_and_belongs_to_many+ and +has_many+ associations are not automatically rendered in a form, you have to explicitly include these attributes. You might also want to stylize the multi-select widget, for example with a {jQuery UI Multiselect}[http://www.quasipartikel.at/multiselect/].
 
+
 === Nested Resources
 
 In case you define nested resources, your +CrudController+ subclass should know. Listing and creating entries as well as displaying links for these resources is dependent on the nesting hierarchy. This is how you declare the namespaces and parent resources in your controller:
 
   self.nesting = :my_namspace, ParentResource
-  
+
 This declaration is for a controller nested in +parent_resources+ within a +:my_namespace+ scope. +ParentResource+ is the corresponding +ActiveRecord+ model. The request param +:parent_resource_id+ is used to load the parent entry, which in turn is used to filter the entries listed and created in your controller. For all parent resources, a corresponding instance variable is created.
 
 The <tt>ListController::Nesting</tt> module defines this basic behaviour. For more complex setups, have a look there and adjust it to your needs.
 
 
+=== CRUD controller callbacks
+
+As a last example, let's say we have added a custom input field that must specially processed. Instead of overwriting the entire update action, it is possible to register callbacks for the +create+, +update+, +save+ (= +create+ and +update+) and +destroy+ actions. They work very similarliy like the callbacks on ActiveRecord. For each action, before and after callbacks are run. Before callbacks may also prevent the action from being executed when returning false. Here is some code:
+
+In <tt>app/controllers/people_controller.rb</tt>:
+  after_save :upload_picture
+  before_destroy :delete_picture
+
+  def upload_picture
+    store_file(params[:person][:picture]) if params[:person][:picture]
+  end
+
+  def delete_picture
+    if !perform_delete_picture(entry.picture)
+      flash.alert = 'Could not delete picture'
+      false
+    end
+  end
+
+Beside these "action" callbacks, there is also a set of "before render" callbacks that are called whenever a certain view is rendered. They are available for the +index+, +show+, +new+, +edit+ and +form+ (= +new+ and +edit+) views. These callbacks are not only called for the corresponding action, but, for example, also when the +new+ view is going to be rendered from an unsuccessfull +create+ action. Say you need to prepare additional variables whenever the form is rendered:
+
+In <tt>app/controllers/people_controller.rb</tt>:
+  before_render_form :set_hometowns
+
+  def set_hometowns
+    @hometowns = City.where(:country => entry.country)
+  end
+
+
 === Internationalization (I18N)
 
-All text strings used are externalized to an english locale yaml. The keys are organized by controller and template name plus a generic global scope. 
+All text strings used are externalized to an english locale yaml. The keys are organized by controller and template name plus a generic global scope.
 
 To represent your controller hierarchy, a special translation helper <tt>:ti</tt> looks up keys along the hierarchy in the following order:
   {controller_name}.{template_name}.{key}
@@ -233,20 +250,28 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 === Helpers:
 
-{helpers/standard_helper.rb}[http://codez.ch/dry_crud/StandardHelper.html]:: A view helper to standardize often used functions like formatting, tables, forms or action links. This helper is ideally defined in the +ApplicationController+. It is required to use the +StandardTableBuilder+ and the +StandardFormBuilder+.
+{helpers/crud/table_builder.rb}[http://codez.ch/dry_crud/Crud/TableBuilder.html]:: A simple helper object to easily define tables listing several rows of the same data type.
 
-{helpers/crud_helper.rb}[http://codez.ch/dry_crud/CrudHelper.html]:: A small helper for +CrudController+ to render tables and forms with a default set of attributes.
+{helpers/crud/form_builder.rb}[http://codez.ch/dry_crud/Crud/FormBuilder.html]:: A form builder that automatically selects the corresponding input type for ActiveRecord columns. Input elements are rendered together with a label by default.
 
-{helpers/list_helper.rb}[http://codez.ch/dry_crud/ListHelper.html]:: A small helper for +ListController+ to render the list table with a default set of attributes.
+{helpers/table_helper.rb}[http://codez.ch/dry_crud/TableHelper.html]:: Create tables to list multiple models with <tt>Crud::TableBuilder</tt>. Contains a standardized and a custom definable table.
 
-{helpers/standard_table_builder.rb}[http://codez.ch/dry_crud/StandardTableBuilder.html]:: A simple helper object to easily define tables listing several rows of the same data type.
+{helpers/form_helper.rb}[http://codez.ch/dry_crud/FormHelper.html]:: Create forms to edit models with <tt>Crud::FormBuilder</tt>. Contains a standardized and a custom definable form.
 
-{helpers/standard_form_builder.rb}[http://codez.ch/dry_crud/StandardFormBuilder.html]:: A form builder that automatically selects the corresponding input type for ActiveRecord columns. Input elements are rendered together with a label by default.
+{helpers/format_helper.rb}[http://codez.ch/dry_crud/FormatHelper.html]:: Format attribute and basic values according to their database or Ruby type.
+
+{helpers/actions_helper.rb}[http://codez.ch/dry_crud/ActionsHelper.html]:: Uniform action links for the most common crud actions.
+
+{helpers/i18n_helper.rb}[http://codez.ch/dry_crud/I18nHelper.html]:: Translation helpers extending the Rails #translate helper to support translation inheritance over the controller class hierarchy.
+
+{helpers/utility_helper.rb}[http://codez.ch/dry_crud/UtilityHelper.html]:: View helpers for basic functions used in various other helpers.
+
 
 
 === Views:
 
 All templates in the +list+ and +crud+ folders may be 'overriden' individually in a respective view folder. Define the basic structure of your CRUD views here and adapt it as required for each single model. Actually, the <tt>_list.html.erb</tt> partial from the +list+ folder gets overriden in the +crud+ folder already.
+All templates are available as HAML as well.
 
 ==== List
 
@@ -262,7 +287,7 @@ views/list/_actions_index.html.erb:: The action links available in the index vie
 
 views/crud/show.html.erb:: The show view displaying all the attributes of one entry and the various actions to perform on it.
 
-views/crud/_attrs.html.erb:: A partial defining the attributes to be displayed in the show view. 
+views/crud/_attrs.html.erb:: A partial defining the attributes to be displayed in the show view.
 
 views/crud/_list.html.erb:: A partial defining the table in the index view with various links to manipulate the entries.
 
@@ -290,22 +315,22 @@ views/layouts/_flash.html.erb:: An simple partial to display the various flash m
 
 views/layouts/_nav.html.erb:: An empty file to put your navigation into. Included from <tt>crud.html.erb</tt>.
 
-app/assets/stylesheets/crud.scss:: A simple SCSS with all the classes and ids used in the CRUD code. 
+app/assets/stylesheets/crud.scss:: A simple SCSS with all the classes and ids used in the CRUD code.
 
 app/assets/images/action/*.png:: Some sample action icons from the {Open Icon Library}[http://openiconlibrary.sourceforge.net].
 
 
 === Tests:
 
-{test/crud_test_model.rb}[http://codez.ch/dry_crud/CrudTestHelper.html]:: A dummy model to run CRUD tests against.
+{test/support/crud_test_model.rb}[http://codez.ch/dry_crud/CrudTestHelper.html]:: A dummy model to run CRUD tests against.
 
-{test/custom_assertions.rb}[http://codez.ch/dry_crud/CustomAssertions.html]:: A handful of convenient assertions. Include this module into your <tt>test_helper.rb</tt> file.
+{test/support/custom_assertions.rb}[http://codez.ch/dry_crud/CustomAssertions.html]:: A handful of convenient assertions. Include this module into your <tt>test_helper.rb</tt> file.
 
-{test/functional/crud_controller_test_helper.rb}[http://codez.ch/dry_crud/CrudControllerTestHelper.html]:: A module to include into the functional tests for your +CrudController+ subclasses. Contains a handful of CRUD functionality tests for the provided implementation. So for each new CRUD controller, you get 20 tests for free.
+{test/support/crud_controller_test_helper.rb}[http://codez.ch/dry_crud/CrudControllerTestHelper.html]:: A module to include into the functional tests for your +CrudController+ subclasses. Contains a handful of CRUD functionality tests for the provided implementation. So for each new CRUD controller, you get 20 tests for free.
 
-test/functional/crud_test_models_controller_test.rb:: Functional tests for the basic +CrudController+ functionality.
+test/controllers/crud_test_models_controller_test.rb:: Functional tests for the basic +CrudController+ functionality.
 
-test/several other tests:: Testing the provided implementation and a great base to test your adaptions of the CRUD code.
+test/helpers/*_test.rb:: Tests for the provided helper implementations and a great base to test your adaptions of the CRUD code.
 
 
 === Specs:
@@ -318,5 +343,5 @@ spec/support/crud_controller_test_helper.rb:: Convenience methods used by the cr
 
 spec/controllers/crud_test_models_controller_spec.rb:: Controller specs to test the basic +CrudController+ functionality.
 
-spec/helpers/*_spec.rb:: The specs for all the helpers included in DRY CRUD.
+spec/helpers/*_spec.rb:: The specs for all the helpers included in dry_crud and a great base to test your adaptions of the CRUD code.
 

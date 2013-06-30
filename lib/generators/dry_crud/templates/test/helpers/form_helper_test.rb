@@ -1,75 +1,25 @@
 require 'test_helper'
-require 'crud_test_model'
-require 'custom_assertions'
+require 'support/crud_test_model'
 
-class CrudHelperTest < ActionView::TestCase
+class FormHelperTest < ActionView::TestCase
 
-  include CustomAssertions
-  include StandardHelper
-  include ListHelper
+  include UtilityHelper
+  include FormatHelper
+  include I18nHelper
   include CrudTestHelper
-
-  attr_reader :entries
 
   setup :reset_db, :setup_db, :create_test_data
   teardown :reset_db
 
-  test "standard crud table" do
-    @entries = CrudTestModel.all
-
-    t = with_test_routing do
-      crud_table
+  test "standard form for existing entry" do
+    e = crud_test_models('AAAAA')
+    f = with_test_routing do
+      f = capture { standard_form(e, :class => 'special') {|f|} }
     end
 
-    assert_count 7, REGEXP_ROWS, t
-    assert_count 13, REGEXP_SORT_HEADERS, t
-    assert_count 12, REGEXP_ACTION_CELL, t      # edit, delete links
+    assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
+    assert_match /input .*?name="_method" .*?type="hidden" .*?value="(patch|put)"/, f
   end
-
-  test "custom crud table with attributes" do
-    @entries = CrudTestModel.all
-
-    t = with_test_routing do
-      crud_table :name, :children, :companion_id
-    end
-
-    assert_count 7, REGEXP_ROWS, t
-    assert_count 3, REGEXP_SORT_HEADERS, t
-    assert_count 12, REGEXP_ACTION_CELL, t      # edit, delete links
-  end
-
-  test "custom crud table with block" do
-    @entries = CrudTestModel.all
-
-    t = with_test_routing do
-      crud_table do |t|
-        t.attrs :name, :children, :companion_id
-        t.col("head") {|e| content_tag :span, e.income.to_s }
-      end
-    end
-
-    assert_count 7, REGEXP_ROWS, t
-    assert_count 6, REGEXP_HEADERS, t
-    assert_count 6, /<span>.+?<\/span>/m, t
-    assert_count 12, REGEXP_ACTION_CELL, t      # edit, delete links
-  end
-
-  test "custom crud table with attributes and block" do
-    @entries = CrudTestModel.all
-
-    t = with_test_routing do
-      crud_table :name, :children, :companion_id do |t|
-        t.col("head") {|e| content_tag :span, e.income.to_s }
-      end
-    end
-
-    assert_count 7, REGEXP_ROWS, t
-    assert_count 3, REGEXP_SORT_HEADERS, t
-    assert_count 6, REGEXP_HEADERS, t
-    assert_count 6, /<span>.+?<\/span>/m, t
-    assert_count 12, REGEXP_ACTION_CELL, t      # edit, delete links
-  end
-
 
   test "entry form" do
     f = with_test_routing do
@@ -103,6 +53,25 @@ class CrudHelperTest < ActionView::TestCase
     assert_match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/, f
     assert_match /button .*?type="submit">Save<\/button>/, f
     assert_match /a .*href="\/somewhere".*>Cancel<\/a>/, f
+  end
+
+  test "crud form with errors" do
+    e = crud_test_models('AAAAA')
+    e.name = nil
+    assert !e.valid?
+
+    f = with_test_routing do
+      f = capture { crud_form(e) {|f| f.labeled_input_fields(:name, :birthdate) } }
+    end
+
+    assert_match /form .*?action="\/crud_test_models\/#{e.id}" .*?method="post"/, f
+    assert_match /input .*?name="_method" .*?type="hidden" .*?value="(patch|put)"/, f
+    assert_match /div[^>]* id='error_explanation'/, f
+    assert_match /div class="control-group error"\>.*?\<input .*?name="crud_test_model\[name\]" .*?type="text"/, f
+    assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
+    assert_match /option selected="selected" value="1910">1910<\/option>/, f
+    assert_match /option selected="selected" value="1">January<\/option>/, f
+    assert_match /option selected="selected" value="1">1<\/option>/, f
   end
 
   def entry

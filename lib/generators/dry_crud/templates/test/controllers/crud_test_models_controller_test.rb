@@ -1,6 +1,6 @@
 require 'test_helper'
-require 'crud_test_model'
-require File.join('functional', 'crud_controller_test_helper')
+require 'support/crud_test_model'
+require 'support/crud_controller_test_helper'
 
 # Tests all actions of the CrudController based on a dummy model
 # (CrudTestModel). This is useful to test the general behavior

@@ -3,7 +3,7 @@
 #
 # Ideally, include this module into your test_helper.rb file:
 #  # at the beginning of the file:
-#  require 'custom_assertions'
+#  require 'support/custom_assertions'
 #
 #  # inside the class definition:
 #  include CustomAssertions
@@ -63,7 +63,7 @@ module CustomAssertions
       end
     end
   end
-  
+
   def build_message(msg, default, *args)
     # TODO: handle minitest format
     message(msg) do

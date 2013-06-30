@@ -1,15 +1,17 @@
 require 'test_helper'
 
-class StandardTableBuilderTest < ActionView::TestCase
+class Crud::TableBuilderTest < ActionView::TestCase
 
   # set dummy helper class for ActionView::TestCase
-  self.helper_class = StandardHelper
+  self.helper_class = UtilityHelper
+
+  include FormatHelper
 
   attr_reader :table, :entries
 
   def setup
     @entries = %w(foo bahr)
-    @table = StandardTableBuilder.new(entries, self)
+    @table = Crud::TableBuilder.new(entries, self)
   end
 
   def format_size(obj)
@@ -119,7 +121,7 @@ class StandardTableBuilderTest < ActionView::TestCase
     FIN
     dom.gsub!(/[\n\t]/, "").gsub!(/\s{2,}/, "")
 
-   table = StandardTableBuilder.new([], self)
+   table = Crud::TableBuilder.new([], self)
     table.col('head', :class => 'left') { |e| link_to e, "/" }
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }

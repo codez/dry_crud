@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 
-describe CrudHelper do
+describe FormHelper do
 
-  include StandardHelper
-  include ListHelper
+  include UtilityHelper
+  include FormatHelper
+  include I18nHelper
   include CrudTestHelper
-
 
   before(:all) do
     reset_db
@@ -16,81 +16,23 @@ describe CrudHelper do
 
   after(:all) { reset_db }
 
-
-  describe "#crud_table" do
-    let(:entries) { CrudTestModel.all }
-
-    context "default" do
-      subject do
-        with_test_routing { crud_table }
-      end
-
-      it "has 7 rows" do
-        subject.scan(REGEXP_ROWS).size.should == 7
-      end
-
-      it "has 13 sort headers" do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 13
-      end
-
-      it "has 12 action cells" do
-        subject.scan(REGEXP_ACTION_CELL).size.should == 12
+  describe "#standard_form" do
+    subject do
+      with_test_routing do
+        capture { standard_form(entry, :html => {:class => 'special'}) {|f| f.labeled_input_fields :name, :birthdate } }
       end
     end
 
-    context "with custom attrs" do
-      subject do
-        with_test_routing { crud_table(:name, :children, :companion_id) }
-      end
+    context "for existing entry" do
+      let(:entry) { crud_test_models(:AAAAA) }
 
-      it "has 3 sort headers" do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 3
-      end
-    end
-
-    context "with custom block" do
-      subject do
-        with_test_routing do
-          crud_table do |t|
-            t.attrs :name, :children, :companion_id
-            t.col("head") {|e| content_tag :span, e.income.to_s }
-          end
-        end
-      end
-
-      it "has 4 headers" do
-        subject.scan(REGEXP_HEADERS).size.should == 6
-      end
-
-      it "has 6 custom col spans" do
-        subject.scan(/<span>.+?<\/span>/m).size.should == 6
-      end
-
-      it "has 12 action cells" do
-        subject.scan(REGEXP_ACTION_CELL).size.should == 12
-      end
-    end
-
-    context "with custom attributes and block" do
-      subject do
-        with_test_routing do
-          crud_table(:name, :children, :companion_id) do |t|
-            t.col("head") {|e| content_tag :span, e.income.to_s }
-          end
-        end
-      end
-
-      it "has 3 sort headers" do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 3
-      end
-
-      it "has 6 custom col spans" do
-        subject.scan(/<span>.+?<\/span>/m).size.should == 6
-      end
-
-      it "has 12 action cells" do
-        subject.scan(REGEXP_ACTION_CELL).size.should == 12
-      end
+      it { should match(/form .*?action="\/crud_test_models\/#{entry.id}" .?class="special form-horizontal" .*?method="post"/) }
+      it { should match(/input .*?name="_method" .*?type="hidden" .*?value="(put|patch)"/) }
+      it { should match(/input .*?name="crud_test_model\[name\]" .*?type="text" .*?value="AAAAA"/) }
+      it { should match(/select .*?name="crud_test_model\[birthdate\(1i\)\]"/) }
+      it { should match(/option selected="selected" value="1910">1910<\/option>/) }
+      it { should match(/option selected="selected" value="1">January<\/option>/) }
+      it { should match(/option selected="selected" value="1">1<\/option>/) }
     end
   end
 
@@ -115,18 +57,18 @@ describe CrudHelper do
 
   describe "#crud_form" do
 
-    context "for existing entry" do
-      subject do
-        with_test_routing do
-          capture do
-            crud_form(entry,
-                      :name, :children, :birthdate, :human,
-                      :cancel_url => "/somewhere",
-                      :html => {:class => 'special'})
-          end
+    subject do
+      with_test_routing do
+        capture do
+          crud_form(entry,
+                    :name, :children, :birthdate, :human,
+                    :cancel_url => "/somewhere",
+                    :html => {:class => 'special'})
         end
       end
+    end
 
+    context "for existing entry" do
       let(:entry) { crud_test_models(:AAAAA) }
 
       it { should match(/form .*?action="\/crud_test_models\/#{entry.id}" .?class="special form-horizontal" .*?method="post"/) }
@@ -140,6 +82,19 @@ describe CrudHelper do
       it { should match(/input .*?name="crud_test_model\[human\]" .*?type="checkbox"/) }
       it { should match(/button .*?type="submit">Save<\/button>/) }
       it { should match(/a .*href="\/somewhere".*>Cancel<\/a>/) }
+    end
+
+    context "for invalid entry" do
+      let(:entry) do
+        e = crud_test_models(:AAAAA)
+        e.name = nil
+        e.valid?
+        e
+      end
+
+      it { should match(/div[^>]* id='error_explanation'/) }
+      it { should match(/div class="control-group error"\>.*?\<input .*?name="crud_test_model\[name\]" .*?type="text"/) }
+      it { should match(/input .*?name="_method" .*?type="hidden" .*?value="(put|patch)"/) }
     end
   end
 

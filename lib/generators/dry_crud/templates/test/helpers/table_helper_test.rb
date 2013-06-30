@@ -1,17 +1,46 @@
 require 'test_helper'
-require 'crud_test_model'
-require 'custom_assertions'
+require 'support/custom_assertions'
+require 'support/crud_test_model'
 
-class ListHelperTest < ActionView::TestCase
+class TableHelperTest < ActionView::TestCase
 
-  include StandardHelper
-  include CrudTestHelper
+  include UtilityHelper
+  include FormatHelper
+  include I18nHelper
   include CustomAssertions
-
-  attr_reader :entries
+  include CrudTestHelper
 
   setup :reset_db, :setup_db, :create_test_data
   teardown :reset_db
+
+  attr_reader :entries
+
+  def format_size(obj)
+    "#{f(obj.size)} items"
+  end
+
+  def format_string_size(obj)
+    "#{f(obj.size)} chars"
+  end
+
+  test "empty table should render message" do
+    result = table([]) { }
+    assert result.html_safe?
+    assert_dom_equal "<div class='table'>No entries found.</div>", result
+  end
+
+  test "non empty table should render table" do
+    result = table(['foo', 'bar']) {|t| t.attrs :size, :upcase }
+    assert result.html_safe?
+    assert_match(/^\<table.*\<\/table\>$/, result)
+  end
+
+  test "table with attrs" do
+    expected = Crud::TableBuilder.table(['foo', 'bar'], self) { |t| t.attrs :size, :upcase }
+    actual = table(['foo', 'bar'], :size, :upcase)
+    assert actual.html_safe?
+    assert_equal expected, actual
+  end
 
   test "standard list table" do
     @entries = CrudTestModel.all
@@ -117,7 +146,67 @@ class ListHelperTest < ActionView::TestCase
   test "default attributes do not include id" do
     assert_equal [:name, :whatever, :children, :companion_id, :rating, :income,
                   :birthdate, :gets_up_at, :last_seen, :human, :remarks,
-                  :created_at, :updated_at], default_attrs
+                  :created_at, :updated_at], default_crud_attrs
+  end
+
+  test "standard crud table" do
+    @entries = CrudTestModel.all
+
+    t = with_test_routing do
+      crud_table
+    end
+
+    assert_count 7, REGEXP_ROWS, t
+    assert_count 13, REGEXP_SORT_HEADERS, t
+    assert_count 12, REGEXP_ACTION_CELL, t      # edit, delete links
+  end
+
+  test "custom crud table with attributes" do
+    @entries = CrudTestModel.all
+
+    t = with_test_routing do
+      crud_table :name, :children, :companion_id
+    end
+
+    assert_count 7, REGEXP_ROWS, t
+    assert_count 3, REGEXP_SORT_HEADERS, t
+    assert_count 12, REGEXP_ACTION_CELL, t      # edit, delete links
+  end
+
+  test "custom crud table with block" do
+    @entries = CrudTestModel.all
+
+    t = with_test_routing do
+      crud_table do |t|
+        t.attrs :name, :children, :companion_id
+        t.col("head") {|e| content_tag :span, e.income.to_s }
+      end
+    end
+
+    assert_count 7, REGEXP_ROWS, t
+    assert_count 6, REGEXP_HEADERS, t
+    assert_count 6, /<span>.+?<\/span>/m, t
+    assert_count 12, REGEXP_ACTION_CELL, t      # edit, delete links
+  end
+
+  test "custom crud table with attributes and block" do
+    @entries = CrudTestModel.all
+
+    t = with_test_routing do
+      crud_table :name, :children, :companion_id do |t|
+        t.col("head") {|e| content_tag :span, e.income.to_s }
+      end
+    end
+
+    assert_count 7, REGEXP_ROWS, t
+    assert_count 3, REGEXP_SORT_HEADERS, t
+    assert_count 6, REGEXP_HEADERS, t
+    assert_count 6, /<span>.+?<\/span>/m, t
+    assert_count 12, REGEXP_ACTION_CELL, t      # edit, delete links
+  end
+
+  def entry
+    @entry ||= CrudTestModel.first
   end
 
 end
