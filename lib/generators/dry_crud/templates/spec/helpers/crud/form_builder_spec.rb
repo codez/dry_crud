@@ -27,6 +27,7 @@ describe 'Crud::FormBuilder' do
 
     {:name => :string_field,
      :password => :password_field,
+     :email => :email_field,
      :remarks => :text_area,
      :children => :integer_field,
      :human => :boolean_field,

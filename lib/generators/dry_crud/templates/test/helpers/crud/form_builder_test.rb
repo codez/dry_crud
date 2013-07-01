@@ -34,6 +34,11 @@ class Crud::FormBuilderTest < ActionView::TestCase
     assert form.password_field(:name).html_safe?
   end
 
+  test "input_field dispatches email attr to email_field" do
+    assert_equal form.email_field(:email), form.input_field(:email)
+    assert form.email_field(:name).html_safe?
+  end
+
   test "input_field dispatches text attr to text_area" do
     assert_equal form.text_area(:remarks), form.input_field(:remarks)
     assert form.text_area(:remarks).html_safe?

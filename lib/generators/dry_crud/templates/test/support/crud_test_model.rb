@@ -51,8 +51,8 @@ class CrudTestModelsController < CrudController #:nodoc:
   self.sort_mappings = {:chatty => 'length(remarks)'}
   self.default_sort = 'name'
 <% if Rails.version >= '4.0' -%>
-  self.permitted_attrs = [:name, :password, :whatever, :children, :companion_id, :rating, :income,
-                          :birthdate, :gets_up_at, :last_seen, :human, :remarks]
+  self.permitted_attrs = [:name, :email, :password, :whatever, :children, :companion_id,
+                          :rating, :income, :birthdate, :gets_up_at, :last_seen, :human, :remarks]
 <% end -%>
 
   before_create :possibly_redirect
@@ -205,6 +205,7 @@ module CrudTestHelper
       silence_stream(STDOUT) do
         ActiveRecord::Base.connection.create_table :crud_test_models, :force => true do |t|
           t.string   :name, :null => false, :limit => 50
+          t.string   :email
           t.string   :password
           t.string   :whatever
           t.integer  :children

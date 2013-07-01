@@ -50,7 +50,7 @@ class TableHelperTest < ActionView::TestCase
     end
 
     assert_count 7, REGEXP_ROWS, t
-    assert_count 13, REGEXP_SORT_HEADERS, t
+    assert_count 14, REGEXP_SORT_HEADERS, t
   end
 
   test "custom list table with attributes" do
@@ -107,7 +107,7 @@ class TableHelperTest < ActionView::TestCase
     end
 
     assert_count 7, REGEXP_ROWS, t
-    assert_count 12, REGEXP_SORT_HEADERS, t
+    assert_count 13, REGEXP_SORT_HEADERS, t
     assert_count 1, /<th><a .*?sort_dir=desc.*?>Children<\/a> &darr;<\/th>/, t
   end
 
@@ -123,7 +123,7 @@ class TableHelperTest < ActionView::TestCase
     end
 
     assert_count 7, REGEXP_ROWS, t
-    assert_count 12, REGEXP_SORT_HEADERS, t
+    assert_count 13, REGEXP_SORT_HEADERS, t
     assert_count 1, /<th><a .*?sort_dir=asc.*?>Children<\/a> &uarr;<\/th>/, t
   end
 
@@ -143,12 +143,6 @@ class TableHelperTest < ActionView::TestCase
     assert_count 1, /<th><a .*?sort_dir=desc.*?>Chatty<\/a> &darr;<\/th>/, t
   end
 
-  test "default attributes do not include id" do
-    assert_equal [:name, :whatever, :children, :companion_id, :rating, :income,
-                  :birthdate, :gets_up_at, :last_seen, :human, :remarks,
-                  :created_at, :updated_at], default_crud_attrs
-  end
-
   test "standard crud table" do
     @entries = CrudTestModel.all
 
@@ -157,7 +151,7 @@ class TableHelperTest < ActionView::TestCase
     end
 
     assert_count 7, REGEXP_ROWS, t
-    assert_count 13, REGEXP_SORT_HEADERS, t
+    assert_count 14, REGEXP_SORT_HEADERS, t
     assert_count 12, REGEXP_ACTION_CELL, t      # edit, delete links
   end
 

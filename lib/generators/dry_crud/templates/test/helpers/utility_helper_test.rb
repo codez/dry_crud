@@ -30,6 +30,12 @@ class UtilityHelperTest < ActionView::TestCase
     assert_equal "<span>a</span><span>b</span>", html
   end
 
+  test "default attributes do not include id and password" do
+    assert_equal [:name, :email, :whatever, :children, :companion_id, :rating, :income,
+                  :birthdate, :gets_up_at, :last_seen, :human, :remarks,
+                  :created_at, :updated_at], default_crud_attrs
+  end
+
   test "column types" do
     reset_db
     setup_db

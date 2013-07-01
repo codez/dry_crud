@@ -57,8 +57,8 @@ describe TableHelper do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
 
-      it "has 13 sortable headers" do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 13
+      it "has 14 sortable headers" do
+        subject.scan(REGEXP_SORT_HEADERS).size.should == 14
       end
     end
 
@@ -135,8 +135,8 @@ describe TableHelper do
         with_test_routing { list_table }
       end
 
-      it "has 12 sortable headers" do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 12
+      it "has 13 sortable headers" do
+        subject.scan(REGEXP_SORT_HEADERS).size.should == 13
       end
 
       it "has 1 ascending sort headers" do
@@ -150,8 +150,8 @@ describe TableHelper do
         with_test_routing { list_table }
       end
 
-      it "has 12 sortable headers" do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 12
+      it "has 13 sortable headers" do
+        subject.scan(REGEXP_SORT_HEADERS).size.should == 13
       end
 
       it "has 1 descending sort headers" do
@@ -187,8 +187,8 @@ describe TableHelper do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
 
-      it "has 13 sort headers" do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 13
+      it "has 14 sort headers" do
+        subject.scan(REGEXP_SORT_HEADERS).size.should == 14
       end
 
       it "has 12 action cells" do
