@@ -45,12 +45,6 @@ class FormatHelperTest < ActionView::TestCase
     assert_dom_equal "<div class='labeled'> <label>Size</label> <div class='value'>3 chars</div> </div>", result.squish
   end
 
-  test "format Fixnums" do
-    assert_equal "0", f(0)
-    assert_equal "10", f(10)
-    assert_equal "10,000,000", f(10000000)
-  end
-
   test "format Floats" do
     assert_equal "1.000", f(1.0)
     assert_equal "1.200", f(1.2)
@@ -90,7 +84,7 @@ class FormatHelperTest < ActionView::TestCase
     assert_equal '9', format_type(m, :children)
 
     m.children = 10000
-    assert_equal '10,000', format_type(m, :children)
+    assert_equal '10000', format_type(m, :children)
   end
 
   test "format float column" do

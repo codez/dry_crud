@@ -21,6 +21,8 @@ class CreatePeopleAndCities < ActiveRecord::Migration
       t.datetime :last_seen
       t.text :remarks
       t.boolean :cool, :null => false, :default => false
+      t.string :email
+      t.string :password
     end
   end
 end

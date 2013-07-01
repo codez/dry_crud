@@ -36,7 +36,7 @@ class TableHelperTest < ActionView::TestCase
   end
 
   test "table with attrs" do
-    expected = Crud::TableBuilder.table(['foo', 'bar'], self) { |t| t.attrs :size, :upcase }
+    expected = Crud::TableBuilder.table(['foo', 'bar'], self, :class => 'table') { |t| t.attrs :size, :upcase }
     actual = table(['foo', 'bar'], :size, :upcase)
     assert actual.html_safe?
     assert_equal expected, actual

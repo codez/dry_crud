@@ -50,7 +50,7 @@ describe 'Crud::TableBuilder' do
 
   specify "two x two table" do
     dom = <<-FIN
-      <table class="table">
+      <table>
       <thead>
       <tr><th>Upcase</th><th>Size</th></tr>
       </thead>
@@ -69,9 +69,9 @@ describe 'Crud::TableBuilder' do
 
   specify "table with before and after cells" do
     dom = <<-FIN
-      <table class="table">
+      <table>
       <thead>
-      <tr><th>head</th><th>Upcase</th><th>Size</th><th></th></tr>
+      <tr><th class="left">head</th><th>Upcase</th><th>Size</th><th></th></tr>
       </thead>
       <tbody>
       <tr>
@@ -100,9 +100,9 @@ describe 'Crud::TableBuilder' do
 
   specify "empty entries collection renders empty table" do
     dom = <<-FIN
-      <table class="table">
+      <table>
       <thead>
-      <tr><th>head</th><th>Upcase</th><th>Size</th><th></th></tr>
+      <tr><th class="left">head</th><th>Upcase</th><th>Size</th><th></th></tr>
       </thead>
       <tbody>
       </tbody>

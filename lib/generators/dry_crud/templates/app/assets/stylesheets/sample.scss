@@ -38,7 +38,7 @@ h1 {
   background-color: #F8F8F8;
 }
 
-.table tr:nth-child(even) { 
+.table tr:nth-child(even) {
   background-color: #F0F0F0;
 }
 
@@ -81,7 +81,6 @@ table.table {
 div.table {}
 
 table.table th {
-  text-align: left;  
   background-color: $theme_color;
   color: white;
   font-weight: bold;
@@ -89,12 +88,12 @@ table.table th {
 }
 
 table.table th a {
-  color: white;  
+  color: white;
   text-decoration: none;
 }
 
 table.table td {
-  padding: 2px 4px;  
+  padding: 2px 4px;
 }
 
 label {

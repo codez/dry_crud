@@ -60,7 +60,7 @@ class Crud::TableBuilderTest < ActionView::TestCase
 
   test "two x two table" do
     dom = <<-FIN
-      <table class="table">
+      <table>
       <thead>
       <tr><th>Upcase</th><th>Size</th></tr>
       </thead>
@@ -79,9 +79,9 @@ class Crud::TableBuilderTest < ActionView::TestCase
 
   test "table with before and after cells" do
     dom = <<-FIN
-      <table class="table">
+      <table>
       <thead>
-      <tr><th>head</th><th>Upcase</th><th>Size</th><th></th></tr>
+      <tr><th class='left'>head</th><th>Upcase</th><th>Size</th><th></th></tr>
       </thead>
       <tbody>
       <tr>
@@ -111,9 +111,9 @@ class Crud::TableBuilderTest < ActionView::TestCase
 
   test "empty entries collection renders empty table" do
     dom = <<-FIN
-      <table class="table">
+      <table>
       <thead>
-      <tr><th>head</th><th>Upcase</th><th>Size</th><th></th></tr>
+      <tr><th class='left'>head</th><th>Upcase</th><th>Size</th><th></th></tr>
       </thead>
       <tbody>
       </tbody>

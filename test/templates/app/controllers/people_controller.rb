@@ -8,7 +8,8 @@ class PeopleController < AjaxController
 
   if respond_to?(:permitted_attrs)
     self.permitted_attrs = [:name, :children, :city_id, :rating, :income,
-                            :birthdate, :gets_up_at, :last_seen, :remarks, :cool]
+                            :birthdate, :gets_up_at, :last_seen, :remarks,
+                            :cool, :email, :password]
   end
 
   private

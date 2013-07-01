@@ -55,16 +55,6 @@ describe FormatHelper do
 
   describe "#f" do
 
-    context "Fixnums" do
-      it "should print small values unchanged" do
-        f(10).should == '10'
-      end
-
-      it "should print large values with delimiters" do
-        f(10000000).should == '10,000,000'
-      end
-    end
-
     context "Floats" do
       it "should add two digits" do
         f(1.0).should == '1.000'
@@ -159,7 +149,7 @@ describe FormatHelper do
 
     it "should format integers" do
       model.children = 10000
-      format_type(model, :children).should == '10,000'
+      format_type(model, :children).should == '10000'
     end
 
     it "should format floats" do

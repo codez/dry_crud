@@ -36,6 +36,8 @@ module Crud
         has_many_field(attr, html_options)
       elsif attr.to_s.include?('password')
         password_field(attr, html_options)
+      elsif attr.to_s.include?('email')
+        email_field(attr, html_options)
       else
         custom_field_method = :"#{type}_field"
         if respond_to?(custom_field_method)
@@ -57,6 +59,18 @@ module Crud
       html_options[:maxlength] ||= column_property(@object, attr, :limit)
       html_options[:size] ||= 30
       text_field(attr, html_options)
+    end
+
+    # Render a text_area.
+    def text_area(attr, html_options = {})
+      html_options[:rows] ||= 5
+      super(attr, html_options)
+    end
+
+    # Render a email field.
+    def email_field(attr, html_options = {})
+      html_options[:size] ||= 30
+      super(attr, html_options)
     end
 
     # Render an integer field.
@@ -108,7 +122,7 @@ module Crud
                           list,
                           :id,
                           :to_s,
-                          html_options[:multiple] ? {} : select_options(attr),
+                          select_options(attr, html_options),
                           html_options)
       else
         ta(:none_available, association(@object, attr))
@@ -185,7 +199,7 @@ module Crud
     #   labeled(:attr, content)
     #   labeled(:attr, 'Caption') { #content }
     #   labeled(:attr, 'Caption', content)
-    def labeled(attr, caption_or_content = nil, content = nil, &block)
+    def labeled(attr, caption_or_content = nil, content = nil, html_options = {}, &block)
       if block_given?
         content = capture(&block)
       elsif content.nil?
@@ -193,19 +207,31 @@ module Crud
         caption_or_content = nil
       end
       caption_or_content ||= captionize(attr, @object.class)
+      add_css_class(html_options, 'controls')
 
-      content_tag(:div, :class => "control-group#{' error' if @object.errors.has_key?(attr)}") do
+      content_tag(:div, :class => "control-group#{' error' if errors_on?(attr)}") do
         label(attr, caption_or_content, :class => 'control-label') +
-        content_tag(:div, content, :class => 'controls')
+        content_tag(:div, content, html_options)
       end
     end
 
     # Depending if the given attribute must be present, return
     # only an initial selection prompt or a blank option, respectively.
-    def select_options(attr)
-      assoc = association(@object, attr)
-      required?(attr) ? { :prompt => ta(:please_select, assoc) } :
-                        { :include_blank => ta(:no_entry, assoc) }
+    def select_options(attr, options = {})
+      if options[:multiple]
+        {}
+      elsif prompt = options.delete(:prompt)
+        {:prompt => prompt}
+      elsif blank = options.delete(:include_blank)
+        {:include_blank => blank}
+      else
+        assoc = association(@object, attr)
+        if required?(attr)
+          { :prompt => ta(:please_select, assoc) }
+        else
+          { :include_blank => ta(:no_entry, assoc) }
+        end
+      end
     end
 
     private
@@ -246,6 +272,11 @@ module Crud
         v.kind == :presence &&
         !v.options.key?(:if) && !v.options.key?(:unless)
       end
+    end
+
+    def errors_on?(attr)
+      attr_plain, attr_id = assoc_and_id_attr(attr)
+      @object.errors.has_key?(attr_plain.to_sym) || @object.errors.has_key?(attr_id.to_sym)
     end
 
     def labeled_field_method?(name)

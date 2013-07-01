@@ -9,9 +9,9 @@ module FormatHelper
   # Formats a basic value based on its Ruby class.
   def f(value)
     case value
-      when Fixnum then number_with_delimiter(value)
-      when Float, BigDecimal then number_with_precision(value, :precision => t('number.format.precision'),
-                                                               :delimiter => t('number.format.delimiter'))
+      when Float, BigDecimal then
+        number_with_precision(value, :precision => t('number.format.precision'),
+                                     :delimiter => t('number.format.delimiter'))
       when Date   then l(value)
       when Time   then l(value, :format => :time)
       when true   then t(:"global.yes")

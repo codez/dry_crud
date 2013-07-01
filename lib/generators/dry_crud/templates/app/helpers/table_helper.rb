@@ -11,7 +11,9 @@ module TableHelper
   def table(entries, *attrs, &block)
     entries.to_a # force evaluation of relations
     if entries.present?
-      Crud::TableBuilder.table(entries, self, attrs.extract_options!) do |t|
+      options = attrs.extract_options!
+      add_css_class(options, 'table')
+      Crud::TableBuilder.table(entries, self, options) do |t|
         t.attrs(*attrs)
         yield t if block_given?
       end

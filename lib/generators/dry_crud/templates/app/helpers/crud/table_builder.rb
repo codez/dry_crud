@@ -56,7 +56,6 @@ module Crud
 
     # Renders the table as HTML.
     def to_html
-      add_css_class options, 'table'
       content_tag :table, options do
         content_tag(:thead, html_header) +
         content_tag_nested(:tbody, entries) { |e| html_row(e) }
@@ -66,7 +65,7 @@ module Crud
     # Returns css classes used for alignment of the cell data.
     # Based on the column type of the attribute.
     def align_class(attr)
-      entry = entries.first
+      entry = entry_class.new rescue nil
       case column_type(entry, attr)
         when :integer, :float, :decimal
           'right' unless association(entry, attr, :belongs_to)
@@ -109,7 +108,7 @@ module Crud
       end
 
       def html_header
-        content_tag :th, header
+        content_tag :th, header, html_options
       end
 
       def html_cell(entry)

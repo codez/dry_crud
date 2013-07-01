@@ -156,7 +156,7 @@ end
 #:nodoc:
 REGEXP_ROWS = /<tr.+?<\/tr>/m  #:nodoc:
 REGEXP_HEADERS = /<th.+?<\/th>/m  #:nodoc:
-REGEXP_SORT_HEADERS = /<th><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m  #:nodoc:
+REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m  #:nodoc:
 REGEXP_ACTION_CELL = /<td class=\"action\"><a .*?href.+?<\/a><\/td>/m  #:nodoc:
 
 
