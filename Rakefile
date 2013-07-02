@@ -2,6 +2,7 @@ require 'rubygems'
 require 'rake/testtask'
 require 'rspec/core/rake_task'
 require 'rubygems/package_task'
+require 'sdoc'
 require 'rdoc/task'
 
 load 'dry_crud.gemspec'
@@ -179,14 +180,16 @@ end
 
 # :rdoc task
 Rake::RDocTask.new do |rdoc|
-  rdoc.title  = 'Dry Crud'
-  rdoc.options << '--line-numbers'
+  rdoc.title  = 'dry_crud'
+  rdoc.options << '--line-numbers' << '--fmt' << 'sdoc'
   rdoc.rdoc_files.include(*FileList.new('*') do |list|
     list.exclude(/(^|[^.a-z])[a-z]+/)
     list.exclude('TODO')
     end.to_a)
   rdoc.rdoc_files.include('lib/generators/dry_crud/templates/**/*.rb')
   rdoc.rdoc_files.exclude('lib/generators/dry_crud/templates/**/*_test.rb')
+  rdoc.rdoc_files.exclude('lib/generators/dry_crud/templates/**/*_spec.rb')
+  rdoc.rdoc_files.exclude('lib/generators/dry_crud/templates/**/*_examples.rb')
   rdoc.rdoc_files.exclude('TODO')
 
   rdoc.rdoc_dir = 'rdoc'

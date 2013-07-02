@@ -16,17 +16,17 @@ describe FormHelper do
 
   after(:all) { reset_db }
 
-  describe "#standard_form" do
+  describe "#plain_form" do
     subject do
       with_test_routing do
-        capture { standard_form(entry, :html => {:class => 'special'}) {|f| f.labeled_input_fields :name, :birthdate } }
+        capture { plain_form(entry, :html => {:class => 'special'}) {|f| f.labeled_input_fields :name, :birthdate } }
       end
     end
 
     context "for existing entry" do
       let(:entry) { crud_test_models(:AAAAA) }
 
-      it { should match(/form .*?action="\/crud_test_models\/#{entry.id}" .?class="special form-horizontal" .*?method="post"/) }
+      it { should match(/form .*?action="\/crud_test_models\/#{entry.id}" .*?class="special form-horizontal" .*?method="post"/) }
       it { should match(/input .*?name="_method" .*?type="hidden" .*?value="(put|patch)"/) }
       it { should match(/input .*?name="crud_test_model\[name\]" .*?type="text" .*?value="AAAAA"/) }
       it { should match(/select .*?name="crud_test_model\[birthdate\(1i\)\]"/) }
@@ -36,34 +36,15 @@ describe FormHelper do
     end
   end
 
-  describe "#entry_form" do
-    let(:entry) { CrudTestModel.first }
-    subject do
-      with_test_routing { entry_form }
-    end
-
-    it { should match /form .*?action="\/crud_test_models\/#{entry.id}"/ }
-    it { should match /input .*?name="crud_test_model\[name\]" .*?type="text"/ }
-    it { should match /input .*?name="crud_test_model\[whatever\]" .*?type="text"/ }
-    it { should match /input .*?name="crud_test_model\[children\]" .*?type="number"/ }
-    it { should match /input .*?name="crud_test_model\[rating\]" .*?type="number"/ }
-    it { should match /input .*?name="crud_test_model\[income\]" .*?type="number"/ }
-    it { should match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/ }
-    it { should match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/ }
-    it { should match /select .*?name="crud_test_model\[companion_id\]"/ }
-    it { should match /textarea .*?name="crud_test_model\[remarks\]"/ }
-    it { should match(/a .*href="\/crud_test_models\/#{entry.id}\?returning=true".*>Cancel<\/a>/) }
-  end
-
-  describe "#crud_form" do
+  describe "#standard_form" do
 
     subject do
       with_test_routing do
         capture do
-          crud_form(entry,
-                    :name, :children, :birthdate, :human,
-                    :cancel_url => "/somewhere",
-                    :html => {:class => 'special'})
+          standard_form(entry,
+                        :name, :children, :birthdate, :human,
+                        :cancel_url => "/somewhere",
+                        :html => {:class => 'special'})
         end
       end
     end
@@ -96,6 +77,25 @@ describe FormHelper do
       it { should match(/div class="control-group error"\>.*?\<input .*?name="crud_test_model\[name\]" .*?type="text"/) }
       it { should match(/input .*?name="_method" .*?type="hidden" .*?value="(put|patch)"/) }
     end
+  end
+
+  describe "#crud_form" do
+    let(:entry) { CrudTestModel.first }
+    subject do
+      with_test_routing { crud_form }
+    end
+
+    it { should match /form .*?action="\/crud_test_models\/#{entry.id}"/ }
+    it { should match /input .*?name="crud_test_model\[name\]" .*?type="text"/ }
+    it { should match /input .*?name="crud_test_model\[whatever\]" .*?type="text"/ }
+    it { should match /input .*?name="crud_test_model\[children\]" .*?type="number"/ }
+    it { should match /input .*?name="crud_test_model\[rating\]" .*?type="number"/ }
+    it { should match /input .*?name="crud_test_model\[income\]" .*?type="number"/ }
+    it { should match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/ }
+    it { should match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/ }
+    it { should match /select .*?name="crud_test_model\[companion_id\]"/ }
+    it { should match /textarea .*?name="crud_test_model\[remarks\]"/ }
+    it { should match(/a .*href="\/crud_test_models\/#{entry.id}\?returning=true".*>Cancel<\/a>/) }
   end
 
 end

@@ -1,11 +1,11 @@
 # Defines forms to edit models. The helper methods come in different granularities:
-# * <tt>#standard_form</tt> - Form using Crud::FormBuilder.
-# * <tt>#crud_form</tt> - standard_form for a given entry and attributes with error messages and save and cancel buttons.
-# * <tt>#entry_form</tt> - crud_form for the current #entry, with the given attributes or default.
+# * #plain_form - A form using Crud::FormBuilder.
+# * #standard_form - A #plain_form for a given object and attributes with error messages and save and cancel buttons.
+# * #crud_form - A #standard_form for the current +entry+, with the given attributes or default.
 module FormHelper
 
   # Renders a form using Crud::FormBuilder.
-  def standard_form(object, options = {}, &block)
+  def plain_form(object, options = {}, &block)
     options[:html] ||= {}
     add_css_class(options[:html], 'form-horizontal')
     options[:builder] ||= Crud::FormBuilder
@@ -19,8 +19,8 @@ module FormHelper
   # If a block is given, custom input fields may be rendered and attrs is ignored.
   # Before the input fields, the error messages are rendered, if present.
   # An options hash may be given as the last argument.
-  def crud_form(object, *attrs, &block)
-    standard_form(object, attrs.extract_options!) do |form|
+  def standard_form(object, *attrs, &block)
+    plain_form(object, attrs.extract_options!) do |form|
       content = form.error_messages
 
       if block_given?
@@ -37,11 +37,11 @@ module FormHelper
   # Renders a crud form for the current entry with default_crud_attrs or the
   # given attribute array. An options hash may be given as the last argument.
   # If a block is given, a custom form may be rendered and attrs is ignored.
-  def entry_form(*attrs, &block)
+  def crud_form(*attrs, &block)
     options = attrs.extract_options!
     attrs = default_crud_attrs - [:created_at, :updated_at] if attrs.blank?
     attrs << options
-    crud_form(path_args(entry), *attrs, &block)
+    standard_form(path_args(entry), *attrs, &block)
   end
 
 end

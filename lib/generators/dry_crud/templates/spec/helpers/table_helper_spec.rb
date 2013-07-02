@@ -15,9 +15,9 @@ describe TableHelper do
 
   after(:all) { reset_db }
 
-  describe "#table" do
+  describe "#plain_table" do
     context "with empty data" do
-      subject { table([]) }
+      subject { plain_table([]) }
 
       it { should be_html_safe }
 
@@ -27,7 +27,7 @@ describe TableHelper do
     end
 
     context "with data" do
-      subject { table(['foo', 'bar'], :size) {|t| t.attrs :upcase } }
+      subject { plain_table(['foo', 'bar'], :size) {|t| t.attrs :upcase } }
 
       it { should be_html_safe }
 

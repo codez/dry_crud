@@ -24,20 +24,20 @@ class TableHelperTest < ActionView::TestCase
   end
 
   test "empty table should render message" do
-    result = table([]) { }
+    result = plain_table([]) { }
     assert result.html_safe?
     assert_dom_equal "<div class='table'>No entries found.</div>", result
   end
 
   test "non empty table should render table" do
-    result = table(['foo', 'bar']) {|t| t.attrs :size, :upcase }
+    result = plain_table(['foo', 'bar']) {|t| t.attrs :size, :upcase }
     assert result.html_safe?
     assert_match(/^\<table.*\<\/table\>$/, result)
   end
 
   test "table with attrs" do
     expected = Crud::TableBuilder.table(['foo', 'bar'], self, :class => 'table') { |t| t.attrs :size, :upcase }
-    actual = table(['foo', 'bar'], :size, :upcase)
+    actual = plain_table(['foo', 'bar'], :size, :upcase)
     assert actual.html_safe?
     assert_equal expected, actual
   end

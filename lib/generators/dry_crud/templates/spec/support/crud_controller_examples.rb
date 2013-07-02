@@ -101,7 +101,7 @@ shared_examples "crud controller" do |options|
         let(:params) { {:id => 9999 } }
 
         it "should raise RecordNotFound", :perform_request => false do
-          expect { perform_request }.to raise_error(ActiveRecord::RecordNotFound)
+          expect { perform_request }.to raise_error(ActiveRecord::RecordNotFound) #:nodoc:
         end
       end
     end

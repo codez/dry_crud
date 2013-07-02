@@ -1,11 +1,11 @@
 
-Thank you for using dry_crud. Feel free to adapt all generated classes to 
-your needs. To integrate dry_crud into your code, only a few additions are 
+Thank you for using dry_crud. Feel free to adapt all generated classes to
+your needs. To integrate dry_crud into your code, only a few additions are
 required:
 
- * For uniform CRUD functionallity, just subclass your controllers from 
-   CrudController. 
- * Overwrite the :to_s method of your models for a human-friendly
+ * For uniform CRUD functionallity, just subclass your controllers from
+   CrudController.
+ * Overwrite the #to_s method of your models for a human-friendly
    representation.
 
 

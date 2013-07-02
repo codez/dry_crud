@@ -1,5 +1,5 @@
 - remote ||= false
-= entry_form :remote => remote do |f|
+= crud_form :remote => remote do |f|
   = f.labeled(:name, 'Called') do
     = f.input_field :name
   = f.labeled_input_field :person_ids

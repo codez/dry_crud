@@ -77,7 +77,7 @@ module CustomAssertions
   # #build_message. Prints ActiveRecord objects in a simpler format.
   # Only works for Ruby 1.9
   def mu_pp(obj)
-    if obj.is_a?(ActiveRecord::Base)
+    if obj.is_a?(ActiveRecord::Base) #:nodoc:
       obj.to_s
     else
       super

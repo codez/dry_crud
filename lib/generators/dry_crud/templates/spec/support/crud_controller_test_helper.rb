@@ -66,6 +66,7 @@ module CrudControllerTestHelper
                &block)
     end
 
+    # Is the current context part of the skip list.
     def skip?(options, *contexts)
       options ||= {}
       contexts = Array(contexts).flatten
