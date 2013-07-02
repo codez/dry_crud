@@ -323,7 +323,7 @@ app/assets/images/action/*.png:: Some sample action icons from the {Open Icon Li
 
 === Tests:
 
-{test/support/crud_test_model.rb}[http://codez.ch/dry_crud?q=CrudTestHelper]:: A dummy model to run CRUD tests against.
+test/support/crud_test_model.rb:: A dummy model to run CRUD tests against.
 
 {test/support/custom_assertions.rb}[http://codez.ch/dry_crud?q=CustomAssertions]:: A handful of convenient assertions. Include this module into your <tt>test_helper.rb</tt> file.
 
@@ -338,9 +338,9 @@ test/helpers/*_test.rb:: Tests for the provided helper implementations and a gre
 
 spec/support/crud_controller_examples.rb:: A whole set of shared exampled to include into your controller specs. See <tt>spec/controllers/crud_test_models_controller_spec.rb</tt> for usage. So for each new CRUD controller, you get all the basic specs for free.
 
-spec/support/crud_controller_test_helper.rb:: Convenience methods used by the crud controller examples.
+{spec/support/crud_controller_test_helper.rb}[http://codez.ch/dry_crud?q=CrudControllerTestHelper::ClassMethods]:: Convenience methods used by the crud controller examples.
 
-{spec/support/crud_test_model.rb}[http://codez.ch/dry_crud?q=CrudTestHelper]:: A dummy model to run CRUD tests against.
+spec/support/crud_test_model.rb:: A dummy model to run CRUD tests against.
 
 spec/controllers/crud_test_models_controller_spec.rb:: Controller specs to test the basic CrudController functionality.
 

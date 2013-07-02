@@ -1,6 +1,9 @@
 # Abstract controller providing basic CRUD actions.
 # This implementation mainly follows the one of the Rails scaffolding
-# controller and responses to HTML and JSON requests. Some enhancements were made to ease extendability.
+# controller and responds to HTML and JSON requests.
+# Some enhancements were made to ease extendability.
+# The current model entry is available in the view as an instance variable
+# named after the +model_class+ or in the helper method +entry+.
 # Several protected helper methods are there to be (optionally) overriden by subclasses.
 # With the help of additional callbacks, it is possible to hook into the action procedures without
 # overriding the entire method.
@@ -122,7 +125,7 @@ class CrudController < ListController
     "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
   end
 
-  # Url of the index page to return to
+  # Url of the index page to return to.
   def index_url
     polymorphic_url(path_args(model_class), :returning => true)
   end
@@ -175,7 +178,7 @@ class CrudController < ListController
     end
   end
 
-  # Custom Responder that handles the controller's path_args.
+  # Custom Responder that handles the controller's +path_args+.
   # An additional :success option is used to handle action callback chain halts.
   class Responder < ActionController::Responder
 

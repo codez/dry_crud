@@ -1,9 +1,10 @@
-# Abstract controller providing a basic list action.
-# This action lists all entries of a certain model and provides functionality to
+# Abstract controller providing a basic list action (#index).
+# The action lists all entries of a certain model and provides functionality to
 # search and sort this list.
-# Furthermore, it remembers the last search and sort parameters. When the action
-# is called with a param returning=true, these parameters are reused to present
-# the user the same list as he left it.
+# Furthermore, it remembers the last search and sort parameters after the
+# user returns from a displayed or edited entry.
+# The loaded model entries are available in the view as an instance variable
+# named after the +model_class+ or by the helper method +entries+.
 class ListController < ApplicationController
 
   helper_method :model_class, :models_label, :entries, :path_args
@@ -31,7 +32,7 @@ class ListController < ApplicationController
   end
 
   # The base relation used to filter the entries.
-  # This method may be adapted as long it returns an ActiveRecord::Relation.
+  # This method may be adapted as long it returns an <tt>ActiveRecord::Relation</tt>.
   def list_entries
     model_scope
   end
@@ -53,7 +54,7 @@ class ListController < ApplicationController
     last
   end
 
-  # Get the instance variable named after the model_class.
+  # Get the instance variable named after the +model_class+.
   # If the collection variable is required, pass true as the second argument.
   def get_model_ivar(plural = false)
     name = ivar_name(model_class)
@@ -95,18 +96,19 @@ class ListController < ApplicationController
 
   end
 
-  # Provide before_render callbacks.
+  # Provide +before_render+ callbacks.
   module Callbacks
+    extend ActiveSupport::Concern
 
-    def self.included(controller)
-      controller.extend ActiveModel::Callbacks
-      controller.extend ClassMethods
-      controller.alias_method_chain :render, :callbacks
+    included do
+      extend ActiveModel::Callbacks
 
-      controller.define_render_callbacks :index
+      alias_method_chain :render, :callbacks
+
+      define_render_callbacks :index
     end
 
-    # Helper method to run before_render callbacks and render the action.
+    # Helper method to run +before_render+ callbacks and render the action.
     # If a callback renders or redirects, the action is not rendered.
     def render_with_callbacks(*args, &block)
       options = _normalize_render(*args, &block)
@@ -141,16 +143,18 @@ class ListController < ApplicationController
   include Callbacks
 
   # The search functionality for the index table.
-  # Extracted into an own module for convenience.
+  # Define an array of searchable columns in your subclassing controllers
+  # using the class attribute +search_columns+.
   module Search
-    def self.included(controller)
-      # Define an array of searchable columns in your subclassing controllers.
-      controller.class_attribute :search_columns
-      controller.search_columns = []
+    extend ActiveSupport::Concern
 
-      controller.helper_method :search_support?
+    included do
+      class_attribute :search_columns
+      self.search_columns = []
 
-      controller.alias_method_chain :list_entries, :search
+      helper_method :search_support?
+
+      alias_method_chain :list_entries, :search
     end
 
     private
@@ -184,7 +188,8 @@ class ListController < ApplicationController
   include Search
 
   # Sort functionality for the index table.
-  # Extracted into an own module for convenience.
+  # Define a default sort expression that is always appended to the
+  # current sort params with the class attribute +default_sort+.
   module Sort
     extend ActiveSupport::Concern
 
@@ -192,8 +197,6 @@ class ListController < ApplicationController
       class_attribute :sort_mappings_with_indifferent_access
       self.sort_mappings = {}
 
-      # Define a default sort expression that is always appended to the
-      # current sort params
       class_attribute :default_sort
 
       helper_method :sortable?
@@ -204,7 +207,7 @@ class ListController < ApplicationController
     module ClassMethods
       # Define a map of (virtual) attributes to SQL order expressions.
       # May be used for sorting table columns that do not appear directly
-      # in the database table. E.g., map :city_id => 'cities.name' to
+      # in the database table. E.g., map :city_id => 'cities.name' to
       # sort the displayed city names.
       def sort_mappings=(hash)
         self.sort_mappings_with_indifferent_access = hash.with_indifferent_access
@@ -247,17 +250,17 @@ class ListController < ApplicationController
   # Remembers certain params of the index action in order to return
   # to the same list after an entry was viewed or edited.
   # If the index is called with a param :returning, the remembered params
-  # will be re-used.
-  # Extracted into an own module for convenience.
+  # will be re-used to present the user the same list as she left it.
+  # Define a list of param keys that should be remembered for the list action
+  # with the class attribute +remember_params+.
   module Memory
+    extend ActiveSupport::Concern
 
-    # Adds the :remember_params class attribute and a before filter to the index action.
-    def self.included(controller)
-      # Define a list of param keys that should be remembered for the list action.
-      controller.class_attribute :remember_params
-      controller.remember_params = [:q, :sort, :sort_dir, :page]
+    included do
+      class_attribute :remember_params
+      self.remember_params = [:q, :sort, :sort_dir, :page]
 
-      controller.before_filter :handle_remember_params, :only => [:index]
+      before_filter :handle_remember_params, :only => [:index]
     end
 
     private
@@ -305,21 +308,22 @@ class ListController < ApplicationController
 
   # Provides functionality to nest controllers/resources.
   # If a controller is nested, the parent classes and namespaces
-  # may be defined as an array in the :nesting class attribute.
+  # may be defined as an array in the +nesting+ class attribute.
   # For example, a cities controller, nested in country and a admin
   # namespace, may define this attribute as follows:
   #   self.nesting = :admin, Country
   module Nesting
+    extend ActiveSupport::Concern
 
     # Adds the :nesting class attribute and parent helper methods
     # to the including controller.
-    def self.included(controller)
-      controller.class_attribute :nesting
+    included do
+      class_attribute :nesting
 
-      controller.helper_method :parent, :parents
+      helper_method :parent, :parents
 
-      controller.alias_method_chain :model_scope, :nesting
-      controller.alias_method_chain :path_args, :nesting
+      alias_method_chain :model_scope, :nesting
+      alias_method_chain :path_args, :nesting
     end
 
     private

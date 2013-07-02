@@ -181,7 +181,7 @@ end
 # :rdoc task
 Rake::RDocTask.new do |rdoc|
   rdoc.title  = 'dry_crud'
-  rdoc.options << '--line-numbers' << '--fmt' << 'sdoc'
+  rdoc.options << '--all' << '--line-numbers' << '--fmt' << 'sdoc'
   rdoc.rdoc_files.include(*FileList.new('*') do |list|
     list.exclude(/(^|[^.a-z])[a-z]+/)
     list.exclude('TODO')

@@ -54,7 +54,7 @@ module TableHelper
     end
   end
 
-  # Adds a set of standard action link column (edit, destroy) to the given table.
+  # Adds standard action link columns (edit, destroy) to the given table.
   def standard_table_actions(table)
     table.edit_action_col
     table.destroy_action_col

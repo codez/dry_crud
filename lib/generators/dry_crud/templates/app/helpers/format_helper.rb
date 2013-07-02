@@ -81,7 +81,7 @@ module FormatHelper
   private
 
   # Formats an arbitrary attribute of the given object depending on its data type.
-  # For ActiveRecords, take the defined data type into account for special types
+  # For Active Records, take the defined data type into account for special types
   # that have no own object class.
   def format_type(obj, attr)
     val = obj.send(attr)
@@ -96,7 +96,7 @@ module FormatHelper
     end
   end
 
-  # Formats an active record belongs_to association
+  # Formats an ActiveRecord +belongs_to+ association
   def format_assoc(obj, assoc)
     if val = obj.send(assoc.name)
       assoc_link(assoc, val)
@@ -105,8 +105,8 @@ module FormatHelper
     end
   end
 
-  # Formats an active record has_and_belongs_to_many or
-  # has_many association.
+  # Formats an ActiveRecord +has_and_belongs_to_many+ or
+  # +has_many+ association.
   def format_many_assoc(obj, assoc)
     values = obj.send(assoc.name)
     if values.size == 1
