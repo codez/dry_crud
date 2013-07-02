@@ -19,22 +19,22 @@ module ActionsHelper
     html
   end
 
-  # Standard link action to the show page of a given record.
-  # Uses the current +entry+ if no record is given.
+  # Standard show action to the given path.
+  # Uses the current +entry+ if no path is given.
   def show_action_link(path = nil)
     path ||= path_args(entry)
     action_link(ti(:"link.show"), 'zoom-in', path)
   end
 
-  # Standard link action to the edit page of a given record.
-  # Uses the current +entry+ if no record is given.
+  # Standard edit action to given path.
+  # Uses the current +entry+ if no path is given.
   def edit_action_link(path = nil)
     path ||= path_args(entry)
     action_link(ti(:"link.edit"), 'pencil', path.is_a?(String) ? path : edit_polymorphic_path(path))
   end
 
-  # Standard link action to the destroy action of a given record.
-  # Uses the current +entry+ if no record is given.
+  # Standard destroy action to the given path.
+  # Uses the current +entry+ if no path is given.
   def destroy_action_link(path = nil)
     path ||= path_args(entry)
     action_link(ti(:"link.delete"), 'remove', path,
@@ -42,15 +42,15 @@ module ActionsHelper
                            :method => :delete })
   end
 
-  # Standard link action to the list page.
-  # Links to the current +model_class+ if no path is given.
+  # Standard list action to the given path.
+  # Uses the current +model_class+ if no path is given.
   def index_action_link(path = nil, url_options = {:returning => true})
     path ||= path_args(model_class)
     action_link(ti(:"link.list"), 'list', path.is_a?(String) ? path : polymorphic_path(path, url_options))
   end
 
-  # Standard link action to the new page.
-  # Links to the current +model_class+ if no path is given.
+  # Standard add action to given path.
+  # Uses the current +model_class+ if no path is given.
   def add_action_link(path = nil, url_options = {})
     path ||= path_args(model_class)
     action_link(ti(:"link.add"), 'plus', path.is_a?(String) ? path : new_polymorphic_path(path, url_options))

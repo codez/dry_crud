@@ -74,22 +74,27 @@ module Crud
       end
     end
 
+    # Creates a header string for the given attr.
     def attr_header(attr)
       captionize(attr, entry_class)
     end
 
     private
 
+    # Renders the header row of the table.
     def html_header
       content_tag_nested(:tr, cols) { |c| c.html_header }
     end
 
+    # Renders a table row for the given entry.
     def html_row(entry)
       attrs = {}
       attrs[:id] = dom_id(entry) if entry.respond_to?(:to_key)
       content_tag_nested(:tr, cols, attrs) { |c| c.html_cell(entry) }
     end
 
+    # Determines the class of the table entries.
+    # All entries should be of the same type.
     def entry_class
       if entries.respond_to?(:klass)
         entries.klass
@@ -103,16 +108,19 @@ module Crud
 
       delegate :content_tag, :capture, :to => :template
 
+      # Runs the Col block for the given entry.
       def content(entry)
         entry.nil? ? '' : capture(entry, &block)
       end
 
+      # Renders the header cell of the Col.
       def html_header
-        content_tag :th, header, html_options
+        content_tag(:th, header, html_options)
       end
 
+      # Renders a table cell for the given entry.
       def html_cell(entry)
-        content_tag :td, content(entry), html_options
+        content_tag(:td, content(entry), html_options)
       end
 
     end
@@ -174,7 +182,10 @@ module Crud
 
     include Sorting
 
-
+    # Adds action columns to the table builder.
+    # Predefined actions are available for show, edit and destroy.
+    # Additionally, a special col type to define cells linked to the show page
+    # of the row entry is provided.
     module Actions
       extend ActiveSupport::Concern
 

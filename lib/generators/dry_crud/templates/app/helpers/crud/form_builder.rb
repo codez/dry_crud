@@ -274,11 +274,13 @@ module Crud
       end
     end
 
+    # Returns true if any errors are found on the passed attribute or its association.
     def errors_on?(attr)
       attr_plain, attr_id = assoc_and_id_attr(attr)
       @object.errors.has_key?(attr_plain.to_sym) || @object.errors.has_key?(attr_id.to_sym)
     end
 
+    # Checks if the passed name corresponds to a field method with a 'labeled_prefix'.
     def labeled_field_method?(name)
       prefix = 'labeled_'
       if name.to_s.start_with?(prefix)
@@ -287,6 +289,8 @@ module Crud
       end
     end
 
+    # Renders the corresponding field together with a label, required mark and
+    # an optional help block.
     def build_labeled_field(field_method, *args)
       options = args.extract_options!
       help = options.delete(:help)
