@@ -1,7 +1,7 @@
 # Defines tables to display a list of entries. The helper methods come in different granularities:
-# * #plain_table+ - A basic table for the given entries and attributes using the Crud::TableBuilder.
-# * #list_table+ - A sortable #plain_table for the current +entries+, with the given attributes or default.
-# * #crud_table+ - A sortable #plain_table for the current +entries+, with the given attributes or default and the standard crud action links.
+# * #plain_table - A basic table for the given entries and attributes using the Crud::TableBuilder.
+# * #list_table - A sortable #plain_table for the current +entries+, with the given attributes or default.
+# * #crud_table - A sortable #plain_table for the current +entries+, with the given attributes or default and the standard crud action links.
 module TableHelper
 
   # Renders a table for the given entries. One column is rendered for each attribute passed.

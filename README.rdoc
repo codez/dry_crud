@@ -244,28 +244,28 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 === Controller:
 
-{controller/crud_controller.rb}[http://codez.ch/dry_crud/CrudController.html]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on ListController.
+{controller/crud_controller.rb}[http://codez.ch/dry_crud?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on ListController.
 
-{controller/list_controller.rb}[http://codez.ch/dry_crud/ListController.html]:: Abstract controller providing a basic list action. Use this controller if you require read-only functionality. There are two sub-modules that provide search and sort functionality for the table displayed in the list action. A third sub-module remembers the list parameters in order to return to an identical list.
+{controller/list_controller.rb}[http://codez.ch/dry_crud?q=ListController]:: Abstract controller providing a basic list action. Use this controller if you require read-only functionality. There are two sub-modules that provide search and sort functionality for the table displayed in the list action. A third sub-module remembers the list parameters in order to return to an identical list.
 
 
 === Helpers:
 
-{helpers/crud/table_builder.rb}[http://codez.ch/dry_crud/Crud/TableBuilder.html]:: A simple helper object to easily define tables listing several rows of the same data type.
+{helpers/crud/table_builder.rb}[http://codez.ch/dry_crud?q=Crud::TableBuilder]:: A simple helper object to easily define tables listing several rows of the same data type.
 
-{helpers/crud/form_builder.rb}[http://codez.ch/dry_crud/Crud/FormBuilder.html]:: A form builder that automatically selects the corresponding input type for ActiveRecord columns. Input elements are rendered together with a label by default.
+{helpers/crud/form_builder.rb}[http://codez.ch/dry_crud?q=Crud::FormBuilder]:: A form builder that automatically selects the corresponding input type for ActiveRecord columns. Input elements are rendered together with a label by default.
 
-{helpers/table_helper.rb}[http://codez.ch/dry_crud/TableHelper.html]:: Create tables to list multiple models with Crud::TableBuilder. Contains a standardized and a custom definable table.
+{helpers/table_helper.rb}[http://codez.ch/dry_crud?q=TableHelper]:: Create tables to list multiple models with Crud::TableBuilder. Contains a standardized and a custom definable table.
 
-{helpers/form_helper.rb}[http://codez.ch/dry_crud/FormHelper.html]:: Create forms to edit models with Crud::FormBuilder. Contains a standardized and a custom definable form.
+{helpers/form_helper.rb}[http://codez.ch/dry_crud?q=FormHelper]:: Create forms to edit models with Crud::FormBuilder. Contains a standardized and a custom definable form.
 
-{helpers/format_helper.rb}[http://codez.ch/dry_crud/FormatHelper.html]:: Format attribute and basic values according to their database or Ruby type.
+{helpers/format_helper.rb}[http://codez.ch/dry_crud?q=FormatHelper]:: Format attribute and basic values according to their database or Ruby type.
 
-{helpers/actions_helper.rb}[http://codez.ch/dry_crud/ActionsHelper.html]:: Uniform action links for the most common crud actions.
+{helpers/actions_helper.rb}[http://codez.ch/dry_crud?q=ActionsHelper]:: Uniform action links for the most common crud actions.
 
-{helpers/i18n_helper.rb}[http://codez.ch/dry_crud/I18nHelper.html]:: Translation helpers extending Rails' +translate+ helper to support translation inheritance over the controller class hierarchy.
+{helpers/i18n_helper.rb}[http://codez.ch/dry_crud?q=I18nHelper]:: Translation helpers extending Rails' +translate+ helper to support translation inheritance over the controller class hierarchy.
 
-{helpers/utility_helper.rb}[http://codez.ch/dry_crud/UtilityHelper.html]:: View helpers for basic functions used in various other helpers.
+{helpers/utility_helper.rb}[http://codez.ch/dry_crud?q=UtilityHelper]:: View helpers for basic functions used in various other helpers.
 
 
 
@@ -323,11 +323,11 @@ app/assets/images/action/*.png:: Some sample action icons from the {Open Icon Li
 
 === Tests:
 
-{test/support/crud_test_model.rb}[http://codez.ch/dry_crud/CrudTestHelper.html]:: A dummy model to run CRUD tests against.
+{test/support/crud_test_model.rb}[http://codez.ch/dry_crud?q=CrudTestHelper]:: A dummy model to run CRUD tests against.
 
-{test/support/custom_assertions.rb}[http://codez.ch/dry_crud/CustomAssertions.html]:: A handful of convenient assertions. Include this module into your <tt>test_helper.rb</tt> file.
+{test/support/custom_assertions.rb}[http://codez.ch/dry_crud?q=CustomAssertions]:: A handful of convenient assertions. Include this module into your <tt>test_helper.rb</tt> file.
 
-{test/support/crud_controller_test_helper.rb}[http://codez.ch/dry_crud/CrudControllerTestHelper.html]:: A module to include into the functional tests for your CrudController subclasses. Contains a handful of CRUD functionality tests for the provided implementation. So for each new CRUD controller, you get 20 tests for free.
+{test/support/crud_controller_test_helper.rb}[http://codez.ch/dry_crud?q=CrudControllerTestHelper]:: A module to include into the functional tests for your CrudController subclasses. Contains a handful of CRUD functionality tests for the provided implementation. So for each new CRUD controller, you get 20 tests for free.
 
 test/controllers/crud_test_models_controller_test.rb:: Functional tests for the basic CrudController functionality.
 
@@ -340,7 +340,7 @@ spec/support/crud_controller_examples.rb:: A whole set of shared exampled to inc
 
 spec/support/crud_controller_test_helper.rb:: Convenience methods used by the crud controller examples.
 
-{spec/support/crud_test_model.rb}[http://codez.ch/dry_crud/CrudTestHelper.html]:: A dummy model to run CRUD tests against.
+{spec/support/crud_test_model.rb}[http://codez.ch/dry_crud?q=CrudTestHelper]:: A dummy model to run CRUD tests against.
 
 spec/controllers/crud_test_models_controller_spec.rb:: Controller specs to test the basic CrudController functionality.
 
