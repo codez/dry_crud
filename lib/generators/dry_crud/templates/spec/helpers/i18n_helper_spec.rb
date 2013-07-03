@@ -4,7 +4,7 @@ describe I18nHelper do
 
   include CrudTestHelper
 
-  describe "#translate_inheritable" do
+  describe '#translate_inheritable' do
     before { @controller = CrudTestModelsController.new }
 
     before { I18n.backend.store_translations :en, :global => { :test_key => 'global' } }
@@ -12,27 +12,27 @@ describe I18nHelper do
 
     it { should == 'global' }
 
-    context "with list key" do
+    context 'with list key' do
       before { I18n.backend.store_translations :en, :list => { :global => {:test_key => 'list global'} } }
       it { should == 'list global' }
 
-      context "and list action key" do
+      context 'and list action key' do
         before { I18n.backend.store_translations :en, :list => { :index => {:test_key => 'list index'} } }
         it { should == 'list index' }
 
-        context "and crud global key" do
+        context 'and crud global key' do
           before { I18n.backend.store_translations :en, :crud => {  :global => {:test_key => 'crud global'} } }
           it { should == 'crud global' }
 
-          context "and crud action key" do
+          context 'and crud action key' do
             before { I18n.backend.store_translations :en, :crud => {  :index => {:test_key => 'crud index'} } }
             it { should == 'crud index' }
 
-            context "and controller global key" do
+            context 'and controller global key' do
               before { I18n.backend.store_translations :en, :crud_test_models => {  :global => {:test_key => 'test global'} } }
               it { should == 'test global' }
 
-              context "and controller action key" do
+              context 'and controller action key' do
                 before { I18n.backend.store_translations :en, :crud_test_models => {  :index => {:test_key => 'test index'} } }
                 it { should == 'test index' }
               end
@@ -43,14 +43,14 @@ describe I18nHelper do
     end
   end
 
-  describe "#translate_association" do
+  describe '#translate_association' do
     let(:assoc) { CrudTestModel.reflect_on_association(:companion) }
     subject { ta(:test_key, assoc)}
 
     before { I18n.backend.store_translations :en, :global => { :associations => {:test_key => 'global'} } }
     it { should == 'global' }
 
-    context "with model key" do
+    context 'with model key' do
       before do
         I18n.backend.store_translations :en,
             :activerecord => {
@@ -61,7 +61,7 @@ describe I18nHelper do
 
       it { should == 'model' }
 
-      context "and assoc key" do
+      context 'and assoc key' do
         before do
           I18n.backend.store_translations :en,
              :activerecord => {
@@ -73,7 +73,7 @@ describe I18nHelper do
         end
 
         it { should == 'companion' }
-        it "should use global without assoc" do
+        it 'should use global without assoc' do
           ta(:test_key).should == 'global'
         end
       end

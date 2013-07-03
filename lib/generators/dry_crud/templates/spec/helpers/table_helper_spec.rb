@@ -15,68 +15,68 @@ describe TableHelper do
 
   after(:all) { reset_db }
 
-  describe "#plain_table" do
-    context "with empty data" do
+  describe '#plain_table' do
+    context 'with empty data' do
       subject { plain_table([]) }
 
       it { should be_html_safe }
 
-      it "should handle empty data" do
+      it 'should handle empty data' do
         should match(/No entries/)
       end
     end
 
-    context "with data" do
+    context 'with data' do
       subject { plain_table(['foo', 'bar'], :size) {|t| t.attrs :upcase } }
 
       it { should be_html_safe }
 
-      it "should render table" do
+      it 'should render table' do
         should match(/^\<table.*\<\/table\>$/)
       end
 
-      it "should contain attrs" do
+      it 'should contain attrs' do
         should match(/<th>Size<\/th>/)
       end
 
-      it "should contain block" do
+      it 'should contain block' do
         should match(/<th>Upcase<\/th>/)
       end
     end
   end
 
-  describe "#list_table" do
+  describe '#list_table' do
     let(:entries) { CrudTestModel.all }
 
-    context "default" do
+    context 'default' do
       subject do
         with_test_routing { list_table }
       end
 
-      it "has 7 rows" do
+      it 'has 7 rows' do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
 
-      it "has 14 sortable headers" do
+      it 'has 14 sortable headers' do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 14
       end
     end
 
-    context "with custom attributes" do
+    context 'with custom attributes' do
       subject do
         with_test_routing { list_table(:name, :children, :companion_id) }
       end
 
-      it "has 7 rows" do
+      it 'has 7 rows' do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
 
-      it "has 3 sortable headers" do
+      it 'has 3 sortable headers' do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 3
       end
     end
 
-    context "with custom block" do
+    context 'with custom block' do
       subject do
         with_test_routing do
           list_table do |t|
@@ -86,24 +86,24 @@ describe TableHelper do
         end
       end
 
-      it "has 7 rows" do
+      it 'has 7 rows' do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
 
-      it "has 4 headers" do
+      it 'has 4 headers' do
         subject.scan(REGEXP_HEADERS).size.should == 4
       end
 
-      it "has 0 sortable headers" do
+      it 'has 0 sortable headers' do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 0
       end
 
-      it "has 6 spans" do
+      it 'has 6 spans' do
         subject.scan(/<span>.+?<\/span>/).size.should == 6
       end
     end
 
-    context "with custom attributes and block" do
+    context 'with custom attributes and block' do
       subject do
         with_test_routing do
           list_table(:name, :children, :companion_id) do |t|
@@ -112,141 +112,141 @@ describe TableHelper do
         end
       end
 
-      it "has 7 rows" do
+      it 'has 7 rows' do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
 
-      it "has 4 headers" do
+      it 'has 4 headers' do
         subject.scan(REGEXP_HEADERS).size.should == 4
       end
 
-      it "has 3 sortable headers" do
+      it 'has 3 sortable headers' do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 3
       end
 
-      it "has 6 spans" do
+      it 'has 6 spans' do
         subject.scan(/<span>.+?<\/span>/).size.should == 6
       end
     end
 
-    context "with ascending sort params" do
+    context 'with ascending sort params' do
       let(:params) { {:sort => 'children', :sort_dir => 'asc'} }
       subject do
         with_test_routing { list_table }
       end
 
-      it "has 13 sortable headers" do
+      it 'has 13 sortable headers' do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 13
       end
 
-      it "has 1 ascending sort headers" do
+      it 'has 1 ascending sort headers' do
         subject.scan(/<th><a .*?sort_dir=desc.*?>Children<\/a> &darr;<\/th>/).size.should == 1
       end
     end
 
-    context "with descending sort params" do
+    context 'with descending sort params' do
       let(:params) { {:sort => 'children', :sort_dir => 'desc'} }
       subject do
         with_test_routing { list_table }
       end
 
-      it "has 13 sortable headers" do
+      it 'has 13 sortable headers' do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 13
       end
 
-      it "has 1 descending sort headers" do
+      it 'has 1 descending sort headers' do
         subject.scan(/<th><a .*?sort_dir=asc.*?>Children<\/a> &uarr;<\/th>/).size.should == 1
       end
     end
 
-    context "with custom column sort params" do
+    context 'with custom column sort params' do
       let(:params) { {:sort => 'chatty', :sort_dir => 'asc'} }
       subject do
         with_test_routing { list_table(:name, :children, :chatty) }
       end
 
-      it "has 2 sortable headers" do
+      it 'has 2 sortable headers' do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 2
       end
 
-      it "has 1 ascending sort headers" do
+      it 'has 1 ascending sort headers' do
         subject.scan(/<th><a .*?sort_dir=desc.*?>Chatty<\/a> &darr;<\/th>/).size.should == 1
       end
     end
   end
 
-  describe "#crud_table" do
+  describe '#crud_table' do
     let(:entries) { CrudTestModel.all }
 
-    context "default" do
+    context 'default' do
       subject do
         with_test_routing { crud_table }
       end
 
-      it "has 7 rows" do
+      it 'has 7 rows' do
         subject.scan(REGEXP_ROWS).size.should == 7
       end
 
-      it "has 14 sort headers" do
+      it 'has 14 sort headers' do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 14
       end
 
-      it "has 12 action cells" do
+      it 'has 12 action cells' do
         subject.scan(REGEXP_ACTION_CELL).size.should == 12
       end
     end
 
-    context "with custom attrs" do
+    context 'with custom attrs' do
       subject do
         with_test_routing { crud_table(:name, :children, :companion_id) }
       end
 
-      it "has 3 sort headers" do
+      it 'has 3 sort headers' do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 3
       end
     end
 
-    context "with custom block" do
+    context 'with custom block' do
       subject do
         with_test_routing do
           crud_table do |t|
             t.attrs :name, :children, :companion_id
-            t.col("head") {|e| content_tag :span, e.income.to_s }
+            t.col('head') {|e| content_tag :span, e.income.to_s }
           end
         end
       end
 
-      it "has 4 headers" do
+      it 'has 4 headers' do
         subject.scan(REGEXP_HEADERS).size.should == 6
       end
 
-      it "has 6 custom col spans" do
+      it 'has 6 custom col spans' do
         subject.scan(/<span>.+?<\/span>/m).size.should == 6
       end
 
-      it "has 12 action cells" do
+      it 'has 12 action cells' do
         subject.scan(REGEXP_ACTION_CELL).size.should == 12
       end
     end
 
-    context "with custom attributes and block" do
+    context 'with custom attributes and block' do
       subject do
         with_test_routing do
           crud_table(:name, :children, :companion_id) do |t|
-            t.col("head") {|e| content_tag :span, e.income.to_s }
+            t.col('head') {|e| content_tag :span, e.income.to_s }
           end
         end
       end
 
-      it "has 3 sort headers" do
+      it 'has 3 sort headers' do
         subject.scan(REGEXP_SORT_HEADERS).size.should == 3
       end
 
-      it "has 6 custom col spans" do
+      it 'has 6 custom col spans' do
         subject.scan(/<span>.+?<\/span>/m).size.should == 6
       end
 
-      it "has 12 action cells" do
+      it 'has 12 action cells' do
         subject.scan(REGEXP_ACTION_CELL).size.should == 12
       end
     end

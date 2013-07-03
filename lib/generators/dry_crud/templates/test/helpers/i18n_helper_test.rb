@@ -5,7 +5,7 @@ class I18nHelperTest < ActionView::TestCase
 
   include CrudTestHelper
 
-  test "translate inheritable lookup" do
+  test 'translate inheritable lookup' do
     # current controller is :crud_test_models, action is :index
     @controller = CrudTestModelsController.new
 
@@ -31,7 +31,7 @@ class I18nHelperTest < ActionView::TestCase
     assert_equal 'test index', ti(:test_key)
   end
 
-  test "translate association lookup" do
+  test 'translate association lookup' do
     assoc = CrudTestModel.reflect_on_association(:companion)
 
     I18n.backend.store_translations :en, :global => { :associations => {:test_key => 'global'} }

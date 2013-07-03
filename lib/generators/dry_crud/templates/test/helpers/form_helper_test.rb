@@ -11,7 +11,7 @@ class FormHelperTest < ActionView::TestCase
   setup :reset_db, :setup_db, :create_test_data
   teardown :reset_db
 
-  test "plain form for existing entry" do
+  test 'plain form for existing entry' do
     e = crud_test_models('AAAAA')
     f = with_test_routing do
       f = capture { plain_form(e, :html => {:class => 'special'}) {|f| f.labeled_input_fields :name, :birthdate } }
@@ -22,7 +22,7 @@ class FormHelperTest < ActionView::TestCase
     assert_match /input .*?name="crud_test_model\[name\]" .*?type="text" .*?value="AAAAA"/, f
   end
 
-  test "standard form" do
+  test 'standard form' do
     e = crud_test_models('AAAAA')
     f = with_test_routing do
       f = capture { standard_form(e, :name, :children, :birthdate, :human, :cancel_url => '/somewhere', :html => {:class => 'special'}) }
@@ -38,7 +38,7 @@ class FormHelperTest < ActionView::TestCase
     assert_match /a .*href="\/somewhere".*>Cancel<\/a>/, f
   end
 
-  test "standard form with errors" do
+  test 'standard form with errors' do
     e = crud_test_models('AAAAA')
     e.name = nil
     assert !e.valid?
@@ -57,7 +57,7 @@ class FormHelperTest < ActionView::TestCase
     assert_match /option selected="selected" value="1">1<\/option>/, f
   end
 
-  test "crud form" do
+  test 'crud form' do
     f = with_test_routing do
       capture { crud_form }
     end

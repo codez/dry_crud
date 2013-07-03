@@ -40,7 +40,7 @@ class DryCrudGenerator < Rails::Generators::Base
       end
     end
 
-    readme "INSTALL"
+    readme 'INSTALL'
   end
 
 end

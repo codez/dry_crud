@@ -23,22 +23,22 @@ describe FormatHelper do
     "#{f(obj.size)} chars"
   end
 
-  describe "#labeled" do
-    context "regular" do
+  describe '#labeled' do
+    context 'regular' do
       subject { labeled('label') { 'value' } }
 
       it { should be_html_safe }
       its(:squish) { should =~ /^<div class=["']labeled["']> <label>label<\/label> <div class=["']value["']>value<\/div> <\/div>$/ }
     end
 
-    context "with empty value" do
+    context 'with empty value' do
       subject { labeled('label') { '' } }
 
       it { should be_html_safe }
       its(:squish) { should =~ /<div class=["']labeled["']> <label>label<\/label> <div class=["']value["']>#{UtilityHelper::EMPTY_STRING}<\/div> <\/div>$/ }
     end
 
-    context "with unsafe value" do
+    context 'with unsafe value' do
       subject { labeled('label') { 'value <unsafe>' } }
 
       it { should be_html_safe }
@@ -46,90 +46,90 @@ describe FormatHelper do
     end
   end
 
-  describe "#labeled_attr" do
+  describe '#labeled_attr' do
     subject { labeled_attr('foo', :size) }
 
     it { should be_html_safe }
     its(:squish) {  should =~/<div class=["']labeled["']> <label>Size<\/label> <div class=["']value["']>3 chars<\/div> <\/div>$/ }
   end
 
-  describe "#f" do
+  describe '#f' do
 
-    context "Floats" do
-      it "should add two digits" do
+    context 'Floats' do
+      it 'should add two digits' do
         f(1.0).should == '1.000'
       end
 
-      it "should truncate to two digits" do
+      it 'should truncate to two digits' do
         f(3.14159).should == '3.142'
       end
 
-      it "should add delimiters" do
+      it 'should add delimiters' do
         f(12345.6789).should == '12,345.679'
       end
     end
 
-    context "Booleans" do
-      it "true should print yes" do
+    context 'Booleans' do
+      it 'true should print yes' do
         f(true).should == 'yes'
       end
 
-      it "false should print no" do
+      it 'false should print no' do
         f(false).should == 'no'
       end
     end
 
-    context "nil" do
-      it "should print an empty string" do
+    context 'nil' do
+      it 'should print an empty string' do
         f(nil).should == UtilityHelper::EMPTY_STRING
       end
     end
 
-    context "Strings" do
-      it "should print regular strings unchanged" do
+    context 'Strings' do
+      it 'should print regular strings unchanged' do
         f('blah blah').should == 'blah blah'
       end
 
-      it "should not be html safe" do
+      it 'should not be html safe' do
         f('<injection>').should_not be_html_safe
       end
     end
 
   end
 
-  describe "#format_attr" do
-    it "should use #f" do
-      format_attr("12.342", :to_f).should == f(12.342)
+  describe '#format_attr' do
+    it 'should use #f' do
+      format_attr('12.342', :to_f).should == f(12.342)
     end
 
-    it "should use object attr format method if it exists" do
-      format_attr("abcd", :size).should == '4 chars'
+    it 'should use object attr format method if it exists' do
+      format_attr('abcd', :size).should == '4 chars'
     end
 
-    it "should use general attr format method if it exists" do
+    it 'should use general attr format method if it exists' do
       format_attr([1,2], :size).should == '2 items'
     end
 
-    it "should format empty belongs_to" do
+    it 'should format empty belongs_to' do
       format_attr(crud_test_models(:AAAAA), :companion).should == t(:'global.associations.no_entry')
     end
 
-    it "should format existing belongs_to" do
+    it 'should format existing belongs_to' do
       string = format_attr(crud_test_models(:BBBBB), :companion)
-      string.should == "AAAAA"
+      string.should == 'AAAAA'
     end
 
-    it "should format existing has_many" do
+    it 'should format existing has_many' do
       string = format_attr(crud_test_models(:CCCCC), :others)
       string.should be_html_safe
-      string.should == "<ul><li>AAAAA</li><li>BBBBB</li></ul>"
+      string.should == '<ul><li>AAAAA</li><li>BBBBB</li></ul>'
     end
   end
 
-  describe "#column_type" do
+  describe '#column_type' do
     let(:model) { crud_test_models(:AAAAA) }
 
-    it "should recognize types" do
+    it 'should recognize types' do
       column_type(model, :name).should == :string
       column_type(model, :children).should == :integer
       column_type(model, :companion_id).should == :integer
@@ -144,65 +144,65 @@ describe FormatHelper do
     end
   end
 
-  describe "#format_type" do
+  describe '#format_type' do
     let(:model) { crud_test_models(:AAAAA) }
 
-    it "should format integers" do
+    it 'should format integers' do
       model.children = 10000
       format_type(model, :children).should == '10000'
     end
 
-    it "should format floats" do
+    it 'should format floats' do
       format_type(model, :rating).should == '1.100'
     end
 
-    it "should format decimals" do
+    it 'should format decimals' do
       format_type(model, :income).should == '10,000,000.100'
     end
 
-    it "should format dates" do
+    it 'should format dates' do
       format_type(model, :birthdate).should == '1910-01-01'
     end
 
-    it "should format times" do
+    it 'should format times' do
       format_type(model, :gets_up_at).should == '01:01'
     end
 
-    it "should format datetimes" do
+    it 'should format datetimes' do
       format_type(model, :last_seen).should == '2010-01-01 11:21'
     end
 
-    it "should format texts" do
+    it 'should format texts' do
       string = format_type(model, :remarks)
       string.should be_html_safe
       string.should == "<p>AAAAA BBBBB CCCCC\n<br />AAAAA BBBBB CCCCC\n</p>"
     end
 
-    it "should escape texts" do
-      model.remarks = "<unsecure>bla"
+    it 'should escape texts' do
+      model.remarks = '<unsecure>bla'
       string = format_type(model, :remarks)
       string.should be_html_safe
-      string.should == "<p>&lt;unsecure&gt;bla</p>"
+      string.should == '<p>&lt;unsecure&gt;bla</p>'
     end
 
-    it "should format empty texts" do
-      model.remarks = "   "
+    it 'should format empty texts' do
+      model.remarks = '   '
       string = format_type(model, :remarks)
       string.should be_html_safe
       string.should == UtilityHelper::EMPTY_STRING
     end
   end
 
-  describe "#captionize" do
-    it "should handle symbols" do
+  describe '#captionize' do
+    it 'should handle symbols' do
       captionize(:camel_case).should == 'Camel Case'
     end
 
-    it "should render all upper case" do
+    it 'should render all upper case' do
       captionize('all upper case').should == 'All Upper Case'
     end
 
-    it "should render human attribute name" do
+    it 'should render human attribute name' do
       captionize(:gets_up_at, CrudTestModel).should == 'Gets up at'
     end
   end

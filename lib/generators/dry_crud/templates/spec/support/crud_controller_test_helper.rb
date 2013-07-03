@@ -84,14 +84,14 @@ module CrudControllerTestHelper
 
     # Test that entries are assigned.
     def it_should_assign_entries
-      it "should assign entries" do
+      it 'should assign entries' do
         entries.should be_present
       end
     end
 
     # Test that entry is assigned.
     def it_should_assign_entry
-      it "should assign entry" do
+      it 'should assign entry' do
         entry.should == test_entry
       end
     end
@@ -103,7 +103,7 @@ module CrudControllerTestHelper
 
     # Test that test_entry_attrs are set on entry.
     def it_should_set_attrs(action = nil)
-      it "should set params as entry attributes" do
+      it 'should set params as entry attributes' do
         attrs = send("#{action}_entry_attrs")
         actual = {}
         attrs.keys.each do |key|
@@ -139,7 +139,7 @@ module CrudControllerTestHelper
 
     # Test that the current entry is persistend and valid, or not.
     def it_should_persist_entry(bool = true)
-      context "entry" do
+      context 'entry' do
         subject { entry }
 
         if bool

@@ -167,7 +167,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_create_with_before_callback
-    assert_no_difference("CrudTestModel.count") do
+    assert_no_difference('CrudTestModel.count') do
       post :create, :crud_test_model => {:name => 'illegal', :children => 2}
     end
     assert_response :success
@@ -181,7 +181,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_create_with_before_callback_redirect
     @controller.should_redirect = true
-    assert_no_difference("CrudTestModel.count") do
+    assert_no_difference('CrudTestModel.count') do
       post :create, :crud_test_model => {:name => 'illegal', :children => 2}
     end
     assert_redirected_to :action => 'index'
@@ -196,7 +196,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_create_with_failure
-    assert_no_difference("CrudTestModel.count") do
+    assert_no_difference('CrudTestModel.count') do
       post :create, :crud_test_model => {:children => 2}
     end
     assert_response :success
@@ -210,7 +210,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_create_with_failure_json
-    assert_no_difference("CrudTestModel.count") do
+    assert_no_difference('CrudTestModel.count') do
       post :create, :crud_test_model => {:children => 2}, :format => 'json'
     end
     assert_response :unprocessable_entity

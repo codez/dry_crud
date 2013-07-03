@@ -16,14 +16,14 @@ describe FormHelper do
 
   after(:all) { reset_db }
 
-  describe "#plain_form" do
+  describe '#plain_form' do
     subject do
       with_test_routing do
         capture { plain_form(entry, :html => {:class => 'special'}) {|f| f.labeled_input_fields :name, :birthdate } }
       end
     end
 
-    context "for existing entry" do
+    context 'for existing entry' do
       let(:entry) { crud_test_models(:AAAAA) }
 
       it { should match(/form .*?action="\/crud_test_models\/#{entry.id}" .*?class="special form-horizontal" .*?method="post"/) }
@@ -36,20 +36,20 @@ describe FormHelper do
     end
   end
 
-  describe "#standard_form" do
+  describe '#standard_form' do
 
     subject do
       with_test_routing do
         capture do
           standard_form(entry,
                         :name, :children, :birthdate, :human,
-                        :cancel_url => "/somewhere",
+                        :cancel_url => '/somewhere',
                         :html => {:class => 'special'})
         end
       end
     end
 
-    context "for existing entry" do
+    context 'for existing entry' do
       let(:entry) { crud_test_models(:AAAAA) }
 
       it { should match(/form .*?action="\/crud_test_models\/#{entry.id}" .?class="special form-horizontal" .*?method="post"/) }
@@ -65,7 +65,7 @@ describe FormHelper do
       it { should match(/a .*href="\/somewhere".*>Cancel<\/a>/) }
     end
 
-    context "for invalid entry" do
+    context 'for invalid entry' do
       let(:entry) do
         e = crud_test_models(:AAAAA)
         e.name = nil
@@ -79,7 +79,7 @@ describe FormHelper do
     end
   end
 
-  describe "#crud_form" do
+  describe '#crud_form' do
     let(:entry) { CrudTestModel.first }
     subject do
       with_test_routing { crud_form }

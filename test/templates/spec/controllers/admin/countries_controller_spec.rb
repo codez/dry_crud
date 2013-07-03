@@ -11,28 +11,28 @@ describe Admin::CountriesController do
   alias_method :new_entry_attrs, :test_entry_attrs
   alias_method :edit_entry_attrs, :test_entry_attrs
   
-  it "should load fixtures" do
+  it 'should load fixtures' do
     Country.count.should == 3
   end
   
   describe_action :get, :index do 
-    it "should be ordered by default scope" do
+    it 'should be ordered by default scope' do
       entries == Country.order(:name)
     end
     
-    it "should set parents" do
+    it 'should set parents' do
       controller.send(:parents).should == [:admin]
     end
     
-    it "should set nil parent" do
+    it 'should set nil parent' do
       controller.send(:parent).should be_nil
     end
     
-    it "should use correct model_scope" do
+    it 'should use correct model_scope' do
       controller.send(:model_scope).should == Country.all
     end
     
-    it "should have correct path args" do
+    it 'should have correct path args' do
       controller.send(:path_args, 2).should == [:admin, 2]
     end
   end
