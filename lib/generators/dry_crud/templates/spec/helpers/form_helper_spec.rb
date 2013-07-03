@@ -1,5 +1,5 @@
+# encoding: UTF-8
 require 'spec_helper'
-
 
 describe FormHelper do
 
@@ -19,20 +19,48 @@ describe FormHelper do
   describe '#plain_form' do
     subject do
       with_test_routing do
-        capture { plain_form(entry, :html => {:class => 'special'}) {|f| f.labeled_input_fields :name, :birthdate } }
+        capture do
+          plain_form(entry, :html => {:class => 'special'}) do |f|
+            f.labeled_input_fields :name, :birthdate
+          end
+        end
       end
     end
 
     context 'for existing entry' do
       let(:entry) { crud_test_models(:AAAAA) }
 
-      it { should match(/form .*?action="\/crud_test_models\/#{entry.id}" .*?class="special form-horizontal" .*?method="post"/) }
-      it { should match(/input .*?name="_method" .*?type="hidden" .*?value="(put|patch)"/) }
-      it { should match(/input .*?name="crud_test_model\[name\]" .*?type="text" .*?value="AAAAA"/) }
-      it { should match(/select .*?name="crud_test_model\[birthdate\(1i\)\]"/) }
-      it { should match(/option selected="selected" value="1910">1910<\/option>/) }
-      it { should match(/option selected="selected" value="1">January<\/option>/) }
-      it { should match(/option selected="selected" value="1">1<\/option>/) }
+      it do
+        should match(/form .*?action="\/crud_test_models\/#{entry.id}"
+                           .*?class="special\ form-horizontal"
+                           .*?method="post"/x)
+      end
+      it do
+        should match(/input .*?name="_method"
+                            .*?type="hidden"
+                            .*?value="(put|patch)"/x)
+      end
+      it do
+        should match(/input .*?name="crud_test_model\[name\]"
+                            .*?type="text"
+                            .*?value="AAAAA"/x)
+      end
+      it do
+        should match(/select .*?name="crud_test_model
+                                      \[birthdate\(1i\)\]"/x)
+      end
+      it do
+        should match(/option\ selected="selected"
+                            \ value="1910">1910<\/option>/x)
+      end
+      it do
+        should match(/option\ selected="selected"
+                            \ value="1">January<\/option>/x)
+      end
+      it do
+        should match(/option\ selected="selected"
+                            \ value="1">1<\/option>/x)
+      end
     end
   end
 
@@ -52,17 +80,52 @@ describe FormHelper do
     context 'for existing entry' do
       let(:entry) { crud_test_models(:AAAAA) }
 
-      it { should match(/form .*?action="\/crud_test_models\/#{entry.id}" .?class="special form-horizontal" .*?method="post"/) }
-      it { should match(/input .*?name="_method" .*?type="hidden" .*?value="(put|patch)"/) }
-      it { should match(/input .*?name="crud_test_model\[name\]" .*?type="text" .*?value="AAAAA"/) }
-      it { should match(/select .*?name="crud_test_model\[birthdate\(1i\)\]"/) }
-      it { should match(/option selected="selected" value="1910">1910<\/option>/) }
-      it { should match(/option selected="selected" value="1">January<\/option>/) }
-      it { should match(/option selected="selected" value="1">1<\/option>/) }
-      it { should match(/input .*?name="crud_test_model\[children\]" .*?type="number" .*?value=\"9\"/) }
-      it { should match(/input .*?name="crud_test_model\[human\]" .*?type="checkbox"/) }
-      it { should match(/button .*?type="submit">Save<\/button>/) }
-      it { should match(/a .*href="\/somewhere".*>Cancel<\/a>/) }
+      it do
+        should match(/form .*?action="\/crud_test_models\/#{entry.id}"
+                            .*?class="special\ form-horizontal"
+                            .*?method="post"/x)
+      end
+      it do
+        should match(/input .*?name="_method"
+                            .*?type="hidden"
+                            .*?value="(put|patch)"/x)
+      end
+      it do
+        should match(/input .*?name="crud_test_model\[name\]"
+                             .*?type="text"
+                             .*?value="AAAAA"/x)
+      end
+      it do
+        should match(/select .*?name="crud_test_model
+                                      \[birthdate\(1i\)\]"/x)
+      end
+      it do
+        should match(/option\ selected="selected"
+                            \ value="1910">1910<\/option>/x)
+      end
+      it do
+        should match(/option\ selected="selected"
+                            \ value="1">January<\/option>/x)
+      end
+      it do
+        should match(/option\ selected="selected"
+                            \ value="1">1<\/option>/x)
+      end
+      it do
+        should match(/input .*?name="crud_test_model\[children\]"
+                            .*?type="number"
+                            .*?value=\"9\"/x)
+      end
+      it do
+        should match(/input .*?name="crud_test_model\[human\]"
+                            .*?type="checkbox"/x)
+      end
+      it do
+        should match(/button .*?type="submit">Save<\/button>/)
+      end
+      it do
+        should match(/a .*href="\/somewhere".*>Cancel<\/a>/)
+      end
     end
 
     context 'for invalid entry' do
@@ -73,9 +136,19 @@ describe FormHelper do
         e
       end
 
-      it { should match(/div[^>]* id='error_explanation'/) }
-      it { should match(/div class="control-group error"\>.*?\<input .*?name="crud_test_model\[name\]" .*?type="text"/) }
-      it { should match(/input .*?name="_method" .*?type="hidden" .*?value="(put|patch)"/) }
+      it do
+        should match(/div[^>]* id='error_explanation'/)
+      end
+      it do
+        should match(/div\ class="control-group\ error"\>.*?
+                      \<input .*?name="crud_test_model\[name\]"
+                              .*?type="text"/x)
+      end
+      it do
+        should match(/input .*?name="_method"
+                            .*?type="hidden"
+                            .*?value="(put|patch)"/x)
+      end
     end
   end
 
@@ -85,17 +158,46 @@ describe FormHelper do
       with_test_routing { crud_form }
     end
 
-    it { should match /form .*?action="\/crud_test_models\/#{entry.id}"/ }
-    it { should match /input .*?name="crud_test_model\[name\]" .*?type="text"/ }
-    it { should match /input .*?name="crud_test_model\[whatever\]" .*?type="text"/ }
-    it { should match /input .*?name="crud_test_model\[children\]" .*?type="number"/ }
-    it { should match /input .*?name="crud_test_model\[rating\]" .*?type="number"/ }
-    it { should match /input .*?name="crud_test_model\[income\]" .*?type="number"/ }
-    it { should match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/ }
-    it { should match /input .*?name="crud_test_model\[human\]" .*?type="checkbox"/ }
-    it { should match /select .*?name="crud_test_model\[companion_id\]"/ }
-    it { should match /textarea .*?name="crud_test_model\[remarks\]"/ }
-    it { should match(/a .*href="\/crud_test_models\/#{entry.id}\?returning=true".*>Cancel<\/a>/) }
+    it do
+      should match /form .*?action="\/crud_test_models\/#{entry.id}"/
+    end
+    it do
+      should match /input .*?name="crud_test_model\[name\]"
+                          .*?type="text"/x
+    end
+    it do
+       should match /input .*?name="crud_test_model\[whatever\]"
+                           .*?type="text"/x
+    end
+    it do
+      should match /input .*?name="crud_test_model\[children\]"
+                          .*?type="number"/x
+    end
+    it do
+      should match /input .*?name="crud_test_model\[rating\]"
+                          .*?type="number"/x
+    end
+    it do
+      should match /input .*?name="crud_test_model\[income\]"
+                          .*?type="number"/x
+    end
+    it do
+      should match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/
+    end
+    it do
+      should match /input .*?name="crud_test_model\[human\]"
+                          .*?type="checkbox"/x
+    end
+    it do
+      should match /select .*?name="crud_test_model\[companion_id\]"/
+    end
+    it do
+      should match /textarea .*?name="crud_test_model\[remarks\]"/
+    end
+    it do
+      should match(/a .*href="\/crud_test_models\/#{entry.id}
+                              \?returning=true".*>Cancel<\/a>/x)
+    end
   end
 
 end

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'spec_helper'
 
 # Tests all actions of the CrudController based on a dummy model
@@ -18,30 +19,28 @@ describe CrudTestModelsController do
 
   before { special_routing }
 
-
   include_examples 'crud controller', {}
 
   let(:test_entry) { crud_test_models(:AAAAA) }
   let(:new_entry_attrs) do
-    {:name => 'foo',
-     :children => 42,
-     :companion_id => 3,
-     :rating => 8.5,
-     :income => 2.42,
-     :birthdate => '31-12-1999'.to_date,
-     :human => true,
-     :remarks => "some custom\n\tremarks"}
+    { :name => 'foo',
+      :children => 42,
+      :companion_id => 3,
+      :rating => 8.5,
+      :income => 2.42,
+      :birthdate => '31-12-1999'.to_date,
+      :human => true,
+      :remarks => "some custom\n\tremarks" }
   end
   let(:edit_entry_attrs) do
-    {:name => 'foo',
-     :children => 42,
-     :rating => 8.5,
-     :income => 2.42,
-     :birthdate => '31-12-1999'.to_date,
-     :human => true,
-     :remarks => "some custom\n\tremarks"}
+    { :name => 'foo',
+      :children => 42,
+      :rating => 8.5,
+      :income => 2.42,
+      :birthdate => '31-12-1999'.to_date,
+      :human => true,
+      :remarks => "some custom\n\tremarks" }
   end
-
 
   describe 'setup' do
     it 'model count should be correct' do
@@ -75,7 +74,7 @@ describe CrudTestModelsController do
       end
 
       context 'search' do
-        let(:params) { {:q => search_value} }
+        let(:params) { { :q => search_value } }
 
         context 'regular', :combine => 'ihse' do
           it 'entries should only contain test_entry' do
@@ -83,12 +82,13 @@ describe CrudTestModelsController do
           end
 
           it 'session should have query list param' do
-            session[:list_params]['/crud_test_models.html'].should == {:q => 'AAAA'}
+            session[:list_params]['/crud_test_models.html'].should ==
+              {:q => 'AAAA'}
           end
         end
 
         context 'with custom options', :combine => 'ihsec' do
-          let(:params) { {:q => 'DDD', :filter => true} }
+          let(:params) { { :q => 'DDD', :filter => true } }
 
           it_should_respond
 
@@ -97,14 +97,15 @@ describe CrudTestModelsController do
           end
 
           it 'session should have query list param' do
-            session[:list_params]['/crud_test_models.html'].should == {:q => 'DDD'}
+            session[:list_params]['/crud_test_models.html'].should ==
+              { :q => 'DDD' }
           end
         end
       end
 
       context 'sort' do
         context 'for given column', :combine => 'ihsog' do
-          let(:params) { {:sort => 'children', :sort_dir => 'asc'} }
+          let(:params) { { :sort => 'children', :sort_dir => 'asc' } }
 
           it_should_respond
 
@@ -113,12 +114,13 @@ describe CrudTestModelsController do
           end
 
           it 'session should have sort list param' do
-            session[:list_params]['/crud_test_models.html'].should == {:sort => 'children', :sort_dir => 'asc'}
+            session[:list_params]['/crud_test_models.html'].should ==
+              { :sort => 'children', :sort_dir => 'asc' }
           end
         end
 
         context 'for virtual column', :combine => 'ihsov' do
-          let(:params) { {:sort => 'chatty', :sort_dir => 'desc'} }
+          let(:params) { { :sort => 'chatty', :sort_dir => 'desc' } }
 
           it_should_respond
 
@@ -133,27 +135,31 @@ describe CrudTestModelsController do
           end
 
           it 'session should have sort list param' do
-            session[:list_params]['/crud_test_models.html'].should == {:sort => 'chatty', :sort_dir => 'desc'}
+            session[:list_params]['/crud_test_models.html'].should ==
+              { :sort => 'chatty', :sort_dir => 'desc' }
           end
         end
 
         context 'with search', :combine => 'ihsose' do
-          let(:params) { {:q => 'DDD', :sort => 'chatty', :sort_dir => 'asc'} }
+          let(:params) do
+            { :q => 'DDD', :sort => 'chatty', :sort_dir => 'asc' }
+          end
 
           it_should_respond
 
           it 'entries should be in correct order' do
-            entries.collect(&:name).should == ['CCCCC', 'DDDDD', 'BBBBB']
+            entries.collect(&:name).should == %w(CCCCC DDDDD BBBBB)
           end
 
           it 'session should have sort list param' do
-            session[:list_params]['/crud_test_models.html'].should == {:q => 'DDD', :sort => 'chatty', :sort_dir => 'asc'}
+            session[:list_params]['/crud_test_models.html'].should ==
+              { :q => 'DDD', :sort => 'chatty', :sort_dir => 'asc' }
           end
         end
       end
 
       context 'with custom options', :combine => 'ihsoco' do
-        let(:params) { {:filter => true} }
+        let(:params) { { :filter => true } }
 
         it_should_respond
 
@@ -167,14 +173,15 @@ describe CrudTestModelsController do
       context 'returning', :perform_request => false do
         before do
           session[:list_params] = {}
-          session[:list_params]['/crud_test_models'] = {:q => 'DDD', :sort => 'chatty', :sort_dir => 'desc'}
+          session[:list_params]['/crud_test_models'] =
+            { :q => 'DDD', :sort => 'chatty', :sort_dir => 'desc' }
           get :index, :returning => true
         end
 
         it_should_respond
 
         it 'entries should be in correct order' do
-          entries.collect(&:name).should == ['BBBBB', 'DDDDD', 'CCCCC']
+          entries.collect(&:name).should == %w(BBBBB DDDDD CCCCC)
         end
 
         it 'params should be set' do
@@ -199,7 +206,8 @@ describe CrudTestModelsController do
       end
 
       it 'should have called two render callbacks' do
-        controller.called_callbacks.should == [:before_render_new, :before_render_form]
+        controller.called_callbacks.should ==
+          [:before_render_new, :before_render_form]
       end
     end
 
@@ -221,11 +229,14 @@ describe CrudTestModelsController do
     let(:params) { {model_identifier => new_entry_attrs} }
 
     it 'should have called the correct callbacks' do
-      controller.called_callbacks.should == [:before_create, :before_save, :after_save, :after_create]
+      controller.called_callbacks.should ==
+        [:before_create, :before_save, :after_save, :after_create]
     end
 
     context 'with before callback' do
-      let(:params) { {:crud_test_model => {:name => 'illegal', :children => 2}} }
+      let(:params) do
+        { :crud_test_model => { :name => 'illegal', :children => 2 } }
+      end
       it 'should not create entry', :perform_request => false do
         expect { perform_request }.to change { CrudTestModel.count }.by(0)
       end
@@ -245,7 +256,8 @@ describe CrudTestModelsController do
         end
 
         it 'should have called the correct callbacks' do
-          controller.called_callbacks.should == [:before_render_new, :before_render_form]
+          controller.called_callbacks.should ==
+            [:before_render_new, :before_render_form]
         end
       end
 
@@ -266,7 +278,7 @@ describe CrudTestModelsController do
     end
 
     context 'with invalid params' do
-      let(:params) { {:crud_test_model => {:children => 2}} }
+      let(:params) { { :crud_test_model => { :children => 2 } } }
 
       context '.html' do
         it 'should not create entry', :perform_request => false do
@@ -285,7 +297,9 @@ describe CrudTestModelsController do
           end
 
           it 'should have called the correct callbacks' do
-            controller.called_callbacks.should == [:before_create, :before_save, :before_render_new, :before_render_form]
+            controller.called_callbacks.should ==
+              [:before_create, :before_save,
+               :before_render_new, :before_render_form]
           end
         end
       end
@@ -306,7 +320,8 @@ describe CrudTestModelsController do
           end
 
           it 'should have called the correct callbacks' do
-            controller.called_callbacks.should == [:before_create, :before_save]
+            controller.called_callbacks.should ==
+              [:before_create, :before_save]
           end
 
           its(:body) { should match(/errors/) }
@@ -318,19 +333,21 @@ describe CrudTestModelsController do
 
   describe_action :get, :edit, :id => true do
     it 'should have called the correct callbacks' do
-      controller.called_callbacks.should == [:before_render_edit, :before_render_form]
+      controller.called_callbacks.should ==
+        [:before_render_edit, :before_render_form]
     end
   end
 
   describe_action :put, :update, :id => true do
-    let(:params) { {model_identifier => edit_entry_attrs} }
+    let(:params) { { model_identifier => edit_entry_attrs } }
 
     it 'should have called the correct callbacks' do
-      controller.called_callbacks.should == [:before_update, :before_save, :after_save, :after_update]
+      controller.called_callbacks.should ==
+        [:before_update, :before_save, :after_save, :after_update]
     end
 
     context 'with invalid params' do
-      let(:params) { {:crud_test_model => {:rating => 20}} }
+      let(:params) { { :crud_test_model => { :rating => 20 } } }
 
       context '.html', :combine => 'uhivp' do
         it_should_respond
@@ -346,7 +363,9 @@ describe CrudTestModelsController do
         end
 
         it 'should have called the correct callbacks' do
-          controller.called_callbacks.should == [:before_update, :before_save, :before_render_edit, :before_render_form]
+          controller.called_callbacks.should ==
+            [:before_update, :before_save,
+             :before_render_edit, :before_render_form]
         end
       end
 
@@ -372,11 +391,13 @@ describe CrudTestModelsController do
     context 'with failure' do
       let(:test_entry) { crud_test_models(:BBBBB) }
       context '.html' do
-        it 'should not delete entry from database', :perform_request => false do
+        it 'should not delete entry from database',
+           :perform_request => false do
           expect { perform_request }.not_to change { CrudTestModel.count }
         end
 
-        it 'should redirect to referer', :perform_request => false do
+        it 'should redirect to referer',
+           :perform_request => false do
           ref = @request.env['HTTP_REFERER'] = crud_test_model_url(test_entry)
           perform_request
           should redirect_to(ref)

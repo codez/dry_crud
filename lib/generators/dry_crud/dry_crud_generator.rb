@@ -12,7 +12,8 @@ class DryCrudGenerator < Rails::Generators::Base
 
   def install_dry_crud
     # copy everything in template subfolders
-    exclude_template = options[:templates].downcase == 'haml' ? '.erb' : '.haml'
+    exclude_template = options[:templates].downcase == 'haml' ?
+                          '.erb' : '.haml'
 
     exclude_test_dir = case options[:tests].downcase
       when 'rspec' then 'test'

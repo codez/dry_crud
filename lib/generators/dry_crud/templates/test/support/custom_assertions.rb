@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 # A handful of convenient assertions. The aim of custom assertions is to
 # provide more specific error messages and to perform complex checks.
 #
@@ -11,23 +13,32 @@ module CustomAssertions
 
   # Asserts that the element is included in the collection.
   def assert_include(collection, element, msg = '')
-    full_message = build_message(msg, "<?> expected to be included in \n<?>.",
-                                 element, collection)
+    full_message = build_message(msg,
+                                 "<?> expected to be included in \n<?>.",
+                                 element,
+                                 collection)
     assert collection.include?(element), full_message
   end
 
   # Asserts that the element is not included in the collection.
   def assert_not_include(collection, element, msg = '')
-    full_message = build_message(msg, "<?> expected not to be included in \n<?>.",
-                                 element, collection)
+    full_message = build_message(msg,
+                                 "<?> expected not to be included in \n<?>.",
+                                 element,
+                                 collection)
     assert !collection.include?(element), full_message
   end
 
   # Asserts that regexp occurs exactly expected times in string.
   def assert_count(expected, regexp, string, msg = '')
     actual = string.scan(regexp).size
-    full_message = build_message(msg, "<?> expected to occur ? time(s), but occured ? time(s) in \n<?>.",
-                                 regexp, expected, actual, string)
+    full_message = build_message(msg,
+                                 '<?> expected to occur ? time(s), ' +
+                                 "but occured ? time(s) in \n<?>.",
+                                 regexp,
+                                 expected,
+                                 actual,
+                                 string)
     assert expected == actual, full_message
   end
 
@@ -46,19 +57,28 @@ module CustomAssertions
   # attributes are expected to have errors. If no invalid attributes are
   # specified, only the invalidity of the record is asserted.
   def assert_not_valid(record, *invalid_attrs)
-    msg = build_message('', '? expected to be invalid, but is valid.', record.to_s)
+    msg = build_message('',
+                        '? expected to be invalid, but is valid.',
+                        record.to_s)
     assert !record.valid?, msg
 
     # assert that the given attributes have errors.
     invalid_attrs.each do |a|
-      msg = build_message('', 'Attribute <?> expected to be invalid, but is valid.', a.to_s)
+      msg = build_message('',
+                          'Attribute <?> expected to be invalid, ' +
+                          'but is valid.',
+                          a.to_s)
       assert record.errors[a].present?, msg
     end
 
     if invalid_attrs.present?
       # assert that no other than the invalid attributes have errors.
       record.errors.each do |a, error|
-        msg = build_message('', "Attribute <?> not declared as invalid attribute, but has the following error: \n?.", a.to_s, error)
+        msg = build_message('',
+                            'Attribute <?> not declared as invalid ' +
+                            "attribute, but has the following error: \n?.",
+                            a.to_s,
+                            error)
         assert invalid_attrs.include?(a), msg
       end
     end

@@ -1,7 +1,9 @@
-# A module to include into your functional tests for your crud controller subclasses.
-# Simply implement the two methods :test_entry and :test_entry_attrs to test the basic
-# crud functionality. Override the test methods if you changed the behaviour in your subclass
-# controller.
+# encoding: UTF-8
+
+# A module to include into your functional tests for your crud controller
+# subclasses. Simply implement the two methods #test_entry and
+# #test_entry_attrs to test the basic crud functionality. Override the test
+# methods if you changed the behaviour in your subclass controller.
 module CrudControllerTestHelper
 
   def test_index # :nodoc:
@@ -15,7 +17,7 @@ module CrudControllerTestHelper
     get :index, test_params(:format => 'json')
     assert_response :success
     assert entries.present?
-    assert @response.body.starts_with?("[{"), @response.body
+    assert @response.body.starts_with?('[{'), @response.body
   end
 
   def test_index_search # :nodoc:
@@ -34,7 +36,7 @@ module CrudControllerTestHelper
     get :index, test_params(:sort => col, :sort_dir => 'asc')
     assert_response :success
     assert entries.present?
-    sorted = entries.sort_by &(col.to_sym)
+    sorted = entries.sort_by(&(col.to_sym))
     assert_equal sorted, entries.to_a
   end
 
@@ -43,7 +45,7 @@ module CrudControllerTestHelper
     get :index, test_params(:sort => col, :sort_dir => 'desc')
     assert_response :success
     assert entries.present?
-    sorted = entries.to_a.sort_by &(col.to_sym)
+    sorted = entries.to_a.sort_by(&(col.to_sym))
     assert_equal sorted.reverse, entries.to_a
   end
 
@@ -58,7 +60,7 @@ module CrudControllerTestHelper
     get :show, test_params(:id => test_entry.id, :format => 'json')
     assert_response :success
     assert_equal test_entry, entry
-    assert @response.body.starts_with?("{")
+    assert @response.body.starts_with?('{')
   end
 
   def test_show_with_non_existing_id_raises_RecordNotFound # :nodoc:
@@ -85,10 +87,11 @@ module CrudControllerTestHelper
 
   def test_create_json # :nodoc:
     assert_difference("#{model_class.name}.count") do
-      post :create, test_params(model_identifier => new_entry_attrs, :format => 'json')
+      post :create, test_params(model_identifier => new_entry_attrs,
+                                :format => 'json')
     end
     assert_response :success
-    assert @response.body.starts_with?("{")
+    assert @response.body.starts_with?('{')
   end
 
   def test_edit # :nodoc:
@@ -100,7 +103,8 @@ module CrudControllerTestHelper
 
   def test_update # :nodoc:
     assert_no_difference("#{model_class.name}.count") do
-      put :update, test_params(:id => test_entry.id, model_identifier => edit_entry_attrs)
+      put :update, test_params(:id => test_entry.id,
+                               model_identifier => edit_entry_attrs)
     end
     assert_attrs_equal(edit_entry_attrs)
     assert_redirected_to_show entry
@@ -108,10 +112,12 @@ module CrudControllerTestHelper
 
   def test_update_json # :nodoc:
     assert_no_difference("#{model_class.name}.count") do
-      put :update, test_params(:id => test_entry.id, model_identifier => edit_entry_attrs, :format => 'json')
+      put :update, test_params(:id => test_entry.id,
+                               model_identifier => edit_entry_attrs,
+                               :format => 'json')
     end
     assert_response :success
-    assert_equal "", @response.body.strip
+    assert_equal '', @response.body.strip
   end
 
   def test_destroy # :nodoc:
@@ -123,26 +129,31 @@ module CrudControllerTestHelper
 
   def test_destroy_json # :nodoc:
     assert_difference("#{model_class.name}.count", -1) do
-      delete :destroy, test_params(:id => test_entry.id, :format => 'json')
+      delete :destroy, test_params(:id => test_entry.id,
+                                   :format => 'json')
     end
     assert_response :success
-    assert_equal "", @response.body.strip
+    assert_equal '', @response.body.strip
   end
 
   private
 
   def assert_redirected_to_index # :nodoc:
-    assert_redirected_to test_params(:action => 'index', :returning => true)
+    assert_redirected_to test_params(:action => 'index',
+                                     :returning => true)
   end
 
   def assert_redirected_to_show(entry) # :nodoc:
-    assert_redirected_to test_params(:action => 'show', :id => entry.id)
+    assert_redirected_to test_params(:action => 'show',
+                                     :id => entry.id)
   end
 
   def assert_attrs_equal(attrs) # :nodoc:
     attrs.each do |key, value|
       actual = entry.send(key)
-      assert_equal value, actual, "#{key} is expected to be <#{value.inspect}>, got <#{actual.inspect}>"
+      assert_equal value, actual,
+                   "#{key} is expected to be <#{value.inspect}>, " +
+                   "got <#{actual.inspect}>"
     end
   end
 
@@ -168,12 +179,12 @@ module CrudControllerTestHelper
 
   # Test object used in several tests.
   def test_entry
-    raise "Implement this method in your test class"
+    raise 'Implement this method in your test class'
   end
 
   # Attribute hash used in several tests.
   def test_entry_attrs
-    raise "Implement this method in your test class"
+    raise 'Implement this method in your test class'
   end
 
   # Attribute hash used in edit/update tests.

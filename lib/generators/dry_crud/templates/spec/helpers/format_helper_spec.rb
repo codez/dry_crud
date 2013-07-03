@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'spec_helper'
 
 describe FormatHelper do
@@ -28,21 +29,34 @@ describe FormatHelper do
       subject { labeled('label') { 'value' } }
 
       it { should be_html_safe }
-      its(:squish) { should =~ /^<div class=["']labeled["']> <label>label<\/label> <div class=["']value["']>value<\/div> <\/div>$/ }
+      its(:squish) { should =~ /^<div\ class=["']labeled["']>
+                                 \ <label>label<\/label>
+                                 \ <div\ class=["']value["']>value<\/div>
+                                 \ <\/div>$/x }
     end
 
     context 'with empty value' do
       subject { labeled('label') { '' } }
 
       it { should be_html_safe }
-      its(:squish) { should =~ /<div class=["']labeled["']> <label>label<\/label> <div class=["']value["']>#{UtilityHelper::EMPTY_STRING}<\/div> <\/div>$/ }
+      its(:squish) { should =~ /<div\ class=["']labeled["']>
+                                \ <label>label<\/label>
+                                \ <div\ class=["']value["']>
+                                #{UtilityHelper::EMPTY_STRING}
+                                <\/div>
+                                \ <\/div>$/x }
     end
 
     context 'with unsafe value' do
       subject { labeled('label') { 'value <unsafe>' } }
 
       it { should be_html_safe }
-      its(:squish) { should =~/<div class=["']labeled["']> <label>label<\/label> <div class=["']value["']>value &lt;unsafe&gt;<\/div> <\/div>$/ }
+      its(:squish) { should =~/<div\ class=["']labeled["']>
+                               \ <label>label<\/label>
+                               \ <div\ class=["']value["']>
+                               value\ &lt;unsafe&gt;
+                               <\/div>
+                               \ <\/div>$/x }
     end
   end
 
@@ -50,7 +64,10 @@ describe FormatHelper do
     subject { labeled_attr('foo', :size) }
 
     it { should be_html_safe }
-    its(:squish) {  should =~/<div class=["']labeled["']> <label>Size<\/label> <div class=["']value["']>3 chars<\/div> <\/div>$/ }
+    its(:squish) {  should =~/<div\ class=["']labeled["']>
+                              \ <label>Size<\/label>
+                              \ <div\ class=["']value["']>3\ chars<\/div>
+                              \ <\/div>$/x }
   end
 
   describe '#f' do
@@ -111,7 +128,8 @@ describe FormatHelper do
     end
 
     it 'should format empty belongs_to' do
-      format_attr(crud_test_models(:AAAAA), :companion).should == t(:'global.associations.no_entry')
+      format_attr(crud_test_models(:AAAAA), :companion).should ==
+        t(:'global.associations.no_entry')
     end
 
     it 'should format existing belongs_to' do

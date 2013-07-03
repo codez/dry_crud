@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 # add gem to Gemfile
 gem 'dry_crud'
 

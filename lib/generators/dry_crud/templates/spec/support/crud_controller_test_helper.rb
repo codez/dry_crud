@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 # Contains assertions for testing common crud controller use cases.
 # See crud_controller_examples for use cases.
 module CrudControllerTestHelper
@@ -13,12 +15,13 @@ module CrudControllerTestHelper
     send(m[:method], m[:action], params)
   end
 
-  # If a combine key is given in metadata, only the first request for all examples
-  # with the same key will be performed.
+  # If a combine key is given in metadata, only the first request for all
+  # examples with the same key will be performed.
   def perform_combined_request
     if stack = example.metadata[:combine]
       @@current_stack ||= nil
-      if stack == @@current_stack && described_class == @@current_controller.class
+      if stack == @@current_stack &&
+         described_class == @@current_controller.class
         @response = @@current_response
         @_templates = @templates = @@current_templates
         @controller = @@current_controller
@@ -58,8 +61,10 @@ module CrudControllerTestHelper
     # Describe a certain action and provide some usefull metadata.
     # Tests whether this action is configured to be skipped.
     def describe_action(method, action, metadata = {}, &block)
+      action_defined = described_class.instance_methods.
+                        collect(&:to_s).include?(action.to_s)
       describe("#{method.to_s.upcase} #{action}",
-               {:if => described_class.instance_methods.collect(&:to_s).include?(action.to_s),
+               {:if => action_defined,
                 :method => method,
                 :action => action}.
                merge(metadata),
@@ -96,7 +101,8 @@ module CrudControllerTestHelper
       end
     end
 
-    # Test that the given template or the main template of the action under test is rendered.
+    # Test that the given template or the main template of the action under
+    # test is rendered.
     def it_should_render(template = nil)
       it { should render_template(template || example.metadata[:action]) }
     end
@@ -115,12 +121,18 @@ module CrudControllerTestHelper
 
     # Test that the response redirects to the index action.
     def it_should_redirect_to_index
-      it { should redirect_to scope_params.merge(:action => 'index', :returning => true) }
+      it do
+        should redirect_to scope_params.merge(:action => 'index',
+                                              :returning => true)
+      end
     end
 
     # Test that the response redirects to the show action of the current entry.
     def it_should_redirect_to_show
-      it { should redirect_to scope_params.merge(:action => 'show', :id => entry.id) }
+      it do
+        should redirect_to scope_params.merge(:action => 'show',
+                                              :id => entry.id)
+      end
     end
 
     # Test that the given flash type is present.

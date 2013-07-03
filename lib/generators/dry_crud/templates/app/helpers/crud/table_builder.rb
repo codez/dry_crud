@@ -1,5 +1,8 @@
+# encoding: UTF-8
+
 module Crud
-  # A simple helper to easily define tables listing several rows of the same data type.
+  # A simple helper to easily define tables listing several rows of the same
+  # data type.
   #
   # Example Usage:
   #   Crud::TableBuilder.table(entries, template) do |t|
@@ -20,18 +23,18 @@ module Crud
       @cols = []
     end
 
-    # Convenience method to directly generate a table. Renders a row for each entry in entries.
-    # Takes a block that gets the table object as parameter for configuration.
-    # Returns the generated html for the table.
+    # Convenience method to directly generate a table. Renders a row for each
+    # entry in entries. Takes a block that gets the table object as parameter
+    # for configuration. Returns the generated html for the table.
     def self.table(entries, template, options = {})
       t = new(entries, template, options)
       yield t
       t.to_html
     end
 
-    # Define a column for the table with the given header, the html_options used for
-    # each td and a block rendering the contents of a cell for the current entry.
-    # The columns appear in the order they are defined.
+    # Define a column for the table with the given header, the html_options
+    # used for each td and a block rendering the contents of a cell for the
+    # current entry. The columns appear in the order they are defined.
     def col(header = '', html_options = {}, &block)
       @cols << Col.new(header, html_options, @template, block)
     end
@@ -67,10 +70,10 @@ module Crud
     def align_class(attr)
       entry = entry_class.new rescue nil
       case column_type(entry, attr)
-        when :integer, :float, :decimal
-          'right' unless association(entry, attr, :belongs_to)
-        when :boolean
-          'center'
+      when :integer, :float, :decimal
+        'right' unless association(entry, attr, :belongs_to)
+      when :boolean
+        'center'
       end
     end
 
@@ -129,7 +132,8 @@ module Crud
     # in the template/controller to tell if an attribute is sortable or not.
     # Extracted into an own module for convenience.
     module Sorting
-      # Create a header with sort links and a mark for the current sort direction.
+      # Create a header with sort links and a mark for the current sort
+      # direction.
       def sort_header(attr, label = nil)
         label ||= attr_header(attr)
         template.link_to(label, sort_params(attr)) + current_mark(attr)
@@ -143,16 +147,18 @@ module Crud
 
       # Renders a sort link header, otherwise similar to :attr.
       def sortable_attr(a, header = nil, &block)
-        template.sortable?(a) ?
-          attr(a, sort_header(a, header), &block) :
+        if template.sortable?(a)
+          attr(a, sort_header(a, header), &block)
+        else
           attr(a, header, &block)
+        end
       end
 
       private
 
       # Request params for the sort link.
       def sort_params(attr)
-        params.merge({:sort => attr, :sort_dir => sort_dir(attr)})
+        params.merge({ :sort => attr, :sort_dir => sort_dir(attr) })
       end
 
       # The sort mark, if any, for the given attribute.
@@ -217,8 +223,8 @@ module Crud
       def edit_action_col(&block)
         action_col do |e|
           path = action_path(e, &block)
-          table_action_link('pencil',
-                            path.is_a?(String) ? path : edit_polymorphic_path(path))
+          path = path.is_a?(String) ? path : edit_polymorphic_path(path)
+          table_action_link('pencil', path)
         end
       end
 

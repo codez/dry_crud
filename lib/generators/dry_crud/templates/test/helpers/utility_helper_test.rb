@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'test_helper'
 require 'support/crud_test_model'
 
@@ -31,9 +32,10 @@ class UtilityHelperTest < ActionView::TestCase
   end
 
   test 'default attributes do not include id and password' do
-    assert_equal [:name, :email, :whatever, :children, :companion_id, :rating, :income,
-                  :birthdate, :gets_up_at, :last_seen, :human, :remarks,
-                  :created_at, :updated_at], default_crud_attrs
+    assert_equal [:name, :email, :whatever, :children, :companion_id, :rating,
+                  :income, :birthdate, :gets_up_at, :last_seen, :human,
+                  :remarks, :created_at, :updated_at],
+                 default_crud_attrs
   end
 
   test 'column types' do

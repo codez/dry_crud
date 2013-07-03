@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'spec_helper'
 
 describe 'Crud::FormBuilder' do
@@ -18,7 +19,9 @@ describe 'Crud::FormBuilder' do
 
   let(:entry) { CrudTestModel.first }
 <% if Rails.version < '4.0' -%>
-  let(:form)  { Crud::FormBuilder.new(:entry, entry, self, {}, lambda {|form| form }) }
+  let(:form)  do
+    Crud::FormBuilder.new(:entry, entry, self, {}, lambda {|form| form })
+  end
 <% else -%>
   let(:form)  { Crud::FormBuilder.new(:entry, entry, self, {}) }
 <% end -%>
@@ -81,7 +84,8 @@ describe 'Crud::FormBuilder' do
 
     it "with has options from :list option" do
       list = CrudTestModel.all
-      f = form.belongs_to_field(:companion_id, :list => [list.first, list.second])
+      f = form.belongs_to_field(:companion_id,
+                                :list => [list.first, list.second])
       f.scan('</option>').should have(3).items
     end
 
@@ -160,28 +164,42 @@ describe 'Crud::FormBuilder' do
     end
 
     context "with custom content in argument" do
-      subject { form.labeled("gugus", "<input type='text' name='gugus' />".html_safe) }
+      subject do
+        form.labeled('gugus', "<input type='text' name='gugus' />".html_safe)
+      end
 
       it { should be_html_safe }
       it { should match /label [^>]*for.+<input/m }
     end
 
     context "with custom content in block" do
-      subject { form.labeled("gugus") { "<input type='text' name='gugus' />".html_safe } }
+      subject do
+        form.labeled('gugus') do
+          "<input type='text' name='gugus' />".html_safe
+        end
+      end
 
       it { should be_html_safe }
       it { should match /label [^>]*for.+<input/m }
     end
 
     context "with caption and content in argument" do
-      subject { form.labeled("gugus", 'Caption', "<input type='text' name='gugus' />".html_safe) }
+      subject do
+        form.labeled('gugus',
+                     'Caption',
+                     "<input type='text' name='gugus' />".html_safe)
+      end
 
       it { should be_html_safe }
       it { should match /label [^>]*for.+>Caption<\/label>.*<input/m }
     end
 
     context "with caption and content in block" do
-      subject { form.labeled("gugus", 'Caption') { "<input type='text' name='gugus' />".html_safe } }
+      subject do
+        form.labeled("gugus", 'Caption') do
+          "<input type='text' name='gugus' />".html_safe
+        end
+      end
 
       it { should be_html_safe }
       it { should match /label [^>]*for.+>Caption<\/label>.*<input/m }

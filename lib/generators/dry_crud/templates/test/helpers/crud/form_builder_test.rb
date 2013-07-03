@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'test_helper'
 require 'support/crud_test_model'
 
@@ -18,7 +19,8 @@ class Crud::FormBuilderTest < ActionView::TestCase
   def create_form
     @entry = CrudTestModel.first
 <% if Rails.version < '4.0' -%>
-    @form = Crud::FormBuilder.new(:entry, @entry, self, {}, lambda {|form| form })
+    @form = Crud::FormBuilder.new(:entry, @entry, self, {},
+                                  lambda {|form| form })
 <% else -%>
     @form = Crud::FormBuilder.new(:entry, @entry, self, {})
 <% end -%>
@@ -60,7 +62,8 @@ class Crud::FormBuilderTest < ActionView::TestCase
   end
 
   test "input_field dispatches belongs_to attr to select field" do
-    assert_equal form.belongs_to_field(:companion_id), form.input_field(:companion_id)
+    assert_equal form.belongs_to_field(:companion_id),
+                 form.input_field(:companion_id)
     assert form.belongs_to_field(:companion_id).html_safe?
   end
 
@@ -102,7 +105,8 @@ class Crud::FormBuilderTest < ActionView::TestCase
 
   test "belongs_to_field with :list option" do
     list = CrudTestModel.all
-    f = form.belongs_to_field(:companion_id, :list => [list.first, list.second])
+    f = form.belongs_to_field(:companion_id,
+                              :list => [list.first, list.second])
     assert_equal 3, f.scan('</option>').size
   end
 
@@ -190,25 +194,32 @@ class Crud::FormBuilderTest < ActionView::TestCase
   end
 
   test "labeled field creates label" do
-    result = form.labeled("gugus", "<input type='text' name='gugus' />".html_safe)
+    result = form.labeled('gugus',
+                          "<input type='text' name='gugus' />".html_safe)
     assert result.html_safe?
     assert_match /label [^>]*for.+<input/m, result
   end
 
   test "labeled field creates label and block" do
-    result = form.labeled("gugus") { "<input type='text' name='gugus' />".html_safe }
+    result = form.labeled('gugus') do
+      "<input type='text' name='gugus' />".html_safe
+    end
     assert result.html_safe?
     assert_match /label [^>]*for.+<input/m, result
   end
 
   test "labeled field creates label with caption" do
-    result = form.labeled("gugus", 'Caption', "<input type='text' name='gugus' />".html_safe)
+    result = form.labeled('gugus',
+                          'Caption',
+                          "<input type='text' name='gugus' />".html_safe)
     assert result.html_safe?
     assert_match /label [^>]*for.+>Caption<\/label>.*<input/m, result
   end
 
   test "labeled field creates label with caption and block" do
-    result = form.labeled("gugus", 'Caption') { "<input type='text' name='gugus' />".html_safe }
+    result = form.labeled('gugus', 'Caption') do
+      "<input type='text' name='gugus' />".html_safe
+    end
     assert result.html_safe?
     assert_match /label [^>]*for.+>Caption<\/label>.*<input/m, result
   end

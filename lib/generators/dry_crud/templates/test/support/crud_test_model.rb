@@ -1,9 +1,12 @@
+# encoding: UTF-8
+
 # A dummy model used for general testing.
 class CrudTestModel < ActiveRecord::Base #:nodoc:
 
   belongs_to :companion, :class_name => 'CrudTestModel'
   has_and_belongs_to_many :others, :class_name => 'OtherCrudTestModel'
-  has_many :mores, :class_name => 'OtherCrudTestModel', :foreign_key => :more_id
+  has_many :mores, :class_name => 'OtherCrudTestModel',
+                   :foreign_key => :more_id
 
   before_destroy :protect_if_companion
 
@@ -51,8 +54,9 @@ class CrudTestModelsController < CrudController #:nodoc:
   self.sort_mappings = {:chatty => 'length(remarks)'}
   self.default_sort = 'name'
 <% if Rails.version >= '4.0' -%>
-  self.permitted_attrs = [:name, :email, :password, :whatever, :children, :companion_id,
-                          :rating, :income, :birthdate, :gets_up_at, :last_seen, :human, :remarks]
+  self.permitted_attrs = [:name, :email, :password, :whatever, :children,
+                          :companion_id, :rating, :income, :birthdate,
+                          :gets_up_at, :last_seen, :human, :remarks]
 <% end -%>
 
   before_create :possibly_redirect
@@ -94,7 +98,9 @@ class CrudTestModelsController < CrudController #:nodoc:
   def list_entries
     entries = super
     if params[:filter]
-      entries = entries.where(['rating < ?', 3]).except(:order).order('children DESC')
+      entries = entries.where(['rating < ?', 3]).
+                        except(:order).
+                        order('children DESC')
     end
     entries
   end
@@ -103,7 +109,9 @@ class CrudTestModelsController < CrudController #:nodoc:
 
   def build_entry
     entry = super
-    entry.companion_id = model_params.delete(:companion_id) if params[model_identifier]
+    if params[model_identifier]
+      entry.companion_id = model_params.delete(:companion_id)
+    end
     entry
   end
 
@@ -142,7 +150,9 @@ class CrudTestModelsController < CrudController #:nodoc:
 
   # handle the called callbacks
   def method_missing(sym, *args)
-    called_callback(sym.to_s[HANDLE_PREFIX.size..-1].to_sym) if sym.to_s.starts_with?(HANDLE_PREFIX)
+    if sym.to_s.starts_with?(HANDLE_PREFIX)
+      called_callback(sym.to_s[HANDLE_PREFIX.size..-1].to_sym)
+    end
   end
 
   # records a callback
@@ -203,7 +213,8 @@ module CrudTestHelper
   def setup_db
     without_transaction do
       silence_stream(STDOUT) do
-        ActiveRecord::Base.connection.create_table :crud_test_models, :force => true do |t|
+        c = ActiveRecord::Base.connection
+        c.create_table :crud_test_models, :force => true do |t|
           t.string   :name, :null => false, :limit => 50
           t.string   :email
           t.string   :password
@@ -220,14 +231,17 @@ module CrudTestHelper
 
           t.timestamps
         end
-      end
-      ActiveRecord::Base.connection.create_table :other_crud_test_models, :force => true do |t|
-        t.string   :name, :null => false, :limit => 50
-        t.integer  :more_id
-      end
-      ActiveRecord::Base.connection.create_table :crud_test_models_other_crud_test_models, :force => true do |t|
-        t.belongs_to :crud_test_model
-        t.belongs_to :other_crud_test_model
+
+        c.create_table :other_crud_test_models, :force => true do |t|
+          t.string   :name, :null => false, :limit => 50
+          t.integer  :more_id
+        end
+
+        c.create_table :crud_test_models_other_crud_test_models,
+                       :force => true do |t|
+          t.belongs_to :crud_test_model
+          t.belongs_to :other_crud_test_model
+        end
       end
 
       CrudTestModel.reset_column_information
@@ -237,7 +251,9 @@ module CrudTestHelper
   # Removes the crud_test_models table from the database.
   def reset_db
     c = ActiveRecord::Base.connection
-    [:crud_test_models, :other_crud_test_models, :crud_test_models_other_crud_test_models].each do |table|
+    [:crud_test_models,
+     :other_crud_test_models,
+     :crud_test_models_other_crud_test_models].each do |table|
       if c.table_exists?(table)
         c.drop_table(table) rescue nil
       end
@@ -265,7 +281,8 @@ module CrudTestHelper
   end
 
   def special_routing
-    controller = @controller || controller  # test:unit uses instance variable, rspec the method
+    # test:unit uses instance variable, rspec the method
+    controller = @controller || controller
     @routes = ActionDispatch::Routing::RouteSet.new
     _routes = @routes
 
@@ -279,18 +296,19 @@ module CrudTestHelper
 
   def create(index, companion)
     c = str(index)
-    m = CrudTestModel.new(:name => c,
-                          :children => 10 - index,
-                          :rating => "#{index}.#{index}".to_f,
-                          :income => 10000000 * index + 0.1 * index,
-                          :birthdate => "#{1900 + 10 * index}-#{index}-#{index}",
-                          # store entire date to avoid time zone issues
-                          :gets_up_at => RUBY_VERSION.include?('1.8.') ?
-                                            Time.utc(2000,1,1,index,index) :
-                                            Time.local(2000,1,1,index,index),
-                          :last_seen => "#{2000 + 10 * index}-#{index}-#{index} 1#{index}:2#{index}",
-                          :human => index % 2 == 0,
-                          :remarks => "#{c} #{str(index + 1)} #{str(index + 2)}\n" * (index % 3 + 1))
+    m = CrudTestModel.new(
+      :name => c,
+      :children => 10 - index,
+      :rating => "#{index}.#{index}".to_f,
+      :income => 10000000 * index + 0.1 * index,
+      :birthdate => "#{1900 + 10 * index}-#{index}-#{index}",
+      # store entire date to avoid time zone issues
+      :gets_up_at => RUBY_VERSION.include?('1.8.') ?
+                        Time.utc(2000,1,1,index,index) :
+                        Time.local(2000,1,1,index,index),
+      :last_seen => "#{2000 + 10 * index}-#{index}-#{index} 1#{index}:2#{index}",
+      :human => index % 2 == 0,
+      :remarks => "#{c} #{str(index + 1)} #{str(index + 2)}\n" * (index % 3 + 1))
     m.companion = companion
     m.save!
     m
@@ -299,7 +317,9 @@ module CrudTestHelper
   def create_other(index)
     c = str(index)
     others = CrudTestModel.all[index..(index+2)]
-    OtherCrudTestModel.create!(:name => c, :other_ids => others.collect(&:id), :more_id => others.first.try(:id))
+    OtherCrudTestModel.create!(:name => c,
+                               :other_ids => others.collect(&:id),
+                               :more_id => others.first.try(:id))
   end
 
   def str(index)

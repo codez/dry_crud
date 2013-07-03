@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'spec_helper'
 
 describe I18nHelper do
@@ -7,33 +8,67 @@ describe I18nHelper do
   describe '#translate_inheritable' do
     before { @controller = CrudTestModelsController.new }
 
-    before { I18n.backend.store_translations :en, :global => { :test_key => 'global' } }
+    before do
+      I18n.backend.store_translations(:en,
+        :global => {
+          :test_key => 'global' })
+    end
     subject { ti(:test_key) }
 
     it { should == 'global' }
 
     context 'with list key' do
-      before { I18n.backend.store_translations :en, :list => { :global => {:test_key => 'list global'} } }
+      before do
+        I18n.backend.store_translations(:en,
+          :list => {
+            :global => {
+              :test_key => 'list global' } })
+      end
       it { should == 'list global' }
 
       context 'and list action key' do
-        before { I18n.backend.store_translations :en, :list => { :index => {:test_key => 'list index'} } }
+        before do
+          I18n.backend.store_translations(:en,
+            :list => {
+              :index => {
+                :test_key => 'list index' } })
+        end
         it { should == 'list index' }
 
         context 'and crud global key' do
-          before { I18n.backend.store_translations :en, :crud => {  :global => {:test_key => 'crud global'} } }
+          before do
+            I18n.backend.store_translations(:en,
+              :crud => {
+                :global => {
+                  :test_key => 'crud global' } })
+          end
           it { should == 'crud global' }
 
           context 'and crud action key' do
-            before { I18n.backend.store_translations :en, :crud => {  :index => {:test_key => 'crud index'} } }
+            before do
+              I18n.backend.store_translations(:en,
+                :crud => {
+                  :index => {
+                    :test_key => 'crud index' } })
+            end
             it { should == 'crud index' }
 
             context 'and controller global key' do
-              before { I18n.backend.store_translations :en, :crud_test_models => {  :global => {:test_key => 'test global'} } }
+              before do
+                I18n.backend.store_translations(:en,
+                  :crud_test_models => {
+                    :global => {
+                      :test_key => 'test global' } })
+              end
               it { should == 'test global' }
 
               context 'and controller action key' do
-                before { I18n.backend.store_translations :en, :crud_test_models => {  :index => {:test_key => 'test index'} } }
+                before do
+                  I18n.backend.store_translations(:en,
+                    :crud_test_models => {
+                      :index => {
+                        :test_key => 'test index' } })
+                end
                 it { should == 'test index' }
               end
             end
@@ -47,29 +82,34 @@ describe I18nHelper do
     let(:assoc) { CrudTestModel.reflect_on_association(:companion) }
     subject { ta(:test_key, assoc)}
 
-    before { I18n.backend.store_translations :en, :global => { :associations => {:test_key => 'global'} } }
+    before do
+      I18n.backend.store_translations(:en,
+        :global => {
+          :associations => {
+            :test_key => 'global' } })
+    end
     it { should == 'global' }
 
     context 'with model key' do
       before do
-        I18n.backend.store_translations :en,
+        I18n.backend.store_translations(:en,
             :activerecord => {
               :associations => {
                 :crud_test_model => {
-                  :test_key => 'model'} } }
+                  :test_key => 'model' } } })
       end
 
       it { should == 'model' }
 
       context 'and assoc key' do
         before do
-          I18n.backend.store_translations :en,
+          I18n.backend.store_translations(:en,
              :activerecord => {
                :associations => {
                  :models => {
                    :crud_test_model => {
                      :companion => {
-                       :test_key => 'companion'} } } } }
+                       :test_key => 'companion' } } } } })
         end
 
         it { should == 'companion' }

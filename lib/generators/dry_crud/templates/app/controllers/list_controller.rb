@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 # Abstract controller providing a basic list action (#index).
 # The action lists all entries of a certain model and provides functionality to
 # search and sort this list.
@@ -26,13 +28,15 @@ class ListController < ApplicationController
 
   private
 
-  # Helper method to access the entries to be displayed in the current index page in an uniform way.
+  # Helper method to access the entries to be displayed in the current index
+  # page in an uniform way.
   def entries
     get_model_ivar(true) || set_model_ivar(list_entries)
   end
 
   # The base relation used to filter the entries.
-  # This method may be adapted as long it returns an <tt>ActiveRecord::Relation</tt>.
+  # This method may be adapted as long it returns an
+  # <tt>ActiveRecord::Relation</tt>.
   def list_entries
     model_scope
   end
@@ -62,8 +66,8 @@ class ListController < ApplicationController
     instance_variable_get(:"@#{name}")
   end
 
-  # Sets an instance variable with the underscored class name if the given value.
-  # If the value is a collection, sets the plural name.
+  # Sets an instance variable with the underscored class name if the given
+  # value. If the value is a collection, sets the plural name.
   def set_model_ivar(value)
     name = if value.respond_to?(:klass) # ActiveRecord::Relation
       ivar_name(value.klass).pluralize
@@ -135,7 +139,7 @@ class ListController < ApplicationController
         args = actions.collect {|a| :"render_#{a}" }
         args << {:only => :before,
                  :terminator => "result == false || performed?"}
-        define_model_callbacks *args
+        define_model_callbacks(*args)
       end
     end
   end
@@ -174,7 +178,8 @@ class ListController < ApplicationController
         end.join(" OR ")
         clause = terms.collect {|t| "(#{clause})" }.join(" AND ")
 
-         ["(#{clause})"] + terms.collect {|t| [t] * search_columns.size }.flatten
+        ["(#{clause})"] +
+        terms.collect {|t| [t] * search_columns.size }.flatten
       end
     end
 

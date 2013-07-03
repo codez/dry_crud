@@ -1,7 +1,9 @@
+# encoding: UTF-8
+
 # View helpers for basic functions used in various other helpers.
 module UtilityHelper
 
-  EMPTY_STRING = '&nbsp;'.html_safe   # non-breaking space asserts better css styling.
+  EMPTY_STRING = '&nbsp;'.html_safe   # non-breaking space asserts better css.
 
   # Render a content tag with the collected contents rendered
   # by &block for each item in collection.
@@ -9,9 +11,9 @@ module UtilityHelper
     content_tag(tag, safe_join(collection, &block), options)
   end
 
-  # Overridden method that takes a block that is executed for each item in array
-  # before appending the results.
-  def safe_join(array, sep = $,, &block)
+  # Overridden method that takes a block that is executed for each item in
+  # array before appending the results.
+  def safe_join(array, sep = $OUTPUT_FIELD_SEPARATOR, &block)
     super(block_given? ? array.collect(&block) : array, sep)
   end
 
@@ -34,7 +36,8 @@ module UtilityHelper
   end
 
   # The default attributes to use in attrs, list and form partials.
-  # These are all defined attributes except certain special ones like 'id' or 'position'.
+  # These are all defined attributes except certain special ones like
+  # 'id' or 'position'.
   def default_crud_attrs
     attrs = model_class.column_names.collect(&:to_sym)
     attrs - [:id, :position, :password]
@@ -54,10 +57,10 @@ module UtilityHelper
   end
 
   # Returns the association proxy for the given attribute. The attr parameter
-  # may be the _id column or the association name. If a macro (e.g. :belongs_to)
-  # is given, the association must be of this type, otherwise, any association
-  # is returned. Returns nil if no association (or not of the given macro) was
-  # found.
+  # may be the _id column or the association name. If a macro (e.g.
+  # :belongs_to) is given, the association must be of this type, otherwise,
+  # any association is returned. Returns nil if no association (or not of the
+  # given macro) was found.
   def association(obj, attr, *macros)
     if obj.class.respond_to?(:reflect_on_association)
       name = assoc_and_id_attr(attr).first.to_sym
@@ -69,7 +72,7 @@ module UtilityHelper
   # Returns the name of the attr and it's corresponding field
   def assoc_and_id_attr(attr)
     attr = attr.to_s
-    attr, attr_id = if attr.end_with?('_id')
+    if attr.end_with?('_id')
       [attr[0..-4], attr]
     elsif attr.end_with?('_ids')
       [attr[0..-5].pluralize, attr]

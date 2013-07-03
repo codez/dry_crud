@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'test_helper'
 require 'support/crud_test_model'
 
@@ -22,27 +23,35 @@ class FormatHelperTest < ActionView::TestCase
     result = labeled('label') { 'value' }
 
     assert result.html_safe?
-    assert_dom_equal "<div class='labeled'> <label>label</label> <div class='value'>value</div> </div>", result.squish
+    assert_dom_equal "<div class='labeled'> <label>label</label> " +
+                     "<div class='value'>value</div> </div>",
+                     result.squish
   end
 
   test 'labeled text empty' do
     result = labeled('label', '')
 
     assert result.html_safe?
-    assert_dom_equal "<div class='labeled'> <label>label</label> <div class='value'>#{EMPTY_STRING}</div> </div>", result.squish
+    assert_dom_equal "<div class='labeled'> <label>label</label> " +
+                     "<div class='value'>#{EMPTY_STRING}</div> </div>",
+                     result.squish
   end
 
   test 'labeled text as content' do
     result = labeled('label', 'value <unsafe>')
 
     assert result.html_safe?
-    assert_dom_equal "<div class='labeled'> <label>label</label> <div class='value'>value &lt;unsafe&gt;</div> </div>", result.squish
+    assert_dom_equal "<div class='labeled'> <label>label</label> " +
+                     "<div class='value'>value &lt;unsafe&gt;</div> </div>",
+                     result.squish
   end
 
   test 'labeled attr' do
     result = labeled_attr('foo', :size)
     assert result.html_safe?
-    assert_dom_equal "<div class='labeled'> <label>Size</label> <div class='value'>3 chars</div> </div>", result.squish
+    assert_dom_equal "<div class='labeled'> <label>Size</label> " +
+                     "<div class='value'>3 chars</div> </div>",
+                     result.squish
   end
 
   test 'format Floats' do
@@ -117,13 +126,15 @@ class FormatHelperTest < ActionView::TestCase
 
   test 'format text column' do
     m = crud_test_models(:AAAAA)
-    assert_equal "<p>AAAAA BBBBB CCCCC\n<br />AAAAA BBBBB CCCCC\n</p>", format_type(m, :remarks)
+    assert_equal "<p>AAAAA BBBBB CCCCC\n<br />AAAAA BBBBB CCCCC\n</p>",
+                 format_type(m, :remarks)
     assert format_type(m, :remarks).html_safe?
   end
 
   test 'format belongs to column without content' do
     m = crud_test_models(:AAAAA)
-    assert_equal t(:'global.associations.no_entry'), format_attr(m, :companion)
+    assert_equal t(:'global.associations.no_entry'),
+                 format_attr(m, :companion)
   end
 
   test 'format belongs to column with content' do
@@ -133,7 +144,8 @@ class FormatHelperTest < ActionView::TestCase
 
   test 'format has_many column with content' do
     m = crud_test_models(:CCCCC)
-    assert_equal '<ul><li>AAAAA</li><li>BBBBB</li></ul>', format_attr(m, :others)
+    assert_equal '<ul><li>AAAAA</li><li>BBBBB</li></ul>',
+                 format_attr(m, :others)
   end
 
   test 'captionize' do

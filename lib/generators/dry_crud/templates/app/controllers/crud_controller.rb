@@ -1,12 +1,15 @@
+# encoding: UTF-8
+
 # Abstract controller providing basic CRUD actions.
 # This implementation mainly follows the one of the Rails scaffolding
 # controller and responds to HTML and JSON requests.
 # Some enhancements were made to ease extendability.
 # The current model entry is available in the view as an instance variable
 # named after the +model_class+ or in the helper method +entry+.
-# Several protected helper methods are there to be (optionally) overriden by subclasses.
-# With the help of additional callbacks, it is possible to hook into the action procedures without
-# overriding the entire method.
+# Several protected helper methods are there to be (optionally) overriden by
+# subclasses.
+# With the help of additional callbacks, it is possible to hook into the action
+# procedures without overriding the entire method.
 class CrudController < ListController
 
 <% if Rails.version >= '4.0' -%>
@@ -15,11 +18,13 @@ class CrudController < ListController
 <% end -%>
   delegate :model_identifier, :to => 'self.class'
 
-  # Defines before and after callback hooks for create, update, save and destroy actions.
+  # Defines before and after callback hooks for create, update, save and
+  # destroy actions.
   define_model_callbacks :create, :update, :save, :destroy
 
   # Defines before callbacks for the render actions. A virtual callback
-  # unifiying render_new and render_edit, called render_form, is defined further down.
+  # unifiying render_new and render_edit, called render_form, is defined
+  # further down.
   define_render_callbacks :show, :new, :edit
 
   after_save :set_success_notice
@@ -57,7 +62,8 @@ class CrudController < ListController
   def create(options = {}, &block)
     assign_attributes
     created = with_callbacks(:create, :save) { entry.save }
-    respond_with(entry, options.reverse_merge(:success => created), &block)
+    respond_options = options.reverse_merge(:success => created)
+    respond_with(entry, respond_options, &block)
   end
 
   # Display a form to edit an exisiting entry of this model.
@@ -76,7 +82,8 @@ class CrudController < ListController
   def update(options = {}, &block)
     assign_attributes
     updated = with_callbacks(:update, :save) { entry.save }
-    respond_with(entry, options.reverse_merge(:success => updated), &block)
+    respond_options = options.reverse_merge(:success => updated)
+    respond_with(entry, respond_options, &block)
   end
 
   # Destroy an existing entry of this model.
@@ -89,11 +96,15 @@ class CrudController < ListController
   def destroy(options = {}, &block)
     destroyed = run_callbacks(:destroy) { entry.destroy }
     unless destroyed
-      flash[:alert] ||= error_messages.presence || flash_message(:failure) if request.format == :html
+      if request.format == :html
+        flash[:alert] ||= error_messages.presence || flash_message(:failure)
+      end
       location = request.env["HTTP_REFERER"].presence
     end
     location ||= index_url
-    respond_with(entry, options.reverse_merge(:success => destroyed, :location => location), &block)
+    respond_options = options.reverse_merge(:success => destroyed,
+                                            :location => location)
+    respond_with(entry, respond_options, &block)
   end
 
   private
@@ -151,7 +162,8 @@ class CrudController < ListController
 
   # Html safe error messages of the current entry.
   def error_messages
-    entry.errors.full_messages.collect { |i| ERB::Util.html_escape(i) }.join('<br/>').html_safe
+    escaped = entry.errors.full_messages.collect {|m| ERB::Util.html_escape(m) }
+    escaped.join('<br/>').html_safe
   end
 
   # The form params for this model.
@@ -171,7 +183,8 @@ class CrudController < ListController
       @model_identifier ||= model_class.model_name.param_key
     end
 
-    # Convenience callback to apply a callback on both form actions (new and edit).
+    # Convenience callback to apply a callback on both form actions
+    # (new and edit).
     def before_render_form(*methods)
       before_render_new *methods
       before_render_edit *methods
@@ -179,7 +192,8 @@ class CrudController < ListController
   end
 
   # Custom Responder that handles the controller's +path_args+.
-  # An additional :success option is used to handle action callback chain halts.
+  # An additional :success option is used to handle action callback
+  # chain halts.
   class Responder < ActionController::Responder
 
     def initialize(controller, resources, options = {})
@@ -188,14 +202,19 @@ class CrudController < ListController
 
     private
 
-    # Check whether the resource has errors. Additionally checks the :success option.
+    # Check whether the resource has errors. Additionally checks the :success
+    # option.
     def has_errors?
       options[:success] == false || super
     end
 
     # Wraps the resources with the path_args for correct nesting.
     def with_path_args(resources, controller)
-      resources.size == 1 ? Array(controller.send(:path_args, resources.first)) : resources
+      if resources.size == 1
+        Array(controller.send(:path_args, resources.first))
+      else
+        resources
+      end
     end
 
   end

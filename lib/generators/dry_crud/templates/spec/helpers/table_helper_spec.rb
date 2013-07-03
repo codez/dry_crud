@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'spec_helper'
 
 describe TableHelper do
@@ -16,8 +17,20 @@ describe TableHelper do
   after(:all) { reset_db }
 
   describe '#plain_table' do
+    subject { plain_table(['foo', 'bar'], :size) {|t| t.attrs :upcase } }
+
+    it 'should contain attrs' do
+      should match(/<th>Size<\/th>/)
+    end
+
+    it 'should contain block' do
+      should match(/<th>Upcase<\/th>/)
+    end
+  end
+
+  describe '#plain_table_or_message' do
     context 'with empty data' do
-      subject { plain_table([]) }
+      subject { plain_table_or_message([]) }
 
       it { should be_html_safe }
 
@@ -27,20 +40,12 @@ describe TableHelper do
     end
 
     context 'with data' do
-      subject { plain_table(['foo', 'bar'], :size) {|t| t.attrs :upcase } }
+      subject { plain_table_or_message(['foo', 'bar'], :size) {|t| t.attrs :upcase } }
 
       it { should be_html_safe }
 
       it 'should render table' do
         should match(/^\<table.*\<\/table\>$/)
-      end
-
-      it 'should contain attrs' do
-        should match(/<th>Size<\/th>/)
-      end
-
-      it 'should contain block' do
-        should match(/<th>Upcase<\/th>/)
       end
     end
   end
@@ -140,7 +145,8 @@ describe TableHelper do
       end
 
       it 'has 1 ascending sort headers' do
-        subject.scan(/<th><a .*?sort_dir=desc.*?>Children<\/a> &darr;<\/th>/).size.should == 1
+        subject.scan(/<th><a .*?sort_dir=desc.*?>Children<\/a> &darr;<\/th>/).
+                size.should == 1
       end
     end
 
@@ -155,7 +161,8 @@ describe TableHelper do
       end
 
       it 'has 1 descending sort headers' do
-        subject.scan(/<th><a .*?sort_dir=asc.*?>Children<\/a> &uarr;<\/th>/).size.should == 1
+        subject.scan(/<th><a .*?sort_dir=asc.*?>Children<\/a> &uarr;<\/th>/).
+                size.should == 1
       end
     end
 
@@ -170,7 +177,8 @@ describe TableHelper do
       end
 
       it 'has 1 ascending sort headers' do
-        subject.scan(/<th><a .*?sort_dir=desc.*?>Chatty<\/a> &darr;<\/th>/).size.should == 1
+        subject.scan(/<th><a .*?sort_dir=desc.*?>Chatty<\/a> &darr;<\/th>/).
+                size.should == 1
       end
     end
   end

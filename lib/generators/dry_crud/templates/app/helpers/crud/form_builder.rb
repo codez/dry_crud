@@ -1,7 +1,9 @@
+# encoding: UTF-8
+
 module Crud
   # A form builder that automatically selects the corresponding input field
-  # for ActiveRecord column types. Convenience methods for each column type allow
-  # one to customize the different fields.
+  # for ActiveRecord column types. Convenience methods for each column type
+  # allow one to customize the different fields.
   # All field methods may be prefixed with 'labeled_' in order to render
   # a standard label with them.
   class FormBuilder < ActionView::Helpers::FormBuilder
@@ -10,14 +12,16 @@ module Crud
 
     attr_reader :template
 
-    delegate :association, :column_type, :column_property, :captionize, :ti, :ta, :link_to,
-             :content_tag, :safe_join, :capture, :add_css_class, :assoc_and_id_attr,
+    delegate :association, :column_type, :column_property, :captionize,
+             :ti, :ta, :link_to, :content_tag, :safe_join, :capture,
+             :add_css_class, :assoc_and_id_attr,
              :to => :template
 
 
     ### INPUT FIELDS
 
-    # Render multiple input fields together with a label for the given attributes.
+    # Render multiple input fields together with a label for the given
+    # attributes.
     def labeled_input_fields(*attrs)
       options = attrs.extract_options!
       safe_join(attrs) { |a| labeled_input_field(a, options.clone) }
@@ -106,7 +110,8 @@ module Crud
       time_select(attr, {}, html_options)
     end
 
-    # Render a field to enter a date and time. You might want to customize this.
+    # Render a field to enter a date and time.
+    # You might want to customize this.
     def datetime_field(attr, html_options = {})
       datetime_select(attr, {}, html_options)
     end
@@ -140,8 +145,9 @@ module Crud
       belongs_to_field(attr, html_options)
     end
 
-    # Dispatch methods starting with 'labeled_' to render a label and the corresponding
-    # input field. E.g. labeled_boolean_field(:checked, :class => 'bold')
+    # Dispatch methods starting with 'labeled_' to render a label and the
+    # corresponding input field.
+    # E.g. labeled_boolean_field(:checked, :class => 'bold')
     # To add an additional help text, use the help option.
     # E.g. labeled_boolean_field(:checked, :help => 'Some Help')
     def method_missing(name, *args)
@@ -162,7 +168,9 @@ module Crud
 
     # Render the error messages for the current form.
     def error_messages
-      @template.render('shared/error_messages', :errors => @object.errors, :object => @object)
+      @template.render('shared/error_messages',
+                       :errors => @object.errors,
+                       :object => @object)
     end
 
     # Generates a help block for fields
@@ -193,13 +201,14 @@ module Crud
       required?(attr) ? REQUIRED_MARK : ''
     end
 
-    # Render a label for the given attribute with the passed field html section.
-    # The following parameters may be specified:
+    # Render a label for the given attribute with the passed field html
+    # section. The following parameters may be specified:
     #   labeled(:attr) { #content }
     #   labeled(:attr, content)
     #   labeled(:attr, 'Caption') { #content }
     #   labeled(:attr, 'Caption', content)
-    def labeled(attr, caption_or_content = nil, content = nil, html_options = {}, &block)
+    def labeled(attr, caption_or_content = nil, content = nil,
+                html_options = {}, &block)
       if block_given?
         content = capture(&block)
       elsif content.nil?
@@ -209,7 +218,8 @@ module Crud
       caption_or_content ||= captionize(attr, @object.class)
       add_css_class(html_options, 'controls')
 
-      content_tag(:div, :class => "control-group#{' error' if errors_on?(attr)}") do
+      content_tag(:div,
+                  :class => "control-group#{' error' if errors_on?(attr)}") do
         label(attr, caption_or_content, :class => 'control-label') +
         content_tag(:div, content, html_options)
       end
@@ -254,9 +264,11 @@ module Crud
       list = options.delete(:list)
       unless list
         assoc = association(@object, attr)
-        list = @template.send(:instance_variable_get, :"@#{assoc.name.to_s.pluralize}")
+        list = @template.send(:instance_variable_get,
+                              :"@#{assoc.name.to_s.pluralize}")
         unless list
-          list = assoc.klass.where(assoc.options[:conditions]).order(assoc.options[:order])
+          list = assoc.klass.where(assoc.options[:conditions]).
+                             order(assoc.options[:order])
         end
       end
       list
@@ -274,13 +286,16 @@ module Crud
       end
     end
 
-    # Returns true if any errors are found on the passed attribute or its association.
+    # Returns true if any errors are found on the passed attribute or its
+    # association.
     def errors_on?(attr)
       attr_plain, attr_id = assoc_and_id_attr(attr)
-      @object.errors.has_key?(attr_plain.to_sym) || @object.errors.has_key?(attr_id.to_sym)
+      @object.errors.has_key?(attr_plain.to_sym) ||
+      @object.errors.has_key?(attr_id.to_sym)
     end
 
-    # Checks if the passed name corresponds to a field method with a 'labeled_prefix'.
+    # Checks if the passed name corresponds to a field method with a
+    # 'labeled_' prefix.
     def labeled_field_method?(name)
       prefix = 'labeled_'
       if name.to_s.start_with?(prefix)
@@ -303,7 +318,8 @@ module Crud
     # 1. Use :cancel_url_new or :cancel_url_edit option, if present
     # 2. Use :cancel_url option, if present
     def cancel_url
-      url = @object.new_record? ? options[:cancel_url_new] : options[:cancel_url_edit]
+      url = @object.new_record? ? options[:cancel_url_new] :
+                                  options[:cancel_url_edit]
       url || options[:cancel_url]
     end
 

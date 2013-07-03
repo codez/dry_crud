@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'test_helper'
 require 'support/crud_test_model'
 require 'support/crud_controller_test_helper'
@@ -20,10 +21,13 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_setup
     assert_equal 6, CrudTestModel.count
     assert_equal CrudTestModelsController, @controller.class
-    assert_recognizes({:controller => 'crud_test_models', :action => 'index'}, '/crud_test_models')
-    assert_recognizes({:controller => 'crud_test_models', :action => 'show', :id => '1'}, '/crud_test_models/1')
-    # no need to hide actions for pure restful controllers
-    #assert_equal %w(index show new create edit update destroy).to_set, CrudTestModelsController.send(:action_methods)
+    assert_recognizes({:controller => 'crud_test_models',
+                       :action => 'index'},
+                      '/crud_test_models')
+    assert_recognizes({:controller => 'crud_test_models',
+                       :action => 'show',
+                       :id => '1'},
+                      '/crud_test_models/1')
   end
 
   def test_index
@@ -74,7 +78,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert entries.present?
     assert_equal 6, entries.size
     assert_equal CrudTestModel.all.sort_by(&:children), entries
-    assert_equal({:sort => 'children', :sort_dir => 'asc'}, session[:list_params]['/crud_test_models'])
+    assert_equal({:sort => 'children', :sort_dir => 'asc'},
+                 session[:list_params]['/crud_test_models'])
   end
 
   def test_sort_virtual_column
@@ -83,7 +88,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'index'
     assert entries.present?
     assert_equal 6, entries.size
-    assert_equal({:sort => 'chatty', :sort_dir => 'desc'}, session[:list_params]['/crud_test_models'])
+    assert_equal({:sort => 'chatty', :sort_dir => 'desc'},
+                 session[:list_params]['/crud_test_models'])
 
     sorted = CrudTestModel.all.sort_by(&:chatty)
 
@@ -104,12 +110,15 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert entries.present?
     assert_equal 3, entries.size
     assert_equal ['CCCCC', 'DDDDD', 'BBBBB'], entries.collect(&:name)
-    assert_equal({:sort => 'chatty', :sort_dir => 'asc', :q => 'DDD'}, session[:list_params]['/crud_test_models'])
+    assert_equal({:sort => 'chatty', :sort_dir => 'asc', :q => 'DDD'},
+                 session[:list_params]['/crud_test_models'])
   end
 
   def test_index_returning
     session[:list_params] = {}
-    session[:list_params]['/crud_test_models'] = {:q => 'DDD', :sort => 'chatty', :sort_dir => 'desc'}
+    session[:list_params]['/crud_test_models'] = {:q => 'DDD',
+                                                  :sort => 'chatty',
+                                                  :sort_dir => 'desc'}
     get :index, :returning => true
     assert_response :success
     assert_template 'index'
@@ -125,7 +134,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     super
     assert assigns(:companions)
     assert_equal @controller.send(:entry), assigns(:crud_test_model)
-    assert_equal [:before_render_new, :before_render_form], @controller.called_callbacks
+    assert_equal [:before_render_new, :before_render_form],
+                 @controller.called_callbacks
   end
 
   def test_show
@@ -143,13 +153,15 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     super
     assert_match /model got created/, flash[:notice]
     assert flash[:alert].blank?
-    assert_equal [:before_create, :before_save, :after_save, :after_create], @controller.called_callbacks
+    assert_equal [:before_create, :before_save, :after_save, :after_create],
+                 @controller.called_callbacks
   end
 
   def test_edit
     super
     assert_equal @controller.send(:entry), assigns(:crud_test_model)
-    assert_equal [:before_render_edit, :before_render_form], @controller.called_callbacks
+    assert_equal [:before_render_edit, :before_render_form],
+                 @controller.called_callbacks
   end
 
   def test_update
@@ -157,12 +169,14 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_match /successfully updated/, flash[:notice]
     assert flash[:alert].blank?
     assert_equal @controller.send(:entry), assigns(:crud_test_model)
-    assert_equal [:before_update, :before_save, :after_save, :after_update], @controller.called_callbacks
+    assert_equal [:before_update, :before_save, :after_save, :after_update],
+                 @controller.called_callbacks
   end
 
   def test_destroy
     super
-    assert_equal [:before_destroy, :after_destroy], @controller.called_callbacks
+    assert_equal [:before_destroy, :after_destroy],
+                 @controller.called_callbacks
     assert_match 'successfully deleted', flash[:notice]
   end
 
@@ -176,7 +190,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert assigns(:companions).present?
     assert flash[:alert].present?
     assert_equal 'illegal', entry.name
-    assert_equal [:before_render_new, :before_render_form], @controller.called_callbacks
+    assert_equal [:before_render_new, :before_render_form],
+                 @controller.called_callbacks
   end
 
   def test_create_with_before_callback_redirect
@@ -206,7 +221,9 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert flash[:notice].blank?, flash[:notice].to_s
     assert flash[:alert].blank?, flash[:alert].to_s
     assert entry.name.blank?
-    assert_equal [:before_create, :before_save, :before_render_new, :before_render_form], @controller.called_callbacks
+    assert_equal [:before_create, :before_save,
+                  :before_render_new, :before_render_form],
+                 @controller.called_callbacks
   end
 
   def test_create_with_failure_json
@@ -227,11 +244,15 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert flash[:notice].blank?
     assert flash[:alert].blank?
     assert_equal 20, entry.rating
-    assert_equal [:before_update, :before_save, :before_render_edit, :before_render_form], @controller.called_callbacks
+    assert_equal [:before_update, :before_save,
+                  :before_render_edit, :before_render_form],
+                 @controller.called_callbacks
   end
 
   def test_update_with_failure_json
-    put :update, :id => test_entry.id, :crud_test_model => {:rating => 20}, :format => 'json'
+    put :update, :id => test_entry.id,
+                 :crud_test_model => {:rating => 20},
+                 :format => 'json'
     assert_response :unprocessable_entity
     assert entry.changed?
     assert_match /errors/, @response.body
@@ -242,7 +263,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_destroy_failure
     assert_no_difference("#{model_class.name}.count") do
-      @request.env['HTTP_REFERER'] = crud_test_model_url(crud_test_models(:BBBBB))
+      @request.env['HTTP_REFERER'] =
+        crud_test_model_url(crud_test_models(:BBBBB))
       delete :destroy, test_params(:id => crud_test_models(:BBBBB).id)
     end
     assert_redirected_to_show(entry)
@@ -263,7 +285,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_destroy_failure_json
     assert_no_difference("#{model_class.name}.count") do
-      delete :destroy, test_params(:id => crud_test_models(:BBBBB).id, :format => 'json')
+      delete :destroy, test_params(:id => crud_test_models(:BBBBB).id,
+                                   :format => 'json')
     end
     assert_response :unprocessable_entity
     assert_match /errors/, @response.body

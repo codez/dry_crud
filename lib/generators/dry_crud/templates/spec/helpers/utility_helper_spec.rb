@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'spec_helper'
 
 describe UtilityHelper do
@@ -63,9 +64,10 @@ describe UtilityHelper do
 
   describe '#default_crud_attrs' do
     it 'do not contain id and password' do
-      default_crud_attrs.should == [:name, :email, :whatever, :children, :companion_id, :rating, :income,
-                                    :birthdate, :gets_up_at, :last_seen, :human, :remarks,
-                                    :created_at, :updated_at]
+      default_crud_attrs.should ==
+        [:name, :email, :whatever, :children, :companion_id, :rating, :income,
+         :birthdate, :gets_up_at, :last_seen, :human, :remarks,
+         :created_at, :updated_at]
       end
   end
 

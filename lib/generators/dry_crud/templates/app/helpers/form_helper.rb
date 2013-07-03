@@ -1,7 +1,12 @@
-# Defines forms to edit models. The helper methods come in different granularities:
+# encoding: UTF-8
+
+# Defines forms to edit models. The helper methods come in different
+# granularities:
 # * #plain_form - A form using Crud::FormBuilder.
-# * #standard_form - A #plain_form for a given object and attributes with error messages and save and cancel buttons.
-# * #crud_form - A #standard_form for the current +entry+, with the given attributes or default.
+# * #standard_form - A #plain_form for a given object and attributes with error
+#   messages and save and cancel buttons.
+# * #crud_form - A #standard_form for the current +entry+, with the given
+#   attributes or default.
 module FormHelper
 
   # Renders a form using Crud::FormBuilder.
@@ -16,9 +21,9 @@ module FormHelper
 
   # Renders a standard form for the given entry and attributes.
   # The form is rendered with a basic save and cancel button.
-  # If a block is given, custom input fields may be rendered and attrs is ignored.
-  # Before the input fields, the error messages are rendered, if present.
-  # An options hash may be given as the last argument.
+  # If a block is given, custom input fields may be rendered and attrs is
+  # ignored. Before the input fields, the error messages are rendered,
+  # if present. An options hash may be given as the last argument.
   def standard_form(object, *attrs, &block)
     plain_form(object, attrs.extract_options!) do |form|
       content = form.error_messages

@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 # Helpers to create action links. This default implementation supports
 # regular links with an icon and a label. To change the general style
 # of action links, change the method #action_link, e.g. to generate a button.
@@ -30,7 +32,8 @@ module ActionsHelper
   # Uses the current +entry+ if no path is given.
   def edit_action_link(path = nil)
     path ||= path_args(entry)
-    action_link(ti(:"link.edit"), 'pencil', path.is_a?(String) ? path : edit_polymorphic_path(path))
+    path = path.is_a?(String) ? path : edit_polymorphic_path(path)
+    action_link(ti(:"link.edit"), 'pencil', path)
   end
 
   # Standard destroy action to the given path.
@@ -46,14 +49,16 @@ module ActionsHelper
   # Uses the current +model_class+ if no path is given.
   def index_action_link(path = nil, url_options = {:returning => true})
     path ||= path_args(model_class)
-    action_link(ti(:"link.list"), 'list', path.is_a?(String) ? path : polymorphic_path(path, url_options))
+    path = path.is_a?(String) ? path : polymorphic_path(path, url_options)
+    action_link(ti(:"link.list"), 'list', path)
   end
 
   # Standard add action to given path.
   # Uses the current +model_class+ if no path is given.
   def add_action_link(path = nil, url_options = {})
     path ||= path_args(model_class)
-    action_link(ti(:"link.add"), 'plus', path.is_a?(String) ? path : new_polymorphic_path(path, url_options))
+    path = path.is_a?(String) ? path : new_polymorphic_path(path, url_options)
+    action_link(ti(:"link.add"), 'plus', path)
   end
 
 end

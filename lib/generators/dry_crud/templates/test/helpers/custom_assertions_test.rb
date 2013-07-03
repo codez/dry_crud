@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'test_helper'
 require 'support/custom_assertions'
 require 'support/crud_test_model'
@@ -99,7 +100,7 @@ class CustomAssertionsTest < ActiveSupport::TestCase
     end
   end
 
-  test 'assert not valid fails if record invalid and not all invalid attrs given' do
+  test 'assert not valid fails if not all invalid attrs given' do
     assert_raise(AssertionException) do
       assert_not_valid invalid_record, :name
     end
