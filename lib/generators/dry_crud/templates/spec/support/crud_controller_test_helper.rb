@@ -44,7 +44,7 @@ module CrudControllerTestHelper
   def scope_params
     params = {}
     # for nested controllers, add parent ids to each request
-    Array(controller.nesting).reverse.inject(test_entry) do |parent, p|
+    Array(controller.nesting).reverse.reduce(test_entry) do |parent, p|
       if p.is_a?(Class) && p < ActiveRecord::Base
         assoc = p.name.underscore
         params["#{assoc}_id"] = parent.send(:"#{assoc}_id")
@@ -56,18 +56,18 @@ module CrudControllerTestHelper
     params
   end
 
+  # Helper methods to describe contexts.
   module ClassMethods
 
     # Describe a certain action and provide some usefull metadata.
     # Tests whether this action is configured to be skipped.
     def describe_action(method, action, metadata = {}, &block)
       action_defined = described_class.instance_methods.
-                        collect(&:to_s).include?(action.to_s)
+                         map(&:to_s).include?(action.to_s)
       describe("#{method.to_s.upcase} #{action}",
-               {:if => action_defined,
-                :method => method,
-                :action => action}.
-               merge(metadata),
+               { :if => action_defined,
+                 :method => method,
+                 :action => action }.merge(metadata),
                &block)
     end
 

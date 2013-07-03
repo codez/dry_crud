@@ -68,7 +68,7 @@ module Crud
     # Returns css classes used for alignment of the cell data.
     # Based on the column type of the attribute.
     def align_class(attr)
-      entry = entry_class.new rescue nil
+      entry = entries.present? ? entry_class.new : nil
       case column_type(entry, attr)
       when :integer, :float, :decimal
         'right' unless association(entry, attr, :belongs_to)

@@ -17,7 +17,6 @@ module Crud
              :add_css_class, :assoc_and_id_attr,
              :to => :template
 
-
     ### INPUT FIELDS
 
     # Render multiple input fields together with a label for the given
@@ -32,6 +31,7 @@ module Crud
     # Use additional html_options for the input element.
     def input_field(attr, html_options = {})
       type = column_type(@object, attr)
+      custom_field_method = :"#{type}_field"
       if type == :text
         text_area(attr, html_options)
       elsif association_kind?(attr, type, :belongs_to)
@@ -42,13 +42,10 @@ module Crud
         password_field(attr, html_options)
       elsif attr.to_s.include?('email')
         email_field(attr, html_options)
+      elsif respond_to?(custom_field_method)
+        send(custom_field_method, attr, html_options)
       else
-        custom_field_method = :"#{type}_field"
-        if respond_to?(custom_field_method)
-          send(custom_field_method, attr, html_options)
-        else
-          text_field(attr, html_options)
-        end
+        text_field(attr, html_options)
       end
     end
 
@@ -123,10 +120,7 @@ module Crud
     def belongs_to_field(attr, html_options = {})
       list = association_entries(attr, html_options)
       if list.present?
-        collection_select(attr,
-                          list,
-                          :id,
-                          :to_s,
+        collection_select(attr, list, :id, :to_s,
                           select_options(attr, html_options),
                           html_options)
       else
@@ -163,7 +157,6 @@ module Crud
       labeled_field_method?(name).present? || super(name)
     end
 
-
     ### VARIOUS FORM ELEMENTS
 
     # Render the error messages for the current form.
@@ -179,21 +172,21 @@ module Crud
     end
 
     # Render a submit button and a cancel link for this form.
-    def standard_actions(submit_label = ti(:"button.save"), cancel_url = nil)
+    def standard_actions(submit_label = ti('button.save'), cancel_url = nil)
       content_tag(:div, :class => 'form-actions') do
         safe_join([submit_button(submit_label), cancel_link(cancel_url)], ' ')
       end
     end
 
     # Render a standard submit button with the given label.
-    def submit_button(label = ti(:"button.save"))
+    def submit_button(label = ti('button.save'))
       button(label, :class => 'btn btn-primary')
     end
 
     # Render a cancel link pointing to the given url.
     def cancel_link(url = nil)
       url ||= cancel_url
-      link_to(ti(:"button.cancel"), url, :class => 'cancel')
+      link_to(ti('button.cancel'), url, :class => 'cancel')
     end
 
     # Renders a marker if the given attr has to be present.
@@ -209,18 +202,13 @@ module Crud
     #   labeled(:attr, 'Caption', content)
     def labeled(attr, caption_or_content = nil, content = nil,
                 html_options = {}, &block)
-      if block_given?
-        content = capture(&block)
-      elsif content.nil?
-        content = caption_or_content
-        caption_or_content = nil
-      end
-      caption_or_content ||= captionize(attr, @object.class)
+      caption, content = extract_caption_and_content(
+                           attr, caption_or_content, content, &block)
       add_css_class(html_options, 'controls')
+      errors = errors_on?(attr) ? ' error' : ''
 
-      content_tag(:div,
-                  :class => "control-group#{' error' if errors_on?(attr)}") do
-        label(attr, caption_or_content, :class => 'control-label') +
+      content_tag(:div, :class => "control-group#{errors}") do
+        label(attr, caption, :class => 'control-label') +
         content_tag(:div, content, html_options)
       end
     end
@@ -231,9 +219,9 @@ module Crud
       if options[:multiple]
         {}
       elsif prompt = options.delete(:prompt)
-        {:prompt => prompt}
+        { :prompt => prompt }
       elsif blank = options.delete(:include_blank)
-        {:include_blank => blank}
+        { :include_blank => blank }
       else
         assoc = association(@object, attr)
         if required?(attr)
@@ -294,6 +282,19 @@ module Crud
       @object.errors.has_key?(attr_id.to_sym)
     end
 
+    # Get caption and content value from the arguments of #labeled.
+    def extract_caption_and_content(attr, caption_or_content, content, &block)
+      if block_given?
+        content = capture(&block)
+      elsif content.nil?
+        content = caption_or_content
+        caption_or_content = nil
+      end
+      caption_or_content ||= captionize(attr, @object.class)
+
+      [caption_or_content, content]
+    end
+
     # Checks if the passed name corresponds to a field method with a
     # 'labeled_' prefix.
     def labeled_field_method?(name)
@@ -309,9 +310,10 @@ module Crud
     def build_labeled_field(field_method, *args)
       options = args.extract_options!
       help = options.delete(:help)
-      text = send(field_method, *(args<<options)) + required_mark(args.first)
-      text << help_block(help) if help.present?
-      labeled(args.first, text)
+      content = send(field_method, *(args << options))
+      content << required_mark(args.first)
+      content << help_block(help) if help.present?
+      labeled(args.first, content)
     end
 
     # Get the cancel url for the given object considering options:

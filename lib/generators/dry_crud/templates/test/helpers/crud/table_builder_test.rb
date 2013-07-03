@@ -1,6 +1,7 @@
 # encoding: UTF-8
 require 'test_helper'
 
+# Test Crud::TableBuilder
 class Crud::TableBuilderTest < ActionView::TestCase
 
   # set dummy helper class for ActionView::TestCase
@@ -36,7 +37,7 @@ class Crud::TableBuilderTest < ActionView::TestCase
   end
 
   test 'custom row' do
-    table.col('Header', :class => 'hula') {|e| "Weights #{e.size} kg" }
+    table.col('Header', :class => 'hula') { |e| "Weights #{e.size} kg" }
 
     dom = '<tr><td class="hula">Weights 3 kg</td></tr>'
 
@@ -105,7 +106,6 @@ class Crud::TableBuilderTest < ActionView::TestCase
     table.col('head', :class => 'left') { |e| link_to e, '/' }
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }
-
 
     assert_dom_equal dom, table.to_html
   end

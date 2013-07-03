@@ -17,16 +17,15 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   teardown :reset_db
 
-
   def test_setup
     assert_equal 6, CrudTestModel.count
     assert_equal CrudTestModelsController, @controller.class
-    assert_recognizes({:controller => 'crud_test_models',
-                       :action => 'index'},
+    assert_recognizes({ :controller => 'crud_test_models',
+                        :action => 'index' },
                       '/crud_test_models')
-    assert_recognizes({:controller => 'crud_test_models',
-                       :action => 'show',
-                       :id => '1'},
+    assert_recognizes({ :controller => 'crud_test_models',
+                        :action => 'show',
+                        :id => '1' },
                       '/crud_test_models/1')
   end
 
@@ -49,7 +48,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_index_search
     super
     assert_equal 1, entries.size
-    assert_equal({:q => 'AAAA'}, session[:list_params]['/crud_test_models'])
+    assert_equal({ :q => 'AAAA' }, session[:list_params]['/crud_test_models'])
   end
 
   def test_index_with_custom_options
@@ -68,7 +67,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert entries.present?
     assert_equal 1, entries.size
     assert_equal [CrudTestModel.find_by_name('BBBBB')], entries
-    assert_equal({:q => 'DDD'}, session[:list_params]['/crud_test_models'])
+    assert_equal({ :q => 'DDD' }, session[:list_params]['/crud_test_models'])
   end
 
   def test_sort_given_column
@@ -78,7 +77,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert entries.present?
     assert_equal 6, entries.size
     assert_equal CrudTestModel.all.sort_by(&:children), entries
-    assert_equal({:sort => 'children', :sort_dir => 'asc'},
+    assert_equal({ :sort => 'children', :sort_dir => 'asc' },
                  session[:list_params]['/crud_test_models'])
   end
 
@@ -88,13 +87,11 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'index'
     assert entries.present?
     assert_equal 6, entries.size
-    assert_equal({:sort => 'chatty', :sort_dir => 'desc'},
+    assert_equal({ :sort => 'chatty', :sort_dir => 'desc' },
                  session[:list_params]['/crud_test_models'])
 
-    sorted = CrudTestModel.all.sort_by(&:chatty)
-
     # sort order is ambiguous, use index
-    names = entries.collect(&:name)
+    names = entries.map(&:name)
     assert names.index('BBBBB') < names.index('AAAAA')
     assert names.index('BBBBB') < names.index('DDDDD')
     assert names.index('EEEEE') < names.index('AAAAA')
@@ -109,22 +106,22 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'index'
     assert entries.present?
     assert_equal 3, entries.size
-    assert_equal ['CCCCC', 'DDDDD', 'BBBBB'], entries.collect(&:name)
-    assert_equal({:sort => 'chatty', :sort_dir => 'asc', :q => 'DDD'},
+    assert_equal %w(CCCCC DDDDD BBBBB), entries.collect(&:name)
+    assert_equal({ :sort => 'chatty', :sort_dir => 'asc', :q => 'DDD' },
                  session[:list_params]['/crud_test_models'])
   end
 
   def test_index_returning
     session[:list_params] = {}
-    session[:list_params]['/crud_test_models'] = {:q => 'DDD',
-                                                  :sort => 'chatty',
-                                                  :sort_dir => 'desc'}
+    session[:list_params]['/crud_test_models'] = { :q => 'DDD',
+                                                   :sort => 'chatty',
+                                                   :sort_dir => 'desc' }
     get :index, :returning => true
     assert_response :success
     assert_template 'index'
     assert entries.present?
     assert_equal 3, entries.size
-    assert_equal ['BBBBB', 'DDDDD', 'CCCCC'], entries.collect(&:name)
+    assert_equal %w(BBBBB DDDDD CCCCC), entries.collect(&:name)
     assert_equal 'DDD', @controller.params[:q]
     assert_equal 'chatty', @controller.params[:sort]
     assert_equal 'desc', @controller.params[:sort_dir]
@@ -182,7 +179,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_create_with_before_callback
     assert_no_difference('CrudTestModel.count') do
-      post :create, :crud_test_model => {:name => 'illegal', :children => 2}
+      post :create, :crud_test_model => { :name => 'illegal', :children => 2 }
     end
     assert_response :success
     assert_template 'new'
@@ -197,7 +194,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_create_with_before_callback_redirect
     @controller.should_redirect = true
     assert_no_difference('CrudTestModel.count') do
-      post :create, :crud_test_model => {:name => 'illegal', :children => 2}
+      post :create, :crud_test_model => { :name => 'illegal', :children => 2 }
     end
     assert_redirected_to :action => 'index'
     assert_nil @controller.called_callbacks
@@ -212,7 +209,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_create_with_failure
     assert_no_difference('CrudTestModel.count') do
-      post :create, :crud_test_model => {:children => 2}
+      post :create, :crud_test_model => { :children => 2 }
     end
     assert_response :success
     assert_template 'new'
@@ -228,7 +225,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_create_with_failure_json
     assert_no_difference('CrudTestModel.count') do
-      post :create, :crud_test_model => {:children => 2}, :format => 'json'
+      post :create, :crud_test_model => { :children => 2 }, :format => 'json'
     end
     assert_response :unprocessable_entity
     assert entry.new_record?
@@ -237,7 +234,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_update_with_failure
-    put :update, :id => test_entry.id, :crud_test_model => {:rating => 20}
+    put :update, :id => test_entry.id, :crud_test_model => { :rating => 20 }
     assert_response :success
     assert_template 'edit'
     assert entry.changed?
@@ -251,7 +248,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_update_with_failure_json
     put :update, :id => test_entry.id,
-                 :crud_test_model => {:rating => 20},
+                 :crud_test_model => { :rating => 20 },
                  :format => 'json'
     assert_response :unprocessable_entity
     assert entry.changed?
@@ -293,7 +290,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert flash[:notice].blank?
   end
 
-
   def test_models_label
     assert_equal 'Crud Test Models', @controller.models_label
     assert_equal 'Crud Test Model', @controller.models_label(false)
@@ -306,23 +302,23 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def new_entry_attrs
-    {:name => 'foo',
-     :children => 42,
-     :companion_id => 3,
-     :rating => 8.5,
-     :income => 2.42,
-     :birthdate => '31-12-1999'.to_date,
-     :human => true,
-     :remarks => "some custom\n\tremarks"}
+    { :name => 'foo',
+      :children => 42,
+      :companion_id => 3,
+      :rating => 8.5,
+      :income => 2.42,
+      :birthdate => '31-12-1999'.to_date,
+      :human => true,
+      :remarks => "some custom\n\tremarks" }
   end
 
   def edit_entry_attrs
-    {:name => 'foo',
-     :children => 42,
-     :rating => 8.5,
-     :income => 2.42,
-     :birthdate => '31-12-1999'.to_date,
-     :human => true,
-     :remarks => "some custom\n\tremarks"}
+    { :name => 'foo',
+      :children => 42,
+      :rating => 8.5,
+      :income => 2.42,
+      :birthdate => '31-12-1999'.to_date,
+      :human => true,
+      :remarks => "some custom\n\tremarks" }
   end
 end

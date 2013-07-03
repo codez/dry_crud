@@ -2,6 +2,7 @@
 require 'test_helper'
 require 'support/crud_test_model'
 
+# Test Crud::FormBuilder
 class Crud::FormBuilderTest < ActionView::TestCase
 
   include FormatHelper

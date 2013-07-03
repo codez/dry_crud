@@ -25,7 +25,7 @@ module CrudControllerTestHelper
     val = field && test_entry[field].to_s
     return if val.blank?   # does not support search or no value in this field
 
-    get :index, test_params(:q => val[0..((val.size + 1)/ 2)])
+    get :index, test_params(:q => val[0..((val.size + 1) / 2)])
     assert_response :success
     assert entries.present?
     assert entries.include?(test_entry)
@@ -63,7 +63,7 @@ module CrudControllerTestHelper
     assert @response.body.starts_with?('{')
   end
 
-  def test_show_with_non_existing_id_raises_RecordNotFound # :nodoc:
+  def test_show_with_non_existing_id_raises_record_not_found # :nodoc:
     assert_raise(ActiveRecord::RecordNotFound) do
       get :show, test_params(:id => 9999)
     end
@@ -202,10 +202,10 @@ module CrudControllerTestHelper
     nesting_params.merge(params)
   end
 
+  # For nested controllers, collect hash with parent ids.
   def nesting_params
     params = {}
-    # for nested controllers, add parent ids to each request
-    Array(@controller.nesting).reverse.inject(test_entry) do |parent, p|
+    Array(@controller.nesting).reverse.reduce(test_entry) do |parent, p|
       if p.is_a?(Class) && p < ActiveRecord::Base
         assoc = p.name.underscore
         params["#{assoc}_id"] = parent.send(:"#{assoc}_id")

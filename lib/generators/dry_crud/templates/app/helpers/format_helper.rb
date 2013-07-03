@@ -17,8 +17,8 @@ module FormatHelper
                                    :delimiter => t('number.format.delimiter'))
     when Date   then l(value)
     when Time   then l(value, :format => :time)
-    when true   then t(:"global.yes")
-    when false  then t(:"global.no")
+    when true   then t('global.yes')
+    when false  then t('global.no')
     when nil    then UtilityHelper::EMPTY_STRING
     else value.to_s
     end
@@ -49,7 +49,7 @@ module FormatHelper
   # Renders a simple unordered list, which will
   # simply render all passed items or yield them
   # to your block.
-  def simple_list(items, ul_options={}, &block)
+  def simple_list(items, ul_options = {}, &block)
     content_tag_nested(:ul, items, ul_options) do |item|
       content_tag(:li, block_given? ? yield(item) : f(item))
     end
@@ -91,13 +91,13 @@ module FormatHelper
   # special types that have no own object class.
   def format_type(obj, attr)
     val = obj.send(attr)
-    return UtilityHelper::EMPTY_STRING if val.nil?
+    return UtilityHelper::EMPTY_STRING if val.blank?
+
     case column_type(obj, attr)
     when :time    then f(val.to_time)
     when :date    then f(val.to_date)
     when :datetime, :timestamp then "#{f(val.to_date)} #{f(val.time)}"
-    when :text    then
-      val.present? ? simple_format(h(val)) : UtilityHelper::EMPTY_STRING
+    when :text    then simple_format(h(val))
     when :decimal then f(val.to_s.to_f)
     else f(val)
     end

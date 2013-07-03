@@ -46,9 +46,11 @@ module CustomAssertions
   # This method used to be part of Rails but was deprecated, no idea why.
   def assert_valid(record, msg = '')
     record.valid?
-    full_message = build_message(msg,
+    full_message = build_message(
+        msg,
         "? expected to be valid, but has the following errors: \n ?.",
-       record.to_s, record.errors.full_messages.join("\n"))
+        record.to_s,
+        record.errors.full_messages.join("\n"))
     assert record.valid?, full_message
   end
 
@@ -62,25 +64,9 @@ module CustomAssertions
                         record.to_s)
     assert !record.valid?, msg
 
-    # assert that the given attributes have errors.
-    invalid_attrs.each do |a|
-      msg = build_message('',
-                          'Attribute <?> expected to be invalid, ' +
-                          'but is valid.',
-                          a.to_s)
-      assert record.errors[a].present?, msg
-    end
-
     if invalid_attrs.present?
-      # assert that no other than the invalid attributes have errors.
-      record.errors.each do |a, error|
-        msg = build_message('',
-                            'Attribute <?> not declared as invalid ' +
-                            "attribute, but has the following error: \n?.",
-                            a.to_s,
-                            error)
-        assert invalid_attrs.include?(a), msg
-      end
+      assert_invalid_attrs_have_errors(record, *invalid_attrs)
+      assert_other_attrs_have_no_errors(record, *invalid_attrs)
     end
   end
 
@@ -101,6 +87,29 @@ module CustomAssertions
       obj.to_s
     else
       super
+    end
+  end
+
+  private
+
+  def assert_invalid_attrs_have_errors(record, *invalid_attrs)
+    invalid_attrs.each do |a|
+      msg = build_message('',
+                          'Attribute <?> expected to be invalid, ' +
+                          'but is valid.',
+                          a.to_s)
+      assert record.errors[a].present?, msg
+    end
+  end
+
+  def assert_other_attrs_have_no_errors(record, *invalid_attrs)
+    record.errors.each do |a, error|
+      msg = build_message('',
+                          'Attribute <?> not declared as invalid ' +
+                          "attribute, but has the following error: \n?.",
+                          a.to_s,
+                          error)
+      assert invalid_attrs.include?(a), msg
     end
   end
 

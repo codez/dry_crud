@@ -2,6 +2,7 @@
 require 'test_helper'
 require 'support/crud_test_model'
 
+# Test FormatHelper
 class FormatHelperTest < ActionView::TestCase
 
   include UtilityHelper
@@ -85,7 +86,7 @@ class FormatHelperTest < ActionView::TestCase
   end
 
   test 'format attr with custom format_size method' do
-    assert_equal '2 items', format_attr([1,2], :size)
+    assert_equal '2 items', format_attr([1, 2], :size)
   end
 
   test 'format integer column' do
@@ -133,7 +134,7 @@ class FormatHelperTest < ActionView::TestCase
 
   test 'format belongs to column without content' do
     m = crud_test_models(:AAAAA)
-    assert_equal t(:'global.associations.no_entry'),
+    assert_equal t('global.associations.no_entry'),
                  format_attr(m, :companion)
   end
 

@@ -34,18 +34,18 @@ describe UtilityHelper do
   describe '#content_tag_nested' do
 
     it 'should escape safe content' do
-      html = content_tag_nested(:div, ['a', 'b']) { |e| content_tag(:span, e) }
+      html = content_tag_nested(:div, %w(a b)) { |e| content_tag(:span, e) }
       html.should be_html_safe
       html.should == '<div><span>a</span><span>b</span></div>'
     end
 
     it 'should escape unsafe content' do
-      html = content_tag_nested(:div, ['a', 'b']) { |e| "<#{e}>" }
+      html = content_tag_nested(:div, %w(a b)) { |e| "<#{e}>" }
       html.should == '<div>&lt;a&gt;&lt;b&gt;</div>'
     end
 
     it 'should simply join without block' do
-      html = content_tag_nested(:div, ['a', 'b'])
+      html = content_tag_nested(:div, %w(a b))
       html.should == '<div>ab</div>'
     end
   end
@@ -57,7 +57,7 @@ describe UtilityHelper do
     end
 
     it 'should collect contents for array' do
-      html = safe_join(['a', 'b']) { |e| content_tag(:span, e) }
+      html = safe_join(%w(a b)) { |e| content_tag(:span, e) }
       html.should == '<span>a</span><span>b</span>'
     end
   end
@@ -68,7 +68,7 @@ describe UtilityHelper do
         [:name, :email, :whatever, :children, :companion_id, :rating, :income,
          :birthdate, :gets_up_at, :last_seen, :human, :remarks,
          :created_at, :updated_at]
-      end
+    end
   end
 
 end

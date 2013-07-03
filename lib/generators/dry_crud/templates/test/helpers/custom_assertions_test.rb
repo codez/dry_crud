@@ -3,6 +3,7 @@ require 'test_helper'
 require 'support/custom_assertions'
 require 'support/crud_test_model'
 
+# Test CustomAssertions
 class CustomAssertionsTest < ActiveSupport::TestCase
 
   include CustomAssertions
@@ -12,13 +13,16 @@ class CustomAssertionsTest < ActiveSupport::TestCase
   setup :reset_db, :setup_db, :create_test_data
   teardown :reset_db
 
-  AssertionException = RUBY_VERSION.to_f >= 1.9 ?
-                        MiniTest::Assertion :
-                        Test::Unit::AssertionFailedError
+  AssertionException =
+  if RUBY_VERSION.to_f >= 1.9
+    MiniTest::Assertion
+  else
+    Test::Unit::AssertionFailedError
+  end
 
   test 'assert include succeeds if included' do
     assert_nothing_raised do
-      assert_include [1,2,3], 2
+      assert_include [1, 2, 3], 2
     end
   end
 
@@ -30,19 +34,19 @@ class CustomAssertionsTest < ActiveSupport::TestCase
 
   test 'assert include fails if not included' do
     assert_raise(AssertionException) do
-      assert_include [1,2,3], 5
+      assert_include [1, 2, 3], 5
     end
   end
 
   test 'assert not include succeeds if not included' do
     assert_nothing_raised do
-      assert_not_include [1,2,3], 5
+      assert_not_include [1, 2, 3], 5
     end
   end
 
   test 'assert not include fails if included' do
     assert_raise(AssertionException) do
-      assert_not_include [1,2,3], 3
+      assert_not_include [1, 2, 3], 3
     end
   end
 

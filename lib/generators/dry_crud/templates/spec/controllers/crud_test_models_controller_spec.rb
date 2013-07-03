@@ -83,7 +83,7 @@ describe CrudTestModelsController do
 
           it 'session should have query list param' do
             session[:list_params]['/crud_test_models.html'].should ==
-              {:q => 'AAAA'}
+              { :q => 'AAAA' }
           end
         end
 
@@ -125,7 +125,7 @@ describe CrudTestModelsController do
           it_should_respond
 
           it 'entries should be in correct order' do
-            names = entries.collect(&:name)
+            names = entries.map(&:name)
             assert names.index('BBBBB') < names.index('AAAAA')
             assert names.index('BBBBB') < names.index('DDDDD')
             assert names.index('EEEEE') < names.index('AAAAA')
@@ -148,7 +148,7 @@ describe CrudTestModelsController do
           it_should_respond
 
           it 'entries should be in correct order' do
-            entries.collect(&:name).should == %w(CCCCC DDDDD BBBBB)
+            entries.map(&:name).should == %w(CCCCC DDDDD BBBBB)
           end
 
           it 'session should have sort list param' do
@@ -211,7 +211,8 @@ describe CrudTestModelsController do
       end
     end
 
-    context 'with before_render callback redirect', :perform_request => false do
+    context 'with before_render callback redirect',
+            :perform_request => false do
       before do
         controller.should_redirect = true
         get :new
@@ -226,7 +227,7 @@ describe CrudTestModelsController do
   end
 
   describe_action :post, :create do
-    let(:params) { {model_identifier => new_entry_attrs} }
+    let(:params) { { model_identifier => new_entry_attrs } }
 
     it 'should have called the correct callbacks' do
       controller.called_callbacks.should ==
@@ -268,7 +269,10 @@ describe CrudTestModelsController do
           expect { perform_request }.to change { CrudTestModel.count }.by(0)
         end
 
-        it { perform_request; should redirect_to(crud_test_models_path) }
+        it do
+          perform_request
+          should redirect_to(crud_test_models_path)
+        end
 
         it 'should have called no callbacks' do
           perform_request

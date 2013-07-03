@@ -31,14 +31,13 @@ module I18nHelper
   #  - activerecord.associations.{association_model_name}.{key}
   #  - global.associations.{key}
   def translate_association(key, assoc = nil, variables = {})
-    primary = if assoc
-      variables[:default] ||= [association_klass_key(assoc, key),
+    if assoc
+      variables[:default] ||= [association_klass_key(assoc, key).to_sym,
                                :"global.associations.#{key}"]
-      association_owner_key(assoc, key)
+      t(association_owner_key(assoc, key), variables)
     else
-      :"global.associations.#{key}"
+      t("global.associations.#{key}", variables)
     end
-    t(primary, variables)
   end
 
   alias_method :ta, :translate_association
@@ -51,7 +50,6 @@ module I18nHelper
     k << assoc.klass.model_name.singular
     k << '.'
     k << key.to_s
-    k.to_sym
   end
 
   # Specific translation key based on the owner model and the name
@@ -63,7 +61,6 @@ module I18nHelper
     k << assoc.name.to_s
     k << '.'
     k << key.to_s
-    k.to_sym
   end
 
   def inheritable_translation_defaults(key, partial)

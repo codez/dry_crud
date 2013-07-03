@@ -14,7 +14,7 @@ module UtilityHelper
   # Overridden method that takes a block that is executed for each item in
   # array before appending the results.
   def safe_join(array, sep = $OUTPUT_FIELD_SEPARATOR, &block)
-    super(block_given? ? array.collect(&block) : array, sep)
+    super(block_given? ? array.map(&block) : array, sep)
   end
 
   # Returns the css class for the given flash level.
@@ -39,7 +39,7 @@ module UtilityHelper
   # These are all defined attributes except certain special ones like
   # 'id' or 'position'.
   def default_crud_attrs
-    attrs = model_class.column_names.collect(&:to_sym)
+    attrs = model_class.column_names.map(&:to_sym)
     attrs - [:id, :position, :password]
   end
 

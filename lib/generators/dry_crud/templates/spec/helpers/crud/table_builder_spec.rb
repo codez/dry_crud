@@ -26,7 +26,7 @@ describe 'Crud::TableBuilder' do
   end
 
   specify 'custom row' do
-    table.col('Header', :class => 'hula') {|e| "Weights #{e.size} kg" }
+    table.col('Header', :class => 'hula') { |e| "Weights #{e.size} kg" }
     dom = '<tr><td class="hula">Weights 3 kg</td></tr>'
     assert_dom_equal dom, table.send(:html_row, entries.first)
   end

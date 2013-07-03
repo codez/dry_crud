@@ -2,6 +2,7 @@
 require 'test_helper'
 require 'support/crud_test_model'
 
+# Test FormHelper
 class FormHelperTest < ActionView::TestCase
 
   include UtilityHelper
@@ -15,9 +16,9 @@ class FormHelperTest < ActionView::TestCase
   test 'plain form for existing entry' do
     e = crud_test_models('AAAAA')
     f = with_test_routing do
-      f = capture do
-        plain_form(e, :html => {:class => 'special'}) do |f|
-          f.labeled_input_fields :name, :birthdate
+      capture do
+        plain_form(e, :html => { :class => 'special' }) do |form|
+          form.labeled_input_fields :name, :birthdate
         end
       end
     end
@@ -36,11 +37,11 @@ class FormHelperTest < ActionView::TestCase
   test 'standard form' do
     e = crud_test_models('AAAAA')
     f = with_test_routing do
-      f = capture do
+      capture do
         standard_form(e,
                       :name, :children, :birthdate, :human,
                       :cancel_url => '/somewhere',
-                      :html => {:class => 'special'})
+                      :html => { :class => 'special' })
       end
     end
 
@@ -69,9 +70,9 @@ class FormHelperTest < ActionView::TestCase
     assert !e.valid?
 
     f = with_test_routing do
-      f = capture do
-        standard_form(e) do |f|
-          f.labeled_input_fields(:name, :birthdate)
+      capture do
+        standard_form(e) do |form|
+          form.labeled_input_fields(:name, :birthdate)
         end
       end
     end

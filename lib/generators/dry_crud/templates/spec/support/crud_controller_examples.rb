@@ -32,7 +32,7 @@ shared_examples 'crud controller' do |options|
   let(:search_value) do
     field = controller.search_columns.first
     val = test_entry[field].to_s
-    val[0..((val.size + 1)/ 2)]
+    val[0..((val.size + 1) / 2)]
   end
 
   before do
@@ -41,7 +41,6 @@ shared_examples 'crud controller' do |options|
       perform_combined_request
     end
   end
-
 
   describe_action :get, :index,
                   :unless => skip?(options, 'index') do
@@ -62,7 +61,7 @@ shared_examples 'crud controller' do |options|
               :if => described_class.search_columns.present?,
               :unless => skip?(options, %w(index html search)),
               :combine => 'ihse' do
-        let(:params) { {:q => search_value} }
+        let(:params) { { :q => search_value } }
 
         it_should_respond
 
@@ -77,7 +76,7 @@ shared_examples 'crud controller' do |options|
         context 'ascending',
                 :unless => skip?(options, %w(index html sort ascending)),
                 :combine => 'ihso' do
-          let(:params) { {:sort => sort_column, :sort_dir => 'asc'} }
+          let(:params) { { :sort => sort_column, :sort_dir => 'asc' } }
 
           it_should_respond
 
@@ -90,7 +89,7 @@ shared_examples 'crud controller' do |options|
         context 'descending',
                 :unless => skip?(options, %w(index html sort descending)),
                 :combine => 'ihsd' do
-          let(:params) { {:sort => sort_column, :sort_dir => 'desc'} }
+          let(:params) { { :sort => sort_column, :sort_dir => 'desc' } }
 
           it_should_respond
 
@@ -131,11 +130,11 @@ shared_examples 'crud controller' do |options|
       context 'with non-existing id',
               :unless => skip?(options,
                                'show', 'html', 'with non-existing id') do
-        let(:params) { {:id => 9999 } }
+        let(:params) { { :id => 9999 } }
 
         it 'should raise RecordNotFound', :perform_request => false do
           expect { perform_request }.
-            to raise_error(ActiveRecord::RecordNotFound)
+          to raise_error(ActiveRecord::RecordNotFound)
         end
       end
     end
@@ -236,7 +235,7 @@ shared_examples 'crud controller' do |options|
   describe_action :put, :update,
                   :id => true,
                   :unless => skip?(options, %w(update)) do
-    let(:params) { {model_identifier => edit_entry_attrs} }
+    let(:params) { { model_identifier => edit_entry_attrs } }
 
     it 'should update entry in database', :perform_request => false do
       expect { perform_request }.to change { model_class.count }.by(0)

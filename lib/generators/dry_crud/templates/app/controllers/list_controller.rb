@@ -91,7 +91,7 @@ class ListController < ApplicationController
 
     # A human readable plural name of the model.
     def models_label(plural = true)
-      opts = {:count => (plural ? 3 : 1)}
+      opts = { :count => (plural ? 3 : 1) }
       opts[:default] = model_class.model_name.human.titleize
       opts[:default] = opts[:default].pluralize if plural
 

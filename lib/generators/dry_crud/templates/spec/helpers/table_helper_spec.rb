@@ -17,7 +17,7 @@ describe TableHelper do
   after(:all) { reset_db }
 
   describe '#plain_table' do
-    subject { plain_table(['foo', 'bar'], :size) {|t| t.attrs :upcase } }
+    subject { plain_table(%w(foo bar), :size) { |t| t.attrs :upcase } }
 
     it 'should contain attrs' do
       should match(/<th>Size<\/th>/)
@@ -40,7 +40,9 @@ describe TableHelper do
     end
 
     context 'with data' do
-      subject { plain_table_or_message(['foo', 'bar'], :size) {|t| t.attrs :upcase } }
+      subject do
+        plain_table_or_message(%w(foo bar), :size) { |t| t.attrs :upcase }
+      end
 
       it { should be_html_safe }
 
@@ -86,7 +88,7 @@ describe TableHelper do
         with_test_routing do
           list_table do |t|
             t.attrs :name, :children, :companion_id
-            t.col('head') {|e| content_tag(:span, e.income.to_s) }
+            t.col('head') { |e| content_tag(:span, e.income.to_s) }
           end
         end
       end
@@ -112,7 +114,7 @@ describe TableHelper do
       subject do
         with_test_routing do
           list_table(:name, :children, :companion_id) do |t|
-            t.col('head') {|e| content_tag(:span, e.income.to_s) }
+            t.col('head') { |e| content_tag(:span, e.income.to_s) }
           end
         end
       end
@@ -135,7 +137,7 @@ describe TableHelper do
     end
 
     context 'with ascending sort params' do
-      let(:params) { {:sort => 'children', :sort_dir => 'asc'} }
+      let(:params) { { :sort => 'children', :sort_dir => 'asc' } }
       subject do
         with_test_routing { list_table }
       end
@@ -151,7 +153,7 @@ describe TableHelper do
     end
 
     context 'with descending sort params' do
-      let(:params) { {:sort => 'children', :sort_dir => 'desc'} }
+      let(:params) { { :sort => 'children', :sort_dir => 'desc' } }
       subject do
         with_test_routing { list_table }
       end
@@ -167,7 +169,7 @@ describe TableHelper do
     end
 
     context 'with custom column sort params' do
-      let(:params) { {:sort => 'chatty', :sort_dir => 'asc'} }
+      let(:params) { { :sort => 'chatty', :sort_dir => 'asc' } }
       subject do
         with_test_routing { list_table(:name, :children, :chatty) }
       end
@@ -219,7 +221,7 @@ describe TableHelper do
         with_test_routing do
           crud_table do |t|
             t.attrs :name, :children, :companion_id
-            t.col('head') {|e| content_tag :span, e.income.to_s }
+            t.col('head') { |e| content_tag(:span, e.income.to_s) }
           end
         end
       end
@@ -241,7 +243,7 @@ describe TableHelper do
       subject do
         with_test_routing do
           crud_table(:name, :children, :companion_id) do |t|
-            t.col('head') {|e| content_tag :span, e.income.to_s }
+            t.col('head') { |e| content_tag(:span, e.income.to_s) }
           end
         end
       end

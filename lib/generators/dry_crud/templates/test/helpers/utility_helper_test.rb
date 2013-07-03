@@ -2,22 +2,23 @@
 require 'test_helper'
 require 'support/crud_test_model'
 
+# Test UtilityHelper
 class UtilityHelperTest < ActionView::TestCase
 
   include CrudTestHelper
 
   test 'content_tag_nested escapes safe correctly' do
-    html = content_tag_nested(:div, ['a', 'b']) { |e| content_tag(:span, e) }
+    html = content_tag_nested(:div, %w(a b)) { |e| content_tag(:span, e) }
     assert_equal '<div><span>a</span><span>b</span></div>', html
   end
 
   test 'content_tag_nested escapes unsafe correctly' do
-    html = content_tag_nested(:div, ['a', 'b']) { |e| "<#{e}>" }
+    html = content_tag_nested(:div, %w(a b)) { |e| "<#{e}>" }
     assert_equal '<div>&lt;a&gt;&lt;b&gt;</div>', html
   end
 
   test 'content_tag_nested without block' do
-    html = content_tag_nested(:div, ['a', 'b'])
+    html = content_tag_nested(:div, %w(a b))
     assert_equal '<div>ab</div>', html
   end
 
@@ -27,7 +28,7 @@ class UtilityHelperTest < ActionView::TestCase
   end
 
   test 'safe_join with block' do
-    html = safe_join(['a', 'b']) { |e| content_tag(:span, e) }
+    html = safe_join(%w(a b)) { |e| content_tag(:span, e) }
     assert_equal '<span>a</span><span>b</span>', html
   end
 
