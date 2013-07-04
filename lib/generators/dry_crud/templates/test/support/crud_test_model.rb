@@ -34,6 +34,7 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
 
 end
 
+# Second dummy model to test associations.
 class OtherCrudTestModel < ActiveRecord::Base #:nodoc:
 
   has_and_belongs_to_many :others, :class_name => 'CrudTestModel'
@@ -51,7 +52,7 @@ class CrudTestModelsController < CrudController #:nodoc:
   HANDLE_PREFIX = 'handle_'
 
   self.search_columns = [:name, :whatever, :remarks]
-  self.sort_mappings = {:chatty => 'length(remarks)'}
+  self.sort_mappings = { :chatty => 'length(remarks)' }
   self.default_sort = 'name'
 <% if Rails.version >= '4.0' -%>
   self.permitted_attrs = [:name, :email, :password, :whatever, :children,
@@ -118,7 +119,7 @@ class CrudTestModelsController < CrudController #:nodoc:
   # custom callback
   def handle_name
     if entry.name == 'illegal'
-      flash[:alert] = "illegal name"
+      flash[:alert] = 'illegal name'
       false
     end
   end
@@ -132,7 +133,6 @@ class CrudTestModelsController < CrudController #:nodoc:
   def set_companions
     @companions = CrudTestModel.where(:human => true)
   end
-
 
   # create callback methods that record the before/after callbacks
   [:create, :update, :save, :destroy].each do |a|
@@ -168,8 +168,6 @@ REGEXP_ROWS = /<tr.+?<\/tr>/m  #:nodoc:
 REGEXP_HEADERS = /<th.+?<\/th>/m  #:nodoc:
 REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m  #:nodoc:
 REGEXP_ACTION_CELL = /<td class=\"action\"><a .*?href.+?<\/a><\/td>/m  #:nodoc:
-
-
 
 # A simple test helper to prepare the test database with a CrudTestModel model.
 # This helper is used to test the CrudController and various helpers
@@ -214,37 +212,48 @@ module CrudTestHelper
     without_transaction do
       silence_stream(STDOUT) do
         c = ActiveRecord::Base.connection
-        c.create_table :crud_test_models, :force => true do |t|
-          t.string   :name, :null => false, :limit => 50
-          t.string   :email
-          t.string   :password
-          t.string   :whatever
-          t.integer  :children
-          t.integer  :companion_id
-          t.float    :rating
-          t.decimal  :income, :precision => 14, :scale => 2
-          t.date     :birthdate
-          t.time     :gets_up_at
-          t.datetime :last_seen
-          t.boolean  :human, :default => true
-          t.text     :remarks
 
-          t.timestamps
-        end
-
-        c.create_table :other_crud_test_models, :force => true do |t|
-          t.string   :name, :null => false, :limit => 50
-          t.integer  :more_id
-        end
-
-        c.create_table :crud_test_models_other_crud_test_models,
-                       :force => true do |t|
-          t.belongs_to :crud_test_model
-          t.belongs_to :other_crud_test_model
-        end
+        create_crud_test_models(c)
+        create_other_crud_test_models(c)
+        create_crud_test_models_other_crud_test_models(c)
       end
 
       CrudTestModel.reset_column_information
+    end
+  end
+
+  def create_crud_test_models(c)
+    c.create_table :crud_test_models, :force => true do |t|
+      t.string   :name, :null => false, :limit => 50
+      t.string   :email
+      t.string   :password
+      t.string   :whatever
+      t.integer  :children
+      t.integer  :companion_id
+      t.float    :rating
+      t.decimal  :income, :precision => 14, :scale => 2
+      t.date     :birthdate
+      t.time     :gets_up_at
+      t.datetime :last_seen
+      t.boolean  :human, :default => true
+      t.text     :remarks
+
+      t.timestamps
+    end
+  end
+
+  def create_other_crud_test_models(c)
+    c.create_table :other_crud_test_models, :force => true do |t|
+      t.string   :name, :null => false, :limit => 50
+      t.integer  :more_id
+    end
+  end
+
+  def create_crud_test_models_other_crud_test_models(c)
+    c.create_table :crud_test_models_other_crud_test_models,
+                   :force => true do |t|
+      t.belongs_to :crud_test_model
+      t.belongs_to :other_crud_test_model
     end
   end
 
@@ -254,16 +263,14 @@ module CrudTestHelper
     [:crud_test_models,
      :other_crud_test_models,
      :crud_test_models_other_crud_test_models].each do |table|
-      if c.table_exists?(table)
-        c.drop_table(table) rescue nil
-      end
+      c.drop_table(table) if c.table_exists?(table)
     end
   end
 
   # Creates 6 dummy entries for the crud_test_models table.
   def create_test_data
-    (1..6).inject(nil) {|prev, i| create(i, prev) }
-    (1..6).each {|i| create_other(i) }
+    (1..6).reduce(nil) { |prev, i| create(i, prev) }
+    (1..6).each { |i| create_other(i) }
   end
 
   # Fixture-style accessor method to get CrudTestModel instances by name
@@ -275,7 +282,7 @@ module CrudTestHelper
     with_routing do |set|
       set.draw { resources :crud_test_models }
       # used to define a controller in these tests
-      set.default_url_options = {:controller => 'crud_test_models'}
+      set.default_url_options = { :controller => 'crud_test_models' }
       yield
     end
   end
@@ -300,15 +307,19 @@ module CrudTestHelper
       :name => c,
       :children => 10 - index,
       :rating => "#{index}.#{index}".to_f,
-      :income => 10000000 * index + 0.1 * index,
+      :income => 10_000_000 * index + 0.1 * index,
       :birthdate => "#{1900 + 10 * index}-#{index}-#{index}",
       # store entire date to avoid time zone issues
-      :gets_up_at => RUBY_VERSION.include?('1.8.') ?
-                        Time.utc(2000,1,1,index,index) :
-                        Time.local(2000,1,1,index,index),
-      :last_seen => "#{2000 + 10 * index}-#{index}-#{index} 1#{index}:2#{index}",
+      :gets_up_at => if RUBY_VERSION.include?('1.8.')
+                       Time.utc(2000, 1, 1, index, index)
+                     else
+                       Time.local(2000, 1, 1, index, index)
+                     end,
+      :last_seen => "#{2000 + 10 * index}-#{index}-#{index} " +
+                    "1#{index}:2#{index}",
       :human => index % 2 == 0,
-      :remarks => "#{c} #{str(index + 1)} #{str(index + 2)}\n" * (index % 3 + 1))
+      :remarks => "#{c} #{str(index + 1)} #{str(index + 2)}\n" *
+                  (index % 3 + 1))
     m.companion = companion
     m.save!
     m
@@ -316,7 +327,7 @@ module CrudTestHelper
 
   def create_other(index)
     c = str(index)
-    others = CrudTestModel.all[index..(index+2)]
+    others = CrudTestModel.all[index..(index + 2)]
     OtherCrudTestModel.create!(:name => c,
                                :other_ids => others.collect(&:id),
                                :more_id => others.first.try(:id))
@@ -332,13 +343,13 @@ module CrudTestHelper
     start_transaction = false
     if c.adapter_name.downcase.include?('mysql') && c.open_transactions > 0
       # in transactional tests, we may simply rollback
-      c.execute("ROLLBACK")
+      c.execute('ROLLBACK')
       start_transaction = true
     end
 
     yield
 
-    c.execute("BEGIN") if start_transaction
+    c.execute('BEGIN') if start_transaction
   end
 
 end

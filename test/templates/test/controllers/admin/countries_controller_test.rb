@@ -1,14 +1,21 @@
+# encoding: UTF-8
 require 'test_helper'
 require 'support/crud_controller_test_helper'
 
+# Countries Controller Test
 class Admin::CountriesControllerTest < ActionController::TestCase
 
   include CrudControllerTestHelper
 
   def test_setup
     assert_equal 3, Country.count
-    assert_recognizes({:controller => 'admin/countries', :action => 'index'}, 'admin/countries')
-    assert_recognizes({:controller => 'admin/countries', :action => 'show', :id => '1'}, 'admin/countries/1')
+    assert_recognizes({ :controller => 'admin/countries',
+                        :action => 'index' },
+                      'admin/countries')
+    assert_recognizes({ :controller => 'admin/countries',
+                        :action => 'show',
+                        :id => '1' },
+                      'admin/countries/1')
   end
 
   def test_index
@@ -17,7 +24,7 @@ class Admin::CountriesControllerTest < ActionController::TestCase
     assert_equal [:admin], @controller.send(:parents)
     assert_nil @controller.send(:parent)
     assert_equal Country.all, @controller.send(:model_scope)
-    assert_equal [:admin,2], @controller.send(:path_args, 2)
+    assert_equal [:admin, 2], @controller.send(:path_args, 2)
   end
 
   def test_show
@@ -36,7 +43,7 @@ class Admin::CountriesControllerTest < ActionController::TestCase
   end
 
   def test_entry_attrs
-    {:name => 'United States of America', :code => 'US'}
+    { :name => 'United States of America', :code => 'US' }
   end
 
 end

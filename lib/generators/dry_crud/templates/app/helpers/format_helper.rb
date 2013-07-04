@@ -30,20 +30,9 @@ module FormatHelper
   # If the value is an associated model, renders the label of this object.
   # Otherwise, calls format_type.
   def format_attr(obj, attr)
-    class_name = obj.class.name.underscore.gsub('/', '_')
-    format_type_attr_method = :"format_#{class_name}_#{attr}"
-    format_attr_method = :"format_#{attr}"
-    if respond_to?(format_type_attr_method)
-      send(format_type_attr_method, obj)
-    elsif respond_to?(format_attr_method)
-      send(format_attr_method, obj)
-    elsif assoc = association(obj, attr, :belongs_to)
-      format_assoc(obj, assoc)
-    elsif assoc = association(obj, attr, :has_many, :has_and_belongs_to_many)
-      format_many_assoc(obj, assoc)
-    else
-      format_type(obj, attr)
-    end
+    format_with_helper(obj, attr) ||
+    format_association(obj, attr) ||
+    format_type(obj, attr)
   end
 
   # Renders a simple unordered list, which will
@@ -86,6 +75,36 @@ module FormatHelper
 
   private
 
+  # Checks whether a format_{class}_{attr} or format_{attr} helper method is
+  # defined and calls it if is.
+  def format_with_helper(obj, attr)
+    class_name = obj.class.name.underscore.gsub('/', '_')
+    format_type_attr_method = :"format_#{class_name}_#{attr}"
+    format_attr_method = :"format_#{attr}"
+
+    if respond_to?(format_type_attr_method)
+      send(format_type_attr_method, obj)
+    elsif respond_to?(format_attr_method)
+      send(format_attr_method, obj)
+    else
+      false
+    end
+  end
+
+  # Checks whether the given attr is an association of obj and formats it
+  # accordingly if it is.
+  def format_association(obj, attr)
+    belongs_to = association(obj, attr, :belongs_to)
+    has_many = association(obj, attr, :has_many, :has_and_belongs_to_many)
+    if belongs_to
+      format_belongs_to(obj, belongs_to)
+    elsif has_many
+      format_has_many(obj, has_many)
+    else
+      false
+    end
+  end
+
   # Formats an arbitrary attribute of the given object depending on its data
   # type. For Active Records, take the defined data type into account for
   # special types that have no own object class.
@@ -104,8 +123,9 @@ module FormatHelper
   end
 
   # Formats an ActiveRecord +belongs_to+ association
-  def format_assoc(obj, assoc)
-    if val = obj.send(assoc.name)
+  def format_belongs_to(obj, assoc)
+    val = obj.send(assoc.name)
+    if val
       assoc_link(assoc, val)
     else
       ta(:no_entry, assoc)
@@ -114,7 +134,7 @@ module FormatHelper
 
   # Formats an ActiveRecord +has_and_belongs_to_many+ or
   # +has_many+ association.
-  def format_many_assoc(obj, assoc)
+  def format_has_many(obj, assoc)
     values = obj.send(assoc.name)
     if values.size == 1
       assoc_link(assoc, values.first)

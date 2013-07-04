@@ -1,3 +1,6 @@
+# encoding: UTF-8
+
+# Person model
 class Person < ActiveRecord::Base
 
   belongs_to :city

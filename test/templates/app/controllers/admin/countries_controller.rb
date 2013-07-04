@@ -1,3 +1,6 @@
+# encoding: UTF-8
+
+# Countries Controller nested under /admin
 class Admin::CountriesController < AjaxController
 
   self.nesting = :admin
@@ -6,9 +9,7 @@ class Admin::CountriesController < AjaxController
 
   self.default_sort = 'countries.name'
 
-  if respond_to?(:permitted_attrs)
-    self.permitted_attrs = [:name, :code]
-  end
+  self.permitted_attrs = [:name, :code] if respond_to?(:permitted_attrs)
 
   def show
     super do |format|

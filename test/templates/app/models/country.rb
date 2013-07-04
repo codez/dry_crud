@@ -1,3 +1,6 @@
+# encoding: UTF-8
+
+# Country model
 class Country < ActiveRecord::Base
 
   has_many :cities, :dependent => :destroy

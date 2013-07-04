@@ -1,3 +1,6 @@
+# encoding: UTF-8
+
+# initial migration
 class CreatePeopleAndCities < ActiveRecord::Migration
   def change
     create_table :countries do |t|

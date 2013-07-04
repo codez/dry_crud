@@ -1,3 +1,6 @@
+# encoding: UTF-8
+
+# City model
 class City < ActiveRecord::Base
 
   belongs_to :country

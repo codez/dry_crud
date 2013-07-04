@@ -1,3 +1,6 @@
+# encoding: UTF-8
+
+# Cities Controller nested under /admin and countries
 class Admin::CitiesController < AjaxController
 
   self.nesting = :admin, Country
@@ -6,9 +9,7 @@ class Admin::CitiesController < AjaxController
 
   self.default_sort = 'countries.code, cities.name'
 
-  if respond_to?(:permitted_attrs)
-    self.permitted_attrs = [:name, :person_ids]
-  end
+  self.permitted_attrs = [:name, :person_ids] if respond_to?(:permitted_attrs)
 
   private
 

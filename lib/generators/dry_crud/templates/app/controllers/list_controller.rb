@@ -70,12 +70,12 @@ class ListController < ApplicationController
   # value. If the value is a collection, sets the plural name.
   def set_model_ivar(value)
     name = if value.respond_to?(:klass) # ActiveRecord::Relation
-      ivar_name(value.klass).pluralize
-    elsif value.respond_to?(:each) # Array
-      ivar_name(value.first.class).pluralize
-    else
-      ivar_name(value.class)
-    end
+             ivar_name(value.klass).pluralize
+           elsif value.respond_to?(:each) # Array
+             ivar_name(value.first.class).pluralize
+           else
+             ivar_name(value.class)
+           end
     instance_variable_set(:"@#{name}", value)
   end
 
@@ -128,17 +128,18 @@ class ListController < ApplicationController
     # Helper method the run the given block in between the before and after
     # callbacks of the given kinds.
     def with_callbacks(*kinds, &block)
-      kinds.reverse.inject(block) do |b, kind|
+      kinds.reverse.reduce(block) do |b, kind|
         lambda { run_callbacks(kind, &b) }
       end.call
     end
 
+    # Class methods for callbacks.
     module ClassMethods
       # Defines before callbacks for the render actions.
       def define_render_callbacks(*actions)
-        args = actions.collect {|a| :"render_#{a}" }
-        args << {:only => :before,
-                 :terminator => "result == false || performed?"}
+        args = actions.map { |a| :"render_#{a}" }
+        args << { :only => :before,
+                  :terminator => 'result == false || performed?' }
         define_model_callbacks(*args)
       end
     end
@@ -171,16 +172,24 @@ class ListController < ApplicationController
     # Compose the search condition with a basic SQL OR query.
     def search_condition
       if search_support? && params[:q].present?
-        terms = params[:q].split(/\s+/).collect { |t| "%#{t}%" }
-        clause = search_columns.collect do |f|
-          col = f.to_s.include?('.') ? f : "#{model_class.table_name}.#{f}"
-          "#{col} LIKE ?"
-        end.join(" OR ")
-        clause = terms.collect {|t| "(#{clause})" }.join(" AND ")
+        col_clause = search_column_clause
+        terms = params[:q].split(/\s+/).map { |t| "%#{t}%" }
+        term_clause = terms.map { |t| "(#{col_clause})" }.join(' AND ')
 
-        ["(#{clause})"] +
-        terms.collect {|t| [t] * search_columns.size }.flatten
+        term_params = terms.map { |t| [t] * search_columns.size }.flatten
+        ["(#{term_clause})", *term_params]
       end
+    end
+
+    # SQL where clause with all search colums or'ed.
+    def search_column_clause
+      search_columns.map do |f|
+        if f.to_s.include?('.')
+          "#{f} LIKE ?"
+        else
+          "#{model_class.table_name}.#{f} LIKE ?"
+        end
+      end.join(' OR ')
     end
 
     # Returns true if this controller has searchable columns.
@@ -209,13 +218,15 @@ class ListController < ApplicationController
       alias_method_chain :list_entries, :sort
     end
 
+    # Class methods for sorting.
     module ClassMethods
       # Define a map of (virtual) attributes to SQL order expressions.
       # May be used for sorting table columns that do not appear directly
       # in the database table. E.g., map :city_id => 'cities.name' to
       # sort the displayed city names.
       def sort_mappings=(hash)
-        self.sort_mappings_with_indifferent_access = hash.with_indifferent_access
+        self.sort_mappings_with_indifferent_access =
+          hash.with_indifferent_access
       end
     end
 
@@ -281,7 +292,7 @@ class ListController < ApplicationController
 
     def restore_params_on_return(remembered)
       if params[:returning]
-        remember_params.each {|p| params[p] ||= remembered[p] }
+        remember_params.each { |p| params[p] ||= remembered[p] }
       end
     end
 
@@ -335,14 +346,14 @@ class ListController < ApplicationController
 
     # Returns the direct parent ActiveRecord of the current request, if any.
     def parent
-      parents.select {|p| p.is_a?(ActiveRecord::Base) }.last
+      parents.select { |p| p.is_a?(ActiveRecord::Base) }.last
     end
 
     # Returns the parent entries of the current request, if any.
     # These are ActiveRecords or namespace symbols, corresponding
     # to the defined nesting attribute.
     def parents
-      @parents ||= Array(nesting).collect do |p|
+      @parents ||= Array(nesting).map do |p|
         if p.is_a?(Class) && p < ActiveRecord::Base
           parent_entry(p)
         else

@@ -20,13 +20,13 @@ describe 'Crud::FormBuilder' do
   let(:entry) { CrudTestModel.first }
 <% if Rails.version < '4.0' -%>
   let(:form)  do
-    Crud::FormBuilder.new(:entry, entry, self, {}, lambda {|form| form })
+    Crud::FormBuilder.new(:entry, entry, self, {}, lambda { |form| form })
   end
 <% else -%>
   let(:form)  { Crud::FormBuilder.new(:entry, entry, self, {}) }
 <% end -%>
 
-  describe "#input_field" do
+  describe '#input_field' do
 
     { :name => :string_field,
       :password => :password_field,
@@ -40,7 +40,7 @@ describe 'Crud::FormBuilder' do
       :other_ids => :has_many_field,
       :more_ids => :has_many_field,
     }.each do |attr, method|
-      it "dispatches #{attr} attr to #{method}" do
+      it 'dispatches #{attr} attr to #{method}' do
         form.should_receive(method).with(attr, {})
         form.input_field(attr)
       end
@@ -50,7 +50,7 @@ describe 'Crud::FormBuilder' do
 
   end
 
-  describe "#labeled_input_fields" do
+  describe '#labeled_input_fields' do
     subject { form.labeled_input_fields(:name, :remarks, :children) }
 
     it { should be_html_safe }
@@ -59,37 +59,37 @@ describe 'Crud::FormBuilder' do
     it { should include(form.input_field(:children)) }
   end
 
-  describe "#labeled_input_field" do
-    context "when required" do
+  describe '#labeled_input_field' do
+    context 'when required' do
       subject { form.labeled_input_field(:name) }
       it { should include(Crud::FormBuilder::REQUIRED_MARK) }
     end
 
-    context "when not required" do
+    context 'when not required' do
       subject { form.labeled_input_field(:remarks) }
       it { should_not include(Crud::FormBuilder::REQUIRED_MARK) }
     end
 
-    context "with help text" do
+    context 'with help text' do
       subject { form.labeled_input_field(:name, :help => 'Some Help') }
       it { should include(form.help_block('Some Help')) }
     end
   end
 
-  describe "#belongs_to_field" do
-    it "has all options by default" do
+  describe '#belongs_to_field' do
+    it 'has all options by default' do
       f = form.belongs_to_field(:companion_id)
       f.scan('</option>').should have(7).items
     end
 
-    it "with has options from :list option" do
+    it 'with has options from :list option' do
       list = CrudTestModel.all
       f = form.belongs_to_field(:companion_id,
                                 :list => [list.first, list.second])
       f.scan('</option>').should have(3).items
     end
 
-    it "with empty instance list has no select" do
+    it 'with empty instance list has no select' do
       assign(:companions, [])
       @companions = []
       f = form.belongs_to_field(:companion_id)
@@ -98,27 +98,27 @@ describe 'Crud::FormBuilder' do
     end
   end
 
-  describe "#has_and_belongs_to_many_field" do
+  describe '#has_and_belongs_to_many_field' do
     let(:others) { OtherCrudTestModel.all[0..1] }
 
-    it "has all options by default" do
+    it 'has all options by default' do
       f = form.has_many_field(:other_ids)
       f.scan('</option>').should have(6).items
     end
 
-    it "uses options from :list option if given" do
+    it 'uses options from :list option if given' do
       f = form.has_many_field(:other_ids, :list => others)
       f.scan('</option>').should have(2).items
     end
 
-    it "uses options form instance variable if given" do
+    it 'uses options form instance variable if given' do
       assign(:others, others)
       @others = others
       f = form.has_many_field(:other_ids)
       f.scan('</option>').should have(2).items
     end
 
-    it "displays a message for an empty list" do
+    it 'displays a message for an empty list' do
        @others = []
        f = form.has_many_field(:other_ids)
        f.should match /none available/m
@@ -126,44 +126,44 @@ describe 'Crud::FormBuilder' do
     end
   end
 
-  describe "#string_field" do
-    it "sets maxlength if attr has a limit" do
+  describe '#string_field' do
+    it 'sets maxlength if attr has a limit' do
       form.string_field(:name).should match /maxlength="50"/
     end
   end
 
-  describe "#label" do
-    context "only with attr" do
+  describe '#label' do
+    context 'only with attr' do
       subject { form.label(:gugus_dada) }
 
       it { should be_html_safe }
-      it "provides the same interface as rails" do
+      it 'provides the same interface as rails' do
         should match /label [^>]*for.+Gugus dada/
       end
     end
 
-    context "with attr and text" do
-      subject { form.label(:gugus_dada, "hoho") }
+    context 'with attr and text' do
+      subject { form.label(:gugus_dada, 'hoho') }
 
       it { should be_html_safe }
-      it "provides the same interface as rails" do
+      it 'provides the same interface as rails' do
         should match /label [^>]*for.+hoho/
       end
     end
 
   end
 
-  describe "#labeled" do
-    context "in labeled_ method" do
+  describe '#labeled' do
+    context 'in labeled_ method' do
       subject { form.labeled_string_field(:name) }
 
       it { should be_html_safe }
-      it "provides the same interface as rails" do
+      it 'provides the same interface as rails' do
         should match /label [^>]*for.+input/m
       end
     end
 
-    context "with custom content in argument" do
+    context 'with custom content in argument' do
       subject do
         form.labeled('gugus', "<input type='text' name='gugus' />".html_safe)
       end
@@ -172,7 +172,7 @@ describe 'Crud::FormBuilder' do
       it { should match /label [^>]*for.+<input/m }
     end
 
-    context "with custom content in block" do
+    context 'with custom content in block' do
       subject do
         form.labeled('gugus') do
           "<input type='text' name='gugus' />".html_safe
@@ -183,7 +183,7 @@ describe 'Crud::FormBuilder' do
       it { should match /label [^>]*for.+<input/m }
     end
 
-    context "with caption and content in argument" do
+    context 'with caption and content in argument' do
       subject do
         form.labeled('gugus',
                      'Caption',
@@ -194,9 +194,9 @@ describe 'Crud::FormBuilder' do
       it { should match /label [^>]*for.+>Caption<\/label>.*<input/m }
     end
 
-    context "with caption and content in block" do
+    context 'with caption and content in block' do
       subject do
-        form.labeled("gugus", 'Caption') do
+        form.labeled('gugus', 'Caption') do
           "<input type='text' name='gugus' />".html_safe
         end
       end
@@ -206,34 +206,34 @@ describe 'Crud::FormBuilder' do
     end
   end
 
-  describe "#required_mark" do
-    it "is shown for required attrs" do
+  describe '#required_mark' do
+    it 'is shown for required attrs' do
       form.required_mark(:name).should == Crud::FormBuilder::REQUIRED_MARK
     end
 
-    it "is not shown for optional attrs" do
+    it 'is not shown for optional attrs' do
       form.required_mark(:rating).should be_empty
     end
 
-    it "is not shown for non existing attrs" do
+    it 'is not shown for non existing attrs' do
       form.required_mark(:not_existing).should be_empty
     end
   end
 
-  it "handles missing methods" do
+  it 'handles missing methods' do
     expect { form.blabla }.to raise_error(NoMethodError)
   end
 
-  context "#respond_to?" do
-    it "returns false for non existing methods" do
+  context '#respond_to?' do
+    it 'returns false for non existing methods' do
       form.respond_to?(:blabla).should be_false
     end
 
-    it "returns true for existing methods" do
+    it 'returns true for existing methods' do
       form.respond_to?(:text_field).should be_true
     end
 
-    it "returns true for labeled_ methods" do
+    it 'returns true for labeled_ methods' do
       form.respond_to?(:labeled_text_field).should be_true
     end
   end

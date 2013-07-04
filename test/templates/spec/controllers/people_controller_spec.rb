@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'spec_helper'
 
 describe PeopleController do
@@ -9,10 +10,13 @@ describe PeopleController do
   include_examples 'crud controller', {}
 
   let(:test_entry)       { people(:john) }
-  let(:test_entry_attrs) { {:name => 'Fischers Fritz',
-                            :children => 2,
-                            :income => 120,
-                            :city_id => cities(:rj).id} }
+  let(:test_entry_attrs) do
+    { :name => 'Fischers Fritz',
+      :children => 2,
+      :income => 120,
+      :city_id => cities(:rj).id }
+  end
+
   alias_method :new_entry_attrs, :test_entry_attrs
   alias_method :edit_entry_attrs, :test_entry_attrs
 
@@ -24,7 +28,9 @@ describe PeopleController do
     it 'should be ordered by default scope' do
       expected = Person.includes(:city => :country).
                         order('people.name, countries.code, cities.name')
-      expected = expected.references(:cities, :countries) if expected.respond_to?(:references)
+      if expected.respond_to?(:references)
+        expected = expected.references(:cities, :countries)
+      end
       entries == expected
     end
 
@@ -64,7 +70,7 @@ describe PeopleController do
   describe_action :put, :update, :id => true do
     context '.js', :format => :js do
       context 'with valid params' do
-        let(:params) { {:person => {:name => 'New Name'} } }
+        let(:params) { { :person => { :name => 'New Name' } } }
 
         it_should_respond
         it_should_render
@@ -72,7 +78,7 @@ describe PeopleController do
       end
 
       context 'with invalid params' do
-        let(:params) { {:person => {:name => ' '} } }
+        let(:params) { { :person => { :name => ' ' } } }
 
         it_should_respond
         it_should_render

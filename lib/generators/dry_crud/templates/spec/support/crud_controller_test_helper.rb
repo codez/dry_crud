@@ -18,7 +18,8 @@ module CrudControllerTestHelper
   # If a combine key is given in metadata, only the first request for all
   # examples with the same key will be performed.
   def perform_combined_request
-    if stack = example.metadata[:combine]
+    stack = example.metadata[:combine]
+    if stack
       @@current_stack ||= nil
       if stack == @@current_stack &&
          described_class == @@current_controller.class

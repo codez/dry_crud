@@ -145,7 +145,8 @@ module Crud
     # To add an additional help text, use the help option.
     # E.g. labeled_boolean_field(:checked, :help => 'Some Help')
     def method_missing(name, *args)
-      if field_method = labeled_field_method?(name)
+      field_method = labeled_field_method?(name)
+      if field_method
         build_labeled_field(field_method, *args)
       else
         super(name, *args)
@@ -216,11 +217,13 @@ module Crud
     # Depending if the given attribute must be present, return
     # only an initial selection prompt or a blank option, respectively.
     def select_options(attr, options = {})
+      prompt = options.delete(:prompt)
+      blank = options.delete(:include_blank)
       if options[:multiple]
         {}
-      elsif prompt = options.delete(:prompt)
+      elsif prompt
         { :prompt => prompt }
-      elsif blank = options.delete(:include_blank)
+      elsif blank
         { :include_blank => blank }
       else
         assoc = association(@object, attr)

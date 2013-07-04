@@ -249,5 +249,5 @@ def file_replace(file, expression, replacement)
   if text == replaced
     puts "WARN: Nothing replaced in '#{file}' for '#{expression}'"
   end
-  File.open(file, "w") { |f| f.puts replaced }
+  File.open(file, 'w') { |f| f.puts replaced }
 end

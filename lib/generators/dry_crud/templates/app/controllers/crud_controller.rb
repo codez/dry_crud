@@ -34,7 +34,6 @@ class CrudController < ListController
 
   hide_action :model_identifier, :run_callbacks
 
-
   ##############  ACTIONS  ############################################
 
   # Show one entry of this model.
@@ -99,7 +98,7 @@ class CrudController < ListController
       if request.format == :html
         flash[:alert] ||= error_messages.presence || flash_message(:failure)
       end
-      location = request.env["HTTP_REFERER"].presence
+      location = request.env['HTTP_REFERER'].presence
     end
     location ||= index_url
     respond_options = options.reverse_merge(:success => destroyed,
@@ -162,7 +161,7 @@ class CrudController < ListController
 
   # Html safe error messages of the current entry.
   def error_messages
-    escaped = entry.errors.full_messages.collect {|m| ERB::Util.html_escape(m) }
+    escaped = entry.errors.full_messages.map { |m| ERB::Util.html_escape(m) }
     escaped.join('<br/>').html_safe
   end
 
@@ -175,7 +174,6 @@ class CrudController < ListController
 <% end -%><%# > fixing rdoc -%>
   end
 
-
   class << self
     # The identifier of the model used for form parameters.
     # I.e., the symbol of the underscored model name.
@@ -186,8 +184,8 @@ class CrudController < ListController
     # Convenience callback to apply a callback on both form actions
     # (new and edit).
     def before_render_form(*methods)
-      before_render_new *methods
-      before_render_edit *methods
+      before_render_new(*methods)
+      before_render_edit(*methods)
     end
   end
 

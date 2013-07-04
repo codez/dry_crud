@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'spec_helper'
 
 describe Admin::CitiesController do
@@ -7,7 +8,7 @@ describe Admin::CitiesController do
   include_examples 'crud controller', {}
 
   let(:test_entry)       { cities(:rj) }
-  let(:test_entry_attrs) { {:name => 'Rejkiavik'} }
+  let(:test_entry_attrs) { { :name => 'Rejkiavik' } }
   alias_method :new_entry_attrs, :test_entry_attrs
   alias_method :edit_entry_attrs, :test_entry_attrs
 
@@ -19,7 +20,9 @@ describe Admin::CitiesController do
     it 'should be ordered by default scope' do
       expected = test_entry.country.cities.includes(:country).
                                            order('countries.code, cities.name')
-      expected = expected.references(:countries) if expected.respond_to?(:references)
+      if expected.respond_to?(:references)
+        expected = expected.references(:countries)
+      end
       entries == expected
     end
 
@@ -67,7 +70,8 @@ describe Admin::CitiesController do
       end
 
       it 'should redirect to referer', :perform_request => false do
-        ref = @request.env['HTTP_REFERER'] = admin_country_city_url(test_entry.country, test_entry)
+        ref = @request.env['HTTP_REFERER'] =
+          admin_country_city_url(test_entry.country, test_entry)
         perform_request
         should redirect_to(ref)
       end
