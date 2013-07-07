@@ -45,14 +45,22 @@ namespace :test do
     task :create do
       unless File.exist?(TEST_APP_ROOT)
         sh "rails new #{TEST_APP_ROOT} --skip-bundle"
-        File.open(File.join(TEST_APP_ROOT, 'Gemfile'), 'a') do |f|
-            f.puts File.read(File.join(File.dirname(__FILE__),
-                                       'test', 'templates', 'Gemfile.append'))
-        end
+        file_replace(File.join(TEST_APP_ROOT, 'Gemfile'),
+                     /\z/,
+                     File.read(File.join(File.dirname(__FILE__),
+                               'test', 'templates', 'Gemfile.append')))
         sh "cd #{TEST_APP_ROOT}; bundle install --local" # update Gemfile.lock
         sh "cd #{TEST_APP_ROOT}; rails g rspec:install"
         FileUtils.rm_f(File.join(TEST_APP_ROOT,
                                  'test', 'performance', 'browsing_test.rb'))
+        file_replace(File.join(TEST_APP_ROOT, 'test', 'test_helper.rb'),
+                     /\A/,
+                     "require 'simplecov'\nSimpleCov.start do\n" +
+                     "  coverage_dir 'coverage/test'\nend\n")
+        file_replace(File.join(TEST_APP_ROOT, 'spec', 'spec_helper.rb'),
+                     /\A/,
+                     "require 'simplecov'\nSimpleCov.start do\n" +
+                     "  coverage_dir 'coverage/spec'\nend\n")
       end
     end
 
@@ -174,7 +182,7 @@ task :clobber do
 end
 
 desc "Install dry_crud as a local gem."
-task install: [:package] do
+task install: :package do
   sudo = RUBY_PLATFORM =~ /win32/ ? '' : 'sudo'
   gem = RUBY_PLATFORM =~ /java/ ? 'jgem' : 'gem'
   sh "#{sudo} #{gem} install --no-ri " +
@@ -187,18 +195,6 @@ task site: :rdoc do
     sh "rsync -rzv rdoc/ #{ENV['DEST']}"
   else
     puts "Please specify a destination with DEST=user@server:/deploy/dir"
-  end
-end
-
-if RUBY_VERSION == '1.8.7' && RUBY_PLATFORM != 'java'
-  require 'rcov/rcovtask'
-  Rcov::RcovTask.new do |test|
-      test.libs << 'test/test_app/test'
-      test.test_files = Dir['test/test_app/test/**/*_test.rb']
-      test.rcov_opts = ['--text-report',
-                        '-i', '"test\/test_app\/app\/.*"',
-                        '-x', '"\/Library\/Ruby\/.*"']
-      test.verbose = true
   end
 end
 
@@ -250,3 +246,4 @@ def file_replace(file, expression, replacement)
   end
   File.open(file, 'w') { |f| f.puts replaced }
 end
+

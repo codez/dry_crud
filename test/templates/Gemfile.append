@@ -1,4 +1,6 @@
 
+gem 'simplecov', require: false, group: :test
+
 gem 'sqlite3', platforms: :ruby
 
 platforms :jruby do

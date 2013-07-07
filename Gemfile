@@ -17,9 +17,9 @@ gem 'kaminari'
 gem 'turbolinks'
 gem 'jbuilder'
 
-# platform specific gems
+gem 'simplecov', require: false
 
-gem 'simplecov'
+# platform specific gems
 
 platforms :ruby do
   gem 'sqlite3'
