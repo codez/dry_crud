@@ -19,7 +19,7 @@ To integrate dry_crud into your code, only a few additions are required:
 * For uniform CRUD functionality, just subclass your controllers from CrudController.
 * Overwrite the +to_s+ method of your models for a human-friendly representation in captions.
 
-Version 2.0 and higher are compatible with Rails 4 and Rails 3.2. dry_crud is tested with Ruby 1.8.7, 1.9.3, 2.0.0 and JRuby.
+Version 2.0 and higher are compatible with Rails 4 and Rails 3.2. dry_crud is tested with Ruby 1.9.3, 2.0.0 and JRuby. If you are using Ruby 1.8.7, please refer to version 1.7.0.
 
 == Overview
 
@@ -113,7 +113,7 @@ In <tt>app/controllers/people_controller.rb</tt>:
 When you display computed values in your list table, you may define sort mappings to enable sorting of these columns:
 
 In <tt>app/controllers/people_controller.rb</tt>:
-  self.sort_mappings = {:age => 'birthday', :city_id => 'cities.name'}
+  self.sort_mappings = {age: 'birthday', city_id: 'cities.name'}
 
 There is also a simple search functionality (based on SQL LIKE queries) implemented in ListController. Define an array of columns in your controller's +search_columns+ class variable to make the entries searchable by these fields:
 
@@ -139,7 +139,7 @@ If entries is empty, a basic 'No entries found' message is rendered instead of t
 To render custom columns, use the +col+ method with an appropriate block:
   <%= plain_table(@people) do |t|
         t.sortable_attrs :lastname, :firstname
-        t.col('', :class => 'center') {|entry| image_tag(entry.picture) }
+        t.col('', class: 'center') {|entry| image_tag(entry.picture) }
         t.attr :street
         t.col('Map') {|entry| link_to(entry.city, "http://maps.google.com/?q=#{entry.city}" }
       end %>
@@ -153,7 +153,7 @@ Forms work very similar. In the most simple case, you just have to specify which
   <%= standard_form(@person, :firstname, :lastname, :age, :city) -%>
 
 Of course, custom input fields may be defined as well:
-  <%= standard_form(@person, :url => custom_update_person_path(@person.id)) do |f| %>
+  <%= standard_form(@person, url: custom_update_person_path(@person.id)) do |f| %>
     <%= f.labeled_input_fields :firstname, :lastname %>
     <%= f.labeled(:sex) do %>
       <%= f.radio_button :sex, true %> female
@@ -164,12 +164,12 @@ Of course, custom input fields may be defined as well:
   <% end %>
 
 Even +belongs_to+ associations are automatically rendered with a select field. By default, all entries from the associated model are used as options. To customize this, either define an instance variable with the same name as the association in your controller, or pass a <tt>list</tt> option:
-  <%= f.belongs_to_field :hometown, :list => City.where(:country => @person.country) %>
+  <%= f.belongs_to_field :hometown, list: City.where(country: @person.country) %>
 
 Yes, it's bad practice to use finder logic in your views! Define the variable <tt>@hometowns</tt> in your controller instead (as shown in the example above), and you do not even have to specify the <tt>list</tt> option.
 
 Optionally, +has_and_belongs_to_many+ and +has_many+ associations can be rendered with a multi-select field. Similar to a +belongs_to+ association, all entries from the associated model are used, but can be overwritten using the <tt>list</tt> option:
-  <%= f.has_many_field :visited_cities, :list => City.where(:is_touristic => true) %>
+  <%= f.has_many_field :visited_cities, list: City.where(is_touristic: true) %>
 
 And yes again, the same advice for where to put finder logic applies here as well.
 
@@ -212,7 +212,7 @@ In <tt>app/controllers/people_controller.rb</tt>:
   before_render_form :set_hometowns
 
   def set_hometowns
-    @hometowns = City.where(:country => entry.country)
+    @hometowns = City.where(country: entry.country)
   end
 
 

@@ -37,7 +37,7 @@ class Crud::TableBuilderTest < ActionView::TestCase
   end
 
   test 'custom row' do
-    table.col('Header', :class => 'hula') { |e| "Weights #{e.size} kg" }
+    table.col('Header', class: 'hula') { |e| "Weights #{e.size} kg" }
 
     dom = '<tr><td class="hula">Weights 3 kg</td></tr>'
 
@@ -103,7 +103,7 @@ class Crud::TableBuilderTest < ActionView::TestCase
     FIN
     dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
 
-    table.col('head', :class => 'left') { |e| link_to e, '/' }
+    table.col('head', class: 'left') { |e| link_to e, '/' }
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }
 
@@ -123,7 +123,7 @@ class Crud::TableBuilderTest < ActionView::TestCase
     dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
 
    table = Crud::TableBuilder.new([], self)
-    table.col('head', :class => 'left') { |e| link_to e, '/' }
+    table.col('head', class: 'left') { |e| link_to e, '/' }
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }
 

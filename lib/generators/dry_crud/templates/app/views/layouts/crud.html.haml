@@ -17,9 +17,17 @@
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
 
     = favicon_link_tag
-    = favicon_link_tag '/apple-touch-icon.png', :rel => 'apple-touch-icon', :type => 'image/png'
-    = favicon_link_tag '/apple-touch-icon-72x72.png', :rel => 'apple-touch-icon', :type => 'image/png', :sizes => "72x72"
-    = favicon_link_tag '/apple-touch-icon-114x114.png', :rel => 'apple-touch-icon', :type => 'image/png', :sizes => "114x114"
+    = favicon_link_tag '/apple-touch-icon.png',
+                       rel: 'apple-touch-icon',
+                       type: 'image/png'
+    = favicon_link_tag '/apple-touch-icon-72x72.png',
+                       rel: 'apple-touch-icon',
+                       type: 'image/png',
+                       sizes: "72x72"
+    = favicon_link_tag '/apple-touch-icon-114x114.png',
+                       rel: 'apple-touch-icon',
+                       type: 'image/png',
+                       sizes: "114x114"
 
     = yield :head
 
@@ -29,7 +37,7 @@
 
       %h1= @title
 
-      = render :partial => 'layouts/flash', :collection => [:notice, :alert], :as => :level
+      = render partial: 'layouts/flash', collection: [:notice, :alert], as: :level
 
       .actions.btn-toolbar
         .pull-right= yield :actions

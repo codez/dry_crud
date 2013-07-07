@@ -94,7 +94,7 @@ class Crud::FormBuilderTest < ActionView::TestCase
   end
 
   test 'labeld_input_field adds help text' do
-    result = form.labeled_input_field(:name, :help => 'Some Help')
+    result = form.labeled_input_field(:name, help: 'Some Help')
     assert result.include?(form.help_block('Some Help'))
     assert result.include?(Crud::FormBuilder::REQUIRED_MARK)
   end
@@ -107,7 +107,7 @@ class Crud::FormBuilderTest < ActionView::TestCase
   test 'belongs_to_field with :list option' do
     list = CrudTestModel.all
     f = form.belongs_to_field(:companion_id,
-                              :list => [list.first, list.second])
+                              list: [list.first, list.second])
     assert_equal 3, f.scan('</option>').size
   end
 
@@ -132,7 +132,7 @@ class Crud::FormBuilderTest < ActionView::TestCase
 
   test 'has_and_belongs_to_many_field with :list option' do
     list = OtherCrudTestModel.all
-    f = form.has_many_field(:other_ids, :list => [list.first, list.second])
+    f = form.has_many_field(:other_ids, list: [list.first, list.second])
     assert_equal 2, f.scan('</option>').size
   end
 
@@ -157,7 +157,7 @@ class Crud::FormBuilderTest < ActionView::TestCase
 
   test 'has_many_field with :list option' do
     list = OtherCrudTestModel.all
-    f = form.has_many_field(:more_ids, :list => [list.first, list.second])
+    f = form.has_many_field(:more_ids, list: [list.first, list.second])
     assert_equal 2, f.scan('</option>').size
   end
 

@@ -3,15 +3,15 @@
 # A dummy model used for general testing.
 class CrudTestModel < ActiveRecord::Base #:nodoc:
 
-  belongs_to :companion, :class_name => 'CrudTestModel'
-  has_and_belongs_to_many :others, :class_name => 'OtherCrudTestModel'
-  has_many :mores, :class_name => 'OtherCrudTestModel',
-                   :foreign_key => :more_id
+  belongs_to :companion, class_name: 'CrudTestModel'
+  has_and_belongs_to_many :others, class_name: 'OtherCrudTestModel'
+  has_many :mores, class_name: 'OtherCrudTestModel',
+                   foreign_key: :more_id
 
   before_destroy :protect_if_companion
 
-  validates :name, :presence => true
-  validates :rating, :inclusion => { :in => 1..10 }
+  validates :name, presence: true
+  validates :rating, inclusion: { in: 1..10 }
 
   attr_protected nil if Rails.version < '4.0'
 
@@ -37,8 +37,8 @@ end
 # Second dummy model to test associations.
 class OtherCrudTestModel < ActiveRecord::Base #:nodoc:
 
-  has_and_belongs_to_many :others, :class_name => 'CrudTestModel'
-  belongs_to :more, :foreign_key => :more_id, :class_name => 'CrudTestModel'
+  has_and_belongs_to_many :others, class_name: 'CrudTestModel'
+  belongs_to :more, foreign_key: :more_id, class_name: 'CrudTestModel'
 
   attr_protected nil if Rails.version < '4.0'
 
@@ -52,7 +52,7 @@ class CrudTestModelsController < CrudController #:nodoc:
   HANDLE_PREFIX = 'handle_'
 
   self.search_columns = [:name, :whatever, :remarks]
-  self.sort_mappings = { :chatty => 'length(remarks)' }
+  self.sort_mappings = { chatty: 'length(remarks)' }
   self.default_sort = 'name'
 <% if Rails.version >= '4.0' -%>
   self.permitted_attrs = [:name, :email, :password, :whatever, :children,
@@ -78,13 +78,13 @@ class CrudTestModelsController < CrudController #:nodoc:
 
   def index
     super do |format|
-      format.js { render :text => 'index js'}
+      format.js { render text: 'index js'}
     end
   end
 
   def show
     super do |format|
-      format.html { render :text => 'custom html' } if entry.name == 'BBBBB'
+      format.html { render text: 'custom html' } if entry.name == 'BBBBB'
     end
   end
 
@@ -99,9 +99,9 @@ class CrudTestModelsController < CrudController #:nodoc:
   def list_entries
     entries = super
     if params[:filter]
-      entries = entries.where(['rating < ?', 3]).
-                        except(:order).
-                        order('children DESC')
+      entries = entries.where(['rating < ?', 3])
+                       .except(:order)
+                       .order('children DESC')
     end
     entries
   end
@@ -126,12 +126,12 @@ class CrudTestModelsController < CrudController #:nodoc:
 
   # callback to redirect if @should_redirect is set
   def possibly_redirect
-    redirect_to :action => 'index' if should_redirect && !performed?
+    redirect_to action: 'index' if should_redirect && !performed?
     !should_redirect
   end
 
   def set_companions
-    @companions = CrudTestModel.where(:human => true)
+    @companions = CrudTestModel.where(human: true)
   end
 
   # create callback methods that record the before/after callbacks
@@ -223,19 +223,19 @@ module CrudTestHelper
   end
 
   def create_crud_test_models(c)
-    c.create_table :crud_test_models, :force => true do |t|
-      t.string   :name, :null => false, :limit => 50
+    c.create_table :crud_test_models, force: true do |t|
+      t.string   :name, null: false, limit: 50
       t.string   :email
       t.string   :password
       t.string   :whatever
       t.integer  :children
       t.integer  :companion_id
       t.float    :rating
-      t.decimal  :income, :precision => 14, :scale => 2
+      t.decimal  :income, precision: 14, scale: 2
       t.date     :birthdate
       t.time     :gets_up_at
       t.datetime :last_seen
-      t.boolean  :human, :default => true
+      t.boolean  :human, default: true
       t.text     :remarks
 
       t.timestamps
@@ -243,15 +243,15 @@ module CrudTestHelper
   end
 
   def create_other_crud_test_models(c)
-    c.create_table :other_crud_test_models, :force => true do |t|
-      t.string   :name, :null => false, :limit => 50
+    c.create_table :other_crud_test_models, force: true do |t|
+      t.string   :name, null: false, limit: 50
       t.integer  :more_id
     end
   end
 
   def create_crud_test_models_other_crud_test_models(c)
     c.create_table :crud_test_models_other_crud_test_models,
-                   :force => true do |t|
+                   force: true do |t|
       t.belongs_to :crud_test_model
       t.belongs_to :other_crud_test_model
     end
@@ -269,7 +269,7 @@ module CrudTestHelper
 
   # Creates 6 dummy entries for the crud_test_models table.
   def create_test_data
-    (1..6).reduce(nil) { |prev, i| create(i, prev) }
+    (1..6).reduce(nil) { |a, e| create(e, a) }
     (1..6).each { |i| create_other(i) }
   end
 
@@ -282,7 +282,7 @@ module CrudTestHelper
     with_routing do |set|
       set.draw { resources :crud_test_models }
       # used to define a controller in these tests
-      set.default_url_options = { :controller => 'crud_test_models' }
+      set.default_url_options = { controller: 'crud_test_models' }
       yield
     end
   end
@@ -304,21 +304,17 @@ module CrudTestHelper
   def create(index, companion)
     c = str(index)
     m = CrudTestModel.new(
-      :name => c,
-      :children => 10 - index,
-      :rating => "#{index}.#{index}".to_f,
-      :income => 10_000_000 * index + 0.1 * index,
-      :birthdate => "#{1900 + 10 * index}-#{index}-#{index}",
+      name: c,
+      children: 10 - index,
+      rating: "#{index}.#{index}".to_f,
+      income: 10_000_000 * index + 0.1 * index,
+      birthdate: "#{1900 + 10 * index}-#{index}-#{index}",
       # store entire date to avoid time zone issues
-      :gets_up_at => if RUBY_VERSION.include?('1.8.')
-                       Time.utc(2000, 1, 1, index, index)
-                     else
-                       Time.local(2000, 1, 1, index, index)
-                     end,
-      :last_seen => "#{2000 + 10 * index}-#{index}-#{index} " +
+      gets_up_at: Time.local(2000, 1, 1, index, index),
+      last_seen: "#{2000 + 10 * index}-#{index}-#{index} " +
                     "1#{index}:2#{index}",
-      :human => index % 2 == 0,
-      :remarks => "#{c} #{str(index + 1)} #{str(index + 2)}\n" *
+      human: index % 2 == 0,
+      remarks: "#{c} #{str(index + 1)} #{str(index + 2)}\n" *
                   (index % 3 + 1))
     m.companion = companion
     m.save!
@@ -328,9 +324,9 @@ module CrudTestHelper
   def create_other(index)
     c = str(index)
     others = CrudTestModel.all[index..(index + 2)]
-    OtherCrudTestModel.create!(:name => c,
-                               :other_ids => others.collect(&:id),
-                               :more_id => others.first.try(:id))
+    OtherCrudTestModel.create!(name: c,
+                               other_ids: others.collect(&:id),
+                               more_id: others.first.try(:id))
   end
 
   def str(index)

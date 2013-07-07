@@ -16,7 +16,7 @@ module ActionsHelper
 
   # Outputs an icon for an action with an optional label.
   def action_icon(icon, label = nil)
-    html = content_tag(:i, '', :class => "icon-#{icon}")
+    html = content_tag(:i, '', class: "icon-#{icon}")
     html << ' ' << label if label
     html
   end
@@ -41,13 +41,13 @@ module ActionsHelper
   def destroy_action_link(path = nil)
     path ||= path_args(entry)
     action_link(ti('link.delete'), 'remove', path,
-                :data => { :confirm => ti(:confirm_delete),
-                           :method => :delete })
+                data: { confirm: ti(:confirm_delete),
+                        method: :delete })
   end
 
   # Standard list action to the given path.
   # Uses the current +model_class+ if no path is given.
-  def index_action_link(path = nil, url_options = { :returning => true })
+  def index_action_link(path = nil, url_options = { returning: true })
     path ||= path_args(model_class)
     path = path.is_a?(String) ? path : polymorphic_path(path, url_options)
     action_link(ti('link.list'), 'list', path)

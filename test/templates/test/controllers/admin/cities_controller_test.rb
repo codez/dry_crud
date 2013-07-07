@@ -9,21 +9,21 @@ class Admin::CitiesControllerTest < ActionController::TestCase
 
   def test_setup
     assert_equal 3, City.count
-    assert_recognizes({ :controller => 'admin/cities',
-                        :action => 'index',
-                        :country_id => '1' },
+    assert_recognizes({ controller: 'admin/cities',
+                        action: 'index',
+                        country_id: '1' },
                       'admin/countries/1/cities')
-    assert_recognizes({ :controller => 'admin/cities',
-                        :action => 'show',
-                        :country_id => '2',
-                        :id => '1' },
+    assert_recognizes({ controller: 'admin/cities',
+                        action: 'show',
+                        country_id: '2',
+                        id: '1' },
                       'admin/countries/2/cities/1')
   end
 
   def test_index
     super
-    expected = test_entry.country.cities.includes(:country).
-                                         order('countries.code, cities.name')
+    expected = test_entry.country.cities.includes(:country)
+                                        .order('countries.code, cities.name')
     if expected.respond_to?(:references)
       expected = expected.references(:countries)
     end
@@ -56,7 +56,7 @@ class Admin::CitiesControllerTest < ActionController::TestCase
     ny = cities(:ny)
     assert_no_difference('City.count') do
       @request.env['HTTP_REFERER'] = admin_country_city_url(ny.country, ny)
-      delete :destroy, :country_id => ny.country_id, :id => ny.id
+      delete :destroy, country_id: ny.country_id, id: ny.id
     end
     assert_redirected_to [:admin, ny.country, ny]
     assert flash[:alert].present?
@@ -69,7 +69,7 @@ class Admin::CitiesControllerTest < ActionController::TestCase
   end
 
   def test_entry_attrs
-    { :name => 'Rejkiavik' }
+    { name: 'Rejkiavik' }
   end
 
 end

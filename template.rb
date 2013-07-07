@@ -4,7 +4,7 @@
 gem 'dry_crud'
 
 # install gem if missing
-out = run 'gem list dry_crud', :capture => true
+out = run 'gem list dry_crud', capture: true
 run 'bundle update dry_crud' if out !~ /dry_crud/
 
 # ask user for options

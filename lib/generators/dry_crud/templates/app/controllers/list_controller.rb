@@ -11,7 +11,7 @@ class ListController < ApplicationController
 
   helper_method :model_class, :models_label, :entries, :path_args
 
-  delegate :model_class, :models_label, :to => 'self.class'
+  delegate :model_class, :models_label, to: 'self.class'
 
   hide_action :model_class, :models_label, :inheritable_root_controller
 
@@ -91,7 +91,7 @@ class ListController < ApplicationController
 
     # A human readable plural name of the model.
     def models_label(plural = true)
-      opts = { :count => (plural ? 3 : 1) }
+      opts = { count: (plural ? 3 : 1) }
       opts[:default] = model_class.model_name.human.titleize
       opts[:default] = opts[:default].pluralize if plural
 
@@ -128,8 +128,8 @@ class ListController < ApplicationController
     # Helper method the run the given block in between the before and after
     # callbacks of the given kinds.
     def with_callbacks(*kinds, &block)
-      kinds.reverse.reduce(block) do |b, kind|
-        lambda { run_callbacks(kind, &b) }
+      kinds.reverse.reduce(block) do |a, e|
+        -> { run_callbacks(e, &a) }
       end.call
     end
 
@@ -138,8 +138,8 @@ class ListController < ApplicationController
       # Defines before callbacks for the render actions.
       def define_render_callbacks(*actions)
         args = actions.map { |a| :"render_#{a}" }
-        args << { :only => :before,
-                  :terminator => 'result == false || performed?' }
+        args << { only: :before,
+                  terminator: 'result == false || performed?' }
         define_model_callbacks(*args)
       end
     end
@@ -222,7 +222,7 @@ class ListController < ApplicationController
     module ClassMethods
       # Define a map of (virtual) attributes to SQL order expressions.
       # May be used for sorting table columns that do not appear directly
-      # in the database table. E.g., map :city_id => 'cities.name' to
+      # in the database table. E.g., map city_id: 'cities.name' to
       # sort the displayed city names.
       def sort_mappings=(hash)
         self.sort_mappings_with_indifferent_access =
@@ -276,7 +276,7 @@ class ListController < ApplicationController
       class_attribute :remember_params
       self.remember_params = [:q, :sort, :sort_dir, :page]
 
-      before_filter :handle_remember_params, :only => [:index]
+      before_filter :handle_remember_params, only: [:index]
     end
 
     private

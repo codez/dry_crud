@@ -14,7 +14,7 @@ module CrudControllerTestHelper
   end
 
   def test_index_json # :nodoc:
-    get :index, test_params(:format => 'json')
+    get :index, test_params(format: 'json')
     assert_response :success
     assert entries.present?
     assert @response.body.starts_with?('[{'), @response.body
@@ -25,7 +25,7 @@ module CrudControllerTestHelper
     val = field && test_entry[field].to_s
     return if val.blank?   # does not support search or no value in this field
 
-    get :index, test_params(:q => val[0..((val.size + 1) / 2)])
+    get :index, test_params(q: val[0..((val.size + 1) / 2)])
     assert_response :success
     assert entries.present?
     assert entries.include?(test_entry)
@@ -33,7 +33,7 @@ module CrudControllerTestHelper
 
   def test_index_sort_asc # :nodoc:
     col = model_class.column_names.first
-    get :index, test_params(:sort => col, :sort_dir => 'asc')
+    get :index, test_params(sort: col, sort_dir: 'asc')
     assert_response :success
     assert entries.present?
     sorted = entries.sort_by(&(col.to_sym))
@@ -42,7 +42,7 @@ module CrudControllerTestHelper
 
   def test_index_sort_desc # :nodoc:
     col = model_class.column_names.first
-    get :index, test_params(:sort => col, :sort_dir => 'desc')
+    get :index, test_params(sort: col, sort_dir: 'desc')
     assert_response :success
     assert entries.present?
     sorted = entries.to_a.sort_by(&(col.to_sym))
@@ -50,14 +50,14 @@ module CrudControllerTestHelper
   end
 
   def test_show # :nodoc:
-    get :show, test_params(:id => test_entry.id)
+    get :show, test_params(id: test_entry.id)
     assert_response :success
     assert_template 'show'
     assert_equal test_entry, entry
   end
 
   def test_show_json # :nodoc:
-    get :show, test_params(:id => test_entry.id, :format => 'json')
+    get :show, test_params(id: test_entry.id, format: 'json')
     assert_response :success
     assert_equal test_entry, entry
     assert @response.body.starts_with?('{')
@@ -65,7 +65,7 @@ module CrudControllerTestHelper
 
   def test_show_with_non_existing_id_raises_record_not_found # :nodoc:
     assert_raise(ActiveRecord::RecordNotFound) do
-      get :show, test_params(:id => 9999)
+      get :show, test_params(id: 9999)
     end
   end
 
@@ -88,14 +88,14 @@ module CrudControllerTestHelper
   def test_create_json # :nodoc:
     assert_difference("#{model_class.name}.count") do
       post :create, test_params(model_identifier => new_entry_attrs,
-                                :format => 'json')
+                                format: 'json')
     end
     assert_response :success
     assert @response.body.starts_with?('{')
   end
 
   def test_edit # :nodoc:
-    get :edit, test_params(:id => test_entry.id)
+    get :edit, test_params(id: test_entry.id)
     assert_response :success
     assert_template 'edit'
     assert_equal test_entry, entry
@@ -103,7 +103,7 @@ module CrudControllerTestHelper
 
   def test_update # :nodoc:
     assert_no_difference("#{model_class.name}.count") do
-      put :update, test_params(:id => test_entry.id,
+      put :update, test_params(id: test_entry.id,
                                model_identifier => edit_entry_attrs)
     end
     assert_attrs_equal(edit_entry_attrs)
@@ -112,9 +112,9 @@ module CrudControllerTestHelper
 
   def test_update_json # :nodoc:
     assert_no_difference("#{model_class.name}.count") do
-      put :update, test_params(:id => test_entry.id,
+      put :update, test_params(id: test_entry.id,
                                model_identifier => edit_entry_attrs,
-                               :format => 'json')
+                               format: 'json')
     end
     assert_response :success
     assert_equal '', @response.body.strip
@@ -122,15 +122,15 @@ module CrudControllerTestHelper
 
   def test_destroy # :nodoc:
     assert_difference("#{model_class.name}.count", -1) do
-      delete :destroy, test_params(:id => test_entry.id)
+      delete :destroy, test_params(id: test_entry.id)
     end
     assert_redirected_to_index
   end
 
   def test_destroy_json # :nodoc:
     assert_difference("#{model_class.name}.count", -1) do
-      delete :destroy, test_params(:id => test_entry.id,
-                                   :format => 'json')
+      delete :destroy, test_params(id: test_entry.id,
+                                   format: 'json')
     end
     assert_response :success
     assert_equal '', @response.body.strip
@@ -139,13 +139,13 @@ module CrudControllerTestHelper
   private
 
   def assert_redirected_to_index # :nodoc:
-    assert_redirected_to test_params(:action => 'index',
-                                     :returning => true)
+    assert_redirected_to test_params(action: 'index',
+                                     returning: true)
   end
 
   def assert_redirected_to_show(entry) # :nodoc:
-    assert_redirected_to test_params(:action => 'show',
-                                     :id => entry.id)
+    assert_redirected_to test_params(action: 'show',
+                                     id: entry.id)
   end
 
   def assert_attrs_equal(attrs) # :nodoc:

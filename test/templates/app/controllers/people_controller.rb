@@ -8,7 +8,7 @@ class PeopleController < AjaxController
 
   self.default_sort = 'people.name, countries.code, cities.name'
 
-  self.sort_mappings = { :city_id => 'cities.name' }
+  self.sort_mappings = { city_id: 'cities.name' }
 
   if respond_to?(:permitted_attrs)
     self.permitted_attrs = [:name, :children, :city_id, :rating, :income,
@@ -19,7 +19,7 @@ class PeopleController < AjaxController
   private
 
   def list_entries
-    list = super.includes(:city => :country)
+    list = super.includes(city: :country)
     if list.respond_to?(:references)
       list = list.references(:cities, :countries)
     end

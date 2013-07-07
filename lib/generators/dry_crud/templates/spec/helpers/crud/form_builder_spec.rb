@@ -28,17 +28,17 @@ describe 'Crud::FormBuilder' do
 
   describe '#input_field' do
 
-    { :name => :string_field,
-      :password => :password_field,
-      :email => :email_field,
-      :remarks => :text_area,
-      :children => :integer_field,
-      :human => :boolean_field,
-      :birthdate => :date_field,
-      :gets_up_at => :time_field,
-      :companion_id => :belongs_to_field,
-      :other_ids => :has_many_field,
-      :more_ids => :has_many_field,
+    { name: :string_field,
+      password: :password_field,
+      email: :email_field,
+      remarks: :text_area,
+      children: :integer_field,
+      human: :boolean_field,
+      birthdate: :date_field,
+      gets_up_at: :time_field,
+      companion_id: :belongs_to_field,
+      other_ids: :has_many_field,
+      more_ids: :has_many_field,
     }.each do |attr, method|
       it 'dispatches #{attr} attr to #{method}' do
         form.should_receive(method).with(attr, {})
@@ -71,7 +71,7 @@ describe 'Crud::FormBuilder' do
     end
 
     context 'with help text' do
-      subject { form.labeled_input_field(:name, :help => 'Some Help') }
+      subject { form.labeled_input_field(:name, help: 'Some Help') }
       it { should include(form.help_block('Some Help')) }
     end
   end
@@ -85,7 +85,7 @@ describe 'Crud::FormBuilder' do
     it 'with has options from :list option' do
       list = CrudTestModel.all
       f = form.belongs_to_field(:companion_id,
-                                :list => [list.first, list.second])
+                                list: [list.first, list.second])
       f.scan('</option>').should have(3).items
     end
 
@@ -107,7 +107,7 @@ describe 'Crud::FormBuilder' do
     end
 
     it 'uses options from :list option if given' do
-      f = form.has_many_field(:other_ids, :list => others)
+      f = form.has_many_field(:other_ids, list: others)
       f.scan('</option>').should have(2).items
     end
 

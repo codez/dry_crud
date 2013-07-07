@@ -28,14 +28,3 @@ MethodLength:
 
 Attr:
   Enabled: false
-
-# Ruby 1.8 compatibility
-HashSyntax:
-  Enabled: false
-
-Lambda:
-  Enabled: false
-
-DotPosition:
-  Enabled: false
-

@@ -31,7 +31,7 @@ module TableHelper
     if entries.present?
       plain_table(entries, *attrs, &block)
     else
-      content_tag(:div, ti(:no_list_entries), :class => 'table')
+      content_tag(:div, ti(:no_list_entries), class: 'table')
     end
   end
 

@@ -42,7 +42,7 @@ class TableHelperTest < ActionView::TestCase
   test 'table with attrs' do
     expected = Crud::TableBuilder.table(%w(foo bar),
                                         self,
-                                        :class => 'table') do |t|
+                                        class: 'table') do |t|
       t.attrs :size, :upcase
     end
     actual = plain_table(%w(foo bar), :size, :upcase)
@@ -105,7 +105,7 @@ class TableHelperTest < ActionView::TestCase
 
   test 'standard list table with ascending sort params' do
     def params
-      { :sort => 'children', :sort_dir => 'asc' }
+      { sort: 'children', sort_dir: 'asc' }
     end
 
     @entries = CrudTestModel.all
@@ -122,7 +122,7 @@ class TableHelperTest < ActionView::TestCase
 
   test 'standard list table with descending sort params' do
     def params
-      { :sort => 'children', :sort_dir => 'desc' }
+      { sort: 'children', sort_dir: 'desc' }
     end
 
     @entries = CrudTestModel.all
@@ -139,7 +139,7 @@ class TableHelperTest < ActionView::TestCase
 
   test 'list table with custom column sort params' do
     def params
-      { :sort => 'chatty', :sort_dir => 'asc' }
+      { sort: 'chatty', sort_dir: 'asc' }
     end
 
     @entries = CrudTestModel.all

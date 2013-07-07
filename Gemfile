@@ -19,11 +19,12 @@ gem 'jbuilder'
 
 # platform specific gems
 
-gem 'rcov', :platforms => :ruby_18
-gem 'simplecov', :platforms => :ruby_19
+gem 'simplecov'
 
-gem 'sqlite3', :platforms => :ruby
-gem 'therubyracer', :platforms => :ruby
+platforms :ruby do
+  gem 'sqlite3'
+  gem 'therubyracer'
+end
 
 platforms :jruby do
   gem 'jdbc-sqlite3'

@@ -5,11 +5,11 @@ describe Admin::CountriesController do
 
   fixtures :all
 
-  include_examples 'crud controller', :skip => %w(show html plain)
+  include_examples 'crud controller', skip: %w(show html plain)
 
   let(:test_entry)       { countries(:usa) }
   let(:test_entry_attrs) do
-    { :name => 'United States of America', :code => 'US' }
+    { name: 'United States of America', code: 'US' }
   end
 
   alias_method :new_entry_attrs, :test_entry_attrs
@@ -42,7 +42,7 @@ describe Admin::CountriesController do
   end
 
   describe_action :get, :show do
-    let(:params) { { :id => test_entry.id } }
+    let(:params) { { id: test_entry.id } }
     it_should_redirect_to_index
   end
 

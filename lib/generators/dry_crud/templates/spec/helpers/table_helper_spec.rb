@@ -137,7 +137,7 @@ describe TableHelper do
     end
 
     context 'with ascending sort params' do
-      let(:params) { { :sort => 'children', :sort_dir => 'asc' } }
+      let(:params) { { sort: 'children', sort_dir: 'asc' } }
       subject do
         with_test_routing { list_table }
       end
@@ -153,7 +153,7 @@ describe TableHelper do
     end
 
     context 'with descending sort params' do
-      let(:params) { { :sort => 'children', :sort_dir => 'desc' } }
+      let(:params) { { sort: 'children', sort_dir: 'desc' } }
       subject do
         with_test_routing { list_table }
       end
@@ -169,7 +169,7 @@ describe TableHelper do
     end
 
     context 'with custom column sort params' do
-      let(:params) { { :sort => 'chatty', :sort_dir => 'asc' } }
+      let(:params) { { sort: 'chatty', sort_dir: 'asc' } }
       subject do
         with_test_routing { list_table(:name, :children, :chatty) }
       end

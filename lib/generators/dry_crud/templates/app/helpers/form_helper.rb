@@ -14,7 +14,7 @@ module FormHelper
     options[:html] ||= {}
     add_css_class(options[:html], 'form-horizontal')
     options[:builder] ||= Crud::FormBuilder
-    options[:cancel_url] ||= polymorphic_path(object, :returning => true)
+    options[:cancel_url] ||= polymorphic_path(object, returning: true)
 
     form_for(object, options, &block)
   end

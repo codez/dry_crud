@@ -26,7 +26,7 @@ describe 'Crud::TableBuilder' do
   end
 
   specify 'custom row' do
-    table.col('Header', :class => 'hula') { |e| "Weights #{e.size} kg" }
+    table.col('Header', class: 'hula') { |e| "Weights #{e.size} kg" }
     dom = '<tr><td class="hula">Weights 3 kg</td></tr>'
     assert_dom_equal dom, table.send(:html_row, entries.first)
   end
@@ -92,7 +92,7 @@ describe 'Crud::TableBuilder' do
     FIN
     dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
 
-    table.col('head', :class => 'left') { |e| link_to e, '/' }
+    table.col('head', class: 'left') { |e| link_to e, '/' }
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }
 
@@ -112,7 +112,7 @@ describe 'Crud::TableBuilder' do
     dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
 
     table = Crud::TableBuilder.new([], self)
-    table.col('head', :class => 'left') { |e| link_to e, '/' }
+    table.col('head', class: 'left') { |e| link_to e, '/' }
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }
 

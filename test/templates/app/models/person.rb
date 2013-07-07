@@ -5,7 +5,7 @@ class Person < ActiveRecord::Base
 
   belongs_to :city
 
-  validates :name, :presence => true
+  validates :name, presence: true
 
   attr_protected nil if Rails.version < '4.0'
 

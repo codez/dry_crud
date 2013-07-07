@@ -13,10 +13,10 @@ module FormatHelper
   def f(value)
     case value
     when Float, BigDecimal then
-      number_with_precision(value, :precision => t('number.format.precision'),
-                                   :delimiter => t('number.format.delimiter'))
+      number_with_precision(value, precision: t('number.format.precision'),
+                                   delimiter: t('number.format.delimiter'))
     when Date   then l(value)
-    when Time   then l(value, :format => :time)
+    when Time   then l(value, format: :time)
     when true   then t('global.yes')
     when false  then t('global.no')
     when nil    then UtilityHelper::EMPTY_STRING
@@ -59,7 +59,7 @@ module FormatHelper
   # presentation.
   def labeled(label, content = nil, &block)
     content = capture(&block) if block_given?
-    render('shared/labeled', :label => label, :content => content)
+    render('shared/labeled', label: label, content: content)
   end
 
   # Transform the given text into a form as used by labels or table headers.

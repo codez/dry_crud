@@ -17,7 +17,7 @@ class FormHelperTest < ActionView::TestCase
     e = crud_test_models('AAAAA')
     f = with_test_routing do
       capture do
-        plain_form(e, :html => { :class => 'special' }) do |form|
+        plain_form(e, html: { class: 'special' }) do |form|
           form.labeled_input_fields :name, :birthdate
         end
       end
@@ -40,8 +40,8 @@ class FormHelperTest < ActionView::TestCase
       capture do
         standard_form(e,
                       :name, :children, :birthdate, :human,
-                      :cancel_url => '/somewhere',
-                      :html => { :class => 'special' })
+                      cancel_url: '/somewhere',
+                      html: { class: 'special' })
       end
     end
 

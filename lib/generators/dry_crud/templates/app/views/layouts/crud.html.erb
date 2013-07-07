@@ -11,14 +11,22 @@
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
   <![endif]-->
 
-  <%= stylesheet_link_tag 'application', :media => 'all', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 
   <!-- fav and touch icons -->
   <%= favicon_link_tag %>
-  <%= favicon_link_tag '/apple-touch-icon.png', :rel => 'apple-touch-icon', :type => 'image/png' %>
-  <%= favicon_link_tag '/apple-touch-icon-72x72.png', :rel => 'apple-touch-icon', :type => 'image/png', :sizes => "72x72" %>
-  <%= favicon_link_tag '/apple-touch-icon-114x114.png', :rel => 'apple-touch-icon', :type => 'image/png', :sizes => "114x114" %>
+  <%= favicon_link_tag '/apple-touch-icon.png',
+                       rel: 'apple-touch-icon',
+                       type: 'image/png' %>
+  <%= favicon_link_tag '/apple-touch-icon-72x72.png',
+                       rel: 'apple-touch-icon',
+                       type: 'image/png',
+                       sizes: "72x72" %>
+  <%= favicon_link_tag '/apple-touch-icon-114x114.png',
+                       rel: 'apple-touch-icon',
+                       type: 'image/png',
+                       sizes: "114x114" %>
 
   <%= yield :head %>
 </head>
@@ -32,7 +40,7 @@
 
   <h1><%= @title %></h1>
 
-  <%= render :partial => 'layouts/flash', :collection => [:notice, :alert], :as => :level %>
+  <%= render partial: 'layouts/flash', collection: [:notice, :alert], as: :level %>
 
   <div class="actions btn-toolbar">
     <div class="pull-right">

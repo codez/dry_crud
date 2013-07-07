@@ -1,5 +1,5 @@
 
-gem 'sqlite3', :platforms => :ruby
+gem 'sqlite3', platforms: :ruby
 
 platforms :jruby do
   gem 'jdbc-sqlite3'
@@ -14,4 +14,4 @@ gem 'rspec-rails'
 
 #gem 'bootstrap-sass-rails'
 
-gem 'therubyracer', :require => RUBY_PLATFORM.include?('linux') && 'v8'
+gem 'therubyracer', require: RUBY_PLATFORM.include?('linux') && 'v8'

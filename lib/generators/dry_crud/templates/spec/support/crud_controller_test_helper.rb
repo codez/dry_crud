@@ -9,8 +9,8 @@ module CrudControllerTestHelper
   def perform_request
     m = example.metadata
     example_params = respond_to?(:params) ? send(:params) : {}
-    params = scope_params.merge(:format => m[:format])
-    params.merge!(:id => test_entry.id) if m[:id]
+    params = scope_params.merge(format: m[:format])
+    params.merge!(id: test_entry.id) if m[:id]
     params.merge!(example_params)
     send(m[:method], m[:action], params)
   end
@@ -63,12 +63,12 @@ module CrudControllerTestHelper
     # Describe a certain action and provide some usefull metadata.
     # Tests whether this action is configured to be skipped.
     def describe_action(method, action, metadata = {}, &block)
-      action_defined = described_class.instance_methods.
-                         map(&:to_s).include?(action.to_s)
+      action_defined = described_class.instance_methods
+                         .map(&:to_s).include?(action.to_s)
       describe("#{method.to_s.upcase} #{action}",
-               { :if => action_defined,
-                 :method => method,
-                 :action => action }.merge(metadata),
+               { if: action_defined,
+                 method: method,
+                 action: action }.merge(metadata),
                &block)
     end
 
@@ -123,16 +123,16 @@ module CrudControllerTestHelper
     # Test that the response redirects to the index action.
     def it_should_redirect_to_index
       it do
-        should redirect_to scope_params.merge(:action => 'index',
-                                              :returning => true)
+        should redirect_to scope_params.merge(action: 'index',
+                                              returning: true)
       end
     end
 
     # Test that the response redirects to the show action of the current entry.
     def it_should_redirect_to_show
       it do
-        should redirect_to scope_params.merge(:action => 'show',
-                                              :id => entry.id)
+        should redirect_to scope_params.merge(action: 'show',
+                                              id: entry.id)
       end
     end
 

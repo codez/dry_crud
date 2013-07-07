@@ -15,7 +15,7 @@ module Crud
     delegate :association, :column_type, :column_property, :captionize,
              :ti, :ta, :link_to, :content_tag, :safe_join, :capture,
              :add_css_class, :assoc_and_id_attr,
-             :to => :template
+             to: :template
 
     ### INPUT FIELDS
 
@@ -141,9 +141,9 @@ module Crud
 
     # Dispatch methods starting with 'labeled_' to render a label and the
     # corresponding input field.
-    # E.g. labeled_boolean_field(:checked, :class => 'bold')
+    # E.g. labeled_boolean_field(:checked, class: 'bold')
     # To add an additional help text, use the help option.
-    # E.g. labeled_boolean_field(:checked, :help => 'Some Help')
+    # E.g. labeled_boolean_field(:checked, help: 'Some Help')
     def method_missing(name, *args)
       field_method = labeled_field_method?(name)
       if field_method
@@ -163,31 +163,31 @@ module Crud
     # Render the error messages for the current form.
     def error_messages
       @template.render('shared/error_messages',
-                       :errors => @object.errors,
-                       :object => @object)
+                       errors: @object.errors,
+                       object: @object)
     end
 
     # Generates a help block for fields
     def help_block(text)
-      content_tag(:p, text, :class => 'help-block')
+      content_tag(:p, text, class: 'help-block')
     end
 
     # Render a submit button and a cancel link for this form.
     def standard_actions(submit_label = ti('button.save'), cancel_url = nil)
-      content_tag(:div, :class => 'form-actions') do
+      content_tag(:div, class: 'form-actions') do
         safe_join([submit_button(submit_label), cancel_link(cancel_url)], ' ')
       end
     end
 
     # Render a standard submit button with the given label.
     def submit_button(label = ti('button.save'))
-      button(label, :class => 'btn btn-primary')
+      button(label, class: 'btn btn-primary')
     end
 
     # Render a cancel link pointing to the given url.
     def cancel_link(url = nil)
       url ||= cancel_url
-      link_to(ti('button.cancel'), url, :class => 'cancel')
+      link_to(ti('button.cancel'), url, class: 'cancel')
     end
 
     # Renders a marker if the given attr has to be present.
@@ -208,8 +208,8 @@ module Crud
       add_css_class(html_options, 'controls')
       errors = errors_on?(attr) ? ' error' : ''
 
-      content_tag(:div, :class => "control-group#{errors}") do
-        label(attr, caption, :class => 'control-label') +
+      content_tag(:div, class: "control-group#{errors}") do
+        label(attr, caption, class: 'control-label') +
         content_tag(:div, content, html_options)
       end
     end
@@ -222,15 +222,15 @@ module Crud
       if options[:multiple]
         {}
       elsif prompt
-        { :prompt => prompt }
+        { prompt: prompt }
       elsif blank
-        { :include_blank => blank }
+        { include_blank: blank }
       else
         assoc = association(@object, attr)
         if required?(attr)
-          { :prompt => ta(:please_select, assoc) }
+          { prompt: ta(:please_select, assoc) }
         else
-          { :include_blank => ta(:no_entry, assoc) }
+          { include_blank: ta(:no_entry, assoc) }
         end
       end
     end
@@ -258,8 +258,8 @@ module Crud
         list = @template.send(:instance_variable_get,
                               :"@#{assoc.name.to_s.pluralize}")
         unless list
-          list = assoc.klass.where(assoc.options[:conditions]).
-                             order(assoc.options[:order])
+          list = assoc.klass.where(assoc.options[:conditions])
+                            .order(assoc.options[:order])
         end
       end
       list

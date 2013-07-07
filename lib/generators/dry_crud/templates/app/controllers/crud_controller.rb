@@ -16,7 +16,7 @@ class CrudController < ListController
   class_attribute :permitted_attrs
 
 <% end -%>
-  delegate :model_identifier, :to => 'self.class'
+  delegate :model_identifier, to: 'self.class'
 
   # Defines before and after callback hooks for create, update, save and
   # destroy actions.
@@ -61,7 +61,7 @@ class CrudController < ListController
   def create(options = {}, &block)
     assign_attributes
     created = with_callbacks(:create, :save) { entry.save }
-    respond_options = options.reverse_merge(:success => created)
+    respond_options = options.reverse_merge(success: created)
     respond_with(entry, respond_options, &block)
   end
 
@@ -81,7 +81,7 @@ class CrudController < ListController
   def update(options = {}, &block)
     assign_attributes
     updated = with_callbacks(:update, :save) { entry.save }
-    respond_options = options.reverse_merge(:success => updated)
+    respond_options = options.reverse_merge(success: updated)
     respond_with(entry, respond_options, &block)
   end
 
@@ -95,14 +95,12 @@ class CrudController < ListController
   def destroy(options = {}, &block)
     destroyed = run_callbacks(:destroy) { entry.destroy }
     unless destroyed
-      if request.format == :html
-        flash[:alert] ||= error_messages.presence || flash_message(:failure)
-      end
+      set_failure_notice
       location = request.env['HTTP_REFERER'].presence
     end
     location ||= index_url
-    respond_options = options.reverse_merge(:success => destroyed,
-                                            :location => location)
+    respond_options = options.reverse_merge(success: destroyed,
+                                            location: location)
     respond_with(entry, respond_options, &block)
   end
 
@@ -137,14 +135,23 @@ class CrudController < ListController
 
   # Url of the index page to return to.
   def index_url
-    polymorphic_url(path_args(model_class), :returning => true)
+    polymorphic_url(path_args(model_class), returning: true)
   end
 
   private
 
   # Set a success flash notice when we got a HTML request.
   def set_success_notice
-    flash[:notice] ||= flash_message(:success) if request.format == :html
+    if request.format == :html
+      flash[:notice] ||= flash_message(:success)
+    end
+  end
+
+  # Set a failure flash notice when we got a HTML request.
+  def set_failure_notice
+    if request.format == :html
+      flash[:alert] ||= error_messages.presence || flash_message(:failure)
+    end
   end
 
   # Get an I18n flash message.
@@ -156,7 +163,7 @@ class CrudController < ListController
             :"#{controller_name}.#{scope}",
             :"crud.#{scope}_html",
             :"crud.#{scope}"]
-    I18n.t(keys.shift, :model => full_entry_label, :default => keys).html_safe
+    I18n.t(keys.shift, model: full_entry_label, default: keys).html_safe
   end
 
   # Html safe error messages of the current entry.

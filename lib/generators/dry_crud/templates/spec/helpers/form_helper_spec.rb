@@ -20,7 +20,7 @@ describe FormHelper do
     subject do
       with_test_routing do
         capture do
-          plain_form(entry, :html => { :class => 'special' }) do |f|
+          plain_form(entry, html: { class: 'special' }) do |f|
             f.labeled_input_fields :name, :birthdate
           end
         end
@@ -77,8 +77,8 @@ describe FormHelper do
         capture do
           standard_form(entry,
                         :name, :children, :birthdate, :human,
-                        :cancel_url => '/somewhere',
-                        :html => { :class => 'special' })
+                        cancel_url: '/somewhere',
+                        html: { class: 'special' })
         end
       end
     end

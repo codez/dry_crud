@@ -9,12 +9,12 @@ class Admin::CountriesControllerTest < ActionController::TestCase
 
   def test_setup
     assert_equal 3, Country.count
-    assert_recognizes({ :controller => 'admin/countries',
-                        :action => 'index' },
+    assert_recognizes({ controller: 'admin/countries',
+                        action: 'index' },
                       'admin/countries')
-    assert_recognizes({ :controller => 'admin/countries',
-                        :action => 'show',
-                        :id => '1' },
+    assert_recognizes({ controller: 'admin/countries',
+                        action: 'show',
+                        id: '1' },
                       'admin/countries/1')
   end
 
@@ -28,7 +28,7 @@ class Admin::CountriesControllerTest < ActionController::TestCase
   end
 
   def test_show
-    get :show, test_params(:id => test_entry.id)
+    get :show, test_params(id: test_entry.id)
     assert_redirected_to_index
   end
 
@@ -43,7 +43,7 @@ class Admin::CountriesControllerTest < ActionController::TestCase
   end
 
   def test_entry_attrs
-    { :name => 'United States of America', :code => 'US' }
+    { name: 'United States of America', code: 'US' }
   end
 
 end

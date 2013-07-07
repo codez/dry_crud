@@ -11,8 +11,8 @@ describe I18nHelper do
     before do
       I18n.backend.store_translations(
         :en,
-        :global => {
-          :test_key => 'global' })
+        global: {
+          test_key: 'global' })
     end
     subject { ti(:test_key) }
 
@@ -22,9 +22,9 @@ describe I18nHelper do
       before do
         I18n.backend.store_translations(
           :en,
-          :list => {
-            :global => {
-              :test_key => 'list global' } })
+          list: {
+            global: {
+              test_key: 'list global' } })
       end
       it { should == 'list global' }
 
@@ -32,9 +32,9 @@ describe I18nHelper do
         before do
           I18n.backend.store_translations(
             :en,
-            :list => {
-              :index => {
-                :test_key => 'list index' } })
+            list: {
+              index: {
+                test_key: 'list index' } })
         end
         it { should == 'list index' }
 
@@ -42,9 +42,9 @@ describe I18nHelper do
           before do
             I18n.backend.store_translations(
               :en,
-              :crud => {
-                :global => {
-                  :test_key => 'crud global' } })
+              crud: {
+                global: {
+                  test_key: 'crud global' } })
           end
           it { should == 'crud global' }
 
@@ -52,9 +52,9 @@ describe I18nHelper do
             before do
               I18n.backend.store_translations(
                 :en,
-                :crud => {
-                  :index => {
-                    :test_key => 'crud index' } })
+                crud: {
+                  index: {
+                    test_key: 'crud index' } })
             end
             it { should == 'crud index' }
 
@@ -62,9 +62,9 @@ describe I18nHelper do
               before do
                 I18n.backend.store_translations(
                   :en,
-                  :crud_test_models => {
-                    :global => {
-                      :test_key => 'test global' } })
+                  crud_test_models: {
+                    global: {
+                      test_key: 'test global' } })
               end
               it { should == 'test global' }
 
@@ -72,9 +72,9 @@ describe I18nHelper do
                 before do
                   I18n.backend.store_translations(
                     :en,
-                    :crud_test_models => {
-                      :index => {
-                        :test_key => 'test index' } })
+                    crud_test_models: {
+                      index: {
+                        test_key: 'test index' } })
                 end
                 it { should == 'test index' }
               end
@@ -92,9 +92,9 @@ describe I18nHelper do
     before do
       I18n.backend.store_translations(
         :en,
-        :global => {
-          :associations => {
-            :test_key => 'global' } })
+        global: {
+          associations: {
+            test_key: 'global' } })
     end
     it { should == 'global' }
 
@@ -102,10 +102,10 @@ describe I18nHelper do
       before do
         I18n.backend.store_translations(
           :en,
-          :activerecord => {
-            :associations => {
-              :crud_test_model => {
-                :test_key => 'model' } } })
+          activerecord: {
+            associations: {
+              crud_test_model: {
+                test_key: 'model' } } })
       end
 
       it { should == 'model' }
@@ -114,12 +114,12 @@ describe I18nHelper do
         before do
           I18n.backend.store_translations(
             :en,
-            :activerecord => {
-              :associations => {
-                :models => {
-                  :crud_test_model => {
-                    :companion => {
-                      :test_key => 'companion' } } } } })
+            activerecord: {
+              associations: {
+                models: {
+                  crud_test_model: {
+                    companion: {
+                      test_key: 'companion' } } } } })
         end
 
         it { should == 'companion' }

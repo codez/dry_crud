@@ -6,7 +6,7 @@ module Crud
   #
   # Example Usage:
   #   Crud::TableBuilder.table(entries, template) do |t|
-  #     t.col('My Header', :class => 'css') {|e| link_to 'Show', e }
+  #     t.col('My Header', class: 'css') {|e| link_to 'Show', e }
   #     t.attrs :name, :city
   #   end
   class TableBuilder
@@ -14,7 +14,7 @@ module Crud
 
     delegate :content_tag, :format_attr, :column_type, :association, :dom_id,
              :captionize, :add_css_class, :content_tag_nested,
-             :to => :template
+             to: :template
 
     def initialize(entries, template, options = {})
       @entries = entries
@@ -53,8 +53,8 @@ module Crud
     # contain the formatted attribute value for the current entry.
     def attr(a, header = nil, &block)
       header ||= attr_header(a)
-      block ||= lambda { |e| format_attr(e, a) }
-      col(header, :class => align_class(a), &block)
+      block ||= ->(e) { format_attr(e, a) }
+      col(header, class: align_class(a), &block)
     end
 
     # Renders the table as HTML.
@@ -109,7 +109,7 @@ module Crud
     # Helper class to store column information.
     class Col < Struct.new(:header, :html_options, :template, :block) #:nodoc:
 
-      delegate :content_tag, :capture, :to => :template
+      delegate :content_tag, :capture, to: :template
 
       # Runs the Col block for the given entry.
       def content(entry)
@@ -158,7 +158,7 @@ module Crud
 
       # Request params for the sort link.
       def sort_params(attr)
-        params.merge({ :sort => attr, :sort_dir => sort_dir(attr) })
+        params.merge({ sort: attr, sort_dir: sort_dir(attr) })
       end
 
       # The sort mark, if any, for the given attribute.
@@ -197,7 +197,7 @@ module Crud
 
       included do
         delegate :link_to, :path_args, :edit_polymorphic_path, :ti,
-                 :to => :template
+                 to: :template
       end
 
       # Renders the passed attr with a link to the show action for
@@ -234,15 +234,15 @@ module Crud
         action_col do |e|
           table_action_link('remove',
                             action_path(e, &block),
-                            :data => { :confirm => ti(:confirm_delete),
-                                       :method => :delete })
+                            data: { confirm: ti(:confirm_delete),
+                                    method: :delete })
         end
       end
 
       # Action column inside a table. No header.
       # The cell content should be defined in the passed block.
       def action_col(&block)
-        col('', :class => 'action', &block)
+        col('', class: 'action', &block)
       end
 
       # Generic action link inside a table.

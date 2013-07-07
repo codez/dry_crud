@@ -40,7 +40,7 @@
 
   <h1><%= @title %></h1>
 
-  <%= render :partial => 'layouts/flash', :collection => [:notice, :alert], :as => :level %>
+  <%= render partial: 'layouts/flash', collection: [:notice, :alert], as: :level %>
 
   <div class="actions btn-toolbar">
     <div class="pull-right">

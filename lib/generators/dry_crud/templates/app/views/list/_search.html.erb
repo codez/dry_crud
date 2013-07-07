@@ -1,6 +1,6 @@
-<%= form_tag(nil, {:method => :get, :class => 'form-search'}) do %>
+<%= form_tag(nil, { method: :get, class: 'form-search' }) do %>
   <%= hidden_field_tag :returning, true %>
   <%= hidden_field_tag :page, 1 %>
-  <%= search_field_tag :q, params[:q], :class => 'search-query' %>
-  <%= submit_tag ti(:"button.search"), :class => 'btn' %>
+  <%= search_field_tag :q, params[:q], class: 'search-query' %>
+  <%= submit_tag ti(:"button.search"), class: 'btn' %>
 <% end %>
