@@ -1,11 +1,10 @@
 # encoding: UTF-8
 
-# add gem to Gemfile
-gem 'dry_crud'
-
-# install gem if missing
-out = run 'gem list dry_crud', capture: true
-run 'bundle update dry_crud' if out !~ /dry_crud/
+def use_gem(name, options = {})
+  gem name, options
+  @used_gems ||= []
+  @used_gems << name
+end
 
 # ask user for options
 templates = ask('Which template engine do you use? [ERB|haml]')
@@ -13,12 +12,26 @@ tests = ask('Which testing framework do you use? [TESTUNIT|rspec]')
 options = ''
 
 if templates.present? && 'haml'.start_with?(templates.downcase)
-  gem 'haml'
+  use_gem 'haml'
   options << ' --templates haml'
 end
 
 if tests.present? && 'rspec'.start_with?(tests.downcase)
+  use_gem 'rspec-rails', group: [:development, :test]
   options << ' --tests rspec'
+end
+
+use_gem 'dry_crud'
+
+# install missing gems
+news = @used_gems.any? do |g| 
+  run("gem list #{g}", capture: true) !~ /#{g}/
+end
+run "bundle install" if news
+
+# setup rspec
+if tests.present? && 'rspec'.start_with?(tests.downcase)
+  generate 'rspec:install'
 end
 
 # generate dry_crud with erb or haml

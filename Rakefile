@@ -1,12 +1,15 @@
 # encoding: UTF-8
-require 'rubygems'
+#!/usr/bin/env rake
+
+begin
+  require 'bundler/setup'
+rescue LoadError
+  puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
+end
 require 'rake/testtask'
 require 'rspec/core/rake_task'
-require 'rubygems/package_task'
 require 'sdoc'
 require 'rdoc/task'
-
-load 'dry_crud.gemspec'
 
 TEST_APP_ROOT  = File.join(File.dirname(__FILE__),
                            'test', 'test_app')
@@ -179,33 +182,10 @@ end
 desc "Clean up all generated resources"
 task :clobber do
   FileUtils.rm_rf(TEST_APP_ROOT)
+  FileUtils.rm_rf('pkg')
 end
 
-desc "Install dry_crud as a local gem."
-task install: :package do
-  sudo = RUBY_PLATFORM =~ /win32/ ? '' : 'sudo'
-  gem = RUBY_PLATFORM =~ /java/ ? 'jgem' : 'gem'
-  sh "#{sudo} #{gem} install --no-ri " +
-     "pkg/dry_crud-#{File.read('VERSION').strip}.gem"
-end
-
-desc "Deploy rdoc to website"
-task site: :rdoc do
-  if ENV['DEST']
-    sh "rsync -rzv rdoc/ #{ENV['DEST']}"
-  else
-    puts "Please specify a destination with DEST=user@server:/deploy/dir"
-  end
-end
-
-# :package task
-Gem::PackageTask.new(DRY_CRUD_GEMSPEC) do |pkg|
-  if Rake.application.top_level_tasks.include?('release')
-    pkg.need_tar_gz = true
-    pkg.need_tar_bz2 = true
-    pkg.need_zip  = true
-  end
-end
+Bundler::GemHelper.install_tasks
 
 # :rdoc task
 Rake::RDocTask.new do |rdoc|
@@ -226,16 +206,15 @@ Rake::RDocTask.new do |rdoc|
   rdoc.main = 'README.rdoc'
 end
 
-desc "Outputs the commands required for a release. No action taken."
-task :release do
-  version = File.read('VERSION').strip
-  puts "Issue the following commands to perform a release:"
-  puts " $ git tag version-#{version} -m " +
-       "\"Version tag for dry_crud-#{version}.gem\""
-  puts " $ git push --tags"
-  puts " $ rake repackage"
-  puts " $ gem push pkg/dry_crud-#{version}.gem"
+desc "Deploy rdoc to website"
+task site: :rdoc do
+  if ENV['DEST']
+    sh "rsync -rzv rdoc/ #{ENV['DEST']}"
+  else
+    puts "Please specify a destination with DEST=user@server:/deploy/dir"
+  end
 end
+
 
 def file_replace(file, expression, replacement)
   return unless File.exists?(file)

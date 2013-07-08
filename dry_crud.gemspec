@@ -29,9 +29,7 @@ END
     list.exclude('TODO')
   end.to_a
 
-  spec.files = FileList['lib/**/*',
-                        'test/templates/**/*',
-                        'Rakefile'].to_a +
+  spec.files = FileList['lib/**/*'].to_a +
                readmes
 
   spec.has_rdoc = true
