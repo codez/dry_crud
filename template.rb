@@ -24,8 +24,9 @@ end
 use_gem 'dry_crud'
 
 # install missing gems
+installed = run("gem list", capture: true)
 news = @used_gems.any? do |g| 
-  run("gem list #{g}", capture: true) !~ /#{g}/
+  installed !~ /#{g}/
 end
 run "bundle install" if news
 
