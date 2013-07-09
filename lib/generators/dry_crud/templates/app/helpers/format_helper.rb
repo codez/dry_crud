@@ -16,7 +16,7 @@ module FormatHelper
       number_with_precision(value, precision: t('number.format.precision'),
                                    delimiter: t('number.format.delimiter'))
     when Date   then l(value)
-    when Time   then l(value, format: :time)
+    when Time   then "#{f(value.to_date)} #{l(value, format: :time)}"
     when true   then t('global.yes')
     when false  then t('global.no')
     when nil    then UtilityHelper::EMPTY_STRING
@@ -113,9 +113,9 @@ module FormatHelper
     return UtilityHelper::EMPTY_STRING if val.blank?
 
     case column_type(obj, attr)
-    when :time    then f(val.to_time)
+    when :time    then l(val.to_time, format: :time)
     when :date    then f(val.to_date)
-    when :datetime, :timestamp then "#{f(val.to_date)} #{f(val.time)}"
+    when :datetime, :timestamp then f(val.time)
     when :text    then simple_format(h(val))
     when :decimal then f(val.to_s.to_f)
     else f(val)

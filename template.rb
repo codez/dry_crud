@@ -24,11 +24,11 @@ end
 use_gem 'dry_crud'
 
 # install missing gems
-installed = run("gem list", capture: true)
-news = @used_gems.any? do |g| 
+installed = run('gem list', capture: true)
+news = @used_gems.any? do |g|
   installed !~ /#{g}/
 end
-run "bundle install" if news
+run 'bundle install' if news
 
 # setup rspec
 if tests.present? && 'rspec'.start_with?(tests.downcase)

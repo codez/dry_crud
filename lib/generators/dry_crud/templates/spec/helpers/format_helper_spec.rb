@@ -104,6 +104,18 @@ describe FormatHelper do
       end
     end
 
+    context 'Dates' do
+      it 'prints regular date' do
+        f(Date.new(2013, 6, 9)).should == '2013-06-09'
+      end
+    end
+
+    context 'Times' do
+      it 'prints regular date' do
+        f(Time.utc(2013, 6, 9, 21, 25)).should == '2013-06-09 21:25'
+      end
+    end
+
     context 'nil' do
       it 'should print an empty string' do
         f(nil).should == UtilityHelper::EMPTY_STRING

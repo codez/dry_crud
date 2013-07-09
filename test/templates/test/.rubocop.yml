@@ -12,5 +12,5 @@ RegexpLiteral:
 MethodLength:
   Max: 25
 
-ConstantName:
-  Enabled: false
+#ConstantName:
+  #Enabled: false
