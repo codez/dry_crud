@@ -124,7 +124,7 @@ module Crud
                           select_options(attr, html_options),
                           html_options)
       else
-        ta(:none_available, association(@object, attr))
+        ta(:none_available, association(@object, attr)).html_safe
       end
     end
 
