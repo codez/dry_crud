@@ -55,17 +55,6 @@ class FormatHelperTest < ActionView::TestCase
                      result.squish
   end
 
-  test 'format Floats' do
-    assert_equal '1.000', f(1.0)
-    assert_equal '1.200', f(1.2)
-    assert_equal '3.142', f(3.14159)
-  end
-
-  test 'format Booleans' do
-    assert_equal 'yes', f(true)
-    assert_equal 'no', f(false)
-  end
-
   test 'format nil' do
     assert EMPTY_STRING.html_safe?
     assert_equal EMPTY_STRING, f(nil)
@@ -77,8 +66,21 @@ class FormatHelperTest < ActionView::TestCase
     assert !f('<injection>').html_safe?
   end
 
-  test 'format attr with fallthrough to f' do
-    assert_equal '12.234', format_attr('12.23424', :to_f)
+  unless ENV['NON_LOCALIZED'] # localization dependent tests
+    test 'format Floats' do
+      assert_equal '1.000', f(1.0)
+      assert_equal '1.200', f(1.2)
+      assert_equal '3.142', f(3.14159)
+    end
+
+    test 'format Booleans' do
+      assert_equal 'yes', f(true)
+      assert_equal 'no', f(false)
+    end
+
+    test 'format attr with fallthrough to f' do
+      assert_equal '12.234', format_attr('12.23424', :to_f)
+    end
   end
 
   test 'format attr with custom format_string_size method' do
@@ -97,32 +99,34 @@ class FormatHelperTest < ActionView::TestCase
     assert_equal '10000', format_type(m, :children)
   end
 
-  test 'format float column' do
-    m = crud_test_models(:AAAAA)
-    assert_equal '1.100', format_type(m, :rating)
+  unless ENV['NON_LOCALIZED'] # localization dependent tests
+    test 'format float column' do
+      m = crud_test_models(:AAAAA)
+      assert_equal '1.100', format_type(m, :rating)
 
-    m.rating = 3.145001   # you never know with these floats..
-    assert_equal '3.145', format_type(m, :rating)
-  end
+      m.rating = 3.145001   # you never know with these floats..
+      assert_equal '3.145', format_type(m, :rating)
+    end
 
-  test 'format decimal column' do
-    m = crud_test_models(:AAAAA)
-    assert_equal '10,000,000.100', format_type(m, :income)
-  end
+    test 'format decimal column' do
+      m = crud_test_models(:AAAAA)
+      assert_equal '10,000,000.100', format_type(m, :income)
+    end
 
-  test 'format date column' do
-    m = crud_test_models(:AAAAA)
-    assert_equal '1910-01-01', format_type(m, :birthdate)
+    test 'format date column' do
+      m = crud_test_models(:AAAAA)
+      assert_equal '1910-01-01', format_type(m, :birthdate)
+    end
+
+    test 'format datetime column' do
+      m = crud_test_models(:AAAAA)
+      assert_equal '2010-01-01 11:21', format_type(m, :last_seen)
+    end
   end
 
   test 'format time column' do
     m = crud_test_models(:AAAAA)
     assert_equal '01:01', format_type(m, :gets_up_at)
-  end
-
-  test 'format datetime column' do
-    m = crud_test_models(:AAAAA)
-    assert_equal '2010-01-01 11:21', format_type(m, :last_seen)
   end
 
   test 'format text column' do

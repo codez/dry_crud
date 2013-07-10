@@ -163,7 +163,9 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_update
     super
-    assert_match /successfully updated/, flash[:notice]
+    assert_equal I18n.t('crud.update.flash.success', 
+                        model: 'Crud Test Model <i>foo</i>'), 
+                 flash[:notice]
     assert flash[:alert].blank?
     assert_equal @controller.send(:entry), assigns(:crud_test_model)
     assert_equal [:before_update, :before_save, :after_save, :after_update],
@@ -174,7 +176,9 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     super
     assert_equal [:before_destroy, :after_destroy],
                  @controller.called_callbacks
-    assert_match 'successfully deleted', flash[:notice]
+    assert_equal I18n.t('crud.destroy.flash.success',
+                         model: 'Crud Test Model <i>AAAAA</i>'), 
+                 flash[:notice]
   end
 
   def test_create_with_before_callback

@@ -121,7 +121,7 @@ class Crud::FormBuilderTest < ActionView::TestCase
   test 'belongs_to_field with empty list' do
     @companions = []
     f = form.belongs_to_field(:companion_id)
-    assert_match /none available/m, f
+    assert_match t('global.associations.none_available'), f
     assert_equal 0, f.scan('</option>').size
   end
 
@@ -146,7 +146,7 @@ class Crud::FormBuilderTest < ActionView::TestCase
   test 'has_and_belongs_to_many_field with empty list' do
     @others = []
     f = form.has_many_field(:other_ids)
-    assert_match /none available/m, f
+    assert_match t('global.associations.none_available'), f
     assert_equal 0, f.scan('</option>').size
   end
 
@@ -171,7 +171,7 @@ class Crud::FormBuilderTest < ActionView::TestCase
   test 'has_many_field with empty list' do
     @mores = []
     f = form.has_many_field(:more_ids)
-    assert_match /none available/m, f
+    assert_match t('global.associations.none_available'), f
     assert_equal 0, f.scan('</option>').size
   end
 

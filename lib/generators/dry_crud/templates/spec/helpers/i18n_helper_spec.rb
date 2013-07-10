@@ -10,7 +10,7 @@ describe I18nHelper do
 
     before do
       I18n.backend.store_translations(
-        :en,
+        I18n.locale,
         global: {
           test_key: 'global' })
     end
@@ -21,7 +21,7 @@ describe I18nHelper do
     context 'with list key' do
       before do
         I18n.backend.store_translations(
-          :en,
+          I18n.locale,
           list: {
             global: {
               test_key: 'list global' } })
@@ -31,7 +31,7 @@ describe I18nHelper do
       context 'and list action key' do
         before do
           I18n.backend.store_translations(
-            :en,
+            I18n.locale,
             list: {
               index: {
                 test_key: 'list index' } })
@@ -41,7 +41,7 @@ describe I18nHelper do
         context 'and crud global key' do
           before do
             I18n.backend.store_translations(
-              :en,
+              I18n.locale,
               crud: {
                 global: {
                   test_key: 'crud global' } })
@@ -51,7 +51,7 @@ describe I18nHelper do
           context 'and crud action key' do
             before do
               I18n.backend.store_translations(
-                :en,
+                I18n.locale,
                 crud: {
                   index: {
                     test_key: 'crud index' } })
@@ -61,7 +61,7 @@ describe I18nHelper do
             context 'and controller global key' do
               before do
                 I18n.backend.store_translations(
-                  :en,
+                  I18n.locale,
                   crud_test_models: {
                     global: {
                       test_key: 'test global' } })
@@ -71,7 +71,7 @@ describe I18nHelper do
               context 'and controller action key' do
                 before do
                   I18n.backend.store_translations(
-                    :en,
+                    I18n.locale,
                     crud_test_models: {
                       index: {
                         test_key: 'test index' } })
@@ -91,7 +91,7 @@ describe I18nHelper do
 
     before do
       I18n.backend.store_translations(
-        :en,
+        I18n.locale,
         global: {
           associations: {
             test_key: 'global' } })
@@ -101,7 +101,7 @@ describe I18nHelper do
     context 'with model key' do
       before do
         I18n.backend.store_translations(
-          :en,
+          I18n.locale,
           activerecord: {
             associations: {
               crud_test_model: {
@@ -113,7 +113,7 @@ describe I18nHelper do
       context 'and assoc key' do
         before do
           I18n.backend.store_translations(
-            :en,
+            I18n.locale,
             activerecord: {
               associations: {
                 models: {
