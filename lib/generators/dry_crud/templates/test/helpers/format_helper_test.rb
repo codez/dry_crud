@@ -110,7 +110,7 @@ class FormatHelperTest < ActionView::TestCase
 
     test 'format decimal column' do
       m = crud_test_models(:AAAAA)
-      assert_equal '10,000,000.1000', format_type(m, :income)
+      assert_equal '10,000,000.1111', format_type(m, :income)
     end
 
     test 'format date column' do

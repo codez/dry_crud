@@ -198,7 +198,7 @@ describe FormatHelper do
       end
 
       it 'should format decimals' do
-        format_type(model, :income).should == '10,000,000.1000'
+        format_type(model, :income).should == '10,000,000.1111'
       end
 
       it 'should format dates' do

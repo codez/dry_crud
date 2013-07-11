@@ -307,7 +307,7 @@ module CrudTestHelper
       name: c,
       children: 10 - index,
       rating: "#{index}.#{index}".to_f,
-      income: 10_000_000 * index + 0.1 * index,
+      income: 10_000_000 * index + 0.1111 * index,
       birthdate: "#{1900 + 10 * index}-#{index}-#{index}",
       # store entire date to avoid time zone issues
       gets_up_at: Time.local(2000, 1, 1, index, index),
