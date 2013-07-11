@@ -117,7 +117,11 @@ module FormatHelper
     when :date    then f(val.to_date)
     when :datetime, :timestamp then f(val.time)
     when :text    then simple_format(h(val))
-    when :decimal then f(val.to_s.to_f)
+    when :decimal then 
+      scale = column_property(obj, attr, :scale)
+      number_with_precision(val.to_s.to_f, 
+                            precision: scale,
+                            delimiter: t('number.format.delimiter'))
     else f(val)
     end
   end

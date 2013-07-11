@@ -231,7 +231,7 @@ module CrudTestHelper
       t.integer  :children
       t.integer  :companion_id
       t.float    :rating
-      t.decimal  :income, precision: 14, scale: 2
+      t.decimal  :income, precision: 14, scale: 4
       t.date     :birthdate
       t.time     :gets_up_at
       t.datetime :last_seen

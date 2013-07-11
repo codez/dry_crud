@@ -51,10 +51,11 @@ module Crud
     # Define a column for the given attribute and an optional header.
     # If no header is given, the attribute name is used. The cell will
     # contain the formatted attribute value for the current entry.
-    def attr(a, header = nil, &block)
+    def attr(a, header = nil, html_options = {}, &block)
       header ||= attr_header(a)
       block ||= ->(e) { format_attr(e, a) }
-      col(header, class: align_class(a), &block)
+      add_css_class(html_options, align_class(a))
+      col(header, html_options, &block)
     end
 
     # Renders the table as HTML.
@@ -211,31 +212,33 @@ module Crud
 
       # Action column to show the row entry.
       # A block may be given to define the link path for the row entry.
-      def show_action_col(&block)
+      def show_action_col(html_options = {}, &block)
         action_col do |e|
           table_action_link('zoom-in',
-                            action_path(e, &block))
+                            action_path(e, &block),
+                            html_options)
         end
       end
 
       # Action column to edit the row entry.
       # A block may be given to define the link path for the row entry.
-      def edit_action_col(&block)
+      def edit_action_col(html_options = {}, &block)
         action_col do |e|
           path = action_path(e, &block)
           path = path.is_a?(String) ? path : edit_polymorphic_path(path)
-          table_action_link('pencil', path)
+          table_action_link('pencil', path, html_options)
         end
       end
 
       # Action column to destroy the row entry.
       # A block may be given to define the link path for the row entry.
-      def destroy_action_col(&block)
+      def destroy_action_col(html_options = {}, &block)
         action_col do |e|
           table_action_link('remove',
                             action_path(e, &block),
-                            data: { confirm: ti(:confirm_delete),
-                                    method: :delete })
+                            html_options.merge(
+                              data: { confirm: ti(:confirm_delete),
+                                      method: :delete }))
         end
       end
 
