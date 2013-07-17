@@ -67,6 +67,27 @@ a img {
   border: none;
 }
 
+dl {
+  vertical-align: top;
+  padding: 2px 0 2px;
+  clear: both;
+}
+
+dt {
+  width: 120px;
+  padding-right: 5px;
+  float: left;
+  font-style: italic;
+}
+
+dd {
+  margin-left: 130px;
+}
+
+dd p {
+  margin: 0;
+}
+
 .table {
   margin-top: 10px;
 }
