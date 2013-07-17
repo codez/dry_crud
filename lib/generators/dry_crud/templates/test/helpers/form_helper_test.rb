@@ -60,8 +60,12 @@ class FormHelperTest < ActionView::TestCase
                         .*?value=\"9\"/x, f
     assert_match /input .*?name="crud_test_model\[human\]"
                         .*?type="checkbox"/x, f
-    assert_match /button .*?type="submit">Save<\/button>/, f
-    assert_match /a .*href="\/somewhere".*>Cancel<\/a>/, f
+    assert_match /button\ .*?type="submit"\>
+                  #{t('global.button.save')}
+                  \<\/button\>/x, f
+    assert_match /\<a\ .*href="\/somewhere".*\>
+                  #{t('global.button.cancel')}
+                  \<\/a\>/x, f
   end
 
   test 'standard form with errors' do
@@ -88,7 +92,9 @@ class FormHelperTest < ActionView::TestCase
                           .*?type="text"/x, f
     assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
     assert_match /option selected="selected" value="1910">1910<\/option>/, f
-    assert_match /option selected="selected" value="1">January<\/option>/, f
+    assert_match /option\ selected="selected"\ value="1"\>
+                  #{t('date.month_names')[1]}
+                  \<\/option\>/x, f
     assert_match /option selected="selected" value="1">1<\/option>/, f
   end
 
@@ -114,7 +120,7 @@ class FormHelperTest < ActionView::TestCase
     assert_match /select .*?name="crud_test_model\[companion_id\]"/, f
     assert_match /textarea .*?name="crud_test_model\[remarks\]"/, f
     assert_match /a .*href="\/crud_test_models\/#{entry.id}\?returning=true"
-                  .*>Cancel<\/a>/x, f
+                  .*>#{t('global.button.cancel')}<\/a>/x, f
   end
 
   def entry

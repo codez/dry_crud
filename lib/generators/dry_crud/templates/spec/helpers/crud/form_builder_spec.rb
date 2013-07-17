@@ -93,7 +93,7 @@ describe 'Crud::FormBuilder' do
       assign(:companions, [])
       @companions = []
       f = form.belongs_to_field(:companion_id)
-      f.should match(/none available/m)
+      f.should match t('global.associations.none_available')
       f.scan('</option>').should have(0).items
     end
   end
@@ -121,7 +121,7 @@ describe 'Crud::FormBuilder' do
     it 'displays a message for an empty list' do
        @others = []
        f = form.has_many_field(:other_ids)
-       f.should match /none available/m
+       f.should match t('global.associations.none_available')
        f.scan('</option>').should have(0).items
     end
   end

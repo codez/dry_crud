@@ -73,39 +73,41 @@ describe FormatHelper do
 
   describe '#f' do
 
-    context 'Floats' do
-      it 'should add two digits' do
-        f(1.0).should == '1.000'
+    unless ENV['NON_LOCALIZED'] # localization dependent tests
+      context 'Floats' do
+        it 'should add two digits' do
+          f(1.0).should == '1.000'
+        end
+
+        it 'should truncate to two digits' do
+          f(3.14159).should == '3.142'
+        end
+
+        it 'should add delimiters' do
+          f(12345.6789).should == '12,345.679'
+        end
       end
 
-      it 'should truncate to two digits' do
-        f(3.14159).should == '3.142'
+      context 'Booleans' do
+        it 'true should print yes' do
+          f(true).should == 'yes'
+        end
+
+        it 'false should print no' do
+          f(false).should == 'no'
+        end
       end
 
-      it 'should add delimiters' do
-        f(12345.6789).should == '12,345.679'
-      end
-    end
-
-    context 'Booleans' do
-      it 'true should print yes' do
-        f(true).should == 'yes'
+      context 'Dates' do
+        it 'prints regular date' do
+          f(Date.new(2013, 6, 9)).should == '2013-06-09'
+        end
       end
 
-      it 'false should print no' do
-        f(false).should == 'no'
-      end
-    end
-
-    context 'Dates' do
-      it 'prints regular date' do
-        f(Date.new(2013, 6, 9)).should == '2013-06-09'
-      end
-    end
-
-    context 'Times' do
-      it 'prints regular date' do
-        f(Time.utc(2013, 6, 9, 21, 25)).should == '2013-06-09 21:25'
+      context 'Times' do
+        it 'prints regular date' do
+          f(Time.utc(2013, 6, 9, 21, 25)).should == '2013-06-09 21:25'
+        end
       end
     end
 
@@ -183,24 +185,26 @@ describe FormatHelper do
       format_type(model, :children).should == '10000'
     end
 
-    it 'should format floats' do
-      format_type(model, :rating).should == '1.100'
-    end
+    unless ENV['NON_LOCALIZED'] # localization dependent tests
+      it 'should format floats' do
+        format_type(model, :rating).should == '1.100'
+      end
 
-    it 'should format decimals' do
-      format_type(model, :income).should == '10,000,000.100'
-    end
+      it 'should format decimals' do
+        format_type(model, :income).should == '10,000,000.1111'
+      end
 
-    it 'should format dates' do
-      format_type(model, :birthdate).should == '1910-01-01'
-    end
+      it 'should format dates' do
+        format_type(model, :birthdate).should == '1910-01-01'
+      end
 
-    it 'should format times' do
-      format_type(model, :gets_up_at).should == '01:01'
-    end
+      it 'should format times' do
+        format_type(model, :gets_up_at).should == '01:01'
+      end
 
-    it 'should format datetimes' do
-      format_type(model, :last_seen).should == '2010-01-01 11:21'
+      it 'should format datetimes' do
+        format_type(model, :last_seen).should == '2010-01-01 11:21'
+      end
     end
 
     it 'should format texts' do

@@ -35,7 +35,7 @@ describe TableHelper do
       it { should be_html_safe }
 
       it 'should handle empty data' do
-        should match(/No entries/)
+        should match(/div class=.table.\>.+\<\/div\>/)
       end
     end
 

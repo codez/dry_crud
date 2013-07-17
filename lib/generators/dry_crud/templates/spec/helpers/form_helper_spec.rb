@@ -59,8 +59,9 @@ describe FormHelper do
       end
 
       it do
-        should match(/option\ selected="selected"
-                            \ value="1">January<\/option>/x)
+        should match(/option\ selected="selected"\ value="1">
+                      #{t('date.month_names')[1]}
+                      <\/option>/x)
       end
 
       it do
@@ -115,8 +116,9 @@ describe FormHelper do
       end
 
       it do
-        should match(/option\ selected="selected"
-                            \ value="1">January<\/option>/x)
+        should match(/option\ selected="selected"\ value="1">
+                      #{t('date.month_names')[1]}
+                      <\/option>/x)
       end
 
       it do
@@ -136,11 +138,15 @@ describe FormHelper do
       end
 
       it do
-        should match(/button .*?type="submit">Save<\/button>/)
+        should match(/button\ .*?type="submit">
+                      #{t('global.button.save')}
+                      <\/button>/x)
       end
 
       it do
-        should match(/a .*href="\/somewhere".*>Cancel<\/a>/)
+        should match(/a\ .*href="\/somewhere".*>
+                      #{t('global.button.cancel')}
+                      <\/a>/x)
       end
     end
 
@@ -223,8 +229,9 @@ describe FormHelper do
     end
 
     it do
-      should match(/a .*href="\/crud_test_models\/#{entry.id}
-                              \?returning=true".*>Cancel<\/a>/x)
+      should match(/a\ .*href="\/crud_test_models\/#{entry.id}
+                               \?returning=true".*>
+                    #{t('global.button.cancel')}<\/a>/x)
     end
   end
 

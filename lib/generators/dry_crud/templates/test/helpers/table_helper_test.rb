@@ -28,7 +28,7 @@ class TableHelperTest < ActionView::TestCase
   test 'empty table should render message' do
     result = plain_table_or_message([]) { }
     assert result.html_safe?
-    assert_dom_equal "<div class='table'>No entries found.</div>", result
+    assert_match /\<div class=["']table["']\>.*\<\/div\>/, result
   end
 
   test 'non empty table should render table' do
