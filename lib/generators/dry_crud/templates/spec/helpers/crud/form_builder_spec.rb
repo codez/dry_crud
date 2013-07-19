@@ -54,7 +54,7 @@ describe 'Crud::FormBuilder' do
     subject { form.labeled_input_fields(:name, :remarks, :children) }
 
     it { should be_html_safe }
-    it { should include(form.input_field(:name)) }
+    it { should include(form.input_field(:name, required: 'required')) }
     it { should include(form.input_field(:remarks)) }
     it { should include(form.input_field(:children)) }
   end
@@ -203,20 +203,6 @@ describe 'Crud::FormBuilder' do
 
       it { should be_html_safe }
       it { should match /label [^>]*for.+>Caption<\/label>.*<input/m }
-    end
-  end
-
-  describe '#required_mark' do
-    it 'is shown for required attrs' do
-      form.required_mark(:name).should == Crud::FormBuilder::REQUIRED_MARK
-    end
-
-    it 'is not shown for optional attrs' do
-      form.required_mark(:rating).should be_empty
-    end
-
-    it 'is not shown for non existing attrs' do
-      form.required_mark(:not_existing).should be_empty
     end
   end
 
