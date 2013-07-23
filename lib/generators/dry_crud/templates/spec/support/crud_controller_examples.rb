@@ -129,7 +129,7 @@ shared_examples 'crud controller' do |options|
 
       context 'with non-existing id',
               unless: skip?(options,
-                            'show', 'html', 'with non-existing id') do
+                            %w(show html with_non_existing_id)) do
         let(:params) { { id: 9999 } }
 
         it 'should raise RecordNotFound', perform_request: false do
@@ -160,7 +160,7 @@ shared_examples 'crud controller' do |options|
     end
 
     context 'with params',
-            unless: skip?(options, 'new', 'with params') do
+            unless: skip?(options, %w(new with_params)) do
       let(:params) { { model_identifier => new_entry_attrs } }
       it_should_set_attrs(:new)
     end
