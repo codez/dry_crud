@@ -29,7 +29,7 @@ module UtilityHelper
   # Adds a class to the given options, even if there are already classes.
   def add_css_class(options, classes)
     if options[:class]
-      options[:class] += ' ' + classes
+      options[:class] += ' ' + classes if classes
     else
       options[:class] = classes
     end
