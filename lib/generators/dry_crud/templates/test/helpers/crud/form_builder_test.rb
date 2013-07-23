@@ -81,7 +81,7 @@ class Crud::FormBuilderTest < ActionView::TestCase
   test 'input_fields concats multiple fields' do
     result = form.labeled_input_fields(:name, :remarks, :children)
     assert result.html_safe?
-    assert result.include?(form.input_field(:name))
+    assert result.include?(form.input_field(:name, required: 'required'))
     assert result.include?(form.input_field(:remarks))
     assert result.include?(form.input_field(:children))
   end
@@ -223,12 +223,6 @@ class Crud::FormBuilderTest < ActionView::TestCase
     end
     assert result.html_safe?
     assert_match /label [^>]*for.+>Caption<\/label>.*<input/m, result
-  end
-
-  test 'required mark is shown' do
-    assert_equal Crud::FormBuilder::REQUIRED_MARK, form.required_mark(:name)
-    assert_equal '', form.required_mark(:rating)
-    assert_equal '', form.required_mark(:anything)
   end
 
   test 'method missing still works' do

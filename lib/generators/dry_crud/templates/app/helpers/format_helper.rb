@@ -115,7 +115,7 @@ module FormatHelper
     return UtilityHelper::EMPTY_STRING if val.blank?
 
     case column_type(obj, attr)
-    when :time    then l(val.to_time, format: :time)
+    when :time    then l(val, format: :time)
     when :date    then f(val.to_date)
     when :datetime, :timestamp then f(val.time)
     when :text    then simple_format(h(val))

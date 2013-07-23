@@ -5,7 +5,7 @@ module Crud
   # for ActiveRecord column types. Convenience methods for each column type
   # allow one to customize the different fields.
   # All field methods may be prefixed with 'labeled_' in order to render
-  # a standard label with them.
+  # a standard label, required mark and an optional help block with them.
   class FormBuilder < ActionView::Helpers::FormBuilder
 
     REQUIRED_MARK = '<span class="required">*</span>'.html_safe
@@ -190,11 +190,6 @@ module Crud
       link_to(ti('button.cancel'), url, class: 'cancel')
     end
 
-    # Renders a marker if the given attr has to be present.
-    def required_mark(attr)
-      required?(attr) ? REQUIRED_MARK : ''
-    end
-
     # Render a label for the given attribute with the passed field html
     # section. The following parameters may be specified:
     #   labeled(:attr) { #content }
@@ -273,7 +268,8 @@ module Crud
                    @object.class.validators_on(attr_id)
       validators.any? do |v|
         v.kind == :presence &&
-        !v.options.key?(:if) && !v.options.key?(:unless)
+        !v.options.key?(:if) && 
+        !v.options.key?(:unless)
       end
     end
 
@@ -311,10 +307,12 @@ module Crud
     # Renders the corresponding field together with a label, required mark and
     # an optional help block.
     def build_labeled_field(field_method, *args)
+      required = required?(args.first)
       options = args.extract_options!
+      options[:required] ||= 'required' if required
       help = options.delete(:help)
       content = send(field_method, *(args << options))
-      content << required_mark(args.first)
+      content << REQUIRED_MARK if required
       content << help_block(help) if help.present?
       labeled(args.first, content)
     end
