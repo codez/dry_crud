@@ -265,10 +265,10 @@ shared_examples 'crud controller' do |options|
 
     context '.json',
             format: :json,
-            unless: skip?(options, %w(udpate json)) do
+            unless: skip?(options, %w(update json)) do
 
       context 'with valid params',
-              unless: skip?(options, %w(udpate json valid)),
+              unless: skip?(options, %w(update json valid)),
               combine: 'ujv' do
         it_should_respond(204)
         it_should_set_attrs(:edit)
