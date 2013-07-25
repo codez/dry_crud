@@ -106,7 +106,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'index'
     assert entries.present?
     assert_equal 3, entries.size
-    assert_equal %w(CCCCC DDDDD BBBBB), entries.collect(&:name)
+    assert_equal %w(CCCCC DDDDD BBBBB), entries.map(&:name)
     assert_equal({ sort: 'chatty', sort_dir: 'asc', q: 'DDD' },
                  session[:list_params]['/crud_test_models'])
   end
@@ -121,7 +121,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_template 'index'
     assert entries.present?
     assert_equal 3, entries.size
-    assert_equal %w(BBBBB DDDDD CCCCC), entries.collect(&:name)
+    assert_equal %w(BBBBB DDDDD CCCCC), entries.map(&:name)
     assert_equal 'DDD', @controller.params[:q]
     assert_equal 'chatty', @controller.params[:sort]
     assert_equal 'desc', @controller.params[:sort_dir]
@@ -163,8 +163,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_update
     super
-    assert_equal I18n.t('crud.update.flash.success', 
-                        model: 'Crud Test Model <i>foo</i>'), 
+    assert_equal I18n.t('crud.update.flash.success',
+                        model: 'Crud Test Model <i>foo</i>'),
                  flash[:notice]
     assert flash[:alert].blank?
     assert_equal @controller.send(:entry), assigns(:crud_test_model)
@@ -177,7 +177,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_equal [:before_destroy, :after_destroy],
                  @controller.called_callbacks
     assert_equal I18n.t('crud.destroy.flash.success',
-                         model: 'Crud Test Model <i>AAAAA</i>'), 
+                         model: 'Crud Test Model <i>AAAAA</i>'),
                  flash[:notice]
   end
 

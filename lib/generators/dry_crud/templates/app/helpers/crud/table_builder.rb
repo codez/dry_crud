@@ -212,33 +212,44 @@ module Crud
 
       # Action column to show the row entry.
       # A block may be given to define the link path for the row entry.
+      # If the block returns nil, no link is rendered.
       def show_action_col(html_options = {}, &block)
         action_col do |e|
-          table_action_link('zoom-in',
-                            action_path(e, &block),
-                            html_options)
+          path = action_path(e, &block)
+          if path
+            table_action_link('zoom-in',
+                              path,
+                              html_options)
+          end
         end
       end
 
       # Action column to edit the row entry.
       # A block may be given to define the link path for the row entry.
+      # If the block returns nil, no link is rendered.
       def edit_action_col(html_options = {}, &block)
         action_col do |e|
           path = action_path(e, &block)
-          path = path.is_a?(String) ? path : edit_polymorphic_path(path)
-          table_action_link('pencil', path, html_options)
+          if path
+            path = path.is_a?(String) ? path : edit_polymorphic_path(path)
+            table_action_link('pencil', path, html_options)
+          end
         end
       end
 
       # Action column to destroy the row entry.
       # A block may be given to define the link path for the row entry.
+      # If the block returns nil, no link is rendered.
       def destroy_action_col(html_options = {}, &block)
         action_col do |e|
-          table_action_link('remove',
-                            action_path(e, &block),
-                            html_options.merge(
-                              data: { confirm: ti(:confirm_delete),
-                                      method: :delete }))
+          path = action_path(e, &block)
+          if path
+            table_action_link('remove',
+                              path,
+                              html_options.merge(
+                                data: { confirm: ti(:confirm_delete),
+                                        method: :delete }))
+          end
         end
       end
 

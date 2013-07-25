@@ -24,7 +24,6 @@ describe FormatHelper do
     "#{f(obj.size)} chars"
   end
 
-
   describe '#labeled' do
     context 'regular' do
       subject { labeled('label') { 'value' } }

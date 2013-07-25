@@ -268,7 +268,7 @@ module Crud
                    @object.class.validators_on(attr_id)
       validators.any? do |v|
         v.kind == :presence &&
-        !v.options.key?(:if) && 
+        !v.options.key?(:if) &&
         !v.options.key?(:unless)
       end
     end

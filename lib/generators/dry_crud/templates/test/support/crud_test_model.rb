@@ -325,7 +325,7 @@ module CrudTestHelper
     c = str(index)
     others = CrudTestModel.all[index..(index + 2)]
     OtherCrudTestModel.create!(name: c,
-                               other_ids: others.collect(&:id),
+                               other_ids: others.map(&:id),
                                more_id: others.first.try(:id))
   end
 

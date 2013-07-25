@@ -181,7 +181,7 @@ describe CrudTestModelsController do
         it_should_respond
 
         it 'entries should be in correct order' do
-          entries.collect(&:name).should == %w(BBBBB DDDDD CCCCC)
+          entries.map(&:name).should == %w(BBBBB DDDDD CCCCC)
         end
 
         it 'params should be set' do
