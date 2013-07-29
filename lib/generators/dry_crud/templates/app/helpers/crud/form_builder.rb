@@ -181,7 +181,7 @@ module Crud
 
     # Render a standard submit button with the given label.
     def submit_button(label = ti('button.save'))
-      button(label, class: 'btn btn-primary')
+      button(label, class: 'btn btn-primary', data: { disable_with: label })
     end
 
     # Render a cancel link pointing to the given url.
