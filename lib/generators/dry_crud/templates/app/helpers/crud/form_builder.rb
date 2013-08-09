@@ -5,7 +5,7 @@ module Crud
   # for ActiveRecord column types. Convenience methods for each column type
   # allow one to customize the different fields.
   #
-  # All field methods may be prefixed with 'labeled_' in order to render
+  # All field methods may be prefixed with +labeled_+ in order to render
   # a standard label, required mark and an optional help block with them.
   class FormBuilder < ActionView::Helpers::FormBuilder
 
@@ -119,7 +119,7 @@ module Crud
     # To pass a custom element list, specify the list with the :list key or
     # define an instance variable with the pluralized name of the association.
     def belongs_to_field(attr, html_options = {})
-      list = association_entries(attr, html_options)
+      list = association_entries(attr, html_options).to_a
       if list.present?
         collection_select(attr, list, :id, :to_s,
                           select_options(attr, html_options),

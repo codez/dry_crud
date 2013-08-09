@@ -115,7 +115,7 @@ When you display computed values in your list table, you may define sort mapping
 In <tt>app/controllers/people_controller.rb</tt>:
   self.sort_mappings = {age: 'birthday', city_id: 'cities.name'}
 
-There is also a simple search functionality (based on SQL LIKE queries) implemented in ListController. Define an array of columns in your controller's +search_columns+ class variable to make the entries searchable by these fields:
+There is also a simple search functionality (based on SQL LIKE queries) implemented in Crud::Searchable. Define an array of columns in your controller's +search_columns+ class variable to make the entries searchable by these fields:
 
 In <tt>app/controllers/people_controller.rb</tt>:
   self.search_columns = [:firstname, :lastname]
@@ -144,7 +144,7 @@ To render custom columns, use the +col+ method with an appropriate block:
         t.col('Map') {|entry| link_to(entry.city, "http://maps.google.com/?q=#{entry.city}" }
       end %>
 
-For views of subclasses of ListController, you can directly use the +crud_table+ helper method, where you do not have to pass the +@people+ list explicitly and actions are added automatically.
+For views of subclasses of ListController, you can directly use the +crud_table+ helper method, where you do not have to pass the <tt>@people</tt> list explicitly and actions are added automatically.
 
 ==== Forms
 
@@ -206,7 +206,7 @@ In <tt>app/controllers/people_controller.rb</tt>:
     end
   end
 
-Beside these "action" callbacks, there is also a set of "before render" callbacks that are called whenever a certain view is rendered. They are available for the +index+, +show+, +new+, +edit+ and +form+ (= +new+ and +edit+) views. These callbacks are not only called for the corresponding action, but, for example, also when the +new+ view is going to be rendered from an unsuccessfull +create+ action. Say you need to prepare additional variables whenever the form is rendered:
+Beside these "action" callbacks, there is also a set of +before_render+ callbacks that are called whenever a certain view is rendered. They are available for the +index+, +show+, +new+, +edit+ and +form+ (= +new+ and +edit+) views. These callbacks are not only called for the corresponding action, but, for example, also when the +new+ view is going to be rendered from an unsuccessfull +create+ action. Say you need to prepare additional variables whenever the form is rendered:
 
 In <tt>app/controllers/people_controller.rb</tt>:
   before_render_form :set_hometowns
@@ -258,9 +258,9 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 {controller/crud/sortable.rb}[http://codez.ch/dry_crud?q=Crud::Sortable]:: Sort functionality for the index table.
 
-{controller/crud/render_callbacks.rb}[http://codez.ch/dry_crud?q=Crud::RenderCallbacks]:: Provide +before_render+ callbacks.
+{controller/crud/render_callbacks.rb}[http://codez.ch/dry_crud?q=Crud::RenderCallbacks]:: Provide +before_render+ callbacks to controllers.
 
-{controller/crud/responder.rb}[http://codez.ch/dry_crud?q=Crud::Responder]:: Responder used by the +CrudController+ to handle the +path_args+.
+{controller/crud/responder.rb}[http://codez.ch/dry_crud?q=Crud::Responder]:: Responder used by the CrudController to handle the +path_args+.
 
 === Helpers:
 
