@@ -20,7 +20,7 @@ describe 'Crud::FormBuilder' do
   let(:entry) { CrudTestModel.first }
 <% if Rails.version < '4.0' -%>
   let(:form)  do
-    Crud::FormBuilder.new(:entry, entry, self, {}, lambda { |form| form })
+    Crud::FormBuilder.new(:entry, entry, self, {}, ->(form) { form })
   end
 <% else -%>
   let(:form)  { Crud::FormBuilder.new(:entry, entry, self, {}) }

@@ -21,7 +21,7 @@ class Crud::FormBuilderTest < ActionView::TestCase
     @entry = CrudTestModel.first
 <% if Rails.version < '4.0' -%>
     @form = Crud::FormBuilder.new(:entry, @entry, self, {},
-                                  lambda { |form| form })
+                                  ->(form) { form })
 <% else -%>
     @form = Crud::FormBuilder.new(:entry, @entry, self, {})
 <% end -%>

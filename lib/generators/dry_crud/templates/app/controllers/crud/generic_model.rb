@@ -15,7 +15,7 @@ module Crud
 
     private
 
-      delegate :model_class, :models_label, :model_identifier, to: :class
+      delegate :model_class, :models_label, :model_identifier, to: 'self.class'
     end
 
     private

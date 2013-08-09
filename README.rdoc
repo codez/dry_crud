@@ -184,7 +184,7 @@ In case you define nested resources, your CrudController subclass should know. L
 
 This declaration is for a controller nested in +parent_resources+ within a +:my_namespace+ scope. +ParentResource+ is the corresponding +ActiveRecord+ model. The request param +:parent_resource_id+ is used to load the parent entry, which in turn is used to filter the entries listed and created in your controller. For all parent resources, a corresponding instance variable is created.
 
-The ListController::Nesting module defines this basic behaviour. For more complex setups, have a look there and adjust it to your needs.
+The <tt>Crud::Nestable</tt> module defines this basic behaviour. For more complex setups, have a look there and adjust it to your needs.
 
 
 === CRUD controller callbacks
@@ -246,8 +246,21 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 {controller/crud_controller.rb}[http://codez.ch/dry_crud?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on ListController.
 
-{controller/list_controller.rb}[http://codez.ch/dry_crud?q=ListController]:: Abstract controller providing a basic list action. Use this controller if you require read-only functionality. There are two sub-modules that provide search and sort functionality for the table displayed in the list action. A third sub-module remembers the list parameters in order to return to an identical list.
+{controller/list_controller.rb}[http://codez.ch/dry_crud?q=ListController]:: Abstract controller providing a basic list action. Use this controller if you require read-only functionality. It includes the following modules.
 
+{controller/crud/generic_model.rb}[http://codez.ch/dry_crud?q=Crud::GenericModel]:: Work with the model whose name corrsponds to the controller's name.
+
+{controller/crud/nestable.rb}[http://codez.ch/dry_crud?q=Crud::Nestable]:: Provides functionality to easily nest controllers/resources.
+
+{controller/crud/rememberable.rb}[http://codez.ch/dry_crud?q=Crud::Rememberable]:: Remembers certain params of the index action in order to return to the same list after an entry was viewed or edited.
+
+{controller/crud/searchable.rb}[http://codez.ch/dry_crud?q=Crud::Searchable]:: Search functionality for the index table.
+
+{controller/crud/sortable.rb}[http://codez.ch/dry_crud?q=Crud::Sortable]:: Sort functionality for the index table.
+
+{controller/crud/render_callbacks.rb}[http://codez.ch/dry_crud?q=Crud::RenderCallbacks]:: Provide +before_render+ callbacks.
+
+{controller/crud/responder.rb}[http://codez.ch/dry_crud?q=Crud::Responder]:: Responder used by the +CrudController+ to handle the +path_args+.
 
 === Helpers:
 
