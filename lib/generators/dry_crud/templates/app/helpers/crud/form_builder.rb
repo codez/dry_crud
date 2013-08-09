@@ -4,6 +4,7 @@ module Crud
   # A form builder that automatically selects the corresponding input field
   # for ActiveRecord column types. Convenience methods for each column type
   # allow one to customize the different fields.
+  #
   # All field methods may be prefixed with 'labeled_' in order to render
   # a standard label, required mark and an optional help block with them.
   class FormBuilder < ActionView::Helpers::FormBuilder

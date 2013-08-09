@@ -33,7 +33,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     super
     assert_equal 6, entries.size
     assert_equal entries.sort_by(&:name), entries
-    assert_equal Hash.new, session[:list_params]
+    assert_equal({}, session[:list_params])
     assert_equal entries, assigns(:crud_test_models)
     assert_respond_to assigns(:crud_test_models), :klass
   end

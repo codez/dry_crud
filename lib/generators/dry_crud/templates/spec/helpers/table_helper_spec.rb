@@ -147,8 +147,8 @@ describe TableHelper do
       end
 
       it 'has 1 ascending sort headers' do
-        subject.scan(/<th><a .*?sort_dir=desc.*?>Children<\/a> &darr;<\/th>/).
-                size.should == 1
+        subject.scan(/<th><a .*?sort_dir=desc.*?>Children<\/a> &darr;<\/th>/)
+               .size.should == 1
       end
     end
 
@@ -163,8 +163,8 @@ describe TableHelper do
       end
 
       it 'has 1 descending sort headers' do
-        subject.scan(/<th><a .*?sort_dir=asc.*?>Children<\/a> &uarr;<\/th>/).
-                size.should == 1
+        subject.scan(/<th><a .*?sort_dir=asc.*?>Children<\/a> &uarr;<\/th>/)
+               .size.should == 1
       end
     end
 
@@ -179,8 +179,8 @@ describe TableHelper do
       end
 
       it 'has 1 ascending sort headers' do
-        subject.scan(/<th><a .*?sort_dir=desc.*?>Chatty<\/a> &darr;<\/th>/).
-                size.should == 1
+        subject.scan(/<th><a .*?sort_dir=desc.*?>Chatty<\/a> &darr;<\/th>/)
+               .size.should == 1
       end
     end
   end

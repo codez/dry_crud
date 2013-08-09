@@ -333,7 +333,7 @@ module CrudTestHelper
      (index + 64).chr * 5
   end
 
-  # hack to avoid ddl in transaction issues with mysql.
+  # A hack to avoid ddl in transaction issues with mysql.
   def without_transaction
     c = ActiveRecord::Base.connection
     start_transaction = false

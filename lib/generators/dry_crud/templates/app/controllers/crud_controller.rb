@@ -3,6 +3,7 @@
 # Abstract controller providing basic CRUD actions.
 # This implementation mainly follows the one of the Rails scaffolding
 # controller and responds to HTML and JSON requests.
+#
 # Some enhancements were made to ease extendability.
 # The current model entry is available in the view as an instance variable
 # named after the +model_class+ or in the helper method +entry+.
@@ -12,12 +13,12 @@
 # procedures without overriding the entire method.
 class CrudController < ListController
 
+  self.responder = Crud::Responder
+
 <% if Rails.version >= '4.0' -%>
   class_attribute :permitted_attrs
 
 <% end -%>
-  delegate :model_identifier, to: 'self.class'
-
   # Defines before and after callback hooks for create, update, save and
   # destroy actions.
   define_model_callbacks :create, :update, :save, :destroy
@@ -32,7 +33,7 @@ class CrudController < ListController
 
   helper_method :entry, :full_entry_label
 
-  hide_action :model_identifier, :run_callbacks
+  hide_action :run_callbacks
 
   ##############  ACTIONS  ############################################
 
@@ -128,9 +129,13 @@ class CrudController < ListController
     entry.attributes = model_params
   end
 
-  # A label for the current entry, including the model name.
-  def full_entry_label
-    "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
+  # The form params for this model.
+  def model_params
+<% if Rails.version < '4.0' -%>
+    params[model_identifier]
+<% else -%>
+    params.require(model_identifier).permit(permitted_attrs)
+<% end -%><%# > fixing rdoc -%>
   end
 
   # Url of the index page to return to.
@@ -138,7 +143,10 @@ class CrudController < ListController
     polymorphic_url(path_args(model_class), returning: true)
   end
 
-  private
+  # A label for the current entry, including the model name.
+  def full_entry_label
+    "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
+  end
 
   # Set a success flash notice when we got a HTML request.
   def set_success_notice
@@ -172,22 +180,7 @@ class CrudController < ListController
     escaped.join('<br/>').html_safe
   end
 
-  # The form params for this model.
-  def model_params
-<% if Rails.version < '4.0' -%>
-    params[model_identifier]
-<% else -%>
-    params.require(model_identifier).permit(permitted_attrs)
-<% end -%><%# > fixing rdoc -%>
-  end
-
   class << self
-    # The identifier of the model used for form parameters.
-    # I.e., the symbol of the underscored model name.
-    def model_identifier
-      @model_identifier ||= model_class.model_name.param_key
-    end
-
     # Convenience callback to apply a callback on both form actions
     # (new and edit).
     def before_render_form(*methods)
@@ -195,35 +188,5 @@ class CrudController < ListController
       before_render_edit(*methods)
     end
   end
-
-  # Custom Responder that handles the controller's +path_args+.
-  # An additional :success option is used to handle action callback
-  # chain halts.
-  class Responder < ActionController::Responder
-
-    def initialize(controller, resources, options = {})
-      super(controller, with_path_args(resources, controller), options)
-    end
-
-    private
-
-    # Check whether the resource has errors. Additionally checks the :success
-    # option.
-    def has_errors?
-      options[:success] == false || super
-    end
-
-    # Wraps the resources with the path_args for correct nesting.
-    def with_path_args(resources, controller)
-      if resources.size == 1
-        Array(controller.send(:path_args, resources.first))
-      else
-        resources
-      end
-    end
-
-  end
-
-  self.responder = Responder
 
 end
