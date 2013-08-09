@@ -12,3 +12,13 @@ env:
 gemfile:
   - Gemfile
   - test/ci/rails3_2.gemfile
+
+matrix:
+  allow_failures:
+    - rvm: jruby-19mode
+      gemfile: test/ci/rails3_2.gemfile
+      env: "HAML=1"
+    - rvm: jruby-19mode
+      gemfile: test/ci/rails3_2.gemfile
+      env: "NO_HAML=0"
+
