@@ -74,15 +74,15 @@ describe FormatHelper do
 
     unless ENV['NON_LOCALIZED'] # localization dependent tests
       context 'Floats' do
-        it 'should add two digits' do
+        it 'adds two digits' do
           f(1.0).should == '1.000'
         end
 
-        it 'should truncate to two digits' do
+        it 'truncates to two digits' do
           f(3.14159).should == '3.142'
         end
 
-        it 'should add delimiters' do
+        it 'adds delimiters' do
           f(12345.6789).should == '12,345.679'
         end
       end
@@ -111,17 +111,17 @@ describe FormatHelper do
     end
 
     context 'nil' do
-      it 'should print an empty string' do
+      it 'prints an empty string' do
         f(nil).should == UtilityHelper::EMPTY_STRING
       end
     end
 
     context 'Strings' do
-      it 'should print regular strings unchanged' do
+      it 'prints regular strings unchanged' do
         f('blah blah').should == 'blah blah'
       end
 
-      it 'should not be html safe' do
+      it 'is not html safe' do
         f('<injection>').should_not be_html_safe
       end
     end
@@ -129,29 +129,29 @@ describe FormatHelper do
   end
 
   describe '#format_attr' do
-    it 'should use #f' do
+    it 'uses #f' do
       format_attr('12.342', :to_f).should == f(12.342)
     end
 
-    it 'should use object attr format method if it exists' do
+    it 'uses object attr format method if it exists' do
       format_attr('abcd', :size).should == '4 chars'
     end
 
-    it 'should use general attr format method if it exists' do
+    it 'uses general attr format method if it exists' do
       format_attr([1, 2], :size).should == '2 items'
     end
 
-    it 'should format empty belongs_to' do
+    it 'formats empty belongs_to' do
       format_attr(crud_test_models(:AAAAA), :companion).should ==
         t('global.associations.no_entry')
     end
 
-    it 'should format existing belongs_to' do
+    it 'formats existing belongs_to' do
       string = format_attr(crud_test_models(:BBBBB), :companion)
       string.should == 'AAAAA'
     end
 
-    it 'should format existing has_many' do
+    it 'formats existing has_many' do
       string = format_attr(crud_test_models(:CCCCC), :others)
       string.should be_html_safe
       string.should == '<ul><li>AAAAA</li><li>BBBBB</li></ul>'
@@ -161,7 +161,7 @@ describe FormatHelper do
   describe '#column_type' do
     let(:model) { crud_test_models(:AAAAA) }
 
-    it 'should recognize types' do
+    it 'recognizes types' do
       column_type(model, :name).should == :string
       column_type(model, :children).should == :integer
       column_type(model, :companion_id).should == :integer
@@ -179,47 +179,57 @@ describe FormatHelper do
   describe '#format_type' do
     let(:model) { crud_test_models(:AAAAA) }
 
-    it 'should format integers' do
+    it 'formats integers' do
       model.children = 10000
       format_type(model, :children).should == '10000'
     end
 
     unless ENV['NON_LOCALIZED'] # localization dependent tests
-      it 'should format floats' do
+      it 'formats floats' do
         format_type(model, :rating).should == '1.100'
       end
 
-      it 'should format decimals' do
+      it 'formata decimals' do
         format_type(model, :income).should == '10,000,000.1111'
       end
 
-      it 'should format dates' do
+      it 'formats dates' do
         format_type(model, :birthdate).should == '1910-01-01'
       end
 
-      it 'should format times' do
+      it 'formats times' do
         format_type(model, :gets_up_at).should == '01:01'
       end
 
-      it 'should format datetimes' do
+      it 'formats datetimes' do
         format_type(model, :last_seen).should == '2010-01-01 11:21'
+      end
+
+      it 'formats boolean false' do
+        model.human = false
+        format_type(model, :human).should == 'no'
+      end
+
+      it 'formats boolean true' do
+        model.human = true
+        format_type(model, :human).should == 'yes'
       end
     end
 
-    it 'should format texts' do
+    it 'formats texts' do
       string = format_type(model, :remarks)
       string.should be_html_safe
       string.should == "<p>AAAAA BBBBB CCCCC\n<br />AAAAA BBBBB CCCCC\n</p>"
     end
 
-    it 'should escape texts' do
+    it 'escapes texts' do
       model.remarks = '<unsecure>bla'
       string = format_type(model, :remarks)
       string.should be_html_safe
       string.should == '<p>&lt;unsecure&gt;bla</p>'
     end
 
-    it 'should format empty texts' do
+    it 'formats empty texts' do
       model.remarks = '   '
       string = format_type(model, :remarks)
       string.should be_html_safe
@@ -228,15 +238,15 @@ describe FormatHelper do
   end
 
   describe '#captionize' do
-    it 'should handle symbols' do
+    it 'handles symbols' do
       captionize(:camel_case).should == 'Camel Case'
     end
 
-    it 'should render all upper case' do
+    it 'renders all upper case' do
       captionize('all upper case').should == 'All Upper Case'
     end
 
-    it 'should render human attribute name' do
+    it 'renders human attribute name' do
       captionize(:gets_up_at, CrudTestModel).should == 'Gets up at'
     end
   end

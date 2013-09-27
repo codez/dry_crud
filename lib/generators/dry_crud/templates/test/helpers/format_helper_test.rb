@@ -136,6 +136,18 @@ class FormatHelperTest < ActionView::TestCase
     assert format_type(m, :remarks).html_safe?
   end
 
+  test 'format boolean false column' do
+    m = crud_test_models(:AAAAA)
+    m.human = false
+    assert_equal 'no', format_type(m, :human)
+  end
+
+  test 'format boolean true column' do
+    m = crud_test_models(:AAAAA)
+    m.human = true
+    assert_equal 'yes', format_type(m, :human)
+  end
+
   test 'format belongs to column without content' do
     m = crud_test_models(:AAAAA)
     assert_equal t('global.associations.no_entry'),

@@ -112,7 +112,7 @@ module FormatHelper
   # special types that have no own object class.
   def format_type(obj, attr)
     val = obj.send(attr)
-    return UtilityHelper::EMPTY_STRING if val.blank?
+    return UtilityHelper::EMPTY_STRING if val.blank? && val != false
 
     case column_type(obj, attr)
     when :time    then l(val, format: :time)
@@ -152,13 +152,13 @@ module FormatHelper
 
   # Renders a link to the given association entry.
   def assoc_link(assoc, val)
-    link_to_unless(no_assoc_link?(assoc, val), val.to_s, val)
+    link_to_if(assoc_link?(assoc, val), val.to_s, val)
   end
 
   # Returns true if no link should be created when formatting the given
   # association.
-  def no_assoc_link?(assoc, val)
-    !respond_to?("#{val.class.model_name.singular_route_key}_path".to_sym)
+  def assoc_link?(assoc, val)
+    respond_to?("#{val.class.model_name.singular_route_key}_path".to_sym)
   end
 
 end

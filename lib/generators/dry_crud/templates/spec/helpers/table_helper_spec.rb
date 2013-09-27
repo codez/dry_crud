@@ -19,11 +19,11 @@ describe TableHelper do
   describe '#plain_table' do
     subject { plain_table(%w(foo bar), :size) { |t| t.attrs :upcase } }
 
-    it 'should contain attrs' do
+    it 'contains attrs' do
       should match(/<th>Size<\/th>/)
     end
 
-    it 'should contain block' do
+    it 'contains block' do
       should match(/<th>Upcase<\/th>/)
     end
   end
@@ -34,7 +34,7 @@ describe TableHelper do
 
       it { should be_html_safe }
 
-      it 'should handle empty data' do
+      it 'handles empty data' do
         should match(/div class=.table.\>.+\<\/div\>/)
       end
     end
@@ -46,7 +46,7 @@ describe TableHelper do
 
       it { should be_html_safe }
 
-      it 'should render table' do
+      it 'renders table' do
         should match(/^\<table.*\<\/table\>$/)
       end
     end
