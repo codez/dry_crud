@@ -1,3 +1,4 @@
+gem 'dry_crud', path: '../..'
 
 gem 'simplecov', require: false, group: :test
 

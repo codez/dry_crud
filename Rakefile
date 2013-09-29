@@ -79,7 +79,7 @@ namespace :test do
     end
 
     desc "Populates the test application with some models and controllers"
-    task populate: :generate_crud do
+    task populate: [:generate_crud] do
       # copy test app templates
       FileUtils.cp_r(File.join(File.dirname(__FILE__),
                                'test', 'templates', '.'),
@@ -131,7 +131,7 @@ namespace :test do
                      ]
 
     desc "Adds pagination to the test app"
-    task add_pagination: :generate_crud do
+    task :add_pagination do
       list_ctrl = File.join(TEST_APP_ROOT,
                             'app', 'controllers', 'list_controller.rb')
       file_replace(list_ctrl,
@@ -149,7 +149,7 @@ namespace :test do
     end
 
     desc "Use Boostrap in the test app"
-    task use_bootstrap: :generate_crud do
+    task :use_bootstrap do
        file_replace(File.join(TEST_APP_ROOT,
                               'app', 'assets', 'stylesheets',
                               'application.css'),

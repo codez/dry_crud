@@ -15,10 +15,10 @@ class CrudController < ListController
 
   self.responder = Crud::Responder
 
-<% if Rails.version >= '4.0' -%>
-  class_attribute :permitted_attrs
+  if Rails.version >= '4.0'
+    class_attribute :permitted_attrs
+  end 
 
-<% end -%>
   # Defines before and after callback hooks for create, update, save and
   # destroy actions.
   define_model_callbacks :create, :update, :save, :destroy
@@ -131,11 +131,11 @@ class CrudController < ListController
 
   # The form params for this model.
   def model_params
-<% if Rails.version < '4.0' -%>
-    params[model_identifier]
-<% else -%>
-    params.require(model_identifier).permit(permitted_attrs)
-<% end -%><%# > fixing rdoc -%>
+    if Rails.version < '4.0'
+      params[model_identifier]
+    else
+      params.require(model_identifier).permit(permitted_attrs)
+    end
   end
 
   # Url of the index page to return to.
