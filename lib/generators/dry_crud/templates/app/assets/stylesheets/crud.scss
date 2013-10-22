@@ -8,29 +8,17 @@
 }
 
 #content {
+  padding-top: 10px;
+}
+
+#flash {
   clear: both;
   padding-top: 5px;
-  width: 100%;
 }
 
 table.table td.action {
   width: 20px;
   text-align: center;
-}
-
-.control-group {
-  clear: both;
-  padding: 2px 0 2px;
-}
-
-.control-group label {
-  float: left;
-  width: 120px;
-  padding-right: 5px;
-}
-
-.controls {
-  margin-left: 130px;
 }
 
 .cancel {

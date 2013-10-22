@@ -9,14 +9,14 @@ module ActionsHelper
   # A generic helper method to create action links.
   # These link could be styled to look like buttons, for example.
   def action_link(label, icon = nil, url = {}, html_options = {})
-    add_css_class html_options, 'action btn'
+    add_css_class html_options, 'action btn btn-default'
     link_to(icon ? action_icon(icon, label) : label,
             url, html_options)
   end
 
   # Outputs an icon for an action with an optional label.
   def action_icon(icon, label = nil)
-    html = content_tag(:i, '', class: "icon-#{icon}")
+    html = content_tag(:span, '', class: "glyphicon glyphicon-#{icon}")
     html << ' ' << label if label
     html
   end

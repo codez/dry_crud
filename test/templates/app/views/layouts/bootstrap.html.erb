@@ -28,30 +28,30 @@
 </head>
 <body>
 
-<div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container">
-      <%= render 'layouts/nav' %>
-    </div>
-  </div>
-</div>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <%= render 'layouts/nav' %>
+</nav>
 
 <div class="container">
 
   <h1><%= @title %></h1>
 
-  <%= render partial: 'layouts/flash', collection: [:notice, :alert], as: :level %>
+  <div id="flash">
+    <%= render partial: 'layouts/flash', collection: [:notice, :alert], as: :level %>
+  </div>
 
-  <div class="actions btn-toolbar">
-    <div class="pull-right">
-      <%= yield :actions %>
+  <div class="row actions">
+    <div class="col-md-5">
+        <%= yield :tools %>
     </div>
-    <div class="pull-left">
-      <%= yield :tools %>
+    <div class="col-md-7">
+      <div class="btn-toolbar pull-right">
+        <%= yield :actions %>
+      </div>
     </div>
   </div>
 
-  <div id="content">
+  <div id="content">  
     <%= yield %>
   </div>
 

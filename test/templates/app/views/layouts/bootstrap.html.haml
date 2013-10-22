@@ -34,12 +34,16 @@
 
       %h1= @title
 
-      = render partial: 'layouts/flash', collection: [:notice, :alert], as: :level
+      #flash
+        = render partial: 'layouts/flash', collection: [:notice, :alert], as: :level
 
-      .actions.btn-toolbar
-        .pull-right= yield :actions
-        .pull-left= yield :tools
-
+      .actions.row
+        .col-md-5
+          = yield :tools
+        .col-md-7
+          .btn-toolbar.pull-right
+            = yield :actions
+      
       #content= yield
 
       %footer

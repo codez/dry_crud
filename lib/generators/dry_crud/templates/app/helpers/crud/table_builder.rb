@@ -219,7 +219,7 @@ module Crud
           if path
             table_action_link('zoom-in',
                               path,
-                              html_options)
+                              html_options.clone)
           end
         end
       end
@@ -232,7 +232,7 @@ module Crud
           path = action_path(e, &block)
           if path
             path = path.is_a?(String) ? path : edit_polymorphic_path(path)
-            table_action_link('pencil', path, html_options)
+            table_action_link('pencil', path, html_options.clone)
           end
         end
       end
@@ -261,7 +261,7 @@ module Crud
 
       # Generic action link inside a table.
       def table_action_link(icon, url, html_options = {})
-        add_css_class(html_options, "icon-#{icon}")
+        add_css_class(html_options, "glyphicon glyphicon-#{icon}")
         link_to('', url, html_options)
       end
 

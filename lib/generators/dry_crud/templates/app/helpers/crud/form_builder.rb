@@ -53,6 +53,7 @@ module Crud
     # Render a number field.
     def number_field(attr, html_options = {})
       html_options[:size] ||= 10
+      add_css_class(html_options, 'form-control')
       super(attr, html_options)
     end
 
@@ -63,15 +64,23 @@ module Crud
       text_field(attr, html_options)
     end
 
+    # Render a standard text field.
+    def text_field(attr, html_options = {})
+      add_css_class(html_options, 'form-control')
+      super(attr, html_options)
+    end
+
     # Render a text_area.
     def text_area(attr, html_options = {})
       html_options[:rows] ||= 5
+      add_css_class(html_options, 'form-control')
       super(attr, html_options)
     end
 
     # Render a email field.
     def email_field(attr, html_options = {})
       html_options[:size] ||= 30
+      add_css_class(html_options, 'form-control')
       super(attr, html_options)
     end
 
@@ -121,6 +130,7 @@ module Crud
     def belongs_to_field(attr, html_options = {})
       list = association_entries(attr, html_options).to_a
       if list.present?
+        add_css_class(html_options, 'form-control')
         collection_select(attr, list, :id, :to_s,
                           select_options(attr, html_options),
                           html_options)
@@ -175,7 +185,7 @@ module Crud
 
     # Render a submit button and a cancel link for this form.
     def standard_actions(submit_label = ti('button.save'), cancel_url = nil)
-      content_tag(:div, class: 'form-actions') do
+      content_tag(:div, class: 'col-md-offset-2 col-md-8') do
         safe_join([submit_button(submit_label), cancel_link(cancel_url)], ' ')
       end
     end
@@ -201,11 +211,11 @@ module Crud
                 html_options = {}, &block)
       caption, content = extract_caption_and_content(
                            attr, caption_or_content, content, &block)
-      add_css_class(html_options, 'controls')
-      errors = errors_on?(attr) ? ' error' : ''
+      add_css_class(html_options, 'col-md-8')
+      errors = errors_on?(attr) ? ' has-error' : ''
 
-      content_tag(:div, class: "control-group#{errors}") do
-        label(attr, caption, class: 'control-label') +
+      content_tag(:div, class: "form-group#{errors}") do
+        label(attr, caption, class: 'col-md-2 control-label') +
         content_tag(:div, content, html_options)
       end
     end

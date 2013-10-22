@@ -3,7 +3,7 @@ $theme_color: #2580a2;
 
 body, div, p, td, th {
   font-family: Verdana, Geneva, Helvetica, Arial, sans-serif;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 body {
@@ -25,21 +25,59 @@ body {
   box-shadow: 0px 0px 5px $theme_color;
 }
 
-h1 {
-  font-size: 150%;
-  margin: 30px 0 15px 0;
+.actions {
+  height: 25px;
 }
 
-.table thead tr:nth-child(odd), .table thead tr:nth-child(even) {
+#content {
+  clear: both;
+  width: 100%;
+}
+
+h1 {
+  font-size: 150%;
+  margin: 40px 0 20px 0;
+}
+
+table.table {
+  border-collapse: collapse;
+  width: 100%;
+  padding: 0;
+}
+
+/* div rendered if no entries available for list */
+div.table {}
+
+table.table th {
+  background-color: $theme_color;
+  color: white;
+  font-weight: bold;
+  padding: 4px 4px;
+}
+
+table.table th a {
+  color: white;
+  text-decoration: none;
+}
+
+table.table td {
+  padding: 4px 4px;
+}
+
+.table-striped thead tr:nth-child(odd), .table thead tr:nth-child(even) {
   background-color: #D0D0D0;
 }
 
-.table tr:nth-child(odd) {
+.table-striped tr:nth-child(odd) {
   background-color: #F8F8F8;
 }
 
-.table tr:nth-child(even) {
+.table-striped tr:nth-child(even) {
   background-color: #F0F0F0;
+}
+
+.table-hover tr:hover {
+  background-color: #FFFFE0;
 }
 
 td {
@@ -69,52 +107,25 @@ a img {
 
 dl {
   vertical-align: top;
-  padding: 2px 0 2px;
+  margin: 0;
   clear: both;
 }
 
 dt {
   width: 120px;
   padding-right: 5px;
+  margin-bottom: 5px;
   float: left;
   font-style: italic;
 }
 
 dd {
   margin-left: 130px;
+  margin-bottom: 5px;
 }
 
 dd p {
   margin: 0;
-}
-
-.table {
-  margin-top: 10px;
-}
-
-table.table {
-  border-collapse: collapse;
-  width: 100%;
-  padding: 0;
-}
-
-/* div rendered if no entries available for list */
-div.table {}
-
-table.table th {
-  background-color: $theme_color;
-  color: white;
-  font-weight: bold;
-  padding: 2px 4px;
-}
-
-table.table th a {
-  color: white;
-  text-decoration: none;
-}
-
-table.table td {
-  padding: 2px 4px;
 }
 
 label {
@@ -130,16 +141,16 @@ a.action {
   padding: 0 5px;
 }
 
-a[class^="icon-"] {
+a.glyphicon {
   margin-right: 5px;
   margin-left: 5px;
 }
 
-a[class^="icon-"] img {
+a.glyphicon img {
   vertical-align: text-top;
 }
 
-[class^="icon-"] {
+.glyphicon {
   width: 16px;
   height: 16px;
   display: inline-block;
@@ -147,15 +158,27 @@ a[class^="icon-"] img {
   vertical-align: top;
 }
 
-.icon-plus { background-image: image-url('actions/add.png'); }
-.icon-remove { background-image: image-url('actions/delete.png'); }
-.icon-pencil { background-image: image-url('actions/edit.png'); }
-.icon-list { background-image: image-url('actions/list.png'); }
-.icon-zoom-in { background-image: image-url('actions/show.png'); }
+.glyphicon-plus { background-image: image-url('actions/add.png'); }
+.glyphicon-remove { background-image: image-url('actions/delete.png'); }
+.glyphicon-pencil { background-image: image-url('actions/edit.png'); }
+.glyphicon-list { background-image: image-url('actions/list.png'); }
+.glyphicon-zoom-in { background-image: image-url('actions/show.png'); }
 
-input, textarea {
+.form-group {
+  clear: both;
+  padding: 4px 0 4px;
+}
+
+.form-group label {
+  float: left;
+  width: 120px;
+  padding-right: 10px;
+  padding-top: 3px;
+}
+
+input, textarea, select {
   font-family: Verdana, Geneva, Helvetica, Arial, sans-serif;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 input[type=text], input[type=password] {
@@ -171,9 +194,14 @@ textarea, select[multiple] {
   height: 80px;
 }
 
+[role=search] [type=search] {
+  width: 220px;
+}
+
 .alert {
   margin: 15px;
   padding: 5px 10px;
+  clear: both;
 }
 
 .alert-success {
@@ -181,7 +209,7 @@ textarea, select[multiple] {
   background-color: #afa;
 }
 
-.alert-error {
+.alert-danger {
   border: solid 2px #D88;
   background-color: #fec;
 }
@@ -210,7 +238,7 @@ textarea, select[multiple] {
   margin: -20px;
 }
 
-.brand {
+.navbar-brand {
   float: left;
   display: block;
   font-weight: bold;
@@ -219,7 +247,7 @@ textarea, select[multiple] {
   padding: 5px;
 }
 
-a.brand:hover {
+a.navbar-brand:hover {
   text-decoration: none;
   color: #ddd;
 }
@@ -264,10 +292,14 @@ footer * {
   font-size: 80%;
 }
 
-.error .control-label {
+.has-error .control-label {
   color: #D88;
 }
 
-.error .controls input, .error .controls textarea {
+.has-error .form-control {
   border-color: #D88;
+}
+
+.col-md-offset-2 {
+  margin-left: 130px;
 }

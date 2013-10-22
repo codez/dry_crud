@@ -33,15 +33,17 @@
 
   %body
     .container
-      .navbar= render 'layouts/nav'
+      %nav.navbar{role: 'navigation'}= render 'layouts/nav'
 
       %h1= @title
 
-      = render partial: 'layouts/flash', collection: [:notice, :alert], as: :level
-
-      .actions.btn-toolbar
-        .pull-right= yield :actions
+      .actions
+        .pull-right
+          .btn-toolbar
+            = yield :actions
         .pull-left= yield :tools
+
+      = render partial: 'layouts/flash', collection: [:notice, :alert], as: :level
 
       #content= yield
 

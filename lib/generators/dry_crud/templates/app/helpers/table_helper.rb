@@ -17,7 +17,7 @@ module TableHelper
   # An options hash may be given as the last argument.
   def plain_table(entries, *attrs, &block)
     options = attrs.extract_options!
-    add_css_class(options, 'table')
+    add_css_class(options, 'table table-striped table-hover')
     Crud::TableBuilder.table(entries, self, options) do |t|
       t.attrs(*attrs)
       yield t if block_given?

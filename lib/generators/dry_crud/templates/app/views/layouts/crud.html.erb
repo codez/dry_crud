@@ -34,23 +34,25 @@
 
 
 <div class="container">
-  <div class="navbar">
+  <nav class="navbar" role="navigation">
     <%= render 'layouts/nav' %>
-  </div>
+  </nav>
 
   <h1><%= @title %></h1>
 
-  <%= render partial: 'layouts/flash', collection: [:notice, :alert], as: :level %>
-
-  <div class="actions btn-toolbar">
+  <div class="actions">
     <div class="pull-right">
-      <%= yield :actions %>
+      <div class="btn-toolbar">
+        <%= yield :actions %>
+      </div>
     </div>
-    <div class="pull-left">
+    <div class="tools">
       <%= yield :tools %>
     </div>
   </div>
 
+  <%= render partial: 'layouts/flash', collection: [:notice, :alert], as: :level %>
+  
   <div id="content">
     <%= yield %>
   </div>

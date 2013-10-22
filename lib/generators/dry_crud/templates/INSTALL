@@ -4,7 +4,7 @@ your needs. To integrate dry_crud into your code, only a few additions are
 required:
 
  * For uniform CRUD functionallity, just subclass your controllers from
-   CrudController.
+   CrudController and define the #permitted_attrs (for StrongParameters).
  * Overwrite the #to_s method of your models for a human-friendly
    representation.
 

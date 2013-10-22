@@ -163,7 +163,7 @@ describe FormHelper do
       end
 
       it do
-        should match(/div\ class="control-group\ error"\>.*?
+        should match(/div\ class="form-group\ has-error"\>.*?
                       \<input .*?name="crud_test_model\[name\]"
                               .*?type="text"/x)
       end
