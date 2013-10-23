@@ -1,5 +1,6 @@
 = render_attrs entry, *default_crud_attrs
+
 %dl.dl-horizontal
-	= labeled(ti(:i_think_its), ti(:nice))
-	= labeled(ti(:check_google)) do
-	  = link_to ti(:"link.maps"), "http://map.google.com/?q=#{entry.name}"
+  = labeled(ti(:i_think_its), ti(:nice))
+  = labeled(ti(:check_google)) do
+    = link_to ti(:"link.maps"), "http://map.google.com/?q=#{entry.name}"
