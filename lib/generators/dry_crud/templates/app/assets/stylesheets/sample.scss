@@ -181,21 +181,39 @@ input, textarea, select {
   font-size: 14px;
 }
 
-input[type=text], input[type=password] {
-  width: 180px;
+input[type=text], input[type=password], input[type=email] {
+  width: 300px;
 }
 
 input[type=number] {
-  width: 80px;
+  width: 100px;
 }
 
 textarea, select[multiple] {
-  width: 180px;
+  width: 300px;
   height: 80px;
 }
 
 [role=search] [type=search] {
   width: 220px;
+}
+
+.has-error .control-label {
+  color: #D88;
+}
+
+.has-error .form-control {
+  border-color: #D88;
+}
+
+.input-group-addon {
+  font-size: 80%;
+  vertical-align: top;
+  margin-left: 4px;
+}
+
+.help-block {
+  margin-top: 0;
 }
 
 .alert {
@@ -292,14 +310,10 @@ footer * {
   font-size: 80%;
 }
 
-.has-error .control-label {
-  color: #D88;
-}
-
-.has-error .form-control {
-  border-color: #D88;
-}
-
 .col-md-offset-2 {
+  margin-left: 130px;
+}
+
+.col-md-8 {
   margin-left: 130px;
 }

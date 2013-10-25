@@ -26,12 +26,6 @@ table.table td.action {
   margin-left: 7px;
 }
 
-.required {
-  font-size: 80%;
-  vertical-align: top;
-  margin-left: 2px;
-}
-
 #error_explanation h2 {
   font-size: 100%;
   margin-top: 0px;
@@ -39,5 +33,9 @@ table.table td.action {
 
 #error_explanation ul {
   margin-bottom: 5px;
+}
+
+footer {
+  clear: both;
 }
 

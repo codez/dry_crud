@@ -40,9 +40,9 @@ class TableHelperTest < ActionView::TestCase
   end
 
   test 'table with attrs' do
-    expected = Crud::TableBuilder.table(%w(foo bar),
-                                        self,
-                                        class: 'table table-striped table-hover') do |t|
+    expected = Crud::TableBuilder.table(
+                 %w(foo bar), self,
+                 class: 'table table-striped table-hover') do |t|
       t.attrs :size, :upcase
     end
     actual = plain_table(%w(foo bar), :size, :upcase)

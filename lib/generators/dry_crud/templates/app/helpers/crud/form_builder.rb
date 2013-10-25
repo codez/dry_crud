@@ -9,8 +9,6 @@ module Crud
   # a standard label, required mark and an optional help block with them.
   class FormBuilder < ActionView::Helpers::FormBuilder
 
-    REQUIRED_MARK = '<span class="required">*</span>'.html_safe
-
     attr_reader :template
 
     delegate :association, :column_type, :column_property, :captionize,
@@ -24,7 +22,7 @@ module Crud
     # attributes.
     def labeled_input_fields(*attrs)
       options = attrs.extract_options!
-      safe_join(attrs) { |a| labeled_input_field(a, options.clone) }
+      safe_join(attrs) { |a| labeled_input_field(a, options.dup) }
     end
 
     # Render a corresponding input field for the given attribute.
@@ -104,6 +102,7 @@ module Crud
 
     # Render a boolean field.
     def boolean_field(attr, html_options = {})
+      add_css_class(html_options, 'form-control')
       check_box(attr, html_options)
     end
 
@@ -135,7 +134,7 @@ module Crud
                           select_options(attr, html_options),
                           html_options)
       else
-        ta(:none_available, association(@object, attr)).html_safe
+        static_text(ta(:none_available, association(@object, attr)).html_safe)
       end
     end
 
@@ -150,25 +149,6 @@ module Crud
       belongs_to_field(attr, html_options)
     end
 
-    # Dispatch methods starting with 'labeled_' to render a label and the
-    # corresponding input field.
-    # E.g. labeled_boolean_field(:checked, class: 'bold')
-    # To add an additional help text, use the help option.
-    # E.g. labeled_boolean_field(:checked, help: 'Some Help')
-    def method_missing(name, *args)
-      field_method = labeled_field_method?(name)
-      if field_method
-        build_labeled_field(field_method, *args)
-      else
-        super(name, *args)
-      end
-    end
-
-    # Overriden to fullfill contract with method_missing 'labeled_' methods.
-    def respond_to?(name)
-      labeled_field_method?(name).present? || super(name)
-    end
-
     ### VARIOUS FORM ELEMENTS
 
     # Render the error messages for the current form.
@@ -176,6 +156,11 @@ module Crud
       @template.render('shared/error_messages',
                        errors: @object.errors,
                        object: @object)
+    end
+
+    # Renders a static text where otherwise form inputs appear.
+    def static_text(text)
+      content_tag(:p, text, class: 'form-control-static')
     end
 
     # Generates a help block for fields
@@ -218,6 +203,32 @@ module Crud
         label(attr, caption, class: 'col-md-2 control-label') +
         content_tag(:div, content, html_options)
       end
+    end
+
+    # Renders the given content with an addon.
+    def with_addon(content, addon)
+        content_tag(:div, class: 'input-group') do
+          content + content_tag(:span, addon, class: 'input-group-addon')
+        end
+    end
+
+    # Dispatch methods starting with 'labeled_' to render a label and the
+    # corresponding input field.
+    # E.g. labeled_boolean_field(:checked, class: 'bold')
+    # To add an additional help text, use the help option.
+    # E.g. labeled_boolean_field(:checked, help: 'Some Help')
+    def method_missing(name, *args)
+      field_method = labeled_field_method?(name)
+      if field_method
+        build_labeled_field(field_method, *args)
+      else
+        super(name, *args)
+      end
+    end
+
+    # Overriden to fullfill contract with method_missing 'labeled_' methods.
+    def respond_to?(name)
+      labeled_field_method?(name).present? || super(name)
     end
 
     # Depending if the given attribute must be present, return
@@ -273,7 +284,6 @@ module Crud
 
     # Returns true if the given attribute must be present.
     def required?(attr)
-      attr = attr.to_s
       attr, attr_id = assoc_and_id_attr(attr)
       validators = @object.class.validators_on(attr) +
                    @object.class.validators_on(attr_id)
@@ -318,12 +328,19 @@ module Crud
     # Renders the corresponding field together with a label, required mark and
     # an optional help block.
     def build_labeled_field(field_method, *args)
-      required = required?(args.first)
       options = args.extract_options!
-      options[:required] ||= 'required' if required
+
       help = options.delete(:help)
+      addon = options.delete(:addon)
+      required = required?(args.first)
+      options[:required] ||= 'required' if required
+
       content = send(field_method, *(args << options))
-      content << REQUIRED_MARK if required
+      if addon
+        content = with_addon(content, addon)
+      elsif required
+        content = with_addon(content, '*')
+      end
       content << help_block(help) if help.present?
       labeled(args.first, content)
     end

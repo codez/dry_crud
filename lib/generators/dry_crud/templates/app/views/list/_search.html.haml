@@ -1,7 +1,7 @@
 = form_tag(nil, { method: :get, class: 'form-inline', role: 'search' }) do
   = hidden_field_tag :returning, true
   = hidden_field_tag :page, 1
-  .input-group.col-lg-4
+  .input-group
     = search_field_tag :q, params[:q], class: 'form-control'
     %span.input-group-btn
       = submit_tag ti(:"button.search"), class: 'btn btn-default'

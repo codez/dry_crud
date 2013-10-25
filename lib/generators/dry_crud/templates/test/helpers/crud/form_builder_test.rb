@@ -19,12 +19,12 @@ class Crud::FormBuilderTest < ActionView::TestCase
 
   def create_form
     @entry = CrudTestModel.first
-<% if Rails.version < '4.0' -%>
-    @form = Crud::FormBuilder.new(:entry, @entry, self, {},
-                                  ->(form) { form })
-<% else -%>
-    @form = Crud::FormBuilder.new(:entry, @entry, self, {})
-<% end -%>
+    if Rails.version < '4.0'
+      @form = Crud::FormBuilder.new(:entry, @entry, self, {},
+                                    ->(form) { form })
+    else
+      @form = Crud::FormBuilder.new(:entry, @entry, self, {})
+    end
   end
 
   test 'input_field dispatches string attr to string_field' do
@@ -88,15 +88,15 @@ class Crud::FormBuilderTest < ActionView::TestCase
 
   test 'labeld_input_field adds required mark' do
     result = form.labeled_input_field(:name)
-    assert result.include?(Crud::FormBuilder::REQUIRED_MARK)
+    assert result.include?('input-group-addon')
     result = form.labeled_input_field(:remarks)
-    assert !result.include?(Crud::FormBuilder::REQUIRED_MARK)
+    assert !result.include?('input-group-addon')
   end
 
   test 'labeld_input_field adds help text' do
     result = form.labeled_input_field(:name, help: 'Some Help')
     assert result.include?(form.help_block('Some Help'))
-    assert result.include?(Crud::FormBuilder::REQUIRED_MARK)
+    assert result.include?('input-group-addon')
   end
 
   test 'belongs_to_field has all options by default' do

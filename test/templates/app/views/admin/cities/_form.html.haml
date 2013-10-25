@@ -2,4 +2,4 @@
 = crud_form remote: remote do |f|
   = f.labeled(:name, 'Called') do
     = f.input_field :name
-  = f.labeled_input_field :person_ids
+  = f.labeled_input_field :person_ids, help: 'All people living in this city'

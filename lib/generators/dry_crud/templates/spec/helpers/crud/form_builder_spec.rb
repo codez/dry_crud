@@ -18,13 +18,13 @@ describe 'Crud::FormBuilder' do
   after(:all) { reset_db }
 
   let(:entry) { CrudTestModel.first }
-<% if Rails.version < '4.0' -%>
-  let(:form)  do
-    Crud::FormBuilder.new(:entry, entry, self, {}, ->(form) { form })
+  if Rails.version < '4.0'
+    let(:form)  do
+      Crud::FormBuilder.new(:entry, entry, self, {}, ->(form) { form })
+    end
+  else
+    let(:form)  { Crud::FormBuilder.new(:entry, entry, self, {}) }
   end
-<% else -%>
-  let(:form)  { Crud::FormBuilder.new(:entry, entry, self, {}) }
-<% end -%>
 
   describe '#input_field' do
 
@@ -62,12 +62,12 @@ describe 'Crud::FormBuilder' do
   describe '#labeled_input_field' do
     context 'when required' do
       subject { form.labeled_input_field(:name) }
-      it { should include(Crud::FormBuilder::REQUIRED_MARK) }
+      it { should include('input-group-addon') }
     end
 
     context 'when not required' do
       subject { form.labeled_input_field(:remarks) }
-      it { should_not include(Crud::FormBuilder::REQUIRED_MARK) }
+      it { should_not include('input-group-addon') }
     end
 
     context 'with help text' do
