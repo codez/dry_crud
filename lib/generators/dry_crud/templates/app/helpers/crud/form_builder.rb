@@ -82,6 +82,28 @@ module Crud
     alias_method :float_field, :number_field
     alias_method :decimal_field, :number_field
 
+
+    if Rails.version < '4.0'
+      # Render a field to select a date. You might want to customize this.
+      def date_field(attr, html_options = {})
+        html_options[:type] = 'date'
+        text_field(attr, html_options)
+      end
+
+      # Render a field to enter a time. You might want to customize this.
+      def time_field(attr, html_options = {})
+        html_options[:type] = 'time'
+        text_field(attr, html_options)
+      end
+
+      # Render a field to enter a date and time.
+      # You might want to customize this.
+      def datetime_field(attr, html_options = {})
+        html_options[:type] = 'datetime'
+        text_field(attr, html_options)
+      end
+    end
+
     # Render a select element for a :belongs_to association defined by attr.
     # Use additional html_options for the select element.
     # To pass a custom element list, specify the list with the :list key or
