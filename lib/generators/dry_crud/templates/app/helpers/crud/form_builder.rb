@@ -7,6 +7,12 @@ module Crud
   #
   # All field methods may be prefixed with +labeled_+ in order to render
   # a standard label, required mark and an optional help block with them.
+  #
+  # Use #labeled_input_field or #input_field to render a input field
+  # corresponding to the given attribute.
+  #
+  # See the Control class below to customize the html rendered for a
+  # single input field.
   class FormBuilder < ActionView::Helpers::FormBuilder
 
     attr_reader :template
@@ -18,22 +24,37 @@ module Crud
 
     ### INPUT FIELDS
 
-    # Render multiple input fields together with a label for the given
+    # Render multiple input controls together with a label for the given
     # attributes.
     def labeled_input_fields(*attrs)
       options = attrs.extract_options!
       safe_join(attrs) { |a| labeled_input_field(a, options.dup) }
     end
 
-    # Render a corresponding input field for the given attribute.
+    # Render a corresponding input control and label for the given attribute.
     # The input field is chosen based on the ActiveRecord column type.
+    #
+    # The following options may be passed:
+    # * <tt>:addon</tt> - Addon content displayd just after the input field.
+    # * <tt>:help</tt> - A help text displayd below the input field.
+    # * <tt>:span</tt> - Number of columns the input field should span.
+    # * <tt>:caption</tt> - Different caption for the label.
+    # * <tt>:field_method</tt> - Different method to create the input field.
+    #
     # Use additional html_options for the input element.
     def labeled_input_field(attr, html_options = {})
       Control.new(self, attr, html_options).render_labeled
     end
 
-    # Render a corresponding input field for the given attribute.
+    # Render a corresponding input control for the given attribute.
     # The input field is chosen based on the ActiveRecord column type.
+    #
+    # The following options may be passed:
+    # * <tt>:addon</tt> - Addon content displayd just after the input field.
+    # * <tt>:help</tt> - A help text displayd below the input field.
+    # * <tt>:span</tt> - Number of columns the input field should span.
+    # * <tt>:field_method</tt> - Different method to create the input field.
+    #
     # Use additional html_options for the input element.
     def input_field(attr, html_options = {})
       Control.new(self, attr, html_options).render_content
@@ -51,20 +72,10 @@ module Crud
       check_box(attr, html_options)
     end
 
-    # Render a field to select a date. You might want to customize this.
-    def date_field(attr, html_options = {})
-      date_select(attr, {}, html_options)
-    end
-
-    # Render a field to enter a time. You might want to customize this.
-    def time_field(attr, html_options = {})
-      time_select(attr, {}, html_options)
-    end
-
-    # Render a field to enter a date and time.
-    # You might want to customize this.
-    def datetime_field(attr, html_options = {})
-      datetime_select(attr, {}, html_options)
+    # Customize the standard text area to have 5 rows by default.
+    def text_area(attr, html_options = {})
+      html_options[:rows] ||= 5
+      super
     end
 
     alias_method :integer_field, :number_field
@@ -162,6 +173,18 @@ module Crud
       end
     end
 
+    # Returns true if the given attribute must be present.
+    def required?(attr)
+      attr, attr_id = assoc_and_id_attr(attr)
+      validators = @object.class.validators_on(attr) +
+                   @object.class.validators_on(attr_id)
+      validators.any? do |v|
+        v.kind == :presence &&
+        !v.options.key?(:if) &&
+        !v.options.key?(:unless)
+      end
+    end
+
     # Render a label for the given attribute with the passed field html
     # section. The following parameters may be specified:
     #   labeled(:attr) { #content }
@@ -195,18 +218,6 @@ module Crud
       labeled_field_method?(name).present? || super(name)
     end
 
-    # Returns true if the given attribute must be present.
-    def required?(attr)
-      attr, attr_id = assoc_and_id_attr(attr)
-      validators = @object.class.validators_on(attr) +
-                   @object.class.validators_on(attr_id)
-      validators.any? do |v|
-        v.kind == :presence &&
-        !v.options.key?(:if) &&
-        !v.options.key?(:unless)
-      end
-    end
-
     private
 
     # Checks if the passed name corresponds to a field method with a
@@ -224,7 +235,7 @@ module Crud
     def build_labeled_field(field_method, *args)
       options = args.extract_options!
       options[:field_method] = field_method
-      control = Control.new(self, *(args << options)).render_labeled
+      Control.new(self, *(args << options)).render_labeled
     end
 
     # Get caption and content value from the arguments of #labeled.
@@ -266,37 +277,66 @@ module Crud
       url || options[:cancel_url]
     end
 
-
+    # Internal class to handle the rendering of a single control,
+    # consisting of a label, input field, addon, help text or
+    # required mark.
     class Control
 
-      attr_reader :builder, :args, :options, :span, :addon, :help
+      attr_reader :builder, :attr, :args, :options, :span, :addon, :help
 
       delegate :content_tag, :object,
                to: :builder
 
+      # Html displayed to mark an input as required.
+      REQUIRED_MARK = '*'
+
+      # Number of default input field span columns depending
+      # on the #field_method.
       INPUT_SPANS = Hash.new(8)
       INPUT_SPANS[:number_field] =
-      INPUT_SPANS[:integer_field] =
-      INPUT_SPANS[:float_field] =
-      INPUT_SPANS[:decimal_field] = 4
+        INPUT_SPANS[:integer_field] =
+        INPUT_SPANS[:float_field]   =
+        INPUT_SPANS[:decimal_field] = 2
+      INPUT_SPANS[:date_field] =
+        INPUT_SPANS[:time_field] = 3
 
-
-      def initialize(builder, *args)
+      # Create a new control instance.
+      # Takes the form builder, the attribute to build the control for
+      # as well as any additional arguments for the field method.
+      # This includes an options hash as the last argument, that
+      # may contain the following special options:
+      #
+      # * <tt>:addon</tt> - Addon content displayd just after the input field.
+      # * <tt>:help</tt> - A help text displayd below the input field.
+      # * <tt>:span</tt> - Number of columns the input field should span.
+      # * <tt>:caption</tt> - Different caption for the label.
+      # * <tt>:field_method</tt> - Different method to create the input field.
+      # * <tt>:required</tt> - Sets the field as required
+      #   (The value for this option usually is 'required').
+      #
+      # All the other options will go to the field_method.
+      def initialize(builder, attr, *args)
         @builder = builder
+        @attr = attr
         @options = args.extract_options!
         @args = args
 
-        @addon ||= options.delete(:addon)
-        @help ||= options.delete(:help)
-        @span ||= options.delete(:span)
-        @caption ||= options.delete(:caption)
-        @field_method ||= options.delete(:field_method)
+        @addon = options.delete(:addon)
+        @help = options.delete(:help)
+        @span = options.delete(:span)
+        @caption = options.delete(:caption)
+        @field_method = options.delete(:field_method)
+        @required = options[:required]
       end
 
+      # Renders only the content of the control.
+      # I.e. no label and span divs.
       def render_content
         content
       end
 
+      # Renders the complete control with label and everything.
+      # Render the content given or the default one.
       def render_labeled(content = nil)
         @content = content if content
         labeled
@@ -304,6 +344,7 @@ module Crud
 
       private
 
+      # Create the HTML markup for any labeled content.
       def labeled
         errors = errors? ? ' has-error' : ''
 
@@ -313,50 +354,66 @@ module Crud
         end
       end
 
+      # Return the currently set content or create it
+      # based on the various options given.
+      #
+      # Optionally renders addon, required mark and/or a help block
+      # additionally to the input field.
       def content
         @content ||= begin
           content = input
           if addon
             content = builder.with_addon(content, addon)
           elsif required
-            content = builder.with_addon(content, '*')
+            content = builder.with_addon(content, REQUIRED_MARK)
           end
           content << builder.help_block(help) if help.present?
           content
         end
       end
 
+      # Return the currently set input field or create it
+      # depending on the attribute.
       def input
         @input ||= begin
           builder.add_css_class(options, 'form-control')
-          builder.send(field_method, *(args << options))
+          options[:required] = 'required' if required
+          builder.send(field_method, attr, *(args << options))
         end
       end
 
+      # The field method used to create the input.
+      # If none is set, detect it from the attribute type.
       def field_method
         @field_method ||= detect_field_method
       end
 
-      def attr
-        args.first
-      end
-
+      # True if the attr is required, false otherwise.
       def required
         @required = @required.nil? ? builder.required?(attr) : @required
       end
 
+      # Number of grid columns the input field should span.
       def span
         @span ||= INPUT_SPANS[field_method]
       end
 
+      # The caption of the label.
+      # If none is set, uses the I18n value of the attribute.
       def caption
         @caption ||= builder.captionize(attr, object.class)
       end
 
-      def type
-        @type ||= builder.column_type(object, attr)
+      # Returns true if any errors are found on the passed attribute or its
+      # association.
+      def errors?
+        attr_plain, attr_id = builder.assoc_and_id_attr(attr)
+        object.errors.has_key?(attr_plain.to_sym) ||
+        object.errors.has_key?(attr_id.to_sym)
       end
 
+      # Defines the field method to use based on the attribute
+      # type, association or name.
       def detect_field_method
         if type == :text
           :text_area
@@ -375,12 +432,9 @@ module Crud
         end
       end
 
-      # Returns true if any errors are found on the passed attribute or its
-      # association.
-      def errors?
-        attr_plain, attr_id = builder.assoc_and_id_attr(attr)
-        object.errors.has_key?(attr_plain.to_sym) ||
-        object.errors.has_key?(attr_id.to_sym)
+      # The column type of the attribute.
+      def type
+        @type ||= builder.column_type(object, attr)
       end
 
       # Returns true if attr is a non-polymorphic association.

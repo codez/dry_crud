@@ -54,7 +54,8 @@ class FormHelperTest < ActionView::TestCase
     assert_match /input .*?name="crud_test_model\[name\]"
                         .*?type="text"
                         .*?value="AAAAA"/x, f
-    assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
+    assert_match /input .*?name="crud_test_model\[birthdate\]"
+                        .*?type="date"/x, f
     assert_match /input .*?name="crud_test_model\[children\]"
                         .*?type="number"
                         .*?value=\"9\"/x, f
@@ -90,12 +91,9 @@ class FormHelperTest < ActionView::TestCase
     assert_match /div\ class="form-group\ has-error"\>.*?
                   \<input .*?name="crud_test_model\[name\]"
                           .*?type="text"/x, f
-    assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
-    assert_match /option selected="selected" value="1910">1910<\/option>/, f
-    assert_match /option\ selected="selected"\ value="1"\>
-                  #{t('date.month_names')[1]}
-                  \<\/option\>/x, f
-    assert_match /option selected="selected" value="1">1<\/option>/, f
+    assert_match /input .*?name="crud_test_model\[birthdate\]"
+                        .*?type="date"
+                        .*?value="1910-01-01"/x, f
   end
 
   test 'crud form' do
@@ -114,7 +112,12 @@ class FormHelperTest < ActionView::TestCase
                         .*?type="number"/x, f
     assert_match /input .*?name="crud_test_model\[income\]"
                         .*?type="number"/x, f
-    assert_match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/, f
+    assert_match /input .*?name="crud_test_model\[birthdate\]"
+                        .*?type="date"/x, f
+    assert_match /input .*?name="crud_test_model\[gets_up_at\]"
+                        .*?type="time"/x, f
+    assert_match /input .*?name="crud_test_model\[last_seen\]"
+                        .*?type="datetime"/x, f
     assert_match /input .*?name="crud_test_model\[human\]"
                         .*?type="checkbox"/x, f
     assert_match /select .*?name="crud_test_model\[companion_id\]"/, f

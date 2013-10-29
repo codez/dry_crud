@@ -49,24 +49,9 @@ describe FormHelper do
       end
 
       it do
-        should match(/select .*?name="crud_test_model
-                                      \[birthdate\(1i\)\]"/x)
-      end
-
-      it do
-        should match(/option\ selected="selected"
-                            \ value="1910">1910<\/option>/x)
-      end
-
-      it do
-        should match(/option\ selected="selected"\ value="1">
-                      #{t('date.month_names')[1]}
-                      <\/option>/x)
-      end
-
-      it do
-        should match(/option\ selected="selected"
-                            \ value="1">1<\/option>/x)
+        should match(/input .*?name="crud_test_model\[birthdate\]"
+                            .*?type="date"
+                            .*?value="1910-01-01"/x)
       end
     end
   end
@@ -106,24 +91,9 @@ describe FormHelper do
       end
 
       it do
-        should match(/select .*?name="crud_test_model
-                                      \[birthdate\(1i\)\]"/x)
-      end
-
-      it do
-        should match(/option\ selected="selected"
-                            \ value="1910">1910<\/option>/x)
-      end
-
-      it do
-        should match(/option\ selected="selected"\ value="1">
-                      #{t('date.month_names')[1]}
-                      <\/option>/x)
-      end
-
-      it do
-        should match(/option\ selected="selected"
-                            \ value="1">1<\/option>/x)
+        should match(/input .*?name="crud_test_model\[birthdate\]"
+                             .*?type="date"
+                             .*?value="1910-01-01"/x)
       end
 
       it do
@@ -212,7 +182,18 @@ describe FormHelper do
     end
 
     it do
-      should match /select .*?name="crud_test_model\[birthdate\(1i\)\]"/
+      should match /input .*?name="crud_test_model\[birthdate\]"
+                          .*?type="date"/x
+    end
+
+    it do
+      should match /input .*?name="crud_test_model\[gets_up_at\]"
+                          .*?type="time"/x
+    end
+
+    it do
+      should match /input .*?name="crud_test_model\[last_seen\]"
+                          .*?type="datetime"/x
     end
 
     it do

@@ -25,6 +25,60 @@ body {
   box-shadow: 0px 0px 5px $theme_color;
 }
 
+.navbar {
+  background: #333;
+  -moz-box-shadow: 0px 1px 1px $theme_color;
+  -webkit-box-shadow: 0px 1px 1px $theme_color;
+  box-shadow: 0px 1px 1px $theme_color;
+  padding: 0 20px;
+  max-width: $container_width;
+  min-width: $container_width - 200px;
+  height: 33px;
+  margin: -20px;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 130%;
+  color: #ddd;
+  padding: 5px;
+  float: left;
+}
+
+a.navbar-brand:hover {
+  text-decoration: none;
+  color: #ddd;
+}
+
+.nav {
+  list-style: none;
+  margin: 0;
+  float: left;
+}
+
+.nav li {
+  float: left;
+  font-size: 110%;
+  margin: 0;
+  padding: 0;
+}
+
+.nav a {
+  background: #333 bottom right no-repeat;
+  color: #ddd;
+  display: block;
+  float: left;
+  margin: 0;
+  padding: 7px 12px 7px;
+  text-decoration: none;
+  height: 19px;
+}
+
+.nav a:hover {
+  background: $theme_color bottom center no-repeat;
+  color: #fff;
+}
+
 .actions {
   height: 25px;
 }
@@ -242,61 +296,6 @@ textarea, select[multiple] {
 
 .pull-left {
   float: left;
-}
-
-.navbar {
-  background: #333;
-  -moz-box-shadow: 0px 1px 1px $theme_color;
-  -webkit-box-shadow: 0px 1px 1px $theme_color;
-  box-shadow: 0px 1px 1px $theme_color;
-  padding: 0 20px;
-  max-width: $container_width;
-  min-width: $container_width - 200px;
-  height: 33px;
-  margin: -20px;
-}
-
-.navbar-brand {
-  float: left;
-  display: block;
-  font-weight: bold;
-  font-size: 130%;
-  color: #ddd;
-  padding: 5px;
-}
-
-a.navbar-brand:hover {
-  text-decoration: none;
-  color: #ddd;
-}
-
-.nav {
-  list-style: none;
-  margin: 0;
-  float: left;
-}
-
-.nav li {
-  float: left;
-  font-size: 110%;
-  margin: 0;
-  padding: 0;
-}
-
-.nav a {
-  background: #333 bottom right no-repeat;
-  color: #ddd;
-  display: block;
-  float: left;
-  margin: 0;
-  padding: 7px 12px 7px;
-  text-decoration: none;
-  height: 19px;
-}
-
-.nav a:hover {
-  background: $theme_color bottom center no-repeat;
-  color: #fff;
 }
 
 footer {

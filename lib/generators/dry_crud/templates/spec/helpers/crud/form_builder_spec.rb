@@ -28,20 +28,29 @@ describe 'Crud::FormBuilder' do
 
   describe '#input_field' do
 
-    { name: :string_field,
-      password: :password_field,
+    it 'dispatches name attr to string field' do
+      form.should_receive(:string_field)
+          .with(:name, class: 'form-control', required: 'required')
+          .and_return('<input>')
+      form.input_field(:name)
+    end
+
+    it { form.input_field(:name).should be_html_safe }
+
+    { password: :password_field,
       email: :email_field,
       remarks: :text_area,
       children: :integer_field,
       human: :boolean_field,
       birthdate: :date_field,
       gets_up_at: :time_field,
+      last_seen: :datetime_field,
       companion_id: :belongs_to_field,
       other_ids: :has_many_field,
       more_ids: :has_many_field,
     }.each do |attr, method|
       it 'dispatches #{attr} attr to #{method}' do
-        form.should_receive(method).with(attr, {})
+        form.should_receive(method).with(attr, class: 'form-control')
         form.input_field(attr)
       end
 
