@@ -195,8 +195,8 @@ describe 'Crud::FormBuilder' do
     context 'with caption and content in argument' do
       subject do
         form.labeled('gugus',
-                     'Caption',
-                     "<input type='text' name='gugus' />".html_safe)
+                     "<input type='text' name='gugus' />".html_safe,
+                     caption: 'Caption')
       end
 
       it { should be_html_safe }
@@ -205,7 +205,7 @@ describe 'Crud::FormBuilder' do
 
     context 'with caption and content in block' do
       subject do
-        form.labeled('gugus', 'Caption') do
+        form.labeled('gugus', caption: 'Caption') do
           "<input type='text' name='gugus' />".html_safe
         end
       end

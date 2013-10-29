@@ -224,14 +224,14 @@ class Crud::FormBuilderTest < ActionView::TestCase
 
   test 'labeled field creates label with caption' do
     result = form.labeled('gugus',
-                          'Caption',
-                          "<input type='text' name='gugus' />".html_safe)
+                          "<input type='text' name='gugus' />".html_safe,
+                          caption: 'Caption')
     assert result.html_safe?
     assert_match /label [^>]*for.+>Caption<\/label>.*<input/m, result
   end
 
   test 'labeled field creates label with caption and block' do
-    result = form.labeled('gugus', 'Caption') do
+    result = form.labeled('gugus', caption: 'Caption') do
       "<input type='text' name='gugus' />".html_safe
     end
     assert result.html_safe?

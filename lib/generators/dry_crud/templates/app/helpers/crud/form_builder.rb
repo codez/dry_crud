@@ -185,17 +185,20 @@ module Crud
       end
     end
 
-    # Render a label for the given attribute with the passed field html
-    # section. The following parameters may be specified:
+    # Render a label for the given attribute with the passed content.
+    # The content may be given as an argument or as a block:
     #   labeled(:attr) { #content }
     #   labeled(:attr, content)
-    #   labeled(:attr, 'Caption') { #content }
-    #   labeled(:attr, 'Caption', content)
-    def labeled(attr, caption_or_content = nil, content = nil, &block)
-      caption, content = extract_caption_and_content(
-                           attr, caption_or_content, content, &block)
-
-      control = Control.new(self, attr, caption: caption)
+    #
+    # The following options may be passed:
+    # * <tt>:span</tt> - Number of columns the content should span.
+    # * <tt>:caption</tt> - Different caption for the label.
+    def labeled(attr, content = {}, options = {}, &block)
+      if block_given?
+        options = content
+        content = capture(&block)
+      end
+      control = Control.new(self, attr, options)
       control.render_labeled(content)
     end
 
@@ -236,19 +239,6 @@ module Crud
       options = args.extract_options!
       options[:field_method] = field_method
       Control.new(self, *(args << options)).render_labeled
-    end
-
-    # Get caption and content value from the arguments of #labeled.
-    def extract_caption_and_content(attr, caption_or_content, content, &block)
-      if block_given?
-        content = capture(&block)
-      elsif content.nil?
-        content = caption_or_content
-        caption_or_content = nil
-      end
-      caption_or_content ||= captionize(attr, @object.class)
-
-      [caption_or_content, content]
     end
 
     # Returns the list of association entries, either from options[:list],
