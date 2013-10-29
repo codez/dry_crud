@@ -28,76 +28,21 @@ module Crud
     # Render a corresponding input field for the given attribute.
     # The input field is chosen based on the ActiveRecord column type.
     # Use additional html_options for the input element.
-    def input_field(attr, html_options = {})
-      type = column_type(@object, attr)
-      custom_field_method = :"#{type}_field"
-      if type == :text
-        text_area(attr, html_options)
-      elsif association_kind?(attr, type, :belongs_to)
-        belongs_to_field(attr, html_options)
-      elsif association_kind?(attr, type, :has_and_belongs_to_many, :has_many)
-        has_many_field(attr, html_options)
-      elsif attr.to_s.include?('password')
-        password_field(attr, html_options)
-      elsif attr.to_s.include?('email')
-        email_field(attr, html_options)
-      elsif respond_to?(custom_field_method)
-        send(custom_field_method, attr, html_options)
-      else
-        text_field(attr, html_options)
-      end
+    def labeled_input_field(attr, html_options = {})
+      Control.new(self, attr, html_options).render_labeled
     end
 
-    # Render a number field.
-    def number_field(attr, html_options = {})
-      html_options[:size] ||= 10
-      add_css_class(html_options, 'form-control')
-      super(attr, html_options)
+    # Render a corresponding input field for the given attribute.
+    # The input field is chosen based on the ActiveRecord column type.
+    # Use additional html_options for the input element.
+    def input_field(attr, html_options = {})
+      Control.new(self, attr, html_options).render_content
     end
 
     # Render a standard string field with column contraints.
     def string_field(attr, html_options = {})
       html_options[:maxlength] ||= column_property(@object, attr, :limit)
-      html_options[:size] ||= 30
       text_field(attr, html_options)
-    end
-
-    # Render a standard text field.
-    def text_field(attr, html_options = {})
-      add_css_class(html_options, 'form-control')
-      super(attr, html_options)
-    end
-
-    # Render a text_area.
-    def text_area(attr, html_options = {})
-      html_options[:rows] ||= 5
-      add_css_class(html_options, 'form-control')
-      super(attr, html_options)
-    end
-
-    # Render a email field.
-    def email_field(attr, html_options = {})
-      html_options[:size] ||= 30
-      add_css_class(html_options, 'form-control')
-      super(attr, html_options)
-    end
-
-    # Render an integer field.
-    def integer_field(attr, html_options = {})
-      html_options[:step] ||= 1
-      number_field(attr, html_options)
-    end
-
-    # Render a float field.
-    def float_field(attr, html_options = {})
-      html_options[:step] ||= 'any'
-      number_field(attr, html_options)
-    end
-
-    # Render a decimal field.
-    def decimal_field(attr, html_options = {})
-      html_options[:step] ||= 'any'
-      number_field(attr, html_options)
     end
 
     # Render a boolean field.
@@ -122,6 +67,10 @@ module Crud
       datetime_select(attr, {}, html_options)
     end
 
+    alias_method :integer_field, :number_field
+    alias_method :float_field, :number_field
+    alias_method :decimal_field, :number_field
+
     # Render a select element for a :belongs_to association defined by attr.
     # Use additional html_options for the select element.
     # To pass a custom element list, specify the list with the :list key or
@@ -129,7 +78,6 @@ module Crud
     def belongs_to_field(attr, html_options = {})
       list = association_entries(attr, html_options).to_a
       if list.present?
-        add_css_class(html_options, 'form-control')
         collection_select(attr, list, :id, :to_s,
                           select_options(attr, html_options),
                           html_options)
@@ -156,6 +104,13 @@ module Crud
       @template.render('shared/error_messages',
                        errors: @object.errors,
                        object: @object)
+    end
+
+    # Renders the given content with an addon.
+    def with_addon(content, addon)
+      content_tag(:div, class: 'input-group') do
+        content + content_tag(:span, addon, class: 'input-group-addon')
+      end
     end
 
     # Renders a static text where otherwise form inputs appear.
@@ -186,51 +141,6 @@ module Crud
       link_to(ti('button.cancel'), url, class: 'cancel')
     end
 
-    # Render a label for the given attribute with the passed field html
-    # section. The following parameters may be specified:
-    #   labeled(:attr) { #content }
-    #   labeled(:attr, content)
-    #   labeled(:attr, 'Caption') { #content }
-    #   labeled(:attr, 'Caption', content)
-    def labeled(attr, caption_or_content = nil, content = nil,
-                html_options = {}, &block)
-      caption, content = extract_caption_and_content(
-                           attr, caption_or_content, content, &block)
-      add_css_class(html_options, 'col-md-8')
-      errors = errors_on?(attr) ? ' has-error' : ''
-
-      content_tag(:div, class: "form-group#{errors}") do
-        label(attr, caption, class: 'col-md-2 control-label') +
-        content_tag(:div, content, html_options)
-      end
-    end
-
-    # Renders the given content with an addon.
-    def with_addon(content, addon)
-        content_tag(:div, class: 'input-group') do
-          content + content_tag(:span, addon, class: 'input-group-addon')
-        end
-    end
-
-    # Dispatch methods starting with 'labeled_' to render a label and the
-    # corresponding input field.
-    # E.g. labeled_boolean_field(:checked, class: 'bold')
-    # To add an additional help text, use the help option.
-    # E.g. labeled_boolean_field(:checked, help: 'Some Help')
-    def method_missing(name, *args)
-      field_method = labeled_field_method?(name)
-      if field_method
-        build_labeled_field(field_method, *args)
-      else
-        super(name, *args)
-      end
-    end
-
-    # Overriden to fullfill contract with method_missing 'labeled_' methods.
-    def respond_to?(name)
-      labeled_field_method?(name).present? || super(name)
-    end
-
     # Depending if the given attribute must be present, return
     # only an initial selection prompt or a blank option, respectively.
     def select_options(attr, options = {})
@@ -252,17 +162,82 @@ module Crud
       end
     end
 
+    # Render a label for the given attribute with the passed field html
+    # section. The following parameters may be specified:
+    #   labeled(:attr) { #content }
+    #   labeled(:attr, content)
+    #   labeled(:attr, 'Caption') { #content }
+    #   labeled(:attr, 'Caption', content)
+    def labeled(attr, caption_or_content = nil, content = nil, &block)
+      caption, content = extract_caption_and_content(
+                           attr, caption_or_content, content, &block)
+
+      control = Control.new(self, attr, caption: caption)
+      control.render_labeled(content)
+    end
+
+    # Dispatch methods starting with 'labeled_' to render a label and the
+    # corresponding input field.
+    # E.g. labeled_boolean_field(:checked, class: 'bold')
+    # To add an additional help text, use the help option.
+    # E.g. labeled_boolean_field(:checked, help: 'Some Help')
+    def method_missing(name, *args)
+      field_method = labeled_field_method?(name)
+      if field_method
+        build_labeled_field(field_method, *args)
+      else
+        super(name, *args)
+      end
+    end
+
+    # Overriden to fullfill contract with method_missing 'labeled_' methods.
+    def respond_to?(name)
+      labeled_field_method?(name).present? || super(name)
+    end
+
+    # Returns true if the given attribute must be present.
+    def required?(attr)
+      attr, attr_id = assoc_and_id_attr(attr)
+      validators = @object.class.validators_on(attr) +
+                   @object.class.validators_on(attr_id)
+      validators.any? do |v|
+        v.kind == :presence &&
+        !v.options.key?(:if) &&
+        !v.options.key?(:unless)
+      end
+    end
+
     private
 
-    # Returns true if attr is a non-polymorphic association.
-    # If one or more macros are given, the association must be of this kind.
-    def association_kind?(attr, type, *macros)
-      if type == :integer || type.nil?
-        assoc = association(@object, attr, *macros)
-        assoc.present? && assoc.options[:polymorphic].nil?
-      else
-        false
+    # Checks if the passed name corresponds to a field method with a
+    # 'labeled_' prefix.
+    def labeled_field_method?(name)
+      prefix = 'labeled_'
+      if name.to_s.start_with?(prefix)
+        field_method = name.to_s[prefix.size..-1]
+        field_method if respond_to?(field_method)
       end
+    end
+
+    # Renders the corresponding field together with a label, required mark and
+    # an optional help block.
+    def build_labeled_field(field_method, *args)
+      options = args.extract_options!
+      options[:field_method] = field_method
+      control = Control.new(self, *(args << options)).render_labeled
+    end
+
+    # Get caption and content value from the arguments of #labeled.
+    def extract_caption_and_content(attr, caption_or_content, content, &block)
+      if block_given?
+        content = capture(&block)
+      elsif content.nil?
+        content = caption_or_content
+        caption_or_content = nil
+      end
+      caption_or_content ||= captionize(attr, @object.class)
+
+      [caption_or_content, content]
     end
 
     # Returns the list of association entries, either from options[:list],
@@ -282,69 +257,6 @@ module Crud
       list
     end
 
-    # Returns true if the given attribute must be present.
-    def required?(attr)
-      attr, attr_id = assoc_and_id_attr(attr)
-      validators = @object.class.validators_on(attr) +
-                   @object.class.validators_on(attr_id)
-      validators.any? do |v|
-        v.kind == :presence &&
-        !v.options.key?(:if) &&
-        !v.options.key?(:unless)
-      end
-    end
-
-    # Returns true if any errors are found on the passed attribute or its
-    # association.
-    def errors_on?(attr)
-      attr_plain, attr_id = assoc_and_id_attr(attr)
-      @object.errors.has_key?(attr_plain.to_sym) ||
-      @object.errors.has_key?(attr_id.to_sym)
-    end
-
-    # Get caption and content value from the arguments of #labeled.
-    def extract_caption_and_content(attr, caption_or_content, content, &block)
-      if block_given?
-        content = capture(&block)
-      elsif content.nil?
-        content = caption_or_content
-        caption_or_content = nil
-      end
-      caption_or_content ||= captionize(attr, @object.class)
-
-      [caption_or_content, content]
-    end
-
-    # Checks if the passed name corresponds to a field method with a
-    # 'labeled_' prefix.
-    def labeled_field_method?(name)
-      prefix = 'labeled_'
-      if name.to_s.start_with?(prefix)
-        field_method = name.to_s[prefix.size..-1]
-        field_method if respond_to?(field_method)
-      end
-    end
-
-    # Renders the corresponding field together with a label, required mark and
-    # an optional help block.
-    def build_labeled_field(field_method, *args)
-      options = args.extract_options!
-
-      help = options.delete(:help)
-      addon = options.delete(:addon)
-      required = required?(args.first)
-      options[:required] ||= 'required' if required
-
-      content = send(field_method, *(args << options))
-      if addon
-        content = with_addon(content, addon)
-      elsif required
-        content = with_addon(content, '*')
-      end
-      content << help_block(help) if help.present?
-      labeled(args.first, content)
-    end
-
     # Get the cancel url for the given object considering options:
     # 1. Use :cancel_url_new or :cancel_url_edit option, if present
     # 2. Use :cancel_url option, if present
@@ -352,6 +264,136 @@ module Crud
       url = @object.new_record? ? options[:cancel_url_new] :
                                   options[:cancel_url_edit]
       url || options[:cancel_url]
+    end
+
+
+    class Control
+
+      attr_reader :builder, :args, :options, :span, :addon, :help
+
+      delegate :content_tag, :object,
+               to: :builder
+
+      INPUT_SPANS = Hash.new(8)
+      INPUT_SPANS[:number_field] =
+      INPUT_SPANS[:integer_field] =
+      INPUT_SPANS[:float_field] =
+      INPUT_SPANS[:decimal_field] = 4
+
+
+      def initialize(builder, *args)
+        @builder = builder
+        @options = args.extract_options!
+        @args = args
+
+        @addon ||= options.delete(:addon)
+        @help ||= options.delete(:help)
+        @span ||= options.delete(:span)
+        @caption ||= options.delete(:caption)
+        @field_method ||= options.delete(:field_method)
+      end
+
+      def render_content
+        content
+      end
+
+      def render_labeled(content = nil)
+        @content = content if content
+        labeled
+      end
+
+      private
+
+      def labeled
+        errors = errors? ? ' has-error' : ''
+
+        content_tag(:div, class: "form-group#{errors}") do
+          builder.label(attr, caption, class: 'col-md-2 control-label') +
+          content_tag(:div, content, class: "col-md-#{span}")
+        end
+      end
+
+      def content
+        @content ||= begin
+          content = input
+          if addon
+            content = builder.with_addon(content, addon)
+          elsif required
+            content = builder.with_addon(content, '*')
+          end
+          content << builder.help_block(help) if help.present?
+          content
+        end
+      end
+
+      def input
+        @input ||= begin
+          builder.add_css_class(options, 'form-control')
+          builder.send(field_method, *(args << options))
+        end
+      end
+
+      def field_method
+        @field_method ||= detect_field_method
+      end
+
+      def attr
+        args.first
+      end
+
+      def required
+        @required = @required.nil? ? builder.required?(attr) : @required
+      end
+
+      def span
+        @span ||= INPUT_SPANS[field_method]
+      end
+
+      def caption
+        @caption ||= builder.captionize(attr, object.class)
+      end
+
+      def type
+        @type ||= builder.column_type(object, attr)
+      end
+
+      def detect_field_method
+        if type == :text
+          :text_area
+        elsif association_kind?(:belongs_to)
+          :belongs_to_field
+        elsif association_kind?(:has_and_belongs_to_many, :has_many)
+          :has_many_field
+        elsif attr.to_s.include?('password')
+          :password_field
+        elsif attr.to_s.include?('email')
+          :email_field
+        elsif builder.respond_to?(:"#{type}_field")
+          :"#{type}_field"
+        else
+          :text_field
+        end
+      end
+
+      # Returns true if any errors are found on the passed attribute or its
+      # association.
+      def errors?
+        attr_plain, attr_id = builder.assoc_and_id_attr(attr)
+        object.errors.has_key?(attr_plain.to_sym) ||
+        object.errors.has_key?(attr_id.to_sym)
+      end
+
+      # Returns true if attr is a non-polymorphic association.
+      # If one or more macros are given, the association must be of this kind.
+      def association_kind?(*macros)
+        if type == :integer || type.nil?
+          assoc = builder.association(object, attr, *macros)
+
+          assoc.present? && assoc.options[:polymorphic].nil?
+        else
+          false
+        end
+      end
     end
 
   end
