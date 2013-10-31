@@ -13,6 +13,8 @@ class City < ActiveRecord::Base
 
   attr_protected nil if Rails.version < '4.0'
 
+  scope :options_list, -> { includes(:country).order('cities.name') }
+
   def to_s
     "#{name} (#{country.code})"
   end

@@ -135,9 +135,9 @@ namespace :test do
       list_ctrl = File.join(TEST_APP_ROOT,
                             'app', 'controllers', 'list_controller.rb')
       file_replace(list_ctrl,
-                   /def list_entries\n\s+model_scope\s*\n/,
+                   /def list_entries\n\s+(.+)\s*\n/,
                    "def list_entries\n" +
-                   "    model_scope.page(params[:page]).per(10)\n")
+                   "    (\\1).page(params[:page]).per(10)\n")
       file_replace(File.join(TEST_APP_ROOT,
                              'app', 'views', 'list', 'index.html.erb'),
                    "<%= render 'list' %>",

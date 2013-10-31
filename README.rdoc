@@ -16,8 +16,10 @@ By default, dry_crud generates ERB templates and Test::Unit tests. Pass the opti
 
 To integrate dry_crud into your code, only a few additions are required:
 
-* For uniform CRUD functionality, just subclass your controllers from CrudController and define the #permitted_attrs (for StrongParameters).
+* For uniform CRUD functionality, just subclass your controllers from CrudController and define the +permitted_attrs+ (for StrongParameters).
 * Overwrite the +to_s+ method of your models for a human-friendly representation in captions.
+* Optionally define a +list+ scope in your models to be used in the +index+ action.
+* Optionally define a +options_list+ scope in your models to be used in select dropdowns.
 
 Version 2.0 and higher are compatible with Rails 4 and Rails 3.2. dry_crud is tested with Ruby 1.9.3, 2.0.0 and JRuby. If you are using Ruby 1.8.7, please refer to version 1.7.0.
 
@@ -35,7 +37,7 @@ dry_crud is a Rails generator. All code resides in your application and is open 
 
 dry_crud does not depend on any other plugins, but easily allows you to integrate them in order to unify the behavior of your CRUD controllers. You might even use the plugins mentioned above to adapt your generated CrudController base class. All classes come with thorough tests that provide you with a solid foundation for implementing your own adaptions.
 
-A basic CSS gets you started with your application's layout. For advanced needs, dry_crud supports the styles and classes used in {Bootstrap}[http://twitter.github.com/bootstrap/]. A great design never was so close.
+A basic CSS gets you started with your application's layout. For advanced needs, dry_crud supports the styles and classes used in {Bootstrap 3}[http://getbootstrap.com]. A great design never was so close.
 
 If you find yourself adapting the same parts of dry_crud for your applications over and over, please feel free to {fork me on Github}[http://github.com/codez/dry_crud].
 
@@ -78,7 +80,6 @@ This only displays these three attributes in the table. All other templates, as 
 Next, let's adapt a part of the general behavior used in all CRUD controllers. As an example, we include pagination with kaminari[https://github.com/amatsuda/kaminari] in all our overview tables:
 
 In <tt>app/controllers/list_controller.rb</tt>, change the list_entries method to
-
   def list_entries
     model_scope.page(params[:page])
   end
@@ -105,7 +106,12 @@ By the way: The method +f+ in FormatHelper uniformly formats arbitrary values ac
 
 ==== Sorting and filtering the index list
 
-The entries listed on the index page are automatically sortable by each displayed database column. To apply a default sorting order, define the following class attribute in the controller:
+The entries listed on the index page are automatically sortable by each displayed database column. To apply a default sorting order, define a +list+ scope in your model:
+
+In <tt>app/models/person.rb</tt>:
+  scope :list, -> { order('lastname, firstname').includes(:city) }
+
+Alternatively, set the following class attribute in the controller:
 
 In <tt>app/controllers/people_controller.rb</tt>:
   self.default_sort = 'lastname, firstname'
@@ -163,7 +169,7 @@ Of course, custom input fields may be defined as well:
     <%= f.labeled_file_field :picture %>
   <% end %>
 
-Even +belongs_to+ associations are automatically rendered with a select field. By default, all entries from the associated model are used as options. To customize this, either define an instance variable with the same name as the association in your controller, or pass a <tt>list</tt> option:
+Even +belongs_to+ associations are automatically rendered with a select field. By default, entries returned from the +options_list+ scope of the associated model are used as options (if defined, all otherwise). To customize this, either define an instance variable with the same name as the association in your controller, or pass a <tt>list</tt> option:
   <%= f.belongs_to_field :hometown, list: City.where(country: @person.country) %>
 
 Yes, it's bad practice to use finder logic in your views! Define the variable <tt>@hometowns</tt> in your controller instead (as shown in the example above), and you do not even have to specify the <tt>list</tt> option.
@@ -267,6 +273,8 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 {helpers/crud/table_builder.rb}[http://codez.ch/dry_crud?q=Crud::TableBuilder]:: A simple helper object to easily define tables listing several rows of the same data type.
 
 {helpers/crud/form_builder.rb}[http://codez.ch/dry_crud?q=Crud::FormBuilder]:: A form builder that automatically selects the corresponding input type for ActiveRecord columns. Input elements are rendered together with a label by default.
+
+{helpers/crud/control.rb}[http://codez.ch/dry_crud?q=Crud::Control]:: Representation of a single form control consisting of a label, input field, addon or help text.
 
 {helpers/table_helper.rb}[http://codez.ch/dry_crud?q=TableHelper]:: Create tables to list multiple models with Crud::TableBuilder. Contains a standardized and a custom definable table.
 

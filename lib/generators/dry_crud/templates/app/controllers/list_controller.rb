@@ -39,11 +39,13 @@ class ListController < ApplicationController
   end
 
   # The base relation used to filter the entries.
+  # Calls the #list scope if it is defined on the model class.
+  #
   # This method may be adapted as long it returns an
   # <tt>ActiveRecord::Relation</tt>.
   # Some of the modules included extend this method.
   def list_entries
-    model_scope
+    model_class.respond_to?(:list) ? model_scope.list : model_scope
   end
 
   # Include these modules after the #list_entries method is defined.

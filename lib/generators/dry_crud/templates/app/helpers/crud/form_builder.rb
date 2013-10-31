@@ -264,9 +264,11 @@ module Crud
       Control.new(self, *(args << options)).render_labeled
     end
 
-    # Returns the list of association entries, either from options[:list],
-    # the instance variable with the pluralized association name or all
-    # entries of the association klass.
+    # Returns the list of association entries, either from options[:list] or
+    # the instance variable with the pluralized association name. 
+    # Otherwise, if the association defines a #options_list or #list scope, this is 
+    # used to load the entries.
+    # As a last resort, all entries from the association class are returned.
     def association_entries(attr, options)
       list = options.delete(:list)
       unless list
@@ -274,11 +276,29 @@ module Crud
         list = @template.send(:instance_variable_get,
                               :"@#{assoc.name.to_s.pluralize}")
         unless list
-          list = assoc.klass.where(assoc.options[:conditions])
-                            .order(assoc.options[:order])
+          list = load_association_entries(assoc)
         end
       end
       list
+    end
+    
+    # Automatically load the entries for the given association.
+    def load_association_entries(assoc)
+      klass = assoc.klass
+<% if Rails.version >= '4.0' -%>
+      list = klass.all.merge(assoc.scope)
+<% else -%>
+      list = klass.where(assoc.options[:conditions])
+                  .order(assoc.options[:order])
+<% end -%><%# > fixing rdoc -%>
+      # Use special scopes if they are defined
+      if klass.respond_to?(:options_list)
+        list.options_list
+      elsif klass.respond_to?(:list)
+        list.list
+      else
+        list
+      end
     end
 
     # Get the cancel url for the given object considering options:
