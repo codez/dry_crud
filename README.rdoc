@@ -16,7 +16,7 @@ By default, dry_crud generates ERB templates and Test::Unit tests. Pass the opti
 
 To integrate dry_crud into your code, only a few additions are required:
 
-* For uniform CRUD functionality, just subclass your controllers from CrudController.
+* For uniform CRUD functionality, just subclass your controllers from CrudController and define the #permitted_attrs (for StrongParameters).
 * Overwrite the +to_s+ method of your models for a human-friendly representation in captions.
 
 Version 2.0 and higher are compatible with Rails 4 and Rails 3.2. dry_crud is tested with Ruby 1.9.3, 2.0.0 and JRuby. If you are using Ruby 1.8.7, please refer to version 1.7.0.
