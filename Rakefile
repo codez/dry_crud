@@ -162,18 +162,6 @@ namespace :test do
                     "//= require twitter/bootstrap\n//= require_tree .")
        FileUtils.rm(File.join(TEST_APP_ROOT,
                               'app', 'assets', 'stylesheets', 'sample.scss'))
-
-       layouts = File.join(TEST_APP_ROOT, 'app', 'views', 'layouts')
-       if File.exists?(File.join(layouts, 'bootstrap.html.erb'))
-         FileUtils.mv(File.join(layouts, 'bootstrap.html.erb'),
-                      File.join(layouts, 'application.html.erb'),
-                      force: true)
-       end
-       if File.exists?(File.join(layouts, 'bootstrap.html.haml'))
-         FileUtils.mv(File.join(layouts, 'bootstrap.html.haml'),
-                      File.join(layouts, 'application.html.haml'),
-                      force: true)
-       end
     end
 
   end

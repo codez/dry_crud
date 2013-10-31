@@ -2,8 +2,9 @@ $container_width: 1000px;
 $theme_color: #2580a2;
 
 body, div, p, td, th {
-  font-family: Verdana, Geneva, Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
+  line-height: 1.42857;
 }
 
 body {
@@ -27,20 +28,20 @@ body {
 
 .navbar {
   background: #333;
-  -moz-box-shadow: 0px 1px 1px $theme_color;
-  -webkit-box-shadow: 0px 1px 1px $theme_color;
-  box-shadow: 0px 1px 1px $theme_color;
+  margin: 0 auto;
   padding: 0 20px;
   max-width: $container_width;
   min-width: $container_width - 200px;
   height: 33px;
-  margin: -20px;
+  -moz-box-shadow: 0px 0px 5px $theme_color;
+  -webkit-box-shadow: 0px 0px 5px $theme_color;
+  box-shadow: 0px 1px 5px $theme_color;
 }
 
 .navbar-brand {
   font-weight: bold;
   font-size: 130%;
-  color: #ddd;
+  color: #ddd !important;
   padding: 5px;
   float: left;
 }
@@ -64,8 +65,7 @@ a.navbar-brand:hover {
 }
 
 .nav a {
-  background: #333 bottom right no-repeat;
-  color: #ddd;
+  color: #ddd !important;
   display: block;
   float: left;
   margin: 0;
@@ -76,7 +76,8 @@ a.navbar-brand:hover {
 
 .nav a:hover {
   background: $theme_color bottom center no-repeat;
-  color: #fff;
+  color: #fff !important;
+  text-decoration: none;
 }
 
 .actions {
@@ -90,7 +91,7 @@ a.navbar-brand:hover {
 
 h1 {
   font-size: 150%;
-  margin: 40px 0 20px 0;
+  margin: 0px 0 20px 0;
 }
 
 table.table {
@@ -315,4 +316,9 @@ footer * {
 
 .col-md-8 {
   margin-left: 130px;
+}
+
+.col-md-5 {
+  float: left;
+  width: 350px;
 }
