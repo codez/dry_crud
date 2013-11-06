@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-module Crud
+module DryCrud
   # Custom Responder that handles the controller's +path_args+.
   # An additional :success option is used to handle action callback
   # chain halts.

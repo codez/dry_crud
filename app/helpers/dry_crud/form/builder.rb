@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-module Crud
+module DryCrud::Form
   
   # A form builder that automatically selects the corresponding input field
   # for ActiveRecord column types. Convenience methods for each column type
@@ -12,9 +12,12 @@ module Crud
   # Use #labeled_input_field or #input_field to render a input field
   # corresponding to the given attribute.
   #
-  # See the Control class below to customize the html rendered for a
+  # See the Control class for how to customize the html rendered for a
   # single input field.
-  class FormBuilder < ActionView::Helpers::FormBuilder
+  class Builder < ActionView::Helpers::FormBuilder
+
+    class_attribute :control_class
+    self.control_class = Control
 
     attr_reader :template
 
@@ -44,7 +47,7 @@ module Crud
     #
     # Use additional html_options for the input element.
     def labeled_input_field(attr, html_options = {})
-      Control.new(self, attr, html_options).render_labeled
+      control_class.new(self, attr, html_options).render_labeled
     end
 
     # Render a corresponding input control for the given attribute.
@@ -58,7 +61,7 @@ module Crud
     #
     # Use additional html_options for the input element.
     def input_field(attr, html_options = {})
-      Control.new(self, attr, html_options).render_content
+      control_class.new(self, attr, html_options).render_content
     end
 
     # Render a standard string field with column contraints.
@@ -221,7 +224,7 @@ module Crud
         options = content
         content = capture(&block)
       end
-      control = Control.new(self, attr, options)
+      control = control_class.new(self, attr, options)
       control.render_labeled(content)
     end
 
@@ -261,7 +264,7 @@ module Crud
     def build_labeled_field(field_method, *args)
       options = args.extract_options!
       options[:field_method] = field_method
-      Control.new(self, *(args << options)).render_labeled
+      control_class.new(self, *(args << options)).render_labeled
     end
 
     # Returns the list of association entries, either from options[:list] or

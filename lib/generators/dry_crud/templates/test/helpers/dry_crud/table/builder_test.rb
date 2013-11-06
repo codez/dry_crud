@@ -1,8 +1,8 @@
 # encoding: UTF-8
 require 'test_helper'
 
-# Test Crud::TableBuilder
-class Crud::TableBuilderTest < ActionView::TestCase
+# Test DryCrud::Table::Builder
+class DryCrud::Table::BuilderTest < ActionView::TestCase
 
   # set dummy helper class for ActionView::TestCase
   self.helper_class = UtilityHelper
@@ -13,7 +13,7 @@ class Crud::TableBuilderTest < ActionView::TestCase
 
   def setup
     @entries = %w(foo bahr)
-    @table = Crud::TableBuilder.new(entries, self)
+    @table = DryCrud::Table::Builder.new(entries, self)
   end
 
   def format_size(obj)
@@ -122,7 +122,7 @@ class Crud::TableBuilderTest < ActionView::TestCase
     FIN
     dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
 
-   table = Crud::TableBuilder.new([], self)
+   table = DryCrud::Table::Builder.new([], self)
     table.col('head', class: 'left') { |e| link_to e, '/' }
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }

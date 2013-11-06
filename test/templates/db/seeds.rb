@@ -39,7 +39,7 @@ Person.create!(name: 'Jay Z',
          gets_up_at: '12:00',
          last_seen: '2011-03-10 17:29',
          cool: true,
-         remarks: "If got 99 problems\nbut you *** ain't one\nTschie")
+         remarks: "I got 99 problems\nbut you *** ain't one\nTschie")
 Person.create!(name: 'Queen Elisabeth',
          city: lon,
          children: 1,

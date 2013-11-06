@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-module Crud
+module DryCrud::Form
 
   # Internal class to handle the rendering of a single form control,
   # consisting of a label, input field, addon, help text or

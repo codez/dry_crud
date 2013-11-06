@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-module Crud
+module DryCrud
   # Provide +before_render+ callbacks.
   module RenderCallbacks
     extend ActiveSupport::Concern

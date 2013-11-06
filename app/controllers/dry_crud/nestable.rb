@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-module Crud
+module DryCrud
   # Provides functionality to nest controllers/resources.
   # If a controller is nested, the parent classes and namespaces
   # may be defined as an array in the +nesting+ class attribute.

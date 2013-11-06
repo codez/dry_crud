@@ -1,13 +1,13 @@
 # encoding: UTF-8
 require 'spec_helper'
 
-describe 'Crud::TableBuilder' do
+describe 'DryCrud::TableBuilder' do
 
   include FormatHelper
   include UtilityHelper
 
   let(:entries) { %w(foo bahr) }
-  let(:table)   { Crud::TableBuilder.new(entries, self) }
+  let(:table)   { DryCrud::Table::Builder.new(entries, self) }
 
   def format_size(obj) #:nodoc:
     "#{obj.size} chars"
@@ -111,7 +111,7 @@ describe 'Crud::TableBuilder' do
     FIN
     dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
 
-    table = Crud::TableBuilder.new([], self)
+    table = DryCrud::Table::Builder.new([], self)
     table.col('head', class: 'left') { |e| link_to e, '/' }
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }

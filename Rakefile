@@ -134,7 +134,7 @@ namespace :test do
     desc "Adds pagination to the test app"
     task :add_pagination do
       list_ctrl = File.join(TEST_APP_ROOT,
-                            'app', 'controllers', 'list_controller.rb')
+                            'app', 'controllers', 'dry_crud', 'list_actions.rb')
       file_replace(list_ctrl,
                    /def list_entries\n\s+(.+)\s*\n/,
                    "def list_entries\n" +

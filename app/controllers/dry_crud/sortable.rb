@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-module Crud
+module DryCrud
   # Sort functionality for the index table.
   # Define a default sort expression that is always appended to the
   # current sort params with the class attribute +default_sort+.

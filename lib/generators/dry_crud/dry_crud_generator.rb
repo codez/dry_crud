@@ -9,6 +9,8 @@ end
 # Copies all dry_crud files to the rails application.
 class DryCrudGenerator < DryCrudGeneratorBase
 
+  desc 'Copy all dry_crud files to the application.'
+
   class_options %w(templates -t) => 'erb'
   class_options %w(tests) => 'testunit'
 

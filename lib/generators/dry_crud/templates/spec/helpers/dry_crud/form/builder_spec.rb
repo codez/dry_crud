@@ -1,7 +1,7 @@
 # encoding: UTF-8
 require 'spec_helper'
 
-describe 'Crud::FormBuilder' do
+describe 'DryCrud::Form::Builder' do
 
   include FormatHelper
   include FormHelper
@@ -20,10 +20,10 @@ describe 'Crud::FormBuilder' do
   let(:entry) { CrudTestModel.first }
   if Rails.version < '4.0'
     let(:form)  do
-      Crud::FormBuilder.new(:entry, entry, self, {}, ->(form) { form })
+      DryCrud::Form::Builder.new(:entry, entry, self, {}, ->(form) { form })
     end
   else
-    let(:form)  { Crud::FormBuilder.new(:entry, entry, self, {}) }
+    let(:form)  { DryCrud::Form::Builder.new(:entry, entry, self, {}) }
   end
 
   describe '#input_field' do

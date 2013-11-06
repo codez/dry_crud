@@ -18,7 +18,8 @@ module TableHelper
   def plain_table(entries, *attrs, &block)
     options = attrs.extract_options!
     add_css_class(options, 'table table-striped table-hover')
-    Crud::TableBuilder.table(entries, self, options) do |t|
+    builder = options.delete(:builder) || DryCrud::Table::Builder
+    builder.table(entries, self, options) do |t|
       t.attrs(*attrs)
       yield t if block_given?
     end

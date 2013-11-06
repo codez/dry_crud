@@ -2,8 +2,8 @@
 require 'test_helper'
 require 'support/crud_test_model'
 
-# Test Crud::FormBuilder
-class Crud::FormBuilderTest < ActionView::TestCase
+# Test DryCrud::Form::Builder
+class DryCrud::Form::BuilderTest < ActionView::TestCase
 
   include FormatHelper
   include I18nHelper
@@ -20,10 +20,10 @@ class Crud::FormBuilderTest < ActionView::TestCase
   def create_form
     @entry = CrudTestModel.first
     if Rails.version < '4.0'
-      @form = Crud::FormBuilder.new(:entry, @entry, self, {},
+      @form = DryCrud::Form::Builder.new(:entry, @entry, self, {},
                                     ->(form) { form })
     else
-      @form = Crud::FormBuilder.new(:entry, @entry, self, {})
+      @form = DryCrud::Form::Builder.new(:entry, @entry, self, {})
     end
   end
 

@@ -8,4 +8,10 @@ module PeopleHelper
     income.present? ? "#{f(income)} $" : UtilityHelper::EMPTY_STRING
   end
 
+  def f(value)
+    case value
+    when true   then 'iu'
+    else super(value)
+    end
+  end
 end

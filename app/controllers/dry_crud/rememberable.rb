@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-module Crud
+module DryCrud
   # Remembers certain params of the index action in order to return
   # to the same list after an entry was viewed or edited.
   # If the index is called with a param :returning, the remembered params

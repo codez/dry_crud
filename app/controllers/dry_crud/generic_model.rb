@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-module Crud
+module DryCrud
   # Connects the including controller to the model whose name corrsponds to
   # the controller's name.
   #
