@@ -285,12 +285,12 @@ module Crud
     # Automatically load the entries for the given association.
     def load_association_entries(assoc)
       klass = assoc.klass
-<% if Rails.version >= '4.0' -%>
-      list = klass.all.merge(assoc.scope)
-<% else -%>
-      list = klass.where(assoc.options[:conditions])
-                  .order(assoc.options[:order])
-<% end -%><%# > fixing rdoc -%>
+      list = if Rails.version >= '4.0'
+        klass.all.merge(assoc.scope)
+      else
+        klass.where(assoc.options[:conditions])
+             .order(assoc.options[:order])
+      end 
       # Use special scopes if they are defined
       if klass.respond_to?(:options_list)
         list.options_list
