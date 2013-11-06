@@ -1,6 +1,10 @@
 # encoding: UTF-8
 
-require 'generators/dry_crud/dry_crud_generator_base'
+begin
+  require 'generators/dry_crud/dry_crud_generator_base'
+rescue LoadError => e
+  # ok, we are in the rake task
+end
 
 # Copies all dry_crud files to the rails application.
 class DryCrudGenerator < DryCrudGeneratorBase

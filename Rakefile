@@ -69,6 +69,7 @@ namespace :test do
 
     desc "Run the dry_crud generator for the test application"
     task generate_crud: [:create, :environment] do
+      require File.join(GENERATOR_ROOT, 'dry_crud_generator_base')
       require File.join(GENERATOR_ROOT, 'dry_crud_generator')
 
       DryCrudGenerator.new([],
