@@ -20,30 +20,36 @@ module Crud
 
     # Enhance the list entries with an optional search criteria
     def list_entries_with_search
-      list_entries_without_search.where(search_condition)
-    end
-
-    # Compose the search condition with a basic SQL OR query.
-    def search_condition
       if search_support? && params[:q].present?
-        col_clause = search_column_clause
-        terms = params[:q].split(/\s+/).map { |t| "%#{t}%" }
-        term_clause = terms.map { |t| "(#{col_clause})" }.join(' AND ')
-
-        term_params = terms.map { |t| [t] * search_columns.size }.flatten
-        ["(#{term_clause})", *term_params]
+        search_conditions.reduce(list_entries_without_search) do |query, condition|
+          query.where(condition)
+        end
+      else
+        list_entries_without_search
       end
     end
 
+    # Compose the search condition with a basic SQL OR query.
+    def search_conditions
+      terms = params[:q].split(/\s+/).map { |t| "%#{t}%" }
+      terms.collect {|t| search_column_clause(t) }
+    end
+
     # SQL where clause with all search colums or'ed.
-    def search_column_clause
-      search_columns.map do |f|
+    def search_column_clause(term)
+      column_conditions = search_columns.collect do |f|
         if f.to_s.include?('.')
-          "#{f} LIKE ?"
+          table_name, field_name = f.split('.')
         else
-          "#{model_class.table_name}.#{f} LIKE ?"
+          table_name = model_class.table_name
+          field_name = f
         end
-      end.join(' OR ')
+        table = Arel::Table.new(table_name)
+        table[field_name].matches("%#{term}%")
+      end
+      column_conditions.reduce do |query, column_condition|
+        query.or(column_condition)
+      end
     end
 
     # Returns true if this controller has searchable columns.
