@@ -3,8 +3,7 @@
 # People Controller
 class PeopleController < AjaxController
 
-  self.search_columns = [:name, :children, :rating, :income, :birthdate,
-                         :remarks, 'cities.name']
+  self.search_columns = [:name, :email, :remarks, 'cities.name']
 
   self.default_sort = 'people.name, countries.code, cities.name'
 
