@@ -2,7 +2,7 @@
 
 {<img src="https://secure.travis-ci.org/codez/dry_crud.png" />}[http://travis-ci.org/codez/dry_crud]
 
-dry_crud generates simple and extendable controllers, views and helpers that support you to DRY up the CRUD code in your Rails projects. Start with these artifacts and build a clean base to efficiently develop your application upon.
+dry_crud generates simple and extendable controllers, views and helpers that support you to DRY up the CRUD code in your Rails projects. List, search, sort, show, create, edit and destroy any model entries in just 5 minutes. Start with these artifacts and build a clean base to efficiently develop your application upon.
 
 
 == Installation
@@ -38,7 +38,7 @@ Version 2.0 and higher are compatible with Rails 4 and Rails 3.2. dry_crud is te
 
 == Background
 
-In most Rails applications, you have some models that require basic CRUD (create, read, update, delete) functionality. There are various possibilities like Rails scaffolding, {Inherited Resources}[https://github.com/josevalim/inherited_resources] or {Dry Scaffold}[http://github.com/grimen/dry_scaffold]. Still, various parts in your application remain duplicated. While you might pull up common methods into a common superclass controller, most views still contain very similar code. And then you also have to remember the entire API of these frameworks.
+In most Rails applications, you have some models that require basic CRUD (create, read, update, delete) functionality. There are various possibilities like Rails scaffolding, {Inherited Resources}[https://github.com/josevalim/inherited_resources] or {Rails Admin}[https://github.com/sferik/rails_admin]. Still, various parts in your application remain duplicated. While you might pull up common methods into a common superclass controller, most views still contain very similar code. And then you also have to remember the entire API of these frameworks.
 
 Enter dry_crud.
 
@@ -256,6 +256,11 @@ In order to change the title for your +PeopleController+'s +index+ action, you d
 Otherwise, the lookup for the title would fallback on the ListController's key <tt>list.index.title</tt>.
 
 This lookup mechanism also allows you to easily define per-controller overridable text snippets in your views.
+
+
+=== Example Code
+
+To see an example application built on dry_crud, have a look at {these directories}[https://github.com/codez/dry_crud/tree/master/test/templates/app]. Only certain methods and templates are overriden, all the 'missing' files are provided by dry_crud.
 
 
 == Generated Files
