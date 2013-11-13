@@ -1,26 +1,25 @@
 # encoding: UTF-8
 
 module DryCrud
-  # Abstract controller providing basic CRUD actions.
+
+  # Provides the basic CRUD actions.
   # This implementation mainly follows the one of the Rails scaffolding
   # controller and responds to HTML and JSON requests.
   #
-  # Some enhancements were made to ease extendability.
+  # Some enhancements were made to ease extensibility.
   # The current model entry is available in the view as an instance variable
   # named after the +model_class+ or in the helper method +entry+.
   # Several protected helper methods are there to be (optionally) overriden by
   # subclasses.
-  # With the help of additional callbacks, it is possible to hook into the action
-  # procedures without overriding the entire method.
   module CrudActions
     extend ActiveSupport::Concern
 
-    included do 
+    included do
       self.responder = DryCrud::Responder
 
       if Rails.version >= '4.0'
         class_attribute :permitted_attrs
-      end 
+      end
 
       # Defines before and after callback hooks for create, update, save and
       # destroy actions.
@@ -32,7 +31,7 @@ module DryCrud
       define_render_callbacks :show, :new, :edit
 
       hide_action :run_callbacks
-      
+
       after_save :set_success_notice
       after_destroy :set_success_notice
 
@@ -184,6 +183,7 @@ module DryCrud
       escaped.join('<br/>').html_safe
     end
 
+    # Class methods for CrudActions.
     module ClassMethods
       # Convenience callback to apply a callback on both form actions
       # (new and edit).

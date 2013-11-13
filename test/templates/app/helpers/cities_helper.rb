@@ -2,6 +2,7 @@
 
 # Cities Helper
 module CitiesHelper
+
   def format_city_id(entry)
     city = entry.city
     if city
@@ -10,4 +11,5 @@ module CitiesHelper
       ta(:no_entry)
     end
   end
+
 end

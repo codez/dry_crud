@@ -9,8 +9,15 @@ AlignParameters:
 RegexpLiteral:
   Enabled: false
 
+ClassLength:
+  Max: 300
+
 MethodLength:
   Max: 25
 
-#ConstantName:
-  #Enabled: false
+ClassVars:
+  Enabled: false
+
+EmptyLinesAroundBody:
+  Enabled: false
+

@@ -2,8 +2,8 @@
 
 module DryCrud
   # The search functionality for the index table.
-  # Define an array of searchable string columns in your subclassing controllers
-  # using the class attribute +search_columns+.
+  # Define an array of searchable string columns in your subclassing
+  # controllers using the class attribute +search_columns+.
   module Searchable
     extend ActiveSupport::Concern
 
@@ -34,7 +34,7 @@ module DryCrud
 
     # Split the search query in single words and create a list of word clauses.
     def search_word_conditions
-      params[:q].split(/\s+/).map {|w| search_word_condition(w) }
+      params[:q].split(/\s+/).map { |w| search_word_condition(w) }
     end
 
     # Concat the column queries of the given word with OR.
@@ -44,7 +44,8 @@ module DryCrud
       end
     end
 
-    # Create a list of Arel #matches queries for each column and the given word.
+    # Create a list of Arel #matches queries for each column and the given
+    # word.
     def search_column_condition(word)
       self.class.search_tables_and_fields.map do |table_name, field|
         table = Arel::Table.new(table_name)
@@ -57,6 +58,7 @@ module DryCrud
       search_columns.present?
     end
 
+    # Class methods for Searchable.
     module ClassMethods
 
       # All search columns divided in table and field names.

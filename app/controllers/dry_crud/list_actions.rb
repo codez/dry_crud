@@ -1,14 +1,9 @@
 # encoding: UTF-8
 
 module DryCrud
-  # Abstract controller providing a basic list action.
-  # The loaded model entries are available in the view as an instance variable
-  # named after the +model_class+ or by the helper method +entries+.
-  #
-  # The +index+ action lists all entries of a certain model and provides
-  # functionality to search and sort this list.
-  # Furthermore, it remembers the last search and sort parameters after the
-  # user returns from a displayed or edited entry.
+
+  # Provides the index action to fetch a list of #entries for the current
+  # model class.
   module ListActions
     extend ActiveSupport::Concern
 

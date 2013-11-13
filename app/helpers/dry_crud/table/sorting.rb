@@ -31,7 +31,7 @@ module DryCrud::Table
 
     # Request params for the sort link.
     def sort_params(attr)
-      params.merge({ sort: attr, sort_dir: sort_dir(attr) })
+      params.merge(sort: attr, sort_dir: sort_dir(attr))
     end
 
     # The sort mark, if any, for the given attribute.

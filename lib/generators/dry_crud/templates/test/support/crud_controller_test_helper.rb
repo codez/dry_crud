@@ -81,7 +81,7 @@ module CrudControllerTestHelper
       post :create, test_params(model_identifier => new_entry_attrs)
     end
     assert_redirected_to_show entry
-    assert ! entry.new_record?
+    assert !entry.new_record?
     assert_attrs_equal(new_entry_attrs)
   end
 
@@ -179,12 +179,12 @@ module CrudControllerTestHelper
 
   # Test object used in several tests.
   def test_entry
-    raise 'Implement this method in your test class'
+    fail 'Implement this method in your test class'
   end
 
   # Attribute hash used in several tests.
   def test_entry_attrs
-    raise 'Implement this method in your test class'
+    fail 'Implement this method in your test class'
   end
 
   # Attribute hash used in edit/update tests.

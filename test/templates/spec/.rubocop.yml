@@ -12,8 +12,11 @@ RegexpLiteral:
 MethodLength:
   Max: 25
 
-AvoidClassVars:
+ClassVars:
   Enabled: false
 
+EmptyLinesAroundBody:
+  Enabled: false
+  
 Void:
   Enabled: false

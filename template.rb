@@ -40,4 +40,3 @@ generate 'dry_crud', options
 
 # remove gem from Gemfile
 gsub_file 'Gemfile', /gem .dry_crud./, ''
-

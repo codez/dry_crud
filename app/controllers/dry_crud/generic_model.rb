@@ -26,9 +26,9 @@ module DryCrud
   def model_scope
     if Rails.version < '4.0'
       model_class.scoped
-    else 
+    else
       model_class.all
-    end 
+    end
   end
 
     # The path arguments to link to the given model entry.

@@ -95,7 +95,7 @@ class FormatHelperTest < ActionView::TestCase
     m = crud_test_models(:AAAAA)
     assert_equal '9', format_type(m, :children)
 
-    m.children = 10000
+    m.children = 10_000
     assert_equal '10000', format_type(m, :children)
   end
 

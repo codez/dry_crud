@@ -162,8 +162,8 @@ describe FormHelper do
     end
 
     it do
-       should match /input .*?name="crud_test_model\[whatever\]"
-                           .*?type="text"/x
+      should match /input .*?name="crud_test_model\[whatever\]"
+                          .*?type="text"/x
     end
 
     it do

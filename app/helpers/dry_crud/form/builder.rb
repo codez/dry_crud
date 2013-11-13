@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 module DryCrud::Form
-  
+
   # A form builder that automatically selects the corresponding input field
   # for ActiveRecord column types. Convenience methods for each column type
   # allow one to customize the different fields.
@@ -85,7 +85,6 @@ module DryCrud::Form
     alias_method :integer_field, :number_field
     alias_method :float_field, :number_field
     alias_method :decimal_field, :number_field
-
 
     if Rails.version < '4.0'
       # Render a field to select a date. You might want to customize this.
@@ -268,9 +267,9 @@ module DryCrud::Form
     end
 
     # Returns the list of association entries, either from options[:list] or
-    # the instance variable with the pluralized association name. 
-    # Otherwise, if the association defines a #options_list or #list scope, this is 
-    # used to load the entries.
+    # the instance variable with the pluralized association name.
+    # Otherwise, if the association defines a #options_list or #list scope,
+    # this is used to load the entries.
     # As a last resort, all entries from the association class are returned.
     def association_entries(attr, options)
       list = options.delete(:list)
@@ -278,22 +277,20 @@ module DryCrud::Form
         assoc = association(@object, attr)
         list = @template.send(:instance_variable_get,
                               :"@#{assoc.name.to_s.pluralize}")
-        unless list
-          list = load_association_entries(assoc)
-        end
+        list ||= load_association_entries(assoc)
       end
       list
     end
-    
+
     # Automatically load the entries for the given association.
     def load_association_entries(assoc)
       klass = assoc.klass
       list = if Rails.version >= '4.0'
-        klass.all.merge(assoc.scope)
-      else
-        klass.where(assoc.options[:conditions])
-             .order(assoc.options[:order])
-      end 
+               klass.all.merge(assoc.scope)
+             else
+               klass.where(assoc.options[:conditions])
+                    .order(assoc.options[:order])
+             end
       # Use special scopes if they are defined
       if klass.respond_to?(:options_list)
         list.options_list

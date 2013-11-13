@@ -128,10 +128,10 @@ describe 'DryCrud::Form::Builder' do
     end
 
     it 'displays a message for an empty list' do
-       @others = []
-       f = form.has_many_field(:other_ids)
-       f.should match t('global.associations.none_available')
-       f.scan('</option>').should have(0).items
+      @others = []
+      f = form.has_many_field(:other_ids)
+      f.should match t('global.associations.none_available')
+      f.scan('</option>').should have(0).items
     end
   end
 

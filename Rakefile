@@ -138,7 +138,8 @@ namespace :test do
       file_replace(list_ctrl,
                    /def list_entries\n\s+(.+)\s*\n/,
                    "def list_entries\n" +
-                   "    (\\1).page(params[:page]).per(10)\n")
+                   "      list = \\1\n" +
+                   "      list.page(params[:page]).per(10)\n")
       file_replace(File.join(TEST_APP_ROOT,
                              'app', 'views', 'list', 'index.html.erb'),
                    "<%= render 'list' %>",
@@ -161,6 +162,10 @@ namespace :test do
                               'application.js'),
                     "//= require_tree .",
                     "//= require twitter/bootstrap\n//= require_tree .")
+       file_replace(File.join(TEST_APP_ROOT,
+                              'app', 'helpers', 'actions_helper.rb'),
+                    "class: \"icon icon-",
+                    "class: \"glyphicon glyphicon-")
        FileUtils.rm(File.join(TEST_APP_ROOT,
                               'app', 'assets', 'stylesheets', 'sample.scss'))
     end

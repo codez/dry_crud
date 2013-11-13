@@ -313,7 +313,7 @@ module CrudTestHelper
       gets_up_at: Time.zone.local(2000, 1, 1, index, index),
       last_seen: "#{2000 + 10 * index}-#{index}-#{index} " +
                     "1#{index}:2#{index}",
-      human: index % 2 == 0,
+      human: index.even?,
       remarks: "#{c} #{str(index + 1)} #{str(index + 2)}\n" *
                   (index % 3 + 1))
     m.companion = companion
@@ -330,7 +330,7 @@ module CrudTestHelper
   end
 
   def str(index)
-     (index + 64).chr * 5
+    (index + 64).chr * 5
   end
 
   # A hack to avoid ddl in transaction issues with mysql.

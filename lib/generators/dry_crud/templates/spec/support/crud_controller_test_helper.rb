@@ -166,4 +166,3 @@ module CrudControllerTestHelper
   end
 
 end
-

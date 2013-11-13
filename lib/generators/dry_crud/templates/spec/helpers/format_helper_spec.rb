@@ -180,7 +180,7 @@ describe FormatHelper do
     let(:model) { crud_test_models(:AAAAA) }
 
     it 'formats integers' do
-      model.children = 10000
+      model.children = 10_000
       format_type(model, :children).should == '10000'
     end
 

@@ -22,9 +22,20 @@ AllCops:
     - '**/bundle'
     - '**/rake'
 
+ClassLength:
+  Max: 200
 
 MethodLength:
   Max: 18
 
+CyclomaticComplexity:
+  Max: 8
+  
 Attr:
+  Enabled: false
+
+EmptyLinesAroundBody:
+  Enabled: false
+
+IfUnlessModifier:
   Enabled: false

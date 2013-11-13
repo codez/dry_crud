@@ -196,16 +196,16 @@ a.action {
   padding: 0 5px;
 }
 
-a.glyphicon {
+a.icon {
   margin-right: 5px;
   margin-left: 5px;
 }
 
-a.glyphicon img {
+a.icon img {
   vertical-align: text-top;
 }
 
-.glyphicon {
+.icon {
   width: 16px;
   height: 16px;
   display: inline-block;
@@ -213,11 +213,11 @@ a.glyphicon img {
   vertical-align: top;
 }
 
-.glyphicon-plus { background-image: image-url('actions/add.png'); }
-.glyphicon-remove { background-image: image-url('actions/delete.png'); }
-.glyphicon-pencil { background-image: image-url('actions/edit.png'); }
-.glyphicon-list { background-image: image-url('actions/list.png'); }
-.glyphicon-zoom-in { background-image: image-url('actions/show.png'); }
+.icon-plus { background-image: image-url('actions/add.png'); }
+.icon-remove { background-image: image-url('actions/delete.png'); }
+.icon-pencil { background-image: image-url('actions/edit.png'); }
+.icon-list { background-image: image-url('actions/list.png'); }
+.icon-zoom-in { background-image: image-url('actions/show.png'); }
 
 .form-group {
   clear: both;

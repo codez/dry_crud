@@ -58,7 +58,7 @@ module DryCrud
     # Params are stored by request path to play nice when a controller
     # is used in different routes.
     def remember_key
-       request.path
+      request.path
     end
   end
 end

@@ -68,7 +68,7 @@ describe CrudTestModelsController do
         end
 
         it 'provides entries helper method' do
-        should render_template('index')
+          should render_template('index')
           entries.should be(controller.send(:entries))
         end
       end

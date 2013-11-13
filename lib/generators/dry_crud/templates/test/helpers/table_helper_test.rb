@@ -26,7 +26,7 @@ class TableHelperTest < ActionView::TestCase
   end
 
   test 'empty table should render message' do
-    result = plain_table_or_message([]) { }
+    result = plain_table_or_message([]) {}
     assert result.html_safe?
     assert_match /\<div class=["']table["']\>.*\<\/div\>/, result
   end
