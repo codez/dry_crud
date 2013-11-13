@@ -93,17 +93,6 @@ namespace :test do
 
       # replace some unused files
       FileUtils.rm_f(File.join(TEST_APP_ROOT, 'public', 'index.html'))
-      layouts = File.join(TEST_APP_ROOT, 'app', 'views', 'layouts')
-      if File.exists?(File.join(layouts, 'crud.html.erb'))
-        FileUtils.mv(File.join(layouts, 'crud.html.erb'),
-                     File.join(layouts, 'application.html.erb'),
-                     force: true)
-      end
-      if File.exists?(File.join(layouts, 'crud.html.haml'))
-        FileUtils.mv(File.join(layouts, 'crud.html.haml'),
-                     File.join(layouts, 'application.html.haml'),
-                     force: true)
-      end
 
       # remove unused template type, erb or haml
       exclude = ENV['HAML'] ? 'erb' : 'haml'
@@ -164,8 +153,12 @@ namespace :test do
                     "//= require twitter/bootstrap\n//= require_tree .")
        file_replace(File.join(TEST_APP_ROOT,
                               'app', 'helpers', 'actions_helper.rb'),
-                    "class: \"icon icon-",
-                    "class: \"glyphicon glyphicon-")
+                    "\"icon icon-",
+                    "\"glyphicon glyphicon-")
+       file_replace(File.join(TEST_APP_ROOT,
+                              'app', 'helpers', 'dry_crud', 'table', 'actions.rb'),
+                    "\"icon icon-",
+                    "\"glyphicon glyphicon-")
        FileUtils.rm(File.join(TEST_APP_ROOT,
                               'app', 'assets', 'stylesheets', 'sample.scss'))
     end

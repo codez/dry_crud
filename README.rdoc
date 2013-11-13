@@ -320,6 +320,7 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 === Views
 
 All templates in the +list+ and +crud+ folders may be 'overriden' individually in a respective view folder. Define the basic structure of your CRUD views here and adapt it as required for each single model. Actually, the <tt>_list.html.erb</tt> partial from the +list+ folder gets overriden in the +crud+ folder already.
+
 All templates are available as HAML as well.
 
 ==== List
@@ -358,7 +359,7 @@ views/shared/_labeled.html.erb:: Partial to define the layout for an arbitrary c
 
 views/shared/_error_messages.html.erb:: Partial to display the validation errors in Rails 2 style.
 
-views/layouts/crud.html.erb:: An example layout showing how to use the <tt>@title</tt> and +flash+. Most probably you want to merge this with your <tt>application.html.erb</tt> or adapt the main CRUD templates, so you wont need this file.
+views/layouts/application.html.erb:: An example layout showing how to use the <tt>@title</tt> and +flash+.
 
 views/layouts/_flash.html.erb:: An simple partial to display the various flash messages. Included from <tt>crud.html.erb</tt>.
 

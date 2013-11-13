@@ -73,7 +73,7 @@ module DryCrud::Table
 
     # Generic action link inside a table.
     def table_action_link(icon, url, html_options = {})
-      add_css_class(html_options, "glyphicon glyphicon-#{icon}")
+      add_css_class(html_options, "icon icon-#{icon}")
       link_to('', url, html_options)
     end
 
