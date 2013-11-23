@@ -30,7 +30,7 @@ MethodLength:
 
 CyclomaticComplexity:
   Max: 8
-  
+
 Attr:
   Enabled: false
 

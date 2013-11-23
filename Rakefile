@@ -123,12 +123,12 @@ namespace :test do
     desc "Adds pagination to the test app"
     task :add_pagination do
       list_ctrl = File.join(TEST_APP_ROOT,
-                            'app', 'controllers', 'dry_crud', 'list_actions.rb')
+                            'app', 'controllers', 'list_controller.rb')
       file_replace(list_ctrl,
                    /def list_entries\n\s+(.+)\s*\n/,
                    "def list_entries\n" +
-                   "      list = \\1\n" +
-                   "      list.page(params[:page]).per(10)\n")
+                   "    list = \\1\n" +
+                   "    list.page(params[:page]).per(10)\n")
       file_replace(File.join(TEST_APP_ROOT,
                              'app', 'views', 'list', 'index.html.erb'),
                    "<%= render 'list' %>",

@@ -269,11 +269,9 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 === Controller
 
-{controller/crud_controller.rb}[http://codez.ch/dry_crud?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and XML requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on ListController.
+{controller/crud_controller.rb}[http://codez.ch/dry_crud?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and JSON requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on ListController.
 
 {controller/list_controller.rb}[http://codez.ch/dry_crud?q=ListController]:: Abstract controller providing a basic list action. Use this controller if you require read-only functionality. It includes the following modules.
-
-{controller/dry_crud/list_actions.rb}[http://codez.ch/dry_crud?q=DryCrud::ListActions]:: The index action and its dependencies used in the ListController.
 
 {controller/dry_crud/generic_model.rb}[http://codez.ch/dry_crud?q=DryCrud::GenericModel]:: Work with the model whose name corrsponds to the controller's name.
 
