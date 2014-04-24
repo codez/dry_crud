@@ -39,7 +39,7 @@ class Admin::CountriesControllerTest < ActionController::TestCase
   end
 
   def test_entry
-    countries(:usa)
+    countries(:br)
   end
 
   def test_entry_attrs

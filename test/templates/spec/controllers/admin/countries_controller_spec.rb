@@ -7,7 +7,7 @@ describe Admin::CountriesController do
 
   include_examples 'crud controller', skip: %w(show html plain)
 
-  let(:test_entry)       { countries(:usa) }
+  let(:test_entry)       { countries(:br) }
   let(:test_entry_attrs) do
     { name: 'United States of America', code: 'US' }
   end

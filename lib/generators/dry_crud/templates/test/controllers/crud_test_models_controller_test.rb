@@ -1,5 +1,6 @@
 # encoding: UTF-8
 require 'test_helper'
+require 'support/crud_test_helper'
 require 'support/crud_test_model'
 require 'support/crud_controller_test_helper'
 
@@ -39,7 +40,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_index_js
-    get :index, test_params(format: 'js')
+    xhr :get, :index, test_params
     assert_response :success
     assert_equal 'index js', @response.body
     assert entries.present?

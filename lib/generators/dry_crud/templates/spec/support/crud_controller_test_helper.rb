@@ -12,7 +12,11 @@ module CrudControllerTestHelper
     params = scope_params.merge(format: m[:format])
     params.merge!(id: test_entry.id) if m[:id]
     params.merge!(example_params)
-    send(m[:method], m[:action], params)
+    if m[:method] == :get && m[:format] == :js
+      xhr(:get, m[:action], params)
+    else
+      send(m[:method], m[:action], params)
+    end
   end
 
   # If a combine key is given in metadata, only the first request for all

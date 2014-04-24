@@ -40,14 +40,14 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   def test_show_js
-    get :show, id: test_entry.id, format: :js
+    xhr :get, :show, id: test_entry.id
     assert_response :success
     assert_template 'show'
     assert_match /\$\('#content'\)/, response.body
   end
 
   def test_edit_js
-    get :edit, id: test_entry.id, format: :js
+    xhr :get, :edit, id: test_entry.id
     assert_response :success
     assert_template 'edit'
     assert_match /\$\('#content'\)/, response.body

@@ -1,6 +1,7 @@
 # encoding: UTF-8
 require 'test_helper'
 require 'support/crud_test_model'
+require 'support/crud_test_models_controller'
 
 # Test I18nHelper
 class I18nHelperTest < ActionView::TestCase

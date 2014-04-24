@@ -126,7 +126,7 @@ module CrudTestHelper
 
   def special_routing
     # test:unit uses instance variable, rspec the method
-    controller = @controller || controller
+    controller = @controller || @_controller || controller
     @routes = ActionDispatch::Routing::RouteSet.new
     _routes = @routes
 
