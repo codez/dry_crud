@@ -83,7 +83,7 @@ describe FormatHelper do
         end
 
         it 'adds delimiters' do
-          f(12345.6789).should == '12,345.679'
+          f(12_345.6789).should == '12,345.679'
         end
       end
 

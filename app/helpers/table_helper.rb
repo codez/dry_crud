@@ -15,7 +15,7 @@ module TableHelper
   # appended to the attribute columns.
   # If entries is empty, an appropriate message is rendered.
   # An options hash may be given as the last argument.
-  def plain_table(entries, *attrs, &block)
+  def plain_table(entries, *attrs)
     options = attrs.extract_options!
     add_css_class(options, 'table table-striped table-hover')
     builder = options.delete(:builder) || DryCrud::Table::Builder
@@ -73,7 +73,7 @@ module TableHelper
 
   private
 
-  def explode_attrs_with_options(attrs, &block)
+  def explode_attrs_with_options(attrs)
     options = attrs.extract_options!
     if !block_given? && attrs.blank?
       attrs = default_crud_attrs

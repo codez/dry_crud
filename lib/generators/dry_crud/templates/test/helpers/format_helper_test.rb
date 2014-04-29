@@ -24,7 +24,7 @@ class FormatHelperTest < ActionView::TestCase
     result = labeled('label') { 'value' }
 
     assert result.html_safe?
-    assert_dom_equal '<dt>label</dt> ' +
+    assert_dom_equal '<dt>label</dt> ' \
                      "<dd class='value'>value</dd>",
                      result.squish
   end
@@ -33,7 +33,7 @@ class FormatHelperTest < ActionView::TestCase
     result = labeled('label', '')
 
     assert result.html_safe?
-    assert_dom_equal '<dt>label</dt> ' +
+    assert_dom_equal '<dt>label</dt> ' \
                      "<dd class='value'>#{EMPTY_STRING}</dd>",
                      result.squish
   end
@@ -42,7 +42,7 @@ class FormatHelperTest < ActionView::TestCase
     result = labeled('label', 'value <unsafe>')
 
     assert result.html_safe?
-    assert_dom_equal '<dt>label</dt> ' +
+    assert_dom_equal '<dt>label</dt> ' \
                      "<dd class='value'>value &lt;unsafe&gt;</dd>",
                      result.squish
   end
@@ -50,7 +50,7 @@ class FormatHelperTest < ActionView::TestCase
   test 'labeled attr' do
     result = labeled_attr('foo', :size)
     assert result.html_safe?
-    assert_dom_equal '<dt>Size</dt> ' +
+    assert_dom_equal '<dt>Size</dt> ' \
                      "<dd class='value'>3 chars</dd>",
                      result.squish
   end

@@ -2,74 +2,76 @@
 require 'test_helper'
 require 'support/crud_controller_test_helper'
 
-# Cities Controller Test
-class Admin::CitiesControllerTest < ActionController::TestCase
+module Admin
+  # Cities Controller Test
+  class CitiesControllerTest < ActionController::TestCase
 
-  include CrudControllerTestHelper
+    include CrudControllerTestHelper
 
-  def test_setup
-    assert_equal 3, City.count
-    assert_recognizes({ controller: 'admin/cities',
-                        action: 'index',
-                        country_id: '1' },
-                      'admin/countries/1/cities')
-    assert_recognizes({ controller: 'admin/cities',
-                        action: 'show',
-                        country_id: '2',
-                        id: '1' },
-                      'admin/countries/2/cities/1')
-  end
-
-  def test_index
-    super
-    expected = test_entry.country.cities.includes(:country)
-                                        .order('countries.code, cities.name')
-    if expected.respond_to?(:references)
-      expected = expected.references(:countries)
+    def test_setup
+      assert_equal 3, City.count
+      assert_recognizes({ controller: 'admin/cities',
+                          action: 'index',
+                          country_id: '1' },
+                        'admin/countries/1/cities')
+      assert_recognizes({ controller: 'admin/cities',
+                          action: 'show',
+                          country_id: '2',
+                          id: '1' },
+                        'admin/countries/2/cities/1')
     end
-    assert_equal expected.to_a, entries.to_a
 
-    assert_equal @controller.send(:entries), assigns(:cities)
-    assert_equal [:admin, test_entry.country], @controller.send(:parents)
-    assert_equal test_entry.country, assigns(:country)
-    assert_equal test_entry.country, @controller.send(:parent)
-    assert_equal test_entry.country.cities.to_a,
-                 @controller.send(:model_scope).to_a
-    assert_equal [:admin, test_entry.country, 2],
-                 @controller.send(:path_args, 2)
-  end
+    def test_index
+      super
+      expected = test_entry.country.cities.includes(:country)
+                                          .order('countries.code, cities.name')
+      if expected.respond_to?(:references)
+        expected = expected.references(:countries)
+      end
+      assert_equal expected.to_a, entries.to_a
 
-  def test_show
-    super
-    assert_equal @controller.send(:entry), assigns(:city)
-    assert_equal [:admin, test_entry.country], @controller.send(:parents)
-    assert_equal test_entry.country, assigns(:country)
-    assert_equal test_entry.country, @controller.send(:parent)
-  end
-
-  def test_create
-    super
-    assert_equal test_entry.country, entry.country
-  end
-
-  def test_destroy_with_inhabitants
-    ny = cities(:ny)
-    assert_no_difference('City.count') do
-      @request.env['HTTP_REFERER'] = admin_country_city_url(ny.country, ny)
-      delete :destroy, country_id: ny.country_id, id: ny.id
+      assert_equal @controller.send(:entries), assigns(:cities)
+      assert_equal [:admin, test_entry.country], @controller.send(:parents)
+      assert_equal test_entry.country, assigns(:country)
+      assert_equal test_entry.country, @controller.send(:parent)
+      assert_equal test_entry.country.cities.to_a,
+                   @controller.send(:model_scope).to_a
+      assert_equal [:admin, test_entry.country, 2],
+                   @controller.send(:path_args, 2)
     end
-    assert_redirected_to [:admin, ny.country, ny]
-    assert flash[:alert].present?
+
+    def test_show
+      super
+      assert_equal @controller.send(:entry), assigns(:city)
+      assert_equal [:admin, test_entry.country], @controller.send(:parents)
+      assert_equal test_entry.country, assigns(:country)
+      assert_equal test_entry.country, @controller.send(:parent)
+    end
+
+    def test_create
+      super
+      assert_equal test_entry.country, entry.country
+    end
+
+    def test_destroy_with_inhabitants
+      ny = cities(:ny)
+      assert_no_difference('City.count') do
+        @request.env['HTTP_REFERER'] = admin_country_city_url(ny.country, ny)
+        delete :destroy, country_id: ny.country_id, id: ny.id
+      end
+      assert_redirected_to [:admin, ny.country, ny]
+      assert flash[:alert].present?
+    end
+
+    private
+
+    def test_entry
+      cities(:rj)
+    end
+
+    def test_entry_attrs
+      { name: 'Rejkiavik' }
+    end
+
   end
-
-  private
-
-  def test_entry
-    cities(:rj)
-  end
-
-  def test_entry_attrs
-    { name: 'Rejkiavik' }
-  end
-
 end

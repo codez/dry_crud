@@ -47,7 +47,7 @@ describe 'DryCrud::Form::Builder' do
       last_seen: :datetime_field,
       companion_id: :belongs_to_field,
       other_ids: :has_many_field,
-      more_ids: :has_many_field,
+      more_ids: :has_many_field
     }.each do |attr, method|
       it 'dispatches #{attr} attr to #{method}' do
         form.should_receive(method).with(attr, class: 'form-control')
@@ -137,7 +137,7 @@ describe 'DryCrud::Form::Builder' do
 
   describe '#string_field' do
     it 'sets maxlength if attr has a limit' do
-      form.string_field(:name).should match /maxlength="50"/
+      form.string_field(:name).should match(/maxlength="50"/)
     end
   end
 
@@ -147,7 +147,7 @@ describe 'DryCrud::Form::Builder' do
 
       it { should be_html_safe }
       it 'provides the same interface as rails' do
-        should match /label [^>]*for.+Gugus dada/
+        should match(/label [^>]*for.+Gugus dada/)
       end
     end
 
@@ -156,7 +156,7 @@ describe 'DryCrud::Form::Builder' do
 
       it { should be_html_safe }
       it 'provides the same interface as rails' do
-        should match /label [^>]*for.+hoho/
+        should match(/label [^>]*for.+hoho/)
       end
     end
 
@@ -168,7 +168,7 @@ describe 'DryCrud::Form::Builder' do
 
       it { should be_html_safe }
       it 'provides the same interface as rails' do
-        should match /label [^>]*for.+input/m
+        should match(/label [^>]*for.+input/m)
       end
     end
 
@@ -178,7 +178,7 @@ describe 'DryCrud::Form::Builder' do
       end
 
       it { should be_html_safe }
-      it { should match /label [^>]*for.+<input/m }
+      it { should match(/label [^>]*for.+<input/m) }
     end
 
     context 'with custom content in block' do
@@ -189,7 +189,7 @@ describe 'DryCrud::Form::Builder' do
       end
 
       it { should be_html_safe }
-      it { should match /label [^>]*for.+<input/m }
+      it { should match(/label [^>]*for.+<input/m) }
     end
 
     context 'with caption and content in argument' do
@@ -200,7 +200,7 @@ describe 'DryCrud::Form::Builder' do
       end
 
       it { should be_html_safe }
-      it { should match /label [^>]*for.+>Caption<\/label>.*<input/m }
+      it { should match(/label [^>]*for.+>Caption<\/label>.*<input/m) }
     end
 
     context 'with caption and content in block' do
@@ -211,7 +211,7 @@ describe 'DryCrud::Form::Builder' do
       end
 
       it { should be_html_safe }
-      it { should match /label [^>]*for.+>Caption<\/label>.*<input/m }
+      it { should match(/label [^>]*for.+>Caption<\/label>.*<input/m) }
     end
   end
 

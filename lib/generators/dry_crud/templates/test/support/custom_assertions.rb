@@ -15,7 +15,7 @@ module CustomAssertions
   def assert_count(expected, regexp, string, msg = '')
     actual = string.scan(regexp).size
     msg = message(msg) do
-      "Expected #{mu_pp(regexp)} to occur #{expected} time(s), " +
+      "Expected #{mu_pp(regexp)} to occur #{expected} time(s), " \
       "but occured #{actual} time(s) in \n#{mu_pp(string)}"
     end
     assert expected == actual, msg
@@ -26,7 +26,7 @@ module CustomAssertions
   def assert_valid(record, msg = '')
     record.valid?
     msg = message(msg) do
-      "Expected #{mu_pp(record)} to be valid, " +
+      "Expected #{mu_pp(record)} to be valid, " \
       "but has the following errors:\n" +
       mu_pp(record.errors.full_messages.join("\n"))
     end
@@ -73,7 +73,7 @@ module CustomAssertions
   def assert_other_attrs_have_no_errors(record, *invalid_attrs)
     record.errors.each do |a, error|
       msg = message do
-        "Attribute #{mu_pp(a)} not declared as invalid attribute, " +
+        "Attribute #{mu_pp(a)} not declared as invalid attribute, " \
         "but has the following error(s):\n#{mu_pp(error)}"
       end
       assert invalid_attrs.include?(a), msg

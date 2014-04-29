@@ -38,7 +38,7 @@ module FormatHelper
   # Renders a simple unordered list, which will
   # simply render all passed items or yield them
   # to your block.
-  def simple_list(items, ul_options = {}, &block)
+  def simple_list(items, ul_options = {})
     content_tag_nested(:ul, items, ul_options) do |item|
       content_tag(:li, block_given? ? yield(item) : f(item))
     end
@@ -157,7 +157,7 @@ module FormatHelper
 
   # Returns true if no link should be created when formatting the given
   # association.
-  def assoc_link?(assoc, val)
+  def assoc_link?(_assoc, val)
     respond_to?("#{val.class.model_name.singular_route_key}_path".to_sym)
   end
 

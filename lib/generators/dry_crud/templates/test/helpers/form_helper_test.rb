@@ -23,15 +23,15 @@ class FormHelperTest < ActionView::TestCase
       end
     end
 
-    assert_match /form .*?action="\/crud_test_models\/#{e.id}"
+    assert_match(/form .*?action="\/crud_test_models\/#{e.id}"
                        .*?class="special\ form-horizontal"
-                       .*?method="post"/x, f
-    assert_match /input .*?name="_method"
+                       .*?method="post"/x, f)
+    assert_match(/input .*?name="_method"
                         .*?type="hidden"
-                        .*?value="(patch|put)"/x, f
-    assert_match /input .*?name="crud_test_model\[name\]"
+                        .*?value="(patch|put)"/x, f)
+    assert_match(/input .*?name="crud_test_model\[name\]"
                         .*?type="text"
-                        .*?value="AAAAA"/x, f
+                        .*?value="AAAAA"/x, f)
   end
 
   test 'standard form' do
@@ -45,28 +45,28 @@ class FormHelperTest < ActionView::TestCase
       end
     end
 
-    assert_match /form .*?action="\/crud_test_models\/#{e.id}"
+    assert_match(/form .*?action="\/crud_test_models\/#{e.id}"
                        .*?class="special\ form-horizontal"
-                      .*?method="post"/x, f
-    assert_match /input .*?name="_method"
+                      .*?method="post"/x, f)
+    assert_match(/input .*?name="_method"
                         .*?type="hidden"
-                        .*?value="(patch|put)"/x, f
-    assert_match /input .*?name="crud_test_model\[name\]"
+                        .*?value="(patch|put)"/x, f)
+    assert_match(/input .*?name="crud_test_model\[name\]"
                         .*?type="text"
-                        .*?value="AAAAA"/x, f
-    assert_match /input .*?name="crud_test_model\[birthdate\]"
-                        .*?type="date"/x, f
-    assert_match /input .*?name="crud_test_model\[children\]"
+                        .*?value="AAAAA"/x, f)
+    assert_match(/input .*?name="crud_test_model\[birthdate\]"
+                        .*?type="date"/x, f)
+    assert_match(/input .*?name="crud_test_model\[children\]"
                         .*?type="number"
-                        .*?value=\"9\"/x, f
-    assert_match /input .*?name="crud_test_model\[human\]"
-                        .*?type="checkbox"/x, f
-    assert_match /button\ .*?type="submit"\>
+                        .*?value=\"9\"/x, f)
+    assert_match(/input .*?name="crud_test_model\[human\]"
+                        .*?type="checkbox"/x, f)
+    assert_match(/button\ .*?type="submit"\>
                   #{t('global.button.save')}
-                  \<\/button\>/x, f
-    assert_match /\<a\ .*href="\/somewhere".*\>
+                  \<\/button\>/x, f)
+    assert_match(/\<a\ .*href="\/somewhere".*\>
                   #{t('global.button.cancel')}
-                  \<\/a\>/x, f
+                  \<\/a\>/x, f)
   end
 
   test 'standard form with errors' do
@@ -82,18 +82,18 @@ class FormHelperTest < ActionView::TestCase
       end
     end
 
-    assert_match /form .*?action="\/crud_test_models\/#{e.id}"
-                       .*?method="post"/x, f
-    assert_match /input .*?name="_method"
+    assert_match(/form .*?action="\/crud_test_models\/#{e.id}"
+                       .*?method="post"/x, f)
+    assert_match(/input .*?name="_method"
                         .*?type="hidden"
-                        .*?value="(patch|put)"/x, f
-    assert_match /div[^>]* id='error_explanation'/, f
-    assert_match /div\ class="form-group\ has-error"\>.*?
+                        .*?value="(patch|put)"/x, f)
+    assert_match(/div[^>]* id='error_explanation'/, f)
+    assert_match(/div\ class="form-group\ has-error"\>.*?
                   \<input .*?name="crud_test_model\[name\]"
-                          .*?type="text"/x, f
-    assert_match /input .*?name="crud_test_model\[birthdate\]"
+                          .*?type="text"/x, f)
+    assert_match(/input .*?name="crud_test_model\[birthdate\]"
                         .*?type="date"
-                        .*?value="1910-01-01"/x, f
+                        .*?value="1910-01-01"/x, f)
   end
 
   test 'crud form' do
@@ -101,29 +101,29 @@ class FormHelperTest < ActionView::TestCase
       capture { crud_form }
     end
 
-    assert_match /form .*?action="\/crud_test_models\/#{entry.id}"/, f
-    assert_match /input .*?name="crud_test_model\[name\]"
-                        .*?type="text"/x, f
-    assert_match /input .*?name="crud_test_model\[whatever\]"
-                        .*?type="text"/x, f
-    assert_match /input .*?name="crud_test_model\[children\]"
-                        .*?type="number"/x, f
-    assert_match /input .*?name="crud_test_model\[rating\]"
-                        .*?type="number"/x, f
-    assert_match /input .*?name="crud_test_model\[income\]"
-                        .*?type="number"/x, f
-    assert_match /input .*?name="crud_test_model\[birthdate\]"
-                        .*?type="date"/x, f
-    assert_match /input .*?name="crud_test_model\[gets_up_at\]"
-                        .*?type="time"/x, f
-    assert_match /input .*?name="crud_test_model\[last_seen\]"
-                        .*?type="datetime"/x, f
-    assert_match /input .*?name="crud_test_model\[human\]"
-                        .*?type="checkbox"/x, f
-    assert_match /select .*?name="crud_test_model\[companion_id\]"/, f
-    assert_match /textarea .*?name="crud_test_model\[remarks\]"/, f
-    assert_match /a .*href="\/crud_test_models\/#{entry.id}\?returning=true"
-                  .*>#{t('global.button.cancel')}<\/a>/x, f
+    assert_match(/form .*?action="\/crud_test_models\/#{entry.id}"/, f)
+    assert_match(/input .*?name="crud_test_model\[name\]"
+                        .*?type="text"/x, f)
+    assert_match(/input .*?name="crud_test_model\[whatever\]"
+                        .*?type="text"/x, f)
+    assert_match(/input .*?name="crud_test_model\[children\]"
+                        .*?type="number"/x, f)
+    assert_match(/input .*?name="crud_test_model\[rating\]"
+                        .*?type="number"/x, f)
+    assert_match(/input .*?name="crud_test_model\[income\]"
+                        .*?type="number"/x, f)
+    assert_match(/input .*?name="crud_test_model\[birthdate\]"
+                        .*?type="date"/x, f)
+    assert_match(/input .*?name="crud_test_model\[gets_up_at\]"
+                        .*?type="time"/x, f)
+    assert_match(/input .*?name="crud_test_model\[last_seen\]"
+                        .*?type="datetime"/x, f)
+    assert_match(/input .*?name="crud_test_model\[human\]"
+                        .*?type="checkbox"/x, f)
+    assert_match(/select .*?name="crud_test_model\[companion_id\]"/, f)
+    assert_match(/textarea .*?name="crud_test_model\[remarks\]"/, f)
+    assert_match(/a .*href="\/crud_test_models\/#{entry.id}\?returning=true"
+                  .*>#{t('global.button.cancel')}<\/a>/x, f)
   end
 
   def entry

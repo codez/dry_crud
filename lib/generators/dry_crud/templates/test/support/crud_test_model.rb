@@ -46,5 +46,3 @@ class OtherCrudTestModel < ActiveRecord::Base #:nodoc:
     name
   end
 end
-
-

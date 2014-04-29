@@ -33,7 +33,7 @@ module CrudTestHelper
     entry
   end
 
-  def sortable?(attr)
+  def sortable?(_attr)
     true
   end
 
@@ -81,8 +81,8 @@ module CrudTestHelper
 
   def create_other_crud_test_models(c)
     c.create_table :other_crud_test_models, force: true do |t|
-      t.string   :name, null: false, limit: 50
-      t.integer  :more_id
+      t.string  :name, null: false, limit: 50
+      t.integer :more_id
     end
   end
 
@@ -128,11 +128,11 @@ module CrudTestHelper
     # test:unit uses instance variable, rspec the method
     controller = @controller || @_controller || controller
     @routes = ActionDispatch::Routing::RouteSet.new
-    _routes = @routes
+    routes = @routes
 
-    controller.singleton_class.send(:include, _routes.url_helpers)
+    controller.singleton_class.send(:include, routes.url_helpers)
     controller.view_context_class = Class.new(controller.view_context_class) do
-      include _routes.url_helpers
+      include routes.url_helpers
     end
 
     @routes.draw { resources :crud_test_models }
@@ -148,8 +148,8 @@ module CrudTestHelper
       birthdate: "#{1900 + 10 * index}-#{index}-#{index}",
       # store entire date to avoid time zone issues
       gets_up_at: Time.zone.local(2000, 1, 1, index, index),
-      last_seen: "#{2000 + 10 * index}-#{index}-#{index} " +
-                    "1#{index}:2#{index}",
+      last_seen: "#{2000 + 10 * index}-#{index}-#{index} " \
+                 "1#{index}:2#{index}",
       human: index.even?,
       remarks: "#{c} #{str(index + 1)} #{str(index + 2)}\n" *
                   (index % 3 + 1))

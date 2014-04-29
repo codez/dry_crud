@@ -12,11 +12,14 @@ module DryCrud
 
     private
 
+    # rubocop:disable PredicateName
+
     # Check whether the resource has errors. Additionally checks the :success
     # option.
     def has_errors?
       options[:success] == false || super
     end
+    # rubocop:enable PredicateName
 
     # Wraps the resources with the path_args for correct nesting.
     def with_path_args(resources, controller)

@@ -149,7 +149,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_create
     super
-    assert_match /model got created/, flash[:notice]
+    assert_match(/model got created/, flash[:notice])
     assert flash[:alert].blank?
     assert_equal [:before_create, :before_save, :after_save, :after_create],
                  @controller.called_callbacks
@@ -234,7 +234,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     end
     assert_response :unprocessable_entity
     assert entry.new_record?
-    assert_match /errors/, @response.body
+    assert_match(/errors/, @response.body)
     assert_equal [:before_create, :before_save], @controller.called_callbacks
   end
 
@@ -257,7 +257,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
                  format: 'json'
     assert_response :unprocessable_entity
     assert entry.changed?
-    assert_match /errors/, @response.body
+    assert_match(/errors/, @response.body)
     assert flash[:notice].blank?
     assert_equal 20, entry.rating
     assert_equal [:before_update, :before_save], @controller.called_callbacks
@@ -270,7 +270,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
       delete :destroy, test_params(id: crud_test_models(:BBBBB).id)
     end
     assert_redirected_to_show(entry)
-    assert_match /companion/, flash[:alert]
+    assert_match(/companion/, flash[:alert])
     assert flash[:notice].blank?
   end
 
@@ -281,7 +281,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
       delete :destroy, test_params(id: e.id)
     end
     assert_redirected_to_index
-    assert_match /illegal name/, flash[:alert]
+    assert_match(/illegal name/, flash[:alert])
     assert flash[:notice].blank?
   end
 
@@ -291,7 +291,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
                                    format: 'json')
     end
     assert_response :unprocessable_entity
-    assert_match /errors/, @response.body
+    assert_match(/errors/, @response.body)
     assert flash[:notice].blank?
   end
 

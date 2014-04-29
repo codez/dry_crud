@@ -151,8 +151,9 @@ module CrudControllerTestHelper
   def assert_attrs_equal(attrs) # :nodoc:
     attrs.each do |key, value|
       actual = entry.send(key)
-      assert_equal value, actual,
-                   "#{key} is expected to be <#{value.inspect}>, " +
+      assert_equal value,
+                   actual,
+                   "#{key} is expected to be <#{value.inspect}>, " \
                    "got <#{actual.inspect}>"
     end
   end

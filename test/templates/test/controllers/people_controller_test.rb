@@ -43,14 +43,14 @@ class PeopleControllerTest < ActionController::TestCase
     xhr :get, :show, id: test_entry.id
     assert_response :success
     assert_template 'show'
-    assert_match /\$\('#content'\)/, response.body
+    assert_match(/\$\('#content'\)/, response.body)
   end
 
   def test_edit_js
     xhr :get, :edit, id: test_entry.id
     assert_response :success
     assert_template 'edit'
-    assert_match /\$\('#content'\)/, response.body
+    assert_match(/\$\('#content'\)/, response.body)
   end
 
   def test_update_js
@@ -59,7 +59,7 @@ class PeopleControllerTest < ActionController::TestCase
                  person: { name: 'New Name' }
     assert_response :success
     assert_template 'update'
-    assert_match /\$\('#content'\)/, response.body
+    assert_match(/\$\('#content'\)/, response.body)
   end
 
   def test_update_fail_js
@@ -68,7 +68,7 @@ class PeopleControllerTest < ActionController::TestCase
                  person: { name: ' ' }
     assert_response :success
     assert_template 'update'
-    assert_match /alert/, response.body
+    assert_match(/alert/, response.body)
   end
 
   private
