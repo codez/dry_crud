@@ -10,7 +10,7 @@ module DryCrud
 
     argument :filename, type: :string, desc: 'Name or part of the filename to copy. Must match exactly one file.'
 
-    def copy_file
+    def copy_matching_file
       files = matching_files
       case files.size
       when 1
@@ -29,7 +29,7 @@ module DryCrud
 
     def matching_files
       all_template_files.collect do |root, files|
-        files.select do |f| 
+        files.select do |f|
           included = f.include?(filename)
           @root_folder = root if included
           included
