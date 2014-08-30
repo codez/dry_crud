@@ -102,7 +102,6 @@ module DryCrud
       # depending on the attribute.
       def input
         @input ||= begin
-          builder.add_css_class(options, 'form-control')
           options[:required] = 'required' if required
           builder.send(field_method, attr, *(args << options))
         end

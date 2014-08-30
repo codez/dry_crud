@@ -32,7 +32,6 @@ module DryCrud
       test 'input_field dispatches string attr to string_field' do
         assert_equal form.with_addon(
                        form.string_field(:name,
-                                         class: 'form-control',
                                          required: 'required'),
                        '*'),
                      form.input_field(:name)
@@ -40,57 +39,56 @@ module DryCrud
       end
 
       test 'input_field dispatches password attr to password_field' do
-        assert_equal form.password_field(:password, class: 'form-control'),
+        assert_equal form.password_field(:password),
                      form.input_field(:password)
         assert form.password_field(:name).html_safe?
       end
 
       test 'input_field dispatches email attr to email_field' do
-        assert_equal form.email_field(:email, class: 'form-control'),
+        assert_equal form.email_field(:email),
                      form.input_field(:email)
         assert form.email_field(:name).html_safe?
       end
 
       test 'input_field dispatches text attr to text_area' do
-        assert_equal form.text_area(:remarks, class: 'form-control'),
+        assert_equal form.text_area(:remarks),
                      form.input_field(:remarks)
         assert form.text_area(:remarks).html_safe?
       end
 
       test 'input_field dispatches integer attr to integer_field' do
-        assert_equal form.integer_field(:children, class: 'form-control'),
+        assert_equal form.integer_field(:children),
                      form.input_field(:children)
         assert form.integer_field(:children).html_safe?
       end
 
       test 'input_field dispatches boolean attr to boolean_field' do
-        assert_equal form.boolean_field(:human, class: 'form-control'),
+        assert_equal form.boolean_field(:human),
                      form.input_field(:human)
         assert form.boolean_field(:human).html_safe?
       end
 
       test 'input_field dispatches date attr to date_field' do
-        assert_equal form.date_field(:birthdate, class: 'form-control'),
+        assert_equal form.date_field(:birthdate),
                      form.input_field(:birthdate)
         assert form.date_field(:birthdate).html_safe?
       end
 
       test 'input_field dispatches belongs_to attr to select field' do
-        assert_equal form.belongs_to_field(:companion_id,
-                                           class: 'form-control'),
+        assert_equal form.belongs_to_field(:companion_id),
                      form.input_field(:companion_id)
         assert form.belongs_to_field(:companion_id).html_safe?
       end
 
       test 'input_field dispatches has_and_belongs_to_many attr to ' \
            'select field' do
-        assert_equal form.has_many_field(:other_ids, class: 'form-control'),
+        assert_equal form.has_many_field(:other_ids),
                      form.input_field(:other_ids)
         assert form.has_many_field(:other_ids).html_safe?
       end
 
       test 'input_field dispatches has_many attr to select field' do
-        assert_equal form.has_many_field(:more_ids, class: 'form-control'),
+        assert_equal form.has_many_field(:more_ids),
                      form.input_field(:more_ids)
         assert form.has_many_field(:more_ids).html_safe?
       end

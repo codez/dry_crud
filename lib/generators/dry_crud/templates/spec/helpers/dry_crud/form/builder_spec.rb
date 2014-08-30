@@ -30,7 +30,7 @@ describe 'DryCrud::Form::Builder' do
 
     it 'dispatches name attr to string field' do
       form.should_receive(:string_field)
-          .with(:name, class: 'form-control', required: 'required')
+          .with(:name, required: 'required')
           .and_return('<input>')
       form.input_field(:name)
     end
@@ -50,7 +50,7 @@ describe 'DryCrud::Form::Builder' do
       more_ids: :has_many_field
     }.each do |attr, method|
       it 'dispatches #{attr} attr to #{method}' do
-        form.should_receive(method).with(attr, class: 'form-control')
+        form.should_receive(method).with(attr, {})
         form.input_field(attr)
       end
 

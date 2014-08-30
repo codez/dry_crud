@@ -13,6 +13,7 @@ gem 'sass-rails'
 gem 'coffee-rails'
 
 gem 'kaminari'
+gem 'bootstrap-sass'
 
 gem 'turbolinks'
 gem 'jbuilder'

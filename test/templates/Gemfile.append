@@ -15,6 +15,6 @@ gem 'kaminari'
 
 gem 'rspec-rails'
 
-gem 'bootstrap-sass-rails'
+gem 'bootstrap-sass'
 
 gem 'therubyracer', require: RUBY_PLATFORM.include?('linux') && 'v8'

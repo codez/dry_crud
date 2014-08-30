@@ -73,14 +73,34 @@ module DryCrud
 
       # Render a boolean field.
       def boolean_field(attr, html_options = {})
-        add_css_class(html_options, 'form-control')
-        check_box(attr, html_options)
+        content_tag(:div, class: 'checkbox') do
+          content_tag(:label) do
+            detail = html_options.delete(:detail) || '&nbsp;'.html_safe
+            safe_join([check_box(attr, html_options), ' ', detail])
+          end
+        end
+      end
+
+      # Add form-control class to all input fields.
+      %w(text_field
+         password_field
+         email_field
+         text_area
+         number_field
+         date_field
+         time_field
+         datetime_field).each do |method|
+        define_method(method) do |attr, html_options = {}|
+          add_css_class(html_options, 'form-control')
+          super(attr, html_options)
+        end
       end
 
       # Customize the standard text area to have 5 rows by default.
       def text_area(attr, html_options = {})
+        add_css_class(html_options, 'form-control')
         html_options[:rows] ||= 5
-        super
+        super(attr, html_options)
       end
 
       alias_method :integer_field, :number_field
@@ -116,6 +136,7 @@ module DryCrud
       def belongs_to_field(attr, html_options = {})
         list = association_entries(attr, html_options).to_a
         if list.present?
+          add_css_class(html_options, 'form-control')
           collection_select(attr, list, :id, :to_s,
                             select_options(attr, html_options),
                             html_options)

@@ -141,16 +141,25 @@ namespace :test do
 
     desc "Use Boostrap in the test app"
     task :use_bootstrap do
-       file_replace(File.join(TEST_APP_ROOT,
-                              'app', 'assets', 'stylesheets',
-                              'application.css'),
-                    " *= require_self",
-                    "*= require twitter/bootstrap\n *= require_self")
+       css = File.join(TEST_APP_ROOT,
+                       'app', 'assets', 'stylesheets', 'application.css')
+
+       if File.exists?(css)
+         file_replace(css,
+                      " *= require_self\n */",
+                      " *= require_self\n */\n" \
+                      "@import \"bootstrap-sprockets\";\n" \
+                      "@import \"bootstrap\";")
+         FileUtils.mv(css,
+                      File.join(TEST_APP_ROOT,
+                                'app', 'assets', 'stylesheets',
+                                'application.css.scss'))
+       end
        file_replace(File.join(TEST_APP_ROOT,
                               'app', 'assets', 'javascripts',
                               'application.js'),
                     "//= require_tree .",
-                    "//= require twitter/bootstrap\n//= require_tree .")
+                    "//= require bootstrap-sprockets\n//= require_tree .")
        file_replace(File.join(TEST_APP_ROOT,
                               'app', 'helpers', 'actions_helper.rb'),
                     "\"icon icon-",
@@ -159,8 +168,8 @@ namespace :test do
                               'app', 'helpers', 'dry_crud', 'table', 'actions.rb'),
                     "\"icon icon-",
                     "\"glyphicon glyphicon-")
-       FileUtils.rm(File.join(TEST_APP_ROOT,
-                              'app', 'assets', 'stylesheets', 'sample.scss'))
+       FileUtils.rm_f(File.join(TEST_APP_ROOT,
+                                'app', 'assets', 'stylesheets', 'sample.scss'))
     end
 
   end

@@ -38,6 +38,7 @@ module DryCrud
       def define_render_callbacks(*actions)
         args = actions.map { |a| :"render_#{a}" }
         args << { only: :before,
+                  # terminator: ->(ctrl, result) { result == false || ctrl.performed? }
                   terminator: 'result == false || performed?' }
         define_model_callbacks(*args)
       end
