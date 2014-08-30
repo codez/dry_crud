@@ -29,9 +29,10 @@ describe FormatHelper do
       subject { labeled('label') { 'value' } }
 
       it { should be_html_safe }
-      its(:squish) do
-        should =~ /^<dt>label<\/dt>
-                   \ <dd\ class=['"]value['"]>value<\/dd>$/x
+      it do
+        subject.squish.should =~
+          /^<dt>label<\/dt>
+           \ <dd\ class=['"]value['"]>value<\/dd>$/x
       end
     end
 
@@ -39,11 +40,12 @@ describe FormatHelper do
       subject { labeled('label') { '' } }
 
       it { should be_html_safe }
-      its(:squish) do
-        should =~ /<dt>label<\/dt>
-                   \ <dd\ class=['"]value['"]>
-                   #{UtilityHelper::EMPTY_STRING}
-                   <\/dd>$/x
+      it do
+        subject.squish.should =~
+          /<dt>label<\/dt>
+           \ <dd\ class=['"]value['"]>
+           #{UtilityHelper::EMPTY_STRING}
+           <\/dd>$/x
       end
     end
 
@@ -51,11 +53,12 @@ describe FormatHelper do
       subject { labeled('label') { 'value <unsafe>' } }
 
       it { should be_html_safe }
-      its(:squish) do
-        should =~ /<dt>label<\/dt>
-                   \ <dd\ class=['"]value['"]>
-                   value\ &lt;unsafe&gt;
-                   <\/dd>$/x
+      it do
+        subject.squish.should =~
+          /<dt>label<\/dt>
+           \ <dd\ class=['"]value['"]>
+           value\ &lt;unsafe&gt;
+           <\/dd>$/x
       end
     end
   end
@@ -64,9 +67,10 @@ describe FormatHelper do
     subject { labeled_attr('foo', :size) }
 
     it { should be_html_safe }
-    its(:squish) do
-      should =~ /<dt>Size<\/dt>
-                 \ <dd\ class=['"]value['"]>3\ chars<\/dd>$/x
+    it do
+      subject.squish.should =~
+        /<dt>Size<\/dt>
+         \ <dd\ class=['"]value['"]>3\ chars<\/dd>$/x
     end
   end
 

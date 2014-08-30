@@ -89,7 +89,7 @@ module CrudControllerTestHelper
 
     # Test the response status, default 200.
     def it_should_respond(status = 200)
-      its(:status) { should == status }
+      it { response.status.should == status }
     end
 
     # Test that entries are assigned.
@@ -110,6 +110,16 @@ module CrudControllerTestHelper
     # test is rendered.
     def it_should_render(template = nil)
       it { should render_template(template || example.metadata[:action]) }
+    end
+
+    # Test that a json response is rendered.
+    def it_should_render_json
+      it { response.body.should start_with('{') }
+    end
+
+    # Test that a json response containing the error is rendered.
+    def it_should_render_error_json
+      it { response.body.should match(/"errors":\{/) }
     end
 
     # Test that test_entry_attrs are set on entry.

@@ -107,7 +107,7 @@ shared_examples 'crud controller' do |options|
             combine: 'ij' do
       it_should_respond
       it_should_assign_entries
-      its(:body) { should start_with('[{') }
+      it { response.body.should start_with('[{') }
     end
   end
 
@@ -145,7 +145,7 @@ shared_examples 'crud controller' do |options|
             combine: 'sj' do
       it_should_respond
       it_should_assign_entry
-      its(:body) { should start_with('{') }
+      it_should_render_json
     end
   end
 
@@ -208,7 +208,7 @@ shared_examples 'crud controller' do |options|
               combine: 'cjv' do
         it_should_respond(201)
         it_should_set_attrs(:new)
-        its(:body) { should start_with('{') }
+        it_should_render_json
       end
 
       context 'with invalid params',
@@ -217,7 +217,7 @@ shared_examples 'crud controller' do |options|
               combine: 'cji' do
         it_should_respond(422)
         it_should_set_attrs(:new)
-        its(:body) { should match(/"errors":\{/) }
+        it_should_render_error_json
         it_should_persist_entry(false)
       end
     end
@@ -272,7 +272,7 @@ shared_examples 'crud controller' do |options|
               combine: 'ujv' do
         it_should_respond(204)
         it_should_set_attrs(:edit)
-        its(:body) { should match(/s*/) }
+        it { response.body.should be_empty }
         it_should_persist_entry
       end
 
@@ -282,7 +282,7 @@ shared_examples 'crud controller' do |options|
               combine: 'uji' do
         it_should_respond(422)
         it_should_set_attrs(:edit)
-        its(:body) { should match(/"errors":\{/) }
+        it_should_render_error_json
       end
     end
   end
@@ -316,12 +316,12 @@ shared_examples 'crud controller' do |options|
 
       context 'successfull', combine: 'djs' do
         it_should_respond(204)
-        its(:body) { should match(/s*/) }
+        it { response.body.should be_empty }
       end
 
       context 'with failure', failing: true, combine: 'djf' do
         it_should_respond(422)
-        its(:body) { should match(/"errors":\{/) }
+        it_should_render_error_json
       end
     end
   end

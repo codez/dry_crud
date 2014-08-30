@@ -195,7 +195,7 @@ describe CrudTestModelsController do
     context '.js', format: :js, combine: 'ijs' do
       it_should_respond
       it_should_assign_entries
-      its(:body) { should == 'index js' }
+      it { response.body.should == 'index js' }
     end
   end
 
@@ -318,6 +318,7 @@ describe CrudTestModelsController do
           it_should_persist_entry(false)
           it_should_not_have_flash(:notice)
           it_should_not_have_flash(:alert)
+          it_should_render_error_json
 
           it 'should not assign companions' do
             assigns(:companions).should be_nil
@@ -327,8 +328,6 @@ describe CrudTestModelsController do
             controller.called_callbacks.should ==
               [:before_create, :before_save]
           end
-
-          its(:body) { should match(/errors/) }
         end
       end
     end
@@ -376,12 +375,11 @@ describe CrudTestModelsController do
       context '.json', format: :json, combine: 'ujivp' do
         it_should_respond(422)
         it_should_not_have_flash(:notice)
+          it_should_render_error_json
 
         it 'should have called the correct callbacks' do
           controller.called_callbacks.should == [:before_update, :before_save]
         end
-
-        its(:body) { should match(/errors/) }
       end
     end
 
@@ -414,7 +412,7 @@ describe CrudTestModelsController do
       context '.json', format: :json, combine: 'djf' do
         it_should_respond(422)
         it_should_not_have_flash(:notice)
-        its(:body) { should match(/errors/) }
+        it_should_render_error_json
       end
 
       context 'callback', perform_request: false do

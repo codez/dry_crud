@@ -55,7 +55,7 @@ describe PeopleController do
     context '.js', format: :js do
       it_should_respond
       it_should_render
-      its(:body) { should match(/\$\('#content'\)/) }
+      it { response.body.should match(/\$\('#content'\)/) }
     end
   end
 
@@ -63,7 +63,7 @@ describe PeopleController do
     context '.js', format: :js do
       it_should_respond
       it_should_render
-      its(:body) { should match(/\$\('#content'\)/) }
+      it { response.body.should match(/\$\('#content'\)/) }
     end
   end
 
@@ -74,7 +74,7 @@ describe PeopleController do
 
         it_should_respond
         it_should_render
-        its(:body) { should match(/\$\('#content'\)/) }
+        it { response.body.should match(/\$\('#content'\)/) }
       end
 
       context 'with invalid params' do
@@ -82,7 +82,7 @@ describe PeopleController do
 
         it_should_respond
         it_should_render
-        its(:body) { should match(/alert/) }
+        it { response.body.should match(/alert/) }
       end
     end
   end
