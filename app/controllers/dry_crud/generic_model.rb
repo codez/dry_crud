@@ -13,16 +13,16 @@ module DryCrud
     included do
       helper_method :model_class, :models_label, :path_args
 
-    private
+      private
 
       delegate :model_class, :models_label, :model_identifier, to: 'self.class'
     end
 
     private
 
-  # The scope where model entries will be listed and created.
-  # This is mainly used for nested models to provide the
-  # required context.
+    # The scope where model entries will be listed and created.
+    # This is mainly used for nested models to provide the
+    # required context.
     def model_scope
       if Rails.version < '4.0'
         model_class.scoped
@@ -37,16 +37,16 @@ module DryCrud
       last
     end
 
-  # Get the instance variable named after the +model_class+.
-  # If the collection variable is required, pass true as the second argument.
+    # Get the instance variable named after the +model_class+.
+    # If the collection variable is required, pass true as the second argument.
     def model_ivar_get(plural = false)
       name = ivar_name(model_class)
       name = name.pluralize if plural
       instance_variable_get(:"@#{name}")
     end
 
-  # Sets an instance variable with the underscored class name if the given
-  # value. If the value is a collection, sets the plural name.
+    # Sets an instance variable with the underscored class name if the given
+    # value. If the value is a collection, sets the plural name.
     def model_ivar_set(value)
       name = if value.respond_to?(:klass) # ActiveRecord::Relation
                ivar_name(value.klass).pluralize
@@ -62,15 +62,15 @@ module DryCrud
       klass.model_name.param_key
     end
 
-  # Class methods from GenericModel.
+    # Class methods from GenericModel.
     module ClassMethods
       # The ActiveRecord class of the model.
       def model_class
         @model_class ||= controller_name.classify.constantize
       end
 
-        # The identifier of the model used for form parameters.
-        # I.e., the symbol of the underscored model name.
+      # The identifier of the model used for form parameters.
+      # I.e., the symbol of the underscored model name.
       def model_identifier
         @model_identifier ||= model_class.model_name.param_key
       end

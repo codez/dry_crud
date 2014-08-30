@@ -37,8 +37,9 @@ module DryCrud
       # Defines before callbacks for the render actions.
       def define_render_callbacks(*actions)
         args = actions.map { |a| :"render_#{a}" }
+        # Rails 4.1 terminator:
+        # ->(ctrl, result) { result == false || ctrl.performed? }
         args << { only: :before,
-                  # terminator: ->(ctrl, result) { result == false || ctrl.performed? }
                   terminator: 'result == false || performed?' }
         define_model_callbacks(*args)
       end

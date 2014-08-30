@@ -214,7 +214,7 @@ end
 
 
 def file_replace(file, expression, replacement)
-  return unless File.exists?(file)
+  return unless File.exist?(file)
   text = File.read(file)
   replaced = text.gsub(expression, replacement)
   if text == replaced

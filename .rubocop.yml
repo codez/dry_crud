@@ -1,6 +1,4 @@
 AllCops:
-  Include:
-    - dry_crud.gemspec
   Exclude:
     - lib/**/*
     - test/templates/**/*
@@ -21,6 +19,9 @@ AllCops:
     - '**/rails'
     - '**/bundle'
     - '**/rake'
+    - **/Rakefile
+    - dry_crud.gemspec
+    - **/Gemfile
 
 ClassLength:
   Max: 200
@@ -38,4 +39,7 @@ EmptyLinesAroundBody:
   Enabled: false
 
 IfUnlessModifier:
+  Enabled: false
+
+GuardClause:
   Enabled: false

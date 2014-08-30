@@ -142,6 +142,7 @@ module DryCrud
 
       # Defines the field method to use based on the attribute
       # type, association or name.
+      # rubocop:disable PerceivedComplexity
       def detect_field_method
         if type == :text
           :text_area
@@ -159,6 +160,7 @@ module DryCrud
           :text_field
         end
       end
+      # rubocop:enable PerceivedComplexity
 
       # The column type of the attribute.
       def type

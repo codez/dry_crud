@@ -375,7 +375,7 @@ describe CrudTestModelsController do
       context '.json', format: :json, combine: 'ujivp' do
         it_should_respond(422)
         it_should_not_have_flash(:notice)
-          it_should_render_error_json
+        it_should_render_error_json
 
         it 'should have called the correct callbacks' do
           controller.called_callbacks.should == [:before_update, :before_save]
