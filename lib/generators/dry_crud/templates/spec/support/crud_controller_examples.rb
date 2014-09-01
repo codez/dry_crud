@@ -272,7 +272,7 @@ shared_examples 'crud controller' do |options|
               combine: 'ujv' do
         it_should_respond(204)
         it_should_set_attrs(:edit)
-        it { response.body.should be_empty }
+        it { response.body.should be_blank }
         it_should_persist_entry
       end
 
@@ -316,7 +316,7 @@ shared_examples 'crud controller' do |options|
 
       context 'successfull', combine: 'djs' do
         it_should_respond(204)
-        it { response.body.should be_empty }
+        it { response.body.should be_blank }
       end
 
       context 'with failure', failing: true, combine: 'djf' do
