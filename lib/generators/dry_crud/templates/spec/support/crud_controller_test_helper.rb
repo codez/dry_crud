@@ -39,6 +39,8 @@ module CrudControllerTestHelper
         @@current_request = @request
         @@current_controller = @controller
         @@current_templates = @_templates || @templates
+
+        entry.committed! if entry
       end
     else
       perform_request

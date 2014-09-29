@@ -1,6 +1,7 @@
 # encoding: UTF-8
 require 'test_helper'
 require 'support/crud_test_model'
+require 'support/crud_test_helper'
 
 # Test FormHelper
 class FormHelperTest < ActionView::TestCase

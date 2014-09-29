@@ -221,15 +221,15 @@ describe 'DryCrud::Form::Builder' do
 
   context '#respond_to?' do
     it 'returns false for non existing methods' do
-      form.respond_to?(:blabla).should be_false
+      form.respond_to?(:blabla).should be false
     end
 
     it 'returns true for existing methods' do
-      form.respond_to?(:text_field).should be_true
+      form.respond_to?(:text_field).should be true
     end
 
     it 'returns true for labeled_ methods' do
-      form.respond_to?(:labeled_text_field).should be_true
+      form.respond_to?(:labeled_text_field).should be true
     end
   end
 end
