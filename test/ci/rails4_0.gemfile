@@ -16,7 +16,10 @@ gem 'coffee-rails'
 
 gem 'kaminari'
 
-gem 'simplecov'
+gem 'turbolinks'
+gem 'jbuilder'
+
+gem 'simplecov', require: false
 
 platforms :ruby do
   gem 'sqlite3'
