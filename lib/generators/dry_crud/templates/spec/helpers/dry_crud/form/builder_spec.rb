@@ -18,13 +18,7 @@ describe 'DryCrud::Form::Builder' do
   after(:all) { reset_db }
 
   let(:entry) { CrudTestModel.first }
-  if Rails.version < '4.0'
-    let(:form)  do
-      DryCrud::Form::Builder.new(:entry, entry, self, {}, ->(form) { form })
-    end
-  else
-    let(:form)  { DryCrud::Form::Builder.new(:entry, entry, self, {}) }
-  end
+  let(:form)  { DryCrud::Form::Builder.new(:entry, entry, self, {}) }
 
   describe '#input_field' do
 

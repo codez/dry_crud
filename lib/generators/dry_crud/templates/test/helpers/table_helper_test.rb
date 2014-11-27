@@ -12,7 +12,7 @@ class TableHelperTest < ActionView::TestCase
   include CustomAssertions
   include CrudTestHelper
 
-  setup :reset_db, :setup_db, :create_test_data
+  setup :reset_db, :setup_db, :create_test_data, :empty_params
   teardown :reset_db
 
   attr_reader :entries
@@ -23,6 +23,12 @@ class TableHelperTest < ActionView::TestCase
 
   def format_string_size(obj)
     "#{f(obj.size)} chars"
+  end
+
+  def empty_params
+    def params
+      {}
+    end
   end
 
   test 'empty table renders message' do

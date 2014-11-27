@@ -24,11 +24,7 @@ module DryCrud
     # This is mainly used for nested models to provide the
     # required context.
     def model_scope
-      if Rails.version < '4.0'
-        model_class.scoped
-      else
-        model_class.all
-      end
+      model_class.all
     end
 
     # The path arguments to link to the given model entry.

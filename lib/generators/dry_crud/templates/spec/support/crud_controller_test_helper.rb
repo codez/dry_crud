@@ -131,11 +131,6 @@ module CrudControllerTestHelper
       it { expect(response.body).to start_with('{') }
     end
 
-    # Test that a json response containing the error is rendered.
-    def it_is_expected_to_render_error_json
-      it { expect(response.body).to match(/"errors":\{/) }
-    end
-
     # Test that test_entry_attrs are set on entry.
     def it_is_expected_to_set_attrs(action = nil)
       it 'sets params as entry attributes' do

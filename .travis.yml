@@ -2,7 +2,7 @@ language: ruby
 
 rvm:
   - 1.9.3
-  - 2.0.0
+  - 2.1.2
   - jruby-19mode
 
 env:
@@ -11,14 +11,6 @@ env:
 
 gemfile:
   - Gemfile
-  - test/ci/rails3_2.gemfile
+  - test/ci/rails4_0.gemfile
 
-matrix:
-  allow_failures:
-    - rvm: jruby-19mode
-      gemfile: test/ci/rails3_2.gemfile
-      env: "HAML=1"
-    - rvm: jruby-19mode
-      gemfile: test/ci/rails3_2.gemfile
-      env: "NO_HAML=0"
 

@@ -13,8 +13,6 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   validates :name, presence: true
   validates :rating, inclusion: { in: 1..10 }
 
-  attr_protected nil if Rails.version < '4.0'
-
   def to_s
     name
   end
@@ -39,8 +37,6 @@ class OtherCrudTestModel < ActiveRecord::Base #:nodoc:
 
   has_and_belongs_to_many :others, class_name: 'CrudTestModel'
   belongs_to :more, foreign_key: :more_id, class_name: 'CrudTestModel'
-
-  attr_protected nil if Rails.version < '4.0'
 
   def to_s
     name

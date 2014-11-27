@@ -83,7 +83,7 @@ describe CrudTestModelsController do
 
           it 'session has query list param' do
             expect(session[:list_params]['/crud_test_models.html'])
-              .to eq(q: 'AAAA')
+              .to eq('q' =>  'AAAA')
           end
         end
 
@@ -98,7 +98,7 @@ describe CrudTestModelsController do
 
           it 'session has query list param' do
             expect(session[:list_params]['/crud_test_models.html'])
-              .to eq(q: 'DDD')
+              .to eq('q' => 'DDD')
           end
         end
       end
@@ -115,7 +115,7 @@ describe CrudTestModelsController do
 
           it 'session has sort list param' do
             expect(session[:list_params]['/crud_test_models.html']).to eq(
-              sort: 'children', sort_dir: 'asc')
+              'sort' => 'children', 'sort_dir' => 'asc')
           end
         end
 
@@ -136,7 +136,7 @@ describe CrudTestModelsController do
 
           it 'session has sort list param' do
             expect(session[:list_params]['/crud_test_models.html']).to eq(
-              sort: 'chatty', sort_dir: 'desc')
+              'sort' => 'chatty', 'sort_dir' => 'desc')
           end
         end
 
@@ -153,7 +153,7 @@ describe CrudTestModelsController do
 
           it 'session has sort list param' do
             expect(session[:list_params]['/crud_test_models.html']).to eq(
-              q: 'DDD', sort: 'chatty', sort_dir: 'asc')
+              'q' => 'DDD', 'sort' => 'chatty', 'sort_dir' => 'asc')
           end
         end
       end
@@ -174,7 +174,7 @@ describe CrudTestModelsController do
         before do
           session[:list_params] = {}
           session[:list_params]['/crud_test_models'] =
-            { q: 'DDD', sort: 'chatty', sort_dir: 'desc' }
+            { 'q' => 'DDD', 'sort' => 'chatty', 'sort_dir' => 'desc' }
           get :index, returning: true
         end
 
@@ -318,7 +318,7 @@ describe CrudTestModelsController do
           it_is_expected_to_persist_entry(false)
           it_is_expected_to_not_have_flash(:notice)
           it_is_expected_to_not_have_flash(:alert)
-          it_is_expected_to_render_error_json
+          it_is_expected_to_render_json
 
           it 'does not assign companions' do
             expect(assigns(:companions)).to be_nil
@@ -375,7 +375,7 @@ describe CrudTestModelsController do
       context '.json', format: :json, combine: 'ujivp' do
         it_is_expected_to_respond(422)
         it_is_expected_to_not_have_flash(:notice)
-        it_is_expected_to_render_error_json
+        it_is_expected_to_render_json
 
         it 'calls the correct callbacks' do
           expect(controller.called_callbacks).to eq(
@@ -414,7 +414,7 @@ describe CrudTestModelsController do
       context '.json', format: :json, combine: 'djf' do
         it_is_expected_to_respond(422)
         it_is_expected_to_not_have_flash(:notice)
-        it_is_expected_to_render_error_json
+        it_is_expected_to_render_json
       end
 
       context 'callback', perform_request: false do

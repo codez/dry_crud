@@ -11,8 +11,6 @@ class City < ActiveRecord::Base
 
   before_destroy :protect_with_inhabitants
 
-  attr_protected nil if Rails.version < '4.0'
-
   scope :options_list, -> { includes(:country).order('cities.name') }
 
   def to_s

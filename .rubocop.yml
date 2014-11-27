@@ -12,6 +12,7 @@ AllCops:
     - '**/initializers/*.rb'
     - '**/environments/*.rb'
     - '**/db/migrate/*.rb'
+    - '**/bin/setup'
     - '**/boot.rb'
     - '**/environment.rb'
     - '**/application.rb'

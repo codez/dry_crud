@@ -217,7 +217,7 @@ shared_examples 'crud controller' do |options|
               combine: 'cji' do
         it_is_expected_to_respond(422)
         it_is_expected_to_set_attrs(:new)
-        it_is_expected_to_render_error_json
+        it_is_expected_to_render_json
         it_is_expected_to_persist_entry(false)
       end
     end
@@ -270,9 +270,9 @@ shared_examples 'crud controller' do |options|
       context 'with valid params',
               unless: skip?(options, %w(update json valid)),
               combine: 'ujv' do
-        it_is_expected_to_respond(204)
+        it_is_expected_to_respond(200)
         it_is_expected_to_set_attrs(:edit)
-        it { expect(response.body).to be_blank }
+        it_is_expected_to_render_json
         it_is_expected_to_persist_entry
       end
 
@@ -282,7 +282,7 @@ shared_examples 'crud controller' do |options|
               combine: 'uji' do
         it_is_expected_to_respond(422)
         it_is_expected_to_set_attrs(:edit)
-        it_is_expected_to_render_error_json
+        it_is_expected_to_render_json
       end
     end
   end
@@ -321,7 +321,7 @@ shared_examples 'crud controller' do |options|
 
       context 'with failure', failing: true, combine: 'djf' do
         it_is_expected_to_respond(422)
-        it_is_expected_to_render_error_json
+        it_is_expected_to_render_json
       end
     end
   end
