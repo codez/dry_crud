@@ -40,6 +40,7 @@ module CrudControllerTestHelper
         @@current_controller = @controller
         @@current_templates = @_templates || @templates
 
+        # treat in-memory entry as committed in order to avoid rollback of internal state.
         entry.committed! if entry
       end
     else
