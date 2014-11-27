@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 describe FormatHelper do
 
@@ -28,37 +28,37 @@ describe FormatHelper do
     context 'regular' do
       subject { labeled('label') { 'value' } }
 
-      it { should be_html_safe }
+      it { is_expected.to be_html_safe }
       it do
-        subject.squish.should =~
+        expect(subject.squish).to match(
           /^<dt>label<\/dt>
-           \ <dd\ class=['"]value['"]>value<\/dd>$/x
+           \ <dd\ class=['"]value['"]>value<\/dd>$/x)
       end
     end
 
     context 'with empty value' do
       subject { labeled('label') { '' } }
 
-      it { should be_html_safe }
+      it { is_expected.to be_html_safe }
       it do
-        subject.squish.should =~
+        expect(subject.squish).to match(
           /<dt>label<\/dt>
            \ <dd\ class=['"]value['"]>
            #{UtilityHelper::EMPTY_STRING}
-           <\/dd>$/x
+           <\/dd>$/x)
       end
     end
 
     context 'with unsafe value' do
       subject { labeled('label') { 'value <unsafe>' } }
 
-      it { should be_html_safe }
+      it { is_expected.to be_html_safe }
       it do
-        subject.squish.should =~
+        expect(subject.squish).to match(
           /<dt>label<\/dt>
            \ <dd\ class=['"]value['"]>
            value\ &lt;unsafe&gt;
-           <\/dd>$/x
+           <\/dd>$/x)
       end
     end
   end
@@ -66,11 +66,11 @@ describe FormatHelper do
   describe '#labeled_attr' do
     subject { labeled_attr('foo', :size) }
 
-    it { should be_html_safe }
+    it { is_expected.to be_html_safe }
     it do
-      subject.squish.should =~
+      expect(subject.squish).to match(
         /<dt>Size<\/dt>
-         \ <dd\ class=['"]value['"]>3\ chars<\/dd>$/x
+         \ <dd\ class=['"]value['"]>3\ chars<\/dd>$/x)
     end
   end
 
@@ -79,54 +79,54 @@ describe FormatHelper do
     unless ENV['NON_LOCALIZED'] # localization dependent tests
       context 'Floats' do
         it 'adds two digits' do
-          f(1.0).should == '1.000'
+          expect(f(1.0)).to eq('1.000')
         end
 
         it 'truncates to two digits' do
-          f(3.14159).should == '3.142'
+          expect(f(3.14159)).to eq('3.142')
         end
 
         it 'adds delimiters' do
-          f(12_345.6789).should == '12,345.679'
+          expect(f(12_345.6789)).to eq('12,345.679')
         end
       end
 
       context 'Booleans' do
-        it 'true should print yes' do
-          f(true).should == 'yes'
+        it 'true is_expected.to print yes' do
+          expect(f(true)).to eq('yes')
         end
 
-        it 'false should print no' do
-          f(false).should == 'no'
+        it 'false is_expected.to print no' do
+          expect(f(false)).to eq('no')
         end
       end
 
       context 'Dates' do
         it 'prints regular date' do
-          f(Date.new(2013, 6, 9)).should == '2013-06-09'
+          expect(f(Date.new(2013, 6, 9))).to eq('2013-06-09')
         end
       end
 
       context 'Times' do
         it 'prints regular date' do
-          f(Time.utc(2013, 6, 9, 21, 25)).should == '2013-06-09 21:25'
+          expect(f(Time.utc(2013, 6, 9, 21, 25))).to eq('2013-06-09 21:25')
         end
       end
     end
 
     context 'nil' do
       it 'prints an empty string' do
-        f(nil).should == UtilityHelper::EMPTY_STRING
+        expect(f(nil)).to eq(UtilityHelper::EMPTY_STRING)
       end
     end
 
     context 'Strings' do
       it 'prints regular strings unchanged' do
-        f('blah blah').should == 'blah blah'
+        expect(f('blah blah')).to eq('blah blah')
       end
 
       it 'is not html safe' do
-        f('<injection>').should_not be_html_safe
+        expect(f('<injection>')).not_to be_html_safe
       end
     end
 
@@ -134,31 +134,31 @@ describe FormatHelper do
 
   describe '#format_attr' do
     it 'uses #f' do
-      format_attr('12.342', :to_f).should == f(12.342)
+      expect(format_attr('12.342', :to_f)).to eq(f(12.342))
     end
 
     it 'uses object attr format method if it exists' do
-      format_attr('abcd', :size).should == '4 chars'
+      expect(format_attr('abcd', :size)).to eq('4 chars')
     end
 
     it 'uses general attr format method if it exists' do
-      format_attr([1, 2], :size).should == '2 items'
+      expect(format_attr([1, 2], :size)).to eq('2 items')
     end
 
     it 'formats empty belongs_to' do
-      format_attr(crud_test_models(:AAAAA), :companion).should ==
-        t('global.associations.no_entry')
+      expect(format_attr(crud_test_models(:AAAAA), :companion)).to eq(
+        t('global.associations.no_entry'))
     end
 
     it 'formats existing belongs_to' do
       string = format_attr(crud_test_models(:BBBBB), :companion)
-      string.should == 'AAAAA'
+      expect(string).to eq('AAAAA')
     end
 
     it 'formats existing has_many' do
       string = format_attr(crud_test_models(:CCCCC), :others)
-      string.should be_html_safe
-      string.should == '<ul><li>AAAAA</li><li>BBBBB</li></ul>'
+      expect(string).to be_html_safe
+      expect(string).to eq('<ul><li>AAAAA</li><li>BBBBB</li></ul>')
     end
   end
 
@@ -166,17 +166,17 @@ describe FormatHelper do
     let(:model) { crud_test_models(:AAAAA) }
 
     it 'recognizes types' do
-      column_type(model, :name).should == :string
-      column_type(model, :children).should == :integer
-      column_type(model, :companion_id).should == :integer
-      column_type(model, :rating).should == :float
-      column_type(model, :income).should == :decimal
-      column_type(model, :birthdate).should == :date
-      column_type(model, :gets_up_at).should == :time
-      column_type(model, :last_seen).should == :datetime
-      column_type(model, :human).should == :boolean
-      column_type(model, :remarks).should == :text
-      column_type(model, :companion).should be_nil
+      expect(column_type(model, :name)).to eq(:string)
+      expect(column_type(model, :children)).to eq(:integer)
+      expect(column_type(model, :companion_id)).to eq(:integer)
+      expect(column_type(model, :rating)).to eq(:float)
+      expect(column_type(model, :income)).to eq(:decimal)
+      expect(column_type(model, :birthdate)).to eq(:date)
+      expect(column_type(model, :gets_up_at)).to eq(:time)
+      expect(column_type(model, :last_seen)).to eq(:datetime)
+      expect(column_type(model, :human)).to eq(:boolean)
+      expect(column_type(model, :remarks)).to eq(:text)
+      expect(column_type(model, :companion)).to be_nil
     end
   end
 
@@ -185,73 +185,74 @@ describe FormatHelper do
 
     it 'formats integers' do
       model.children = 10_000
-      format_type(model, :children).should == '10000'
+      expect(format_type(model, :children)).to eq('10000')
     end
 
     unless ENV['NON_LOCALIZED'] # localization dependent tests
       it 'formats floats' do
-        format_type(model, :rating).should == '1.100'
+        expect(format_type(model, :rating)).to eq('1.100')
       end
 
       it 'formata decimals' do
-        format_type(model, :income).should == '10,000,000.1111'
+        expect(format_type(model, :income)).to eq('10,000,000.1111')
       end
 
       it 'formats dates' do
-        format_type(model, :birthdate).should == '1910-01-01'
+        expect(format_type(model, :birthdate)).to eq('1910-01-01')
       end
 
       it 'formats times' do
-        format_type(model, :gets_up_at).should == '01:01'
+        expect(format_type(model, :gets_up_at)).to eq('01:01')
       end
 
       it 'formats datetimes' do
-        format_type(model, :last_seen).should == '2010-01-01 11:21'
+        expect(format_type(model, :last_seen)).to eq('2010-01-01 11:21')
       end
 
       it 'formats boolean false' do
         model.human = false
-        format_type(model, :human).should == 'no'
+        expect(format_type(model, :human)).to eq('no')
       end
 
       it 'formats boolean true' do
         model.human = true
-        format_type(model, :human).should == 'yes'
+        expect(format_type(model, :human)).to eq('yes')
       end
     end
 
     it 'formats texts' do
       string = format_type(model, :remarks)
-      string.should be_html_safe
-      string.should == "<p>AAAAA BBBBB CCCCC\n<br />AAAAA BBBBB CCCCC\n</p>"
+      expect(string).to be_html_safe
+      expect(string).to eq(
+        "<p>AAAAA BBBBB CCCCC\n<br />AAAAA BBBBB CCCCC\n</p>")
     end
 
     it 'escapes texts' do
       model.remarks = '<unsecure>bla'
       string = format_type(model, :remarks)
-      string.should be_html_safe
-      string.should == '<p>&lt;unsecure&gt;bla</p>'
+      expect(string).to be_html_safe
+      expect(string).to eq('<p>&lt;unsecure&gt;bla</p>')
     end
 
     it 'formats empty texts' do
       model.remarks = '   '
       string = format_type(model, :remarks)
-      string.should be_html_safe
-      string.should == UtilityHelper::EMPTY_STRING
+      expect(string).to be_html_safe
+      expect(string).to eq(UtilityHelper::EMPTY_STRING)
     end
   end
 
   describe '#captionize' do
     it 'handles symbols' do
-      captionize(:camel_case).should == 'Camel Case'
+      expect(captionize(:camel_case)).to eq('Camel Case')
     end
 
     it 'renders all upper case' do
-      captionize('all upper case').should == 'All Upper Case'
+      expect(captionize('all upper case')).to eq('All Upper Case')
     end
 
     it 'renders human attribute name' do
-      captionize(:gets_up_at, CrudTestModel).should == 'Gets up at'
+      expect(captionize(:gets_up_at, CrudTestModel)).to eq('Gets up at')
     end
   end
 

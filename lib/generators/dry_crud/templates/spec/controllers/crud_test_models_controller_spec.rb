@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 # Tests all actions of the CrudController based on a dummy model
 # (CrudTestModel). This is useful to test the general behavior
@@ -43,16 +43,16 @@ describe CrudTestModelsController do
   end
 
   describe 'setup' do
-    it 'model count should be correct' do
-      CrudTestModel.count.should == 6
+    it 'model count is correct' do
+      expect(CrudTestModel.count).to eq(6)
     end
 
     it 'has models_label' do
-      controller.models_label.should == 'Crud Test Models'
+      expect(controller.models_label).to eq('Crud Test Models')
     end
 
     it 'has models_label singular' do
-      controller.models_label(false).should == 'Crud Test Model'
+      expect(controller.models_label(false)).to eq('Crud Test Model')
     end
   end
 
@@ -60,16 +60,16 @@ describe CrudTestModelsController do
     context '.html', format: :html do
       context 'plain', combine: 'ihp' do
         it 'contains all entries' do
-          entries.size.should == 6
+          expect(entries.size).to eq(6)
         end
 
-        it 'session should have empty list_params' do
-          session[:list_params].should == Hash.new
+        it 'session has empty list_params' do
+          expect(session[:list_params]).to eq(Hash.new)
         end
 
         it 'provides entries helper method' do
-          should render_template('index')
-          entries.should be(controller.send(:entries))
+          is_expected.to render_template('index')
+          expect(entries).to be(controller.send(:entries))
         end
       end
 
@@ -77,28 +77,28 @@ describe CrudTestModelsController do
         let(:params) { { q: search_value } }
 
         context 'regular', combine: 'ihse' do
-          it 'entries should only contain test_entry' do
-            entries.should == [test_entry]
+          it 'entries only contain test_entry' do
+            expect(entries).to eq([test_entry])
           end
 
-          it 'session should have query list param' do
-            session[:list_params]['/crud_test_models.html'].should ==
-              { q: 'AAAA' }
+          it 'session has query list param' do
+            expect(session[:list_params]['/crud_test_models.html'])
+              .to eq(q: 'AAAA')
           end
         end
 
         context 'with custom options', combine: 'ihsec' do
           let(:params) { { q: 'DDD', filter: true } }
 
-          it_should_respond
+          it_is_expected_to_respond
 
-          it 'entries should have one item' do
-            entries.should == [CrudTestModel.find_by_name('BBBBB')]
+          it 'entries have one item' do
+            expect(entries).to eq([CrudTestModel.find_by_name('BBBBB')])
           end
 
-          it 'session should have query list param' do
-            session[:list_params]['/crud_test_models.html'].should ==
-              { q: 'DDD' }
+          it 'session has query list param' do
+            expect(session[:list_params]['/crud_test_models.html'])
+              .to eq(q: 'DDD')
           end
         end
       end
@@ -107,24 +107,24 @@ describe CrudTestModelsController do
         context 'for given column', combine: 'ihsog' do
           let(:params) { { sort: 'children', sort_dir: 'asc' } }
 
-          it_should_respond
+          it_is_expected_to_respond
 
-          it 'entries should be in correct order' do
-            entries.should == CrudTestModel.all.sort_by(&:children)
+          it 'entries are in correct order' do
+            expect(entries).to eq(CrudTestModel.all.sort_by(&:children))
           end
 
-          it 'session should have sort list param' do
-            session[:list_params]['/crud_test_models.html'].should ==
-              { sort: 'children', sort_dir: 'asc' }
+          it 'session has sort list param' do
+            expect(session[:list_params]['/crud_test_models.html']).to eq(
+              sort: 'children', sort_dir: 'asc')
           end
         end
 
         context 'for virtual column', combine: 'ihsov' do
           let(:params) { { sort: 'chatty', sort_dir: 'desc' } }
 
-          it_should_respond
+          it_is_expected_to_respond
 
-          it 'entries should be in correct order' do
+          it 'entries are in correct order' do
             names = entries.map(&:name)
             assert names.index('BBBBB') < names.index('AAAAA')
             assert names.index('BBBBB') < names.index('DDDDD')
@@ -134,9 +134,9 @@ describe CrudTestModelsController do
             assert names.index('DDDDD') < names.index('CCCCC')
           end
 
-          it 'session should have sort list param' do
-            session[:list_params]['/crud_test_models.html'].should ==
-              { sort: 'chatty', sort_dir: 'desc' }
+          it 'session has sort list param' do
+            expect(session[:list_params]['/crud_test_models.html']).to eq(
+              sort: 'chatty', sort_dir: 'desc')
           end
         end
 
@@ -145,15 +145,15 @@ describe CrudTestModelsController do
             { q: 'DDD', sort: 'chatty', sort_dir: 'asc' }
           end
 
-          it_should_respond
+          it_is_expected_to_respond
 
-          it 'entries should be in correct order' do
-            entries.map(&:name).should == %w(CCCCC DDDDD BBBBB)
+          it 'entries are in correct order' do
+            expect(entries.map(&:name)).to eq(%w(CCCCC DDDDD BBBBB))
           end
 
-          it 'session should have sort list param' do
-            session[:list_params]['/crud_test_models.html'].should ==
-              { q: 'DDD', sort: 'chatty', sort_dir: 'asc' }
+          it 'session has sort list param' do
+            expect(session[:list_params]['/crud_test_models.html']).to eq(
+              q: 'DDD', sort: 'chatty', sort_dir: 'asc')
           end
         end
       end
@@ -161,12 +161,12 @@ describe CrudTestModelsController do
       context 'with custom options', combine: 'ihsoco' do
         let(:params) { { filter: true } }
 
-        it_should_respond
+        it_is_expected_to_respond
 
         context 'entries' do
           subject { entries }
-          it { should have(2).items }
-          it { should == entries.sort_by(&:children).reverse }
+          it { expect(subject.size).to eq(2) }
+          it { is_expected.to eq(entries.sort_by(&:children).reverse) }
         end
       end
 
@@ -178,36 +178,36 @@ describe CrudTestModelsController do
           get :index, returning: true
         end
 
-        it_should_respond
+        it_is_expected_to_respond
 
-        it 'entries should be in correct order' do
-          entries.map(&:name).should == %w(BBBBB DDDDD CCCCC)
+        it 'entries are in correct order' do
+          expect(entries.map(&:name)).to eq(%w(BBBBB DDDDD CCCCC))
         end
 
-        it 'params should be set' do
-          controller.params[:q].should == 'DDD'
-          controller.params[:sort].should == 'chatty'
-          controller.params[:sort_dir].should == 'desc'
+        it 'params are set' do
+          expect(controller.params[:q]).to eq('DDD')
+          expect(controller.params[:sort]).to eq('chatty')
+          expect(controller.params[:sort_dir]).to eq('desc')
         end
       end
     end
 
     context '.js', format: :js, combine: 'ijs' do
-      it_should_respond
-      it_should_assign_entries
-      it { response.body.should == 'index js' }
+      it_is_expected_to_respond
+      it_is_expected_to_assign_entries
+      it { expect(response.body).to eq('index js') }
     end
   end
 
   describe_action :get, :new do
     context 'plain', combine: 'new' do
-      it 'should assign companions' do
-        assigns(:companions).should be_present
+      it 'assigns companions' do
+        expect(assigns(:companions)).to be_present
       end
 
-      it 'should have called two render callbacks' do
-        controller.called_callbacks.should ==
-          [:before_render_new, :before_render_form]
+      it 'calls two render callbacks' do
+        expect(controller.called_callbacks).to eq(
+          [:before_render_new, :before_render_form])
       end
     end
 
@@ -218,10 +218,10 @@ describe CrudTestModelsController do
         get :new
       end
 
-      it { should redirect_to(crud_test_models_path) }
+      it { is_expected.to redirect_to(crud_test_models_path) }
 
-      it 'should not set companions' do
-        assigns(:companions).should be_nil
+      it 'does not set companions' do
+        expect(assigns(:companions)).to be_nil
       end
     end
   end
@@ -229,54 +229,54 @@ describe CrudTestModelsController do
   describe_action :post, :create do
     let(:params) { { model_identifier => new_entry_attrs } }
 
-    it 'should have called the correct callbacks' do
-      controller.called_callbacks.should ==
-        [:before_create, :before_save, :after_save, :after_create]
+    it 'calls the correct callbacks' do
+      expect(controller.called_callbacks).to eq(
+        [:before_create, :before_save, :after_save, :after_create])
     end
 
     context 'with before callback' do
       let(:params) do
         { crud_test_model: { name: 'illegal', children: 2 } }
       end
-      it 'should not create entry', perform_request: false do
+      it 'does not create entry', perform_request: false do
         expect { perform_request }.to change { CrudTestModel.count }.by(0)
       end
 
       context 'plain', combine: 'chcp' do
-        it_should_respond
-        it_should_render('new')
-        it_should_persist_entry(false)
-        it_should_have_flash(:alert)
+        it_is_expected_to_respond
+        it_is_expected_to_render('new')
+        it_is_expected_to_persist_entry(false)
+        it_is_expected_to_have_flash(:alert)
 
-        it 'should set entry name' do
-          entry.name.should == 'illegal'
+        it 'sets entry name' do
+          expect(entry.name).to eq('illegal')
         end
 
-        it 'should assign companions' do
-          assigns(:companions).should be_present
+        it 'assigns companions' do
+          expect(assigns(:companions)).to be_present
         end
 
-        it 'should have called the correct callbacks' do
-          controller.called_callbacks.should ==
-            [:before_render_new, :before_render_form]
+        it 'calls the correct callbacks' do
+          expect(controller.called_callbacks).to eq(
+            [:before_render_new, :before_render_form])
         end
       end
 
       context 'redirect', perform_request: false do
         before { controller.should_redirect = true }
 
-        it 'should not create entry' do
+        it 'does not create entry' do
           expect { perform_request }.to change { CrudTestModel.count }.by(0)
         end
 
         it do
           perform_request
-          should redirect_to(crud_test_models_path)
+          is_expected.to redirect_to(crud_test_models_path)
         end
 
-        it 'should have called no callbacks' do
+        it 'calls no callbacks' do
           perform_request
-          controller.called_callbacks.should be_nil
+          expect(controller.called_callbacks).to be_nil
         end
       end
     end
@@ -285,48 +285,48 @@ describe CrudTestModelsController do
       let(:params) { { crud_test_model: { children: 2 } } }
 
       context '.html' do
-        it 'should not create entry', perform_request: false do
+        it 'does not create entry', perform_request: false do
           expect { perform_request }.to change { CrudTestModel.count }.by(0)
         end
 
         context 'plain', combine: 'chip' do
-          it_should_respond
-          it_should_render('new')
-          it_should_persist_entry(false)
-          it_should_not_have_flash(:notice)
-          it_should_not_have_flash(:alert)
+          it_is_expected_to_respond
+          it_is_expected_to_render('new')
+          it_is_expected_to_persist_entry(false)
+          it_is_expected_to_not_have_flash(:notice)
+          it_is_expected_to_not_have_flash(:alert)
 
-          it 'should assign companions' do
-            assigns(:companions).should be_present
+          it 'assigns companions' do
+            expect(assigns(:companions)).to be_present
           end
 
-          it 'should have called the correct callbacks' do
-            controller.called_callbacks.should ==
+          it 'calls the correct callbacks' do
+            expect(controller.called_callbacks).to eq(
               [:before_create, :before_save,
-               :before_render_new, :before_render_form]
+               :before_render_new, :before_render_form])
           end
         end
       end
 
       context '.json', format: :json do
-        it 'should not create entry', perform_request: false do
+        it 'does not create entry', perform_request: false do
           expect { perform_request }.to change { CrudTestModel.count }.by(0)
         end
 
         context 'plain', combine: 'cjcb' do
-          it_should_respond(422)
-          it_should_persist_entry(false)
-          it_should_not_have_flash(:notice)
-          it_should_not_have_flash(:alert)
-          it_should_render_error_json
+          it_is_expected_to_respond(422)
+          it_is_expected_to_persist_entry(false)
+          it_is_expected_to_not_have_flash(:notice)
+          it_is_expected_to_not_have_flash(:alert)
+          it_is_expected_to_render_error_json
 
-          it 'should not assign companions' do
-            assigns(:companions).should be_nil
+          it 'does not assign companions' do
+            expect(assigns(:companions)).to be_nil
           end
 
-          it 'should have called the correct callbacks' do
-            controller.called_callbacks.should ==
-              [:before_create, :before_save]
+          it 'calls the correct callbacks' do
+            expect(controller.called_callbacks).to eq(
+              [:before_create, :before_save])
           end
         end
       end
@@ -335,50 +335,51 @@ describe CrudTestModelsController do
   end
 
   describe_action :get, :edit, id: true do
-    it 'should have called the correct callbacks' do
-      controller.called_callbacks.should ==
-        [:before_render_edit, :before_render_form]
+    it 'calls the correct callbacks' do
+      expect(controller.called_callbacks).to eq(
+        [:before_render_edit, :before_render_form])
     end
   end
 
   describe_action :put, :update, id: true do
     let(:params) { { model_identifier => edit_entry_attrs } }
 
-    it 'should have called the correct callbacks' do
-      controller.called_callbacks.should ==
-        [:before_update, :before_save, :after_save, :after_update]
+    it 'calls the correct callbacks' do
+      expect(controller.called_callbacks).to eq(
+        [:before_update, :before_save, :after_save, :after_update])
     end
 
     context 'with invalid params' do
       let(:params) { { crud_test_model: { rating: 20 } } }
 
       context '.html', combine: 'uhivp' do
-        it_should_respond
-        it_should_render('edit')
-        it_should_not_have_flash(:notice)
+        it_is_expected_to_respond
+        it_is_expected_to_render('edit')
+        it_is_expected_to_not_have_flash(:notice)
 
-        it 'should change entry' do
-          entry.should be_changed
+        it 'changes entry' do
+          expect(entry).to be_changed
         end
 
-        it 'should set entry rating' do
-          entry.rating.should == 20
+        it 'sets entry rating' do
+          expect(entry.rating).to eq(20)
         end
 
-        it 'should have called the correct callbacks' do
-          controller.called_callbacks.should ==
+        it 'calls the correct callbacks' do
+          expect(controller.called_callbacks).to eq(
             [:before_update, :before_save,
-             :before_render_edit, :before_render_form]
+             :before_render_edit, :before_render_form])
         end
       end
 
       context '.json', format: :json, combine: 'ujivp' do
-        it_should_respond(422)
-        it_should_not_have_flash(:notice)
-        it_should_render_error_json
+        it_is_expected_to_respond(422)
+        it_is_expected_to_not_have_flash(:notice)
+        it_is_expected_to_render_error_json
 
-        it 'should have called the correct callbacks' do
-          controller.called_callbacks.should == [:before_update, :before_save]
+        it 'calls the correct callbacks' do
+          expect(controller.called_callbacks).to eq(
+            [:before_update, :before_save])
         end
       end
     end
@@ -386,33 +387,34 @@ describe CrudTestModelsController do
   end
 
   describe_action :delete, :destroy, id: true do
-    it 'should have called the correct callbacks' do
-      controller.called_callbacks.should == [:before_destroy, :after_destroy]
+    it 'calls the correct callbacks' do
+      expect(controller.called_callbacks).to eq(
+        [:before_destroy, :after_destroy])
     end
 
     context 'with failure' do
       let(:test_entry) { crud_test_models(:BBBBB) }
       context '.html' do
-        it 'should not delete entry from database',
+        it 'does not delete entry from database',
            perform_request: false do
           expect { perform_request }.not_to change { CrudTestModel.count }
         end
 
-        it 'should redirect to referer',
+        it 'redirects to referer',
            perform_request: false do
           ref = @request.env['HTTP_REFERER'] = crud_test_model_url(test_entry)
           perform_request
-          should redirect_to(ref)
+          is_expected.to redirect_to(ref)
         end
 
-        it_should_have_flash(:alert, /companion/)
-        it_should_not_have_flash(:notice)
+        it_is_expected_to_have_flash(:alert, /companion/)
+        it_is_expected_to_not_have_flash(:notice)
       end
 
       context '.json', format: :json, combine: 'djf' do
-        it_should_respond(422)
-        it_should_not_have_flash(:notice)
-        it_should_render_error_json
+        it_is_expected_to_respond(422)
+        it_is_expected_to_not_have_flash(:notice)
+        it_is_expected_to_render_error_json
       end
 
       context 'callback', perform_request: false do
@@ -420,18 +422,18 @@ describe CrudTestModelsController do
           test_entry.update_attribute :name, 'illegal'
         end
 
-        it 'should not delete entry from database' do
+        it 'does not delete entry from database' do
           expect { perform_request }.not_to change { CrudTestModel.count }
         end
 
-        it 'should redirect to index' do
+        it 'redirects to index' do
           perform_request
-          should redirect_to(crud_test_models_path(returning: true))
+          is_expected.to redirect_to(crud_test_models_path(returning: true))
         end
 
-        it 'should have flash alert' do
+        it 'has flash alert' do
           perform_request
-          flash[:alert].should match(/illegal name/)
+          expect(flash[:alert]).to match(/illegal name/)
         end
       end
     end

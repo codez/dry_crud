@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'DryCrud::Form::Builder' do
 
@@ -29,13 +29,13 @@ describe 'DryCrud::Form::Builder' do
   describe '#input_field' do
 
     it 'dispatches name attr to string field' do
-      form.should_receive(:string_field)
-          .with(:name, required: 'required')
-          .and_return('<input>')
+      expect(form).to receive(:string_field)
+        .with(:name, required: 'required')
+        .and_return('<input>')
       form.input_field(:name)
     end
 
-    it { form.input_field(:name).should be_html_safe }
+    it { expect(form.input_field(:name)).to be_html_safe }
 
     { password: :password_field,
       email: :email_field,
@@ -50,11 +50,11 @@ describe 'DryCrud::Form::Builder' do
       more_ids: :has_many_field
     }.each do |attr, method|
       it 'dispatches #{attr} attr to #{method}' do
-        form.should_receive(method).with(attr, {})
+        expect(form).to receive(method).with(attr, {})
         form.input_field(attr)
       end
 
-      it { form.input_field(attr).should be_html_safe }
+      it { expect(form.input_field(attr)).to be_html_safe }
     end
 
   end
@@ -62,48 +62,48 @@ describe 'DryCrud::Form::Builder' do
   describe '#labeled_input_fields' do
     subject { form.labeled_input_fields(:name, :remarks, :children) }
 
-    it { should be_html_safe }
-    it { should include(form.input_field(:name, required: 'required')) }
-    it { should include(form.input_field(:remarks)) }
-    it { should include(form.input_field(:children)) }
+    it { is_expected.to be_html_safe }
+    it { is_expected.to include(form.input_field(:name, required: 'required')) }
+    it { is_expected.to include(form.input_field(:remarks)) }
+    it { is_expected.to include(form.input_field(:children)) }
   end
 
   describe '#labeled_input_field' do
     context 'when required' do
       subject { form.labeled_input_field(:name) }
-      it { should include('input-group-addon') }
+      it { is_expected.to include('input-group-addon') }
     end
 
     context 'when not required' do
       subject { form.labeled_input_field(:remarks) }
-      it { should_not include('input-group-addon') }
+      it { is_expected.not_to include('input-group-addon') }
     end
 
     context 'with help text' do
       subject { form.labeled_input_field(:name, help: 'Some Help') }
-      it { should include(form.help_block('Some Help')) }
+      it { is_expected.to include(form.help_block('Some Help')) }
     end
   end
 
   describe '#belongs_to_field' do
     it 'has all options by default' do
       f = form.belongs_to_field(:companion_id)
-      f.scan('</option>').should have(7).items
+      expect_n_options(f, 7)
     end
 
     it 'with has options from :list option' do
       list = CrudTestModel.all
       f = form.belongs_to_field(:companion_id,
                                 list: [list.first, list.second])
-      f.scan('</option>').should have(3).items
+      expect_n_options(f, 3)
     end
 
     it 'with empty instance list has no select' do
       assign(:companions, [])
       @companions = []
       f = form.belongs_to_field(:companion_id)
-      f.should match t('global.associations.none_available')
-      f.scan('</option>').should have(0).items
+      expect(f).to match t('global.associations.none_available')
+      expect_n_options(f, 0)
     end
   end
 
@@ -112,32 +112,32 @@ describe 'DryCrud::Form::Builder' do
 
     it 'has all options by default' do
       f = form.has_many_field(:other_ids)
-      f.scan('</option>').should have(6).items
+      expect_n_options(f, 6)
     end
 
     it 'uses options from :list option if given' do
       f = form.has_many_field(:other_ids, list: others)
-      f.scan('</option>').should have(2).items
+      expect_n_options(f, 2)
     end
 
     it 'uses options form instance variable if given' do
       assign(:others, others)
       @others = others
       f = form.has_many_field(:other_ids)
-      f.scan('</option>').should have(2).items
+      expect_n_options(f, 2)
     end
 
     it 'displays a message for an empty list' do
       @others = []
       f = form.has_many_field(:other_ids)
-      f.should match t('global.associations.none_available')
-      f.scan('</option>').should have(0).items
+      expect(f).to match t('global.associations.none_available')
+      expect_n_options(f, 0)
     end
   end
 
   describe '#string_field' do
     it 'sets maxlength if attr has a limit' do
-      form.string_field(:name).should match(/maxlength="50"/)
+      expect(form.string_field(:name)).to match(/maxlength="50"/)
     end
   end
 
@@ -145,18 +145,18 @@ describe 'DryCrud::Form::Builder' do
     context 'only with attr' do
       subject { form.label(:gugus_dada) }
 
-      it { should be_html_safe }
+      it { is_expected.to be_html_safe }
       it 'provides the same interface as rails' do
-        should match(/label [^>]*for.+Gugus dada/)
+        is_expected.to match(/label [^>]*for.+Gugus dada/)
       end
     end
 
     context 'with attr and text' do
       subject { form.label(:gugus_dada, 'hoho') }
 
-      it { should be_html_safe }
+      it { is_expected.to be_html_safe }
       it 'provides the same interface as rails' do
-        should match(/label [^>]*for.+hoho/)
+        is_expected.to match(/label [^>]*for.+hoho/)
       end
     end
 
@@ -166,9 +166,9 @@ describe 'DryCrud::Form::Builder' do
     context 'in labeled_ method' do
       subject { form.labeled_string_field(:name) }
 
-      it { should be_html_safe }
+      it { is_expected.to be_html_safe }
       it 'provides the same interface as rails' do
-        should match(/label [^>]*for.+input/m)
+        is_expected.to match(/label [^>]*for.+input/m)
       end
     end
 
@@ -177,8 +177,8 @@ describe 'DryCrud::Form::Builder' do
         form.labeled('gugus', "<input type='text' name='gugus' />".html_safe)
       end
 
-      it { should be_html_safe }
-      it { should match(/label [^>]*for.+<input/m) }
+      it { is_expected.to be_html_safe }
+      it { is_expected.to match(/label [^>]*for.+<input/m) }
     end
 
     context 'with custom content in block' do
@@ -188,8 +188,8 @@ describe 'DryCrud::Form::Builder' do
         end
       end
 
-      it { should be_html_safe }
-      it { should match(/label [^>]*for.+<input/m) }
+      it { is_expected.to be_html_safe }
+      it { is_expected.to match(/label [^>]*for.+<input/m) }
     end
 
     context 'with caption and content in argument' do
@@ -199,8 +199,8 @@ describe 'DryCrud::Form::Builder' do
                      caption: 'Caption')
       end
 
-      it { should be_html_safe }
-      it { should match(/label [^>]*for.+>Caption<\/label>.*<input/m) }
+      it { is_expected.to be_html_safe }
+      it { is_expected.to match(/label [^>]*for.+>Caption<\/label>.*<input/m) }
     end
 
     context 'with caption and content in block' do
@@ -210,8 +210,8 @@ describe 'DryCrud::Form::Builder' do
         end
       end
 
-      it { should be_html_safe }
-      it { should match(/label [^>]*for.+>Caption<\/label>.*<input/m) }
+      it { is_expected.to be_html_safe }
+      it { is_expected.to match(/label [^>]*for.+>Caption<\/label>.*<input/m) }
     end
   end
 
@@ -221,15 +221,20 @@ describe 'DryCrud::Form::Builder' do
 
   context '#respond_to?' do
     it 'returns false for non existing methods' do
-      form.respond_to?(:blabla).should be false
+      expect(form.respond_to?(:blabla)).to be false
     end
 
     it 'returns true for existing methods' do
-      form.respond_to?(:text_field).should be true
+      expect(form.respond_to?(:text_field)).to be true
     end
 
     it 'returns true for labeled_ methods' do
-      form.respond_to?(:labeled_text_field).should be true
+      expect(form.respond_to?(:labeled_text_field)).to be true
     end
   end
+
+  def expect_n_options(f, n)
+    expect(f.scan('</option>').size).to eq(n)
+  end
+
 end

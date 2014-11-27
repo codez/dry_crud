@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 describe I18nHelper do
 
@@ -16,7 +16,7 @@ describe I18nHelper do
     end
     subject { ti(:test_key) }
 
-    it { should == 'global' }
+    it { is_expected.to eq('global') }
 
     context 'with list key' do
       before do
@@ -26,7 +26,7 @@ describe I18nHelper do
             global: {
               test_key: 'list global' } })
       end
-      it { should == 'list global' }
+      it { is_expected.to eq('list global') }
 
       context 'and list action key' do
         before do
@@ -36,7 +36,7 @@ describe I18nHelper do
               index: {
                 test_key: 'list index' } })
         end
-        it { should == 'list index' }
+        it { is_expected.to eq('list index') }
 
         context 'and crud global key' do
           before do
@@ -46,7 +46,7 @@ describe I18nHelper do
                 global: {
                   test_key: 'crud global' } })
           end
-          it { should == 'crud global' }
+          it { is_expected.to eq('crud global') }
 
           context 'and crud action key' do
             before do
@@ -56,7 +56,7 @@ describe I18nHelper do
                   index: {
                     test_key: 'crud index' } })
             end
-            it { should == 'crud index' }
+            it { is_expected.to eq('crud index') }
 
             context 'and controller global key' do
               before do
@@ -66,7 +66,7 @@ describe I18nHelper do
                     global: {
                       test_key: 'test global' } })
               end
-              it { should == 'test global' }
+              it { is_expected.to eq('test global') }
 
               context 'and controller action key' do
                 before do
@@ -76,7 +76,7 @@ describe I18nHelper do
                       index: {
                         test_key: 'test index' } })
                 end
-                it { should == 'test index' }
+                it { is_expected.to eq('test index') }
               end
             end
           end
@@ -96,7 +96,7 @@ describe I18nHelper do
           associations: {
             test_key: 'global' } })
     end
-    it { should == 'global' }
+    it { is_expected.to eq('global') }
 
     context 'with model key' do
       before do
@@ -108,7 +108,7 @@ describe I18nHelper do
                 test_key: 'model' } } })
       end
 
-      it { should == 'model' }
+      it { is_expected.to eq('model') }
 
       context 'and assoc key' do
         before do
@@ -122,9 +122,9 @@ describe I18nHelper do
                       test_key: 'companion' } } } } })
         end
 
-        it { should == 'companion' }
-        it 'should use global without assoc' do
-          ta(:test_key).should == 'global'
+        it { is_expected.to eq('companion') }
+        it 'uses global without assoc' do
+          expect(ta(:test_key)).to eq('global')
         end
       end
     end

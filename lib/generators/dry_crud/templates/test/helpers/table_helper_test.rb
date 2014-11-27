@@ -25,13 +25,13 @@ class TableHelperTest < ActionView::TestCase
     "#{f(obj.size)} chars"
   end
 
-  test 'empty table should render message' do
+  test 'empty table renders message' do
     result = plain_table_or_message([]) {}
     assert result.html_safe?
     assert_match(/\<div class=["']table["']\>.*\<\/div\>/, result)
   end
 
-  test 'non empty table should render table' do
+  test 'non empty table renders table' do
     result = plain_table_or_message(%w(foo bar)) do |t|
       t.attrs :size, :upcase
     end

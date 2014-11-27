@@ -4,7 +4,7 @@ gem 'rails'
 
 gem 'rake'
 gem 'sdoc'
-gem 'rspec-rails', '~> 2.14'
+gem 'rspec-rails'
 
 gem 'haml'
 
@@ -29,7 +29,7 @@ end
 
 platforms :jruby do
   gem 'jdbc-sqlite3'
-  gem 'activerecord-jdbcsqlite3-adapter', '>=1.3.0.beta2'
+  gem 'activerecord-jdbcsqlite3-adapter'
   gem 'jruby-openssl'
 end
 

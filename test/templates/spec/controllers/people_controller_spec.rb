@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 describe PeopleController do
 
@@ -20,12 +20,12 @@ describe PeopleController do
   alias_method :new_entry_attrs, :test_entry_attrs
   alias_method :edit_entry_attrs, :test_entry_attrs
 
-  it 'should load fixtures' do
-    Person.count.should == 2
+  it 'loads fixtures' do
+    expect(Person.count).to eq(2)
   end
 
   describe_action :get, :index do
-    it 'should be ordered by default scope' do
+    it 'is ordered by default scope' do
       expected = Person.includes(city: :country)
                        .order('people.name, countries.code, cities.name')
       if expected.respond_to?(:references)
@@ -34,36 +34,36 @@ describe PeopleController do
       entries == expected
     end
 
-    it 'should set parents' do
-      controller.send(:parents).should == []
+    it 'sets parents' do
+      expect(controller.send(:parents)).to eq([])
     end
 
-    it 'should set nil parent' do
-      controller.send(:parent).should be_nil
+    it 'sets nil parent' do
+      expect(controller.send(:parent)).to be_nil
     end
 
-    it 'should use correct model_scope' do
-      controller.send(:model_scope).should == Person.all
+    it 'uses correct model_scope' do
+      expect(controller.send(:model_scope)).to eq(Person.all)
     end
 
-    it 'should have correct path args' do
-      controller.send(:path_args, 2).should == [2]
+    it 'has correct path args' do
+      expect(controller.send(:path_args, 2)).to eq([2])
     end
   end
 
   describe_action :get, :show, id: true do
     context '.js', format: :js do
-      it_should_respond
-      it_should_render
-      it { response.body.should match(/\$\('#content'\)/) }
+      it_is_expected_to_respond
+      it_is_expected_to_render
+      it { expect(response.body).to match(/\$\('#content'\)/) }
     end
   end
 
   describe_action :get, :edit, id: true do
     context '.js', format: :js do
-      it_should_respond
-      it_should_render
-      it { response.body.should match(/\$\('#content'\)/) }
+      it_is_expected_to_respond
+      it_is_expected_to_render
+      it { expect(response.body).to match(/\$\('#content'\)/) }
     end
   end
 
@@ -72,17 +72,17 @@ describe PeopleController do
       context 'with valid params' do
         let(:params) { { person: { name: 'New Name' } } }
 
-        it_should_respond
-        it_should_render
-        it { response.body.should match(/\$\('#content'\)/) }
+        it_is_expected_to_respond
+        it_is_expected_to_render
+        it { expect(response.body).to match(/\$\('#content'\)/) }
       end
 
       context 'with invalid params' do
         let(:params) { { person: { name: ' ' } } }
 
-        it_should_respond
-        it_should_render
-        it { response.body.should match(/alert/) }
+        it_is_expected_to_respond
+        it_is_expected_to_render
+        it { expect(response.body).to match(/alert/) }
       end
     end
   end
