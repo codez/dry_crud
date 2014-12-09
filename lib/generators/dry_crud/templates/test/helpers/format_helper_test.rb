@@ -96,7 +96,7 @@ class FormatHelperTest < ActionView::TestCase
     assert_equal '9', format_type(m, :children)
 
     m.children = 10_000
-    assert_equal '10000', format_type(m, :children)
+    assert_equal '10,000', format_type(m, :children)
   end
 
   unless ENV['NON_LOCALIZED'] # localization dependent tests

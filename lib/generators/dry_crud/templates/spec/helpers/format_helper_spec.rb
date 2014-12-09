@@ -185,7 +185,7 @@ describe FormatHelper do
 
     it 'formats integers' do
       model.children = 10_000
-      format_type(model, :children).should == '10000'
+      format_type(model, :children).should == '10,000'
     end
 
     unless ENV['NON_LOCALIZED'] # localization dependent tests
