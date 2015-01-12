@@ -64,6 +64,9 @@ namespace :test do
                      /\A/,
                      "require 'simplecov'\nSimpleCov.start do\n" +
                      "  coverage_dir 'coverage/spec'\nend\n")
+        file_replace(File.join(TEST_APP_ROOT, 'spec', 'rails_helper.rb'),
+          '# Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }',
+          'Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }')
       end
     end
 

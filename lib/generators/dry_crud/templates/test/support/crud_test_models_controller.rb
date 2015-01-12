@@ -7,11 +7,9 @@ class CrudTestModelsController < CrudController #:nodoc:
   self.search_columns = [:name, :whatever, :remarks]
   self.sort_mappings = { chatty: 'length(remarks)' }
   self.default_sort = 'name'
-<% if Rails.version >= '4.0' -%>
   self.permitted_attrs = [:name, :email, :password, :whatever, :children,
                           :companion_id, :rating, :income, :birthdate,
                           :gets_up_at, :last_seen, :human, :remarks]
-<% end -%>
 
   before_create :possibly_redirect
   before_create :handle_name
@@ -30,20 +28,17 @@ class CrudTestModelsController < CrudController #:nodoc:
   layout false
 
   def index
-    super do |format|
-      format.js { render text: 'index js' }
-    end
+    entries
+    render text: 'index js' if request.format.js?
   end
 
   def show
-    super do |format|
-      format.html { render text: 'custom html' } if entry.name == 'BBBBB'
-    end
+    render text: 'custom html' if entry.name == 'BBBBB'
   end
 
   def create
-    super do |_format|
-      flash[:notice] = 'model got created' if entry.persisted?
+    super do |_format, success|
+      flash[:notice] = 'model got created' if success
     end
   end
 

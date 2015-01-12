@@ -33,7 +33,7 @@ To integrate dry_crud into your code, only a few additions are required:
 * Optionally define a +list+ scope in your models to be used in the +index+ action.
 * Optionally define a +options_list+ scope in your models to be used in select dropdowns.
 
-Version 2.0 and higher are compatible with Rails 4 and Rails 3.2. dry_crud is tested with Ruby 1.9.3, 2.0.0 and JRuby. If you are using Ruby 1.8.7, please refer to version 1.7.0.
+From version 3.0, only the latest released Rails version will be supported, which currently is 4.2. Version 2.0 and higher are compatible with Rails 4 and Rails 3.2. dry_crud is tested with Ruby 1.9.3, 2.1.5 and JRuby. If you are using Ruby 1.8.7, please refer to version 1.7.0.
 
 
 == Background
@@ -392,4 +392,3 @@ spec/support/crud_test_model.rb:: A dummy model to run CRUD tests against.
 spec/controllers/crud_test_models_controller_spec.rb:: Controller specs to test the basic CrudController functionality.
 
 spec/helpers/*_spec.rb:: The specs for all the helpers included in dry_crud and a great base to test your adaptions of the CRUD code.
-

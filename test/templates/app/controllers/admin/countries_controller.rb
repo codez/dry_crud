@@ -10,12 +10,10 @@ module Admin
 
     self.default_sort = 'countries.name'
 
-    self.permitted_attrs = [:name, :code] if respond_to?(:permitted_attrs)
+    self.permitted_attrs = [:name, :code]
 
     def show
-      super do |format|
-        format.html { redirect_to index_url, flash.to_hash }
-      end
+      redirect_to index_path if request.format.html?
     end
 
   end

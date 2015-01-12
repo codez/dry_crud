@@ -11,11 +11,7 @@
 # action procedures without overriding the entire method.
 class CrudController < ListController
 
-  self.responder = DryCrud::Responder
-
-  if Rails.version >= '4.0'
-    class_attribute :permitted_attrs
-  end
+  class_attribute :permitted_attrs
 
   # Defines before and after callback hooks for create, update, save and
   # destroy actions.
@@ -28,79 +24,114 @@ class CrudController < ListController
 
   hide_action :run_callbacks
 
-  after_save :set_success_notice
-  after_destroy :set_success_notice
+  before_action :entry, only: [:show, :new, :edit, :update, :destroy]
 
   helper_method :entry, :full_entry_label
 
   ##############  ACTIONS  ############################################
 
-  # Show one entry of this model.
   #   GET /entries/1
   #   GET /entries/1.json
-  def show(&block)
-    respond_with(entry, &block)
+  #
+  # Show one entry of this model.
+  def show
   end
 
-  # Display a form to create a new entry of this model.
   #   GET /entries/new
   #   GET /entries/new.json
-  def new(&block)
+  #
+  # Display a form to create a new entry of this model.
+  def new
     assign_attributes if params[model_identifier]
-    respond_with(entry, &block)
   end
 
-  # Create a new entry of this model from the passed params.
-  # There are before and after create callbacks to hook into the action.
-  # To customize the response, you may overwrite this action and call
-  # super with a block that gets the format parameter.
-  # Specify a :location option if you wish to do a custom redirect.
   #   POST /entries
   #   POST /entries.json
+  #
+  # Create a new entry of this model from the passed params.
+  # There are before and after create callbacks to hook into the action.
+  #
+  # To customize the response for certain formats, you may overwrite
+  # this action and call super with a block that gets the format and
+  # success parameters. Calling a format action (e.g. format.html)
+  # in the given block will take precedence over the one defined here.
+  #
+  # Specify a :location option if you wish to do a custom redirect.
   def create(options = {}, &block)
     assign_attributes
     created = with_callbacks(:create, :save) { entry.save }
-    respond_options = options.reverse_merge(success: created)
-    respond_with(entry, respond_options, &block)
+
+    respond_to do |format|
+      block.call(format, created) if block_given?
+      if created
+        format.html { redirect_on_success(options) }
+        format.json { render :show, status: :created, location: show_path }
+      else
+        format.html { render :new }
+        format.json { render json: entry.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
-  # Display a form to edit an exisiting entry of this model.
   #   GET /entries/1/edit
-  def edit(&block)
-    respond_with(entry, &block)
+  #
+  # Display a form to edit an exisiting entry of this model.
+  def edit
   end
 
-  # Update an existing entry of this model from the passed params.
-  # There are before and after update callbacks to hook into the action.
-  # To customize the response, you may overwrite this action and call
-  # super with a block that gets the format parameter.
-  # Specify a :location option if you wish to do a custom redirect.
   #   PUT /entries/1
   #   PUT /entries/1.json
+  #
+  # Update an existing entry of this model from the passed params.
+  # There are before and after update callbacks to hook into the action.
+  #
+  # To customize the response for certain formats, you may overwrite
+  # this action and call super with a block that gets the format and
+  # success parameters. Calling a format action (e.g. format.html)
+  # in the given block will take precedence over the one defined here.
+  #
+  # Specify a :location option if you wish to do a custom redirect.
   def update(options = {}, &block)
     assign_attributes
     updated = with_callbacks(:update, :save) { entry.save }
-    respond_options = options.reverse_merge(success: updated)
-    respond_with(entry, respond_options, &block)
+
+    respond_to do |format|
+      block.call(format, updated) if block_given?
+      if updated
+        format.html { redirect_on_success(options) }
+        format.json { render :show, status: :ok, location: show_path }
+      else
+        format.html { render :edit }
+        format.json { render json: entry.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
-  # Destroy an existing entry of this model.
-  # There are before and after destroy callbacks to hook into the action.
-  # To customize the response, you may overwrite this action and call
-  # super with a block that gets success and format parameters.
-  # Specify a :location option if you wish to do a custom redirect.
   #   DELETE /entries/1
   #   DELETE /entries/1.json
+  #
+  # Destroy an existing entry of this model.
+  # There are before and after destroy callbacks to hook into the action.
+  #
+  # To customize the response for certain formats, you may overwrite
+  # this action and call super with a block that gets format and
+  # success parameters. Calling a format action (e.g. format.html)
+  # in the given block will take precedence over the one defined here.
+  #
+  # Specify a :location option if you wish to do a custom redirect.
   def destroy(options = {}, &block)
     destroyed = run_callbacks(:destroy) { entry.destroy }
-    unless destroyed
-      set_failure_notice
-      location = request.env['HTTP_REFERER'].presence
+
+    respond_to do |format|
+      block.call(format, destroyed) if block_given?
+      if destroyed
+        format.html { redirect_on_success(options) }
+        format.json { head :no_content }
+      else
+        format.html { redirect_on_failure(options) }
+        format.json { render json: entry.errors, status: :unprocessable_entity }
+      end
     end
-    location ||= index_url
-    respond_options = options.reverse_merge(success: destroyed,
-                                            location: location)
-    respond_with(entry, respond_options, &block)
   end
 
   private
@@ -129,35 +160,34 @@ class CrudController < ListController
 
   # The form params for this model.
   def model_params
-    if Rails.version < '4.0'
-      params[model_identifier]
-    else
-      params.require(model_identifier).permit(permitted_attrs)
-    end
+    params.require(model_identifier).permit(permitted_attrs)
   end
 
-  # Url of the index page to return to.
-  def index_url
-    polymorphic_url(path_args(model_class), returning: true)
+  # Path of the index page to return to.
+  def index_path
+    polymorphic_path(path_args(model_class), returning: true)
   end
 
-  # A label for the current entry, including the model name.
-  def full_entry_label
-    "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
+  # Path of the show page.
+  def show_path
+    path_args(entry)
   end
 
-  # Set a success flash notice when we got a HTML request.
-  def set_success_notice
-    if request.format == :html
-      flash[:notice] ||= flash_message(:success)
-    end
+  # Perform a redirect after a successfull operation and set a flash notice.
+  def redirect_on_success(options = {})
+    location = options[:location] ||
+               (entry.destroyed? ? index_path : show_path)
+    flash[:notice] ||= flash_message(:success)
+    redirect_to location
   end
 
-  # Set a failure flash notice when we got a HTML request.
-  def set_failure_notice
-    if request.format == :html
-      flash[:alert] ||= error_messages.presence || flash_message(:failure)
-    end
+  # Perform a redirect after a failed operation and set a flash alert.
+  def redirect_on_failure(options = {})
+    location = options[:location] ||
+               request.env['HTTP_REFERER'].presence ||
+               index_path
+    flash[:alert] ||= error_messages.presence || flash_message(:failure)
+    redirect_to location
   end
 
   # Get an I18n flash message.
@@ -169,7 +199,12 @@ class CrudController < ListController
             :"#{controller_name}.#{scope}",
             :"crud.#{scope}_html",
             :"crud.#{scope}"]
-    I18n.t(keys.shift, model: full_entry_label, default: keys).html_safe
+    I18n.t(keys.shift, model: full_entry_label, default: keys)
+  end
+
+  # A label for the current entry, including the model name.
+  def full_entry_label
+    "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
   end
 
   # Html safe error messages of the current entry.

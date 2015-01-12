@@ -3,10 +3,14 @@
 # Crud controller responding to js as well
 class AjaxController < CrudController
 
-  respond_to :html, :json, :js
-
   def ajax
 
+  end
+
+  def update
+    super do |format, _success|
+      format.js
+    end
   end
 
 end

@@ -1,17 +1,14 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 describe Admin::CountriesController do
-  it 'should route index' do
-    { get: 'admin/countries' }.should(
-      route_to(controller: 'admin/countries',
-               action: 'index'))
+  it 'routes index' do
+    expect(get: 'admin/countries').to route_to(
+     controller: 'admin/countries', action: 'index')
   end
 
-  it 'should route show' do
-    { get: 'admin/countries/1' }.should(
-      route_to(controller: 'admin/countries',
-               action: 'show',
-               id: '1'))
+  it 'routes show' do
+    expect(get: 'admin/countries/1').to route_to(
+      controller: 'admin/countries', action: 'show', id: '1')
   end
 end

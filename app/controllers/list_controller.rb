@@ -15,19 +15,18 @@ class ListController < ApplicationController
   include DryCrud::Rememberable
   include DryCrud::RenderCallbacks
 
-  respond_to :html, :json
-
   define_render_callbacks :index
 
   helper_method :entries
 
   ##############  ACTIONS  ############################################
 
-  # List all entries of this model.
   #   GET /entries
   #   GET /entries.json
-  def index(&block)
-    respond_with(entries, &block)
+  #
+  # List all entries of this model.
+  def index
+    entries
   end
 
   private

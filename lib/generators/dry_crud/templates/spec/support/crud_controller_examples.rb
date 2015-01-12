@@ -3,8 +3,8 @@ require 'support/crud_controller_test_helper'
 
 RSpec.configure do |c|
   c.before failing: true do
-    model_class.any_instance.stub(:save).and_return(false)
-    model_class.any_instance.stub(:destroy).and_return(false)
+    allow_any_instance_of(model_class).to receive(:save).and_return(false)
+    allow_any_instance_of(model_class).to receive(:destroy).and_return(false)
   end
 end
 
@@ -36,7 +36,7 @@ shared_examples 'crud controller' do |options|
   end
 
   before do
-    m = example.metadata
+    m = RSpec.current_example.metadata
     if m[:perform_request] != false && m[:action] && m[:method]
       perform_combined_request
     end
@@ -52,9 +52,9 @@ shared_examples 'crud controller' do |options|
       context 'plain',
               unless: skip?(options, %w(index html plain)),
               combine: 'ihp' do
-        it_should_respond
-        it_should_assign_entries
-        it_should_render
+        it_is_expected_to_respond
+        it_is_expected_to_assign_entries
+        it_is_expected_to_render
       end
 
       context 'search',
@@ -63,11 +63,11 @@ shared_examples 'crud controller' do |options|
               combine: 'ihse' do
         let(:params) { { q: search_value } }
 
-        it_should_respond
+        it_is_expected_to_respond
 
         context 'entries' do
           subject { entries }
-          it { should include(test_entry) }
+          it { is_expected.to include(test_entry) }
         end
       end
 
@@ -78,11 +78,11 @@ shared_examples 'crud controller' do |options|
                 combine: 'ihso' do
           let(:params) { { sort: sort_column, sort_dir: 'asc' } }
 
-          it_should_respond
+          it_is_expected_to_respond
 
-          it 'should have sorted entries' do
+          it 'has sorted entries' do
             sorted = entries.sort_by(&(sort_column.to_sym))
-            entries.should == sorted
+            expect(entries).to eq(sorted)
           end
         end
 
@@ -91,11 +91,11 @@ shared_examples 'crud controller' do |options|
                 combine: 'ihsd' do
           let(:params) { { sort: sort_column, sort_dir: 'desc' } }
 
-          it_should_respond
+          it_is_expected_to_respond
 
-          it 'should have sorted entries' do
+          it 'has sorted entries' do
             sorted = entries.sort_by(&(sort_column.to_sym))
-            entries.should == sorted.reverse
+            expect(entries).to eq(sorted.reverse)
           end
         end
       end
@@ -105,9 +105,9 @@ shared_examples 'crud controller' do |options|
             format: :json,
             unless: skip?(options, %w(index json)),
             combine: 'ij' do
-      it_should_respond
-      it_should_assign_entries
-      it { response.body.should start_with('[{') }
+      it_is_expected_to_respond
+      it_is_expected_to_assign_entries
+      it { expect(response.body).to start_with('[{') }
     end
   end
 
@@ -122,9 +122,9 @@ shared_examples 'crud controller' do |options|
       context 'plain',
               unless: skip?(options, %w(show html plain)),
               combine: 'sh' do
-        it_should_respond
-        it_should_assign_entry
-        it_should_render
+        it_is_expected_to_respond
+        it_is_expected_to_assign_entry
+        it_is_expected_to_render
       end
 
       context 'with non-existing id',
@@ -132,7 +132,7 @@ shared_examples 'crud controller' do |options|
                             %w(show html with_non_existing_id)) do
         let(:params) { { id: 9999 } }
 
-        it 'should raise RecordNotFound', perform_request: false do
+        it 'raises RecordNotFound', perform_request: false do
           expect { perform_request }
           .to raise_error(ActiveRecord::RecordNotFound)
         end
@@ -143,9 +143,9 @@ shared_examples 'crud controller' do |options|
             format: :json,
             unless: skip?(options, %w(show json)),
             combine: 'sj' do
-      it_should_respond
-      it_should_assign_entry
-      it_should_render_json
+      it_is_expected_to_respond
+      it_is_expected_to_assign_entry
+      it_is_expected_to_render_json
     end
   end
 
@@ -154,15 +154,15 @@ shared_examples 'crud controller' do |options|
     context 'plain',
             unless: skip?(options, %w(new plain)),
             combine: 'new' do
-      it_should_respond
-      it_should_render
-      it_should_persist_entry(false)
+      it_is_expected_to_respond
+      it_is_expected_to_render
+      it_is_expected_to_persist_entry(false)
     end
 
     context 'with params',
             unless: skip?(options, %w(new with_params)) do
       let(:params) { { model_identifier => new_entry_attrs } }
-      it_should_set_attrs(:new)
+      it_is_expected_to_set_attrs(:new)
     end
   end
 
@@ -170,55 +170,55 @@ shared_examples 'crud controller' do |options|
                   unless: skip?(options, %w(create)) do
     let(:params) { { model_identifier => new_entry_attrs } }
 
-    it 'should add entry to database', perform_request: false do
+    it 'adds entry to database', perform_request: false do
       expect { perform_request }.to change { model_class.count }.by(1)
     end
 
     context 'html',
             format: :html,
             unless: skip?(options, %w(create html)) do
-      it_should_persist_entry # cannot combine this
+      it_is_expected_to_persist_entry # cannot combine this
 
       context 'with valid params',
               unless: skip?(options, %w(create html valid)),
               combine: 'chv' do
-        it_should_redirect_to_show
-        it_should_set_attrs(:new)
-        it_should_have_flash(:notice)
+        it_is_expected_to_redirect_to_show
+        it_is_expected_to_set_attrs(:new)
+        it_is_expected_to_have_flash(:notice)
       end
 
       context 'with invalid params',
               failing: true,
               unless: skip?(options, %w(create html invalid)),
               combine: 'chi' do
-        it_should_render('new')
-        it_should_persist_entry(false)
-        it_should_set_attrs(:new)
-        it_should_not_have_flash(:notice)
+        it_is_expected_to_render('new')
+        it_is_expected_to_persist_entry(false)
+        it_is_expected_to_set_attrs(:new)
+        it_is_expected_to_not_have_flash(:notice)
       end
     end
 
     context 'json',
             format: :json,
             unless: skip?(options, %w(create json)) do
-      it_should_persist_entry # cannot combine this
+      it_is_expected_to_persist_entry # cannot combine this
 
       context 'with valid params',
               unless: skip?(options, %w(create json valid)),
               combine: 'cjv' do
-        it_should_respond(201)
-        it_should_set_attrs(:new)
-        it_should_render_json
+        it_is_expected_to_respond(201)
+        it_is_expected_to_set_attrs(:new)
+        it_is_expected_to_render_json
       end
 
       context 'with invalid params',
               failing: true,
               unless: skip?(options, %w(create json invalid)),
               combine: 'cji' do
-        it_should_respond(422)
-        it_should_set_attrs(:new)
-        it_should_render_error_json
-        it_should_persist_entry(false)
+        it_is_expected_to_respond(422)
+        it_is_expected_to_set_attrs(:new)
+        it_is_expected_to_render_json
+        it_is_expected_to_persist_entry(false)
       end
     end
   end
@@ -227,9 +227,9 @@ shared_examples 'crud controller' do |options|
                   id: true,
                   unless: skip?(options, %w(edit)),
                   combine: 'edit' do
-    it_should_respond
-    it_should_render
-    it_should_assign_entry
+    it_is_expected_to_respond
+    it_is_expected_to_render
+    it_is_expected_to_assign_entry
   end
 
   describe_action :put, :update,
@@ -237,7 +237,7 @@ shared_examples 'crud controller' do |options|
                   unless: skip?(options, %w(update)) do
     let(:params) { { model_identifier => edit_entry_attrs } }
 
-    it 'should update entry in database', perform_request: false do
+    it 'updates entry in database', perform_request: false do
       expect { perform_request }.to change { model_class.count }.by(0)
     end
 
@@ -247,19 +247,19 @@ shared_examples 'crud controller' do |options|
       context 'with valid params',
               unless: skip?(options, %w(update html valid)),
               combine: 'uhv' do
-        it_should_set_attrs(:edit)
-        it_should_redirect_to_show
-        it_should_persist_entry
-        it_should_have_flash(:notice)
+        it_is_expected_to_set_attrs(:edit)
+        it_is_expected_to_redirect_to_show
+        it_is_expected_to_persist_entry
+        it_is_expected_to_have_flash(:notice)
       end
 
       context 'with invalid params',
               failing: true,
               unless: skip?(options, %w(update html invalid)),
               combine: 'uhi' do
-        it_should_render('edit')
-        it_should_set_attrs(:edit)
-        it_should_not_have_flash(:notice)
+        it_is_expected_to_render('edit')
+        it_is_expected_to_set_attrs(:edit)
+        it_is_expected_to_not_have_flash(:notice)
       end
     end
 
@@ -270,19 +270,19 @@ shared_examples 'crud controller' do |options|
       context 'with valid params',
               unless: skip?(options, %w(update json valid)),
               combine: 'ujv' do
-        it_should_respond(204)
-        it_should_set_attrs(:edit)
-        it { response.body.should be_blank }
-        it_should_persist_entry
+        it_is_expected_to_respond(200)
+        it_is_expected_to_set_attrs(:edit)
+        it_is_expected_to_render_json
+        it_is_expected_to_persist_entry
       end
 
       context 'with invalid params',
               failing: true,
               unless: skip?(options, %w(update json invalid)),
               combine: 'uji' do
-        it_should_respond(422)
-        it_should_set_attrs(:edit)
-        it_should_render_error_json
+        it_is_expected_to_respond(422)
+        it_is_expected_to_set_attrs(:edit)
+        it_is_expected_to_render_json
       end
     end
   end
@@ -291,7 +291,7 @@ shared_examples 'crud controller' do |options|
                   id: true,
                   unless: skip?(options, %w(destroy)) do
 
-    it 'should remove entry from database', perform_request: false  do
+    it 'removes entry from database', perform_request: false  do
       expect { perform_request }.to change { model_class.count }.by(-1)
     end
 
@@ -300,13 +300,13 @@ shared_examples 'crud controller' do |options|
             unless: skip?(options, %w(destroy html)) do
 
       context 'successfull', combine: 'dhs' do
-        it_should_redirect_to_index
-        it_should_have_flash(:notice)
+        it_is_expected_to_redirect_to_index
+        it_is_expected_to_have_flash(:notice)
       end
 
       context 'with failure', failing: true, combine: 'dhf' do
-        it_should_redirect_to_index
-        it_should_have_flash(:alert)
+        it_is_expected_to_redirect_to_index
+        it_is_expected_to_have_flash(:alert)
       end
     end
 
@@ -315,13 +315,13 @@ shared_examples 'crud controller' do |options|
             unless: skip?(options, %w(destroy json)) do
 
       context 'successfull', combine: 'djs' do
-        it_should_respond(204)
-        it { response.body.should be_blank }
+        it_is_expected_to_respond(204)
+        it { expect(response.body).to be_blank }
       end
 
       context 'with failure', failing: true, combine: 'djf' do
-        it_should_respond(422)
-        it_should_render_error_json
+        it_is_expected_to_respond(422)
+        it_is_expected_to_render_json
       end
     end
   end

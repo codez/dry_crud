@@ -21,12 +21,7 @@ module DryCrud
 
       def create_form
         @entry = CrudTestModel.first
-        if Rails.version < '4.0'
-          @form = DryCrud::Form::Builder.new(:entry, @entry, self, {},
-                                             ->(form) { form })
-        else
-          @form = DryCrud::Form::Builder.new(:entry, @entry, self, {})
-        end
+        @form = DryCrud::Form::Builder.new(:entry, @entry, self, {})
       end
 
       test 'input_field dispatches string attr to string_field' do

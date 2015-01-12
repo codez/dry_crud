@@ -83,7 +83,7 @@ module DryCrud
 
       # Add form-control class to all input fields.
       %w(text_field password_field email_field text_area
-         number_fielc date_field time_field datetime_field).each do |method|
+         number_field date_field time_field datetime_field).each do |method|
         define_method(method) do |attr, html_options = {}|
           add_css_class(html_options, 'form-control')
           super(attr, html_options)
@@ -100,27 +100,6 @@ module DryCrud
       alias_method :integer_field, :number_field
       alias_method :float_field, :number_field
       alias_method :decimal_field, :number_field
-
-      if Rails.version < '4.0'
-        # Render a field to select a date. You might want to customize this.
-        def date_field(attr, html_options = {})
-          html_options[:type] = 'date'
-          text_field(attr, html_options)
-        end
-
-        # Render a field to enter a time. You might want to customize this.
-        def time_field(attr, html_options = {})
-          html_options[:type] = 'time'
-          text_field(attr, html_options)
-        end
-
-        # Render a field to enter a date and time.
-        # You might want to customize this.
-        def datetime_field(attr, html_options = {})
-          html_options[:type] = 'datetime'
-          text_field(attr, html_options)
-        end
-      end
 
       # Render a select element for a :belongs_to association defined by attr.
       # Use additional html_options for the select element.
@@ -266,8 +245,8 @@ module DryCrud
       end
 
       # Overriden to fullfill contract with method_missing 'labeled_' methods.
-      def respond_to?(name)
-        labeled_field_method?(name).present? || super(name)
+      def respond_to?(name, include_private = false)
+        labeled_field_method?(name).present? || super(name, include_private)
       end
 
       private
@@ -309,12 +288,7 @@ module DryCrud
       # Automatically load the entries for the given association.
       def load_association_entries(assoc)
         klass = assoc.klass
-        list = if Rails.version >= '4.0'
-                 klass.all.merge(assoc.scope)
-               else
-                 klass.where(assoc.options[:conditions])
-                      .order(assoc.options[:order])
-               end
+        list = klass.all.merge(assoc.scope)
         # Use special scopes if they are defined
         if klass.respond_to?(:options_list)
           list.options_list

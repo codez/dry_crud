@@ -91,7 +91,7 @@ module CrudControllerTestHelper
                                 format: 'json')
     end
     assert_response :success
-    assert @response.body.starts_with?('{')
+    assert @response.body.starts_with?('{"id":')
   end
 
   def test_edit # :nodoc:
@@ -117,7 +117,7 @@ module CrudControllerTestHelper
                                format: 'json')
     end
     assert_response :success
-    assert_equal '', @response.body.strip
+    assert @response.body.starts_with?('{"id":')
   end
 
   def test_destroy # :nodoc:

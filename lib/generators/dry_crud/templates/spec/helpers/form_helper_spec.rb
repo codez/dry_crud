@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 describe FormHelper do
 
@@ -31,27 +31,27 @@ describe FormHelper do
       let(:entry) { crud_test_models(:AAAAA) }
 
       it do
-        should match(/form .*?action="\/crud_test_models\/#{entry.id}"
-                           .*?class="special\ form-horizontal"
-                           .*?method="post"/x)
+        is_expected.to match(/form .*?class="special\ form-horizontal"
+                                   .*?action="\/crud_test_models\/#{entry.id}"
+                                   .*?method="post"/x)
       end
 
       it do
-        should match(/input .*?name="_method"
-                            .*?type="hidden"
-                            .*?value="(put|patch)"/x)
+        is_expected.to match(/input .*?type="hidden"
+                                    .*?name="_method"
+                                    .*?value="(put|patch)"/x)
       end
 
       it do
-        should match(/input .*?name="crud_test_model\[name\]"
-                            .*?type="text"
-                            .*?value="AAAAA"/x)
+        is_expected.to match(/input .*?type="text"
+                                    .*?value="AAAAA"
+                                    .*?name="crud_test_model\[name\]"/x)
       end
 
       it do
-        should match(/input .*?name="crud_test_model\[birthdate\]"
-                            .*?type="date"
-                            .*?value="1910-01-01"/x)
+        is_expected.to match(/input .*?value="1910-01-01"
+                                    .*?type="date"
+                                    .*?name="crud_test_model\[birthdate\]"/x)
       end
     end
   end
@@ -73,50 +73,50 @@ describe FormHelper do
       let(:entry) { crud_test_models(:AAAAA) }
 
       it do
-        should match(/form .*?action="\/crud_test_models\/#{entry.id}"
-                            .*?class="special\ form-horizontal"
-                            .*?method="post"/x)
+        is_expected.to match(/form .*?class="special\ form-horizontal"
+                                   .*?action="\/crud_test_models\/#{entry.id}"
+                                   .*?method="post"/x)
       end
 
       it do
-        should match(/input .*?name="_method"
-                            .*?type="hidden"
-                            .*?value="(put|patch)"/x)
+        is_expected.to match(/input .*?type="hidden"
+                                    .*?name="_method"
+                                    .*?value="(put|patch)"/x)
       end
 
       it do
-        should match(/input .*?name="crud_test_model\[name\]"
-                             .*?type="text"
-                             .*?value="AAAAA"/x)
+        is_expected.to match(/input .*?type="text"
+                                    .*?value="AAAAA"
+                                    .*?name="crud_test_model\[name\]"/x)
       end
 
       it do
-        should match(/input .*?name="crud_test_model\[birthdate\]"
-                             .*?type="date"
-                             .*?value="1910-01-01"/x)
+        is_expected.to match(/input .*?value="1910-01-01"
+                                    .*?type="date"
+                                    .*?name="crud_test_model\[birthdate\]"/x)
       end
 
       it do
-        should match(/input .*?name="crud_test_model\[children\]"
-                            .*?type="number"
-                            .*?value=\"9\"/x)
+        is_expected.to match(/input .*?type="number"
+                                    .*?value=\"9\"
+                                    .*?name="crud_test_model\[children\]"/x)
       end
 
       it do
-        should match(/input .*?name="crud_test_model\[human\]"
-                            .*?type="checkbox"/x)
+        is_expected.to match(/input .*?type="checkbox"
+                                    .*?name="crud_test_model\[human\]"/x)
       end
 
       it do
-        should match(/button\ .*?type="submit">
-                      #{t('global.button.save')}
-                      <\/button>/x)
+        is_expected.to match(/button\ .*?type="submit".*>
+                              #{t('global.button.save')}
+                              <\/button>/x)
       end
 
       it do
-        should match(/a\ .*href="\/somewhere".*>
-                      #{t('global.button.cancel')}
-                      <\/a>/x)
+        is_expected.to match(/a\ .*href="\/somewhere".*>
+                              #{t('global.button.cancel')}
+                              <\/a>/x)
       end
     end
 
@@ -129,19 +129,19 @@ describe FormHelper do
       end
 
       it do
-        should match(/div[^>]* id='error_explanation'/)
+        is_expected.to match(/div[^>]* id='error_explanation'/)
       end
 
       it do
-        should match(/div\ class="form-group\ has-error"\>.*?
-                      \<input .*?name="crud_test_model\[name\]"
-                              .*?type="text"/x)
+        is_expected.to match(/div\ class="form-group\ has-error"\>.*?
+                              \<input .*?type="text"
+                                      .*?name="crud_test_model\[name\]"/x)
       end
 
       it do
-        should match(/input .*?name="_method"
-                            .*?type="hidden"
-                            .*?value="(put|patch)"/x)
+        is_expected.to match(/input .*?type="hidden"
+                                    .*?name="_method"
+                                    .*?value="(put|patch)"/x)
       end
     end
   end
@@ -153,66 +153,66 @@ describe FormHelper do
     end
 
     it do
-      should match(/form .*?action="\/crud_test_models\/#{entry.id}"/)
+      is_expected.to match(/form .*?action="\/crud_test_models\/#{entry.id}"/)
     end
 
     it do
-      should match(/input .*?name="crud_test_model\[name\]"
-                          .*?type="text"/x)
+      is_expected.to match(/input .*?type="text"
+                                  .*?name="crud_test_model\[name\]"/x)
     end
 
     it do
-      should match(/input .*?name="crud_test_model\[whatever\]"
-                          .*?type="text"/x)
+      is_expected.to match(/input .*?type="text"
+                                  .*?name="crud_test_model\[whatever\]"/x)
     end
 
     it do
-      should match(/input .*?name="crud_test_model\[children\]"
-                          .*?type="number"/x)
+      is_expected.to match(/input .*?type="number"
+                                  .*?name="crud_test_model\[children\]"/x)
     end
 
     it do
-      should match(/input .*?name="crud_test_model\[rating\]"
-                          .*?type="number"/x)
+      is_expected.to match(/input .*?type="number"
+                                  .*?name="crud_test_model\[rating\]"/x)
     end
 
     it do
-      should match(/input .*?name="crud_test_model\[income\]"
-                          .*?type="number"/x)
+      is_expected.to match(/input .*?type="number"
+                                  .*?name="crud_test_model\[income\]"/x)
     end
 
     it do
-      should match(/input .*?name="crud_test_model\[birthdate\]"
-                          .*?type="date"/x)
+      is_expected.to match(/input .*?type="date"
+                                  .*?name="crud_test_model\[birthdate\]"/x)
     end
 
     it do
-      should match(/input .*?name="crud_test_model\[gets_up_at\]"
-                          .*?type="time"/x)
+      is_expected.to match(/input .*?type="time"
+                                  .*?name="crud_test_model\[gets_up_at\]"/x)
     end
 
     it do
-      should match(/input .*?name="crud_test_model\[last_seen\]"
-                          .*?type="datetime"/x)
+      is_expected.to match(/input .*?type="datetime"
+                                  .*?name="crud_test_model\[last_seen\]"/x)
     end
 
     it do
-      should match(/input .*?name="crud_test_model\[human\]"
-                          .*?type="checkbox"/x)
+      is_expected.to match(/input .*?type="checkbox"
+                                  .*?name="crud_test_model\[human\]"/x)
     end
 
     it do
-      should match(/select .*?name="crud_test_model\[companion_id\]"/)
+      is_expected.to match(/select .*?name="crud_test_model\[companion_id\]"/)
     end
 
     it do
-      should match(/textarea .*?name="crud_test_model\[remarks\]"/)
+      is_expected.to match(/textarea .*?name="crud_test_model\[remarks\]"/)
     end
 
     it do
-      should match(/a\ .*href="\/crud_test_models\/#{entry.id}
+      is_expected.to match(/a\ .*href="\/crud_test_models\/#{entry.id}
                                \?returning=true".*>
-                    #{t('global.button.cancel')}<\/a>/x)
+                            #{t('global.button.cancel')}<\/a>/x)
     end
   end
 

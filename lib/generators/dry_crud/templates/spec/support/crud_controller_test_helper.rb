@@ -7,7 +7,7 @@ module CrudControllerTestHelper
 
   # Performs a request based on the metadata of the action example under test.
   def perform_request
-    m = example.metadata
+    m = RSpec.current_example.metadata
     example_params = respond_to?(:params) ? send(:params) : {}
     params = scope_params.merge(format: m[:format])
     params.merge!(id: test_entry.id) if m[:id]
@@ -22,30 +22,38 @@ module CrudControllerTestHelper
   # If a combine key is given in metadata, only the first request for all
   # examples with the same key will be performed.
   def perform_combined_request
-    stack = example.metadata[:combine]
+    stack = RSpec.current_example.metadata[:combine]
     if stack
       @@current_stack ||= nil
       if stack == @@current_stack &&
          described_class == @@current_controller.class
-        @response = @@current_response
-        @_templates = @templates = @@current_templates
-        @controller = @@current_controller
-        @request = @@current_request
+        restore_request
       else
         perform_request
-
         @@current_stack = stack
-        @@current_response = @response
-        @@current_request = @request
-        @@current_controller = @controller
-        @@current_templates = @_templates || @templates
-
-        # treat in-memory entry as committed in order to avoid rollback of internal state.
-        entry.committed! if entry
+        remember_request
       end
     else
       perform_request
     end
+  end
+
+  def remember_request
+    @@current_response = @response
+    @@current_request = @request
+    @@current_controller = @controller
+    @@current_templates = @_templates || @templates
+
+    # treat in-memory entry as committed in order to
+    # avoid rollback of internal state.
+    entry.committed! if entry
+  end
+
+  def restore_request
+    @response = @@current_response
+    @_templates = @templates = @@current_templates
+    @controller = @@current_controller
+    @request = @@current_request
   end
 
   # The params defining the nesting of the test entry.
@@ -91,92 +99,90 @@ module CrudControllerTestHelper
     end
 
     # Test the response status, default 200.
-    def it_should_respond(status = 200)
-      it { response.status.should == status }
+    def it_is_expected_to_respond(status = 200)
+      it { expect(response.status).to eq(status) }
     end
 
     # Test that entries are assigned.
-    def it_should_assign_entries
-      it 'should assign entries' do
-        entries.should be_present
+    def it_is_expected_to_assign_entries
+      it 'assigns entries' do
+        expect(entries).to be_present
       end
     end
 
     # Test that entry is assigned.
-    def it_should_assign_entry
-      it 'should assign entry' do
-        entry.should == test_entry
+    def it_is_expected_to_assign_entry
+      it 'assigns entry' do
+        expect(entry).to eq(test_entry)
       end
     end
 
     # Test that the given template or the main template of the action under
     # test is rendered.
-    def it_should_render(template = nil)
-      it { should render_template(template || example.metadata[:action]) }
+    def it_is_expected_to_render(template = nil)
+      it do
+        template ||= RSpec.current_example.metadata[:action]
+        is_expected.to render_template(template)
+      end
     end
 
     # Test that a json response is rendered.
-    def it_should_render_json
-      it { response.body.should start_with('{') }
-    end
-
-    # Test that a json response containing the error is rendered.
-    def it_should_render_error_json
-      it { response.body.should match(/"errors":\{/) }
+    def it_is_expected_to_render_json
+      it { expect(response.body).to start_with('{') }
     end
 
     # Test that test_entry_attrs are set on entry.
-    def it_should_set_attrs(action = nil)
-      it 'should set params as entry attributes' do
+    def it_is_expected_to_set_attrs(action = nil)
+      it 'sets params as entry attributes' do
         attrs = send("#{action}_entry_attrs")
         actual = {}
         attrs.keys.each do |key|
           actual[key] = entry.attributes[key.to_s]
         end
-        actual.should == attrs
+        expect(actual).to eq(attrs)
       end
     end
 
     # Test that the response redirects to the index action.
-    def it_should_redirect_to_index
+    def it_is_expected_to_redirect_to_index
       it do
-        should redirect_to scope_params.merge(action: 'index',
-                                              returning: true)
+        is_expected.to redirect_to scope_params.merge(action: 'index',
+                                                      returning: true)
       end
     end
 
     # Test that the response redirects to the show action of the current entry.
-    def it_should_redirect_to_show
+    def it_is_expected_to_redirect_to_show
       it do
-        should redirect_to scope_params.merge(action: 'show',
-                                              id: entry.id)
+        is_expected.to redirect_to scope_params.merge(action: 'show',
+                                                      id: entry.id)
       end
     end
 
     # Test that the given flash type is present.
-    def it_should_have_flash(type, message = nil)
+    def it_is_expected_to_have_flash(type, message = nil)
       it "flash(#{type}) is set" do
-        flash[type].should(message ? match(message) : be_present)
+        expect(flash[type]).to(message ? match(message) : be_present)
       end
     end
 
     # Test that not flash of the given type is present.
-    def it_should_not_have_flash(type)
+    def it_is_expected_to_not_have_flash(type)
       it "flash(#{type}) is nil" do
-        flash[type].should be_blank
+        expect(flash[type]).to be_blank
       end
     end
 
     # Test that the current entry is persistend and valid, or not.
-    def it_should_persist_entry(bool = true)
+    def it_is_expected_to_persist_entry(bool = true)
       context 'entry' do
         subject { entry }
 
         if bool
-          it { should_not be_new_record }
-          it { should be_valid }
+          it { is_expected.not_to be_new_record }
+          it { is_expected.to be_valid }
         else
-          it { should be_new_record }
+          it { is_expected.to be_new_record }
         end
       end
     end

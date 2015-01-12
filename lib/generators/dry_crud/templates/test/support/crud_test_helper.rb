@@ -75,7 +75,7 @@ module CrudTestHelper
       t.boolean  :human, default: true
       t.text     :remarks
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 

@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 describe TableHelper do
 
@@ -20,11 +20,11 @@ describe TableHelper do
     subject { plain_table(%w(foo bar), :size) { |t| t.attrs :upcase } }
 
     it 'contains attrs' do
-      should match(/<th>Size<\/th>/)
+      is_expected.to match(/<th>Size<\/th>/)
     end
 
     it 'contains block' do
-      should match(/<th>Upcase<\/th>/)
+      is_expected.to match(/<th>Upcase<\/th>/)
     end
   end
 
@@ -32,10 +32,10 @@ describe TableHelper do
     context 'with empty data' do
       subject { plain_table_or_message([]) }
 
-      it { should be_html_safe }
+      it { is_expected.to be_html_safe }
 
       it 'handles empty data' do
-        should match(/div class=.table.\>.+\<\/div\>/)
+        is_expected.to match(/div class=.table.\>.+\<\/div\>/)
       end
     end
 
@@ -44,10 +44,10 @@ describe TableHelper do
         plain_table_or_message(%w(foo bar), :size) { |t| t.attrs :upcase }
       end
 
-      it { should be_html_safe }
+      it { is_expected.to be_html_safe }
 
       it 'renders table' do
-        should match(/^\<table.*\<\/table\>$/)
+        is_expected.to match(/^\<table.*\<\/table\>$/)
       end
     end
   end
@@ -61,11 +61,11 @@ describe TableHelper do
       end
 
       it 'has 7 rows' do
-        subject.scan(REGEXP_ROWS).size.should == 7
+        expect_pattern_count(REGEXP_ROWS, 7)
       end
 
       it 'has 14 sortable headers' do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 14
+        expect_pattern_count(REGEXP_SORT_HEADERS, 14)
       end
     end
 
@@ -75,11 +75,11 @@ describe TableHelper do
       end
 
       it 'has 7 rows' do
-        subject.scan(REGEXP_ROWS).size.should == 7
+        expect_pattern_count(REGEXP_ROWS, 7)
       end
 
       it 'has 3 sortable headers' do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 3
+        expect_pattern_count(REGEXP_SORT_HEADERS, 3)
       end
     end
 
@@ -94,19 +94,19 @@ describe TableHelper do
       end
 
       it 'has 7 rows' do
-        subject.scan(REGEXP_ROWS).size.should == 7
+        expect_pattern_count(REGEXP_ROWS, 7)
       end
 
       it 'has 4 headers' do
-        subject.scan(REGEXP_HEADERS).size.should == 4
+        expect_pattern_count(REGEXP_HEADERS, 4)
       end
 
       it 'has 0 sortable headers' do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 0
+        expect_pattern_count(REGEXP_SORT_HEADERS, 0)
       end
 
       it 'has 6 spans' do
-        subject.scan(/<span>.+?<\/span>/).size.should == 6
+        expect_pattern_count(/<span>.+?<\/span>/, 6)
       end
     end
 
@@ -120,19 +120,19 @@ describe TableHelper do
       end
 
       it 'has 7 rows' do
-        subject.scan(REGEXP_ROWS).size.should == 7
+        expect_pattern_count(REGEXP_ROWS, 7)
       end
 
       it 'has 4 headers' do
-        subject.scan(REGEXP_HEADERS).size.should == 4
+        expect_pattern_count(REGEXP_HEADERS, 4)
       end
 
       it 'has 3 sortable headers' do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 3
+        expect_pattern_count(REGEXP_SORT_HEADERS, 3)
       end
 
       it 'has 6 spans' do
-        subject.scan(/<span>.+?<\/span>/).size.should == 6
+        expect_pattern_count(/<span>.+?<\/span>/, 6)
       end
     end
 
@@ -143,12 +143,12 @@ describe TableHelper do
       end
 
       it 'has 13 sortable headers' do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 13
+        expect_pattern_count(REGEXP_SORT_HEADERS, 13)
       end
 
       it 'has 1 ascending sort headers' do
-        subject.scan(/<th><a .*?sort_dir=desc.*?>Children<\/a> &darr;<\/th>/)
-               .size.should == 1
+        expect_pattern_count(
+          /<th><a .*?sort_dir=desc.*?>Children<\/a> &darr;<\/th>/, 1)
       end
     end
 
@@ -159,12 +159,12 @@ describe TableHelper do
       end
 
       it 'has 13 sortable headers' do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 13
+        expect_pattern_count(REGEXP_SORT_HEADERS, 13)
       end
 
       it 'has 1 descending sort headers' do
-        subject.scan(/<th><a .*?sort_dir=asc.*?>Children<\/a> &uarr;<\/th>/)
-               .size.should == 1
+        expect_pattern_count(
+          /<th><a .*?sort_dir=asc.*?>Children<\/a> &uarr;<\/th>/, 1)
       end
     end
 
@@ -175,12 +175,12 @@ describe TableHelper do
       end
 
       it 'has 2 sortable headers' do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 2
+        expect_pattern_count(REGEXP_SORT_HEADERS, 2)
       end
 
       it 'has 1 ascending sort headers' do
-        subject.scan(/<th><a .*?sort_dir=desc.*?>Chatty<\/a> &darr;<\/th>/)
-               .size.should == 1
+        expect_pattern_count(
+          /<th><a .*?sort_dir=desc.*?>Chatty<\/a> &darr;<\/th>/, 1)
       end
     end
   end
@@ -194,15 +194,15 @@ describe TableHelper do
       end
 
       it 'has 7 rows' do
-        subject.scan(REGEXP_ROWS).size.should == 7
+        expect_pattern_count(REGEXP_ROWS, 7)
       end
 
       it 'has 14 sort headers' do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 14
+        expect_pattern_count(REGEXP_SORT_HEADERS, 14)
       end
 
       it 'has 12 action cells' do
-        subject.scan(REGEXP_ACTION_CELL).size.should == 12
+        expect_pattern_count(REGEXP_ACTION_CELL, 12)
       end
     end
 
@@ -212,7 +212,7 @@ describe TableHelper do
       end
 
       it 'has 3 sort headers' do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 3
+        expect_pattern_count(REGEXP_SORT_HEADERS, 3)
       end
     end
 
@@ -227,15 +227,15 @@ describe TableHelper do
       end
 
       it 'has 4 headers' do
-        subject.scan(REGEXP_HEADERS).size.should == 6
+        expect_pattern_count(REGEXP_HEADERS, 6)
       end
 
       it 'has 6 custom col spans' do
-        subject.scan(/<span>.+?<\/span>/m).size.should == 6
+        expect_pattern_count(/<span>.+?<\/span>/m, 6)
       end
 
       it 'has 12 action cells' do
-        subject.scan(REGEXP_ACTION_CELL).size.should == 12
+        expect_pattern_count(REGEXP_ACTION_CELL, 12)
       end
     end
 
@@ -249,17 +249,21 @@ describe TableHelper do
       end
 
       it 'has 3 sort headers' do
-        subject.scan(REGEXP_SORT_HEADERS).size.should == 3
+        expect_pattern_count(REGEXP_SORT_HEADERS, 3)
       end
 
       it 'has 6 custom col spans' do
-        subject.scan(/<span>.+?<\/span>/m).size.should == 6
+        expect_pattern_count(/<span>.+?<\/span>/m, 6)
       end
 
       it 'has 12 action cells' do
-        subject.scan(REGEXP_ACTION_CELL).size.should == 12
+        expect_pattern_count(REGEXP_ACTION_CELL, 12)
       end
     end
+  end
+
+  def expect_pattern_count(pattern, count)
+    expect(subject.scan(pattern).size).to eq(count)
   end
 
 end

@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 describe Admin::CountriesController do
 
@@ -15,35 +15,35 @@ describe Admin::CountriesController do
   alias_method :new_entry_attrs, :test_entry_attrs
   alias_method :edit_entry_attrs, :test_entry_attrs
 
-  it 'should load fixtures' do
-    Country.count.should == 3
+  it 'loads fixtures' do
+    expect(Country.count).to eq(3)
   end
 
   describe_action :get, :index do
-    it 'should be ordered by default scope' do
+    it 'is ordered by default scope' do
       entries == Country.order(:name)
     end
 
-    it 'should set parents' do
-      controller.send(:parents).should == [:admin]
+    it 'sets parents' do
+      expect(controller.send(:parents)).to eq([:admin])
     end
 
-    it 'should set nil parent' do
-      controller.send(:parent).should be_nil
+    it 'sets nil parent' do
+      expect(controller.send(:parent)).to be_nil
     end
 
-    it 'should use correct model_scope' do
-      controller.send(:model_scope).should == Country.all
+    it 'uses correct model_scope' do
+      expect(controller.send(:model_scope)).to eq(Country.all)
     end
 
-    it 'should have correct path args' do
-      controller.send(:path_args, 2).should == [:admin, 2]
+    it 'has correct path args' do
+      expect(controller.send(:path_args, 2)).to eq([:admin, 2])
     end
   end
 
   describe_action :get, :show do
     let(:params) { { id: test_entry.id } }
-    it_should_redirect_to_index
+    it_is_expected_to_redirect_to_index
   end
 
 end

@@ -1,19 +1,14 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 describe Admin::CitiesController do
-  it 'should route index' do
-    { get: 'admin/countries/1/cities' }.should(
-      route_to(controller: 'admin/cities',
-               action: 'index',
-               country_id: '1'))
+  it 'routes index' do
+    expect(get: 'admin/countries/1/cities').to route_to(
+      controller: 'admin/cities', action: 'index', country_id: '1')
   end
 
-  it 'should route show' do
-    { get: 'admin/countries/2/cities/1' }.should(
-      route_to(controller: 'admin/cities',
-               action: 'show',
-               country_id: '2',
-               id: '1'))
+  it 'routes show' do
+    expect(get: 'admin/countries/2/cities/1').to route_to(
+      controller: 'admin/cities', action: 'show', country_id: '2', id: '1')
   end
 end
