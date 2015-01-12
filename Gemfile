@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.0.beta4'
-gem 'arel', '6.0.0.beta2'
+gem 'rails'
 
 gem 'rake'
 gem 'sdoc'
@@ -10,7 +9,7 @@ gem 'rspec-rails'
 gem 'haml'
 
 gem 'jquery-rails'
-gem 'sass-rails', '5.0.0.beta1'
+gem 'sass-rails'
 gem 'coffee-rails'
 
 gem 'kaminari'
@@ -33,5 +32,3 @@ platforms :jruby do
   gem 'activerecord-jdbcsqlite3-adapter'
   gem 'jruby-openssl'
 end
-
-
