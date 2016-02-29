@@ -18,7 +18,7 @@ module DryCrud
       class_attribute :remember_params
       self.remember_params = %w(q sort sort_dir page)
 
-      before_filter :handle_remember_params, only: [:index]
+      before_action :handle_remember_params, only: [:index]
     end
 
     private
@@ -53,6 +53,7 @@ module DryCrud
     def remembered_params
       session[:list_params] ||= {}
       session[:list_params][remember_key] ||= {}
+      session[:list_params][remember_key]
     end
 
     # Params are stored by request path to play nice when a controller

@@ -29,7 +29,7 @@ module Admin
     end
 
     def test_show
-      get :show, test_params(id: test_entry.id)
+      get :show, params: test_params(id: test_entry.id)
       assert_redirected_to_index
     end
 

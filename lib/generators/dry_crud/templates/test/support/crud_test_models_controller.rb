@@ -21,19 +21,17 @@ class CrudTestModelsController < CrudController #:nodoc:
   attr_reader :called_callbacks
   attr_accessor :should_redirect
 
-  hide_action :called_callbacks, :should_redirect, :should_redirect=
-
   # don't use the standard layout as it may require different routes
   # than just the test route for this controller
   layout false
 
   def index
     entries
-    render text: 'index js' if request.format.js?
+    render plain: 'index js' if request.format.js?
   end
 
   def show
-    render text: 'custom html' if entry.name == 'BBBBB'
+    render html: 'custom html' if entry.name == 'BBBBB'
   end
 
   def create
@@ -68,14 +66,13 @@ class CrudTestModelsController < CrudController #:nodoc:
   def handle_name
     if entry.name == 'illegal'
       flash[:alert] = 'illegal name'
-      false
+      throw :abort
     end
   end
 
   # callback to redirect if @should_redirect is set
   def possibly_redirect
     redirect_to action: 'index' if should_redirect && !performed?
-    !should_redirect
   end
 
   def set_companions

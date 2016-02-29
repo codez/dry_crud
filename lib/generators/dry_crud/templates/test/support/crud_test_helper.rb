@@ -47,13 +47,13 @@ module CrudTestHelper
   # Look at the source to view the column definition.
   def setup_db
     without_transaction do
-      silence_stream(STDOUT) do
+      #silence_stream(STDOUT) do
         c = ActiveRecord::Base.connection
 
         create_crud_test_models(c)
         create_other_crud_test_models(c)
         create_crud_test_models_other_crud_test_models(c)
-      end
+      #end
 
       CrudTestModel.reset_column_information
     end
@@ -89,8 +89,8 @@ module CrudTestHelper
   def create_crud_test_models_other_crud_test_models(c)
     c.create_table :crud_test_models_other_crud_test_models,
                    force: true do |t|
-      t.belongs_to :crud_test_model
-      t.belongs_to :other_crud_test_model
+      t.belongs_to :crud_test_model, index: { name: 'parent' }
+      t.belongs_to :other_crud_test_model, index: { name: 'other' }
     end
   end
 
@@ -100,7 +100,7 @@ module CrudTestHelper
     [:crud_test_models,
      :other_crud_test_models,
      :crud_test_models_other_crud_test_models].each do |table|
-      c.drop_table(table) if c.table_exists?(table)
+      c.drop_table(table) if c.data_source_exists?(table)
     end
   end
 

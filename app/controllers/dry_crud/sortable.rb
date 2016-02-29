@@ -15,7 +15,7 @@ module DryCrud
 
       helper_method :sortable?
 
-      alias_method_chain :list_entries, :sort
+      prepend Prepends
     end
 
     # Class methods for sorting.
@@ -30,36 +30,41 @@ module DryCrud
       end
     end
 
-    private
+    module Prepends
 
-    # Enhance the list entries with an optional sort order.
-    def list_entries_with_sort
-      sortable = sortable?(params[:sort])
-      if sortable || default_sort
-        clause = [sortable ? sort_expression : nil, default_sort]
-        list_entries_without_sort.reorder(clause.compact.join(', '))
-      else
-        list_entries_without_sort
+      private
+
+      # Enhance the list entries with an optional sort order.
+      def list_entries
+        sortable = sortable?(params[:sort])
+        if sortable || default_sort
+          clause = [sortable ? sort_expression : nil, default_sort]
+          super.reorder(clause.compact.join(', '))
+        else
+          super
+        end
       end
+
+      # Return the sort expression to be used in the list query.
+      def sort_expression
+        col = sort_mappings_with_indifferent_access[params[:sort]] ||
+              "#{model_class.table_name}.#{params[:sort]}"
+        "#{col} #{sort_dir}"
+      end
+
+      # The sort direction, either 'asc' or 'desc'.
+      def sort_dir
+        params[:sort_dir] == 'desc' ? 'DESC' : 'ASC'
+      end
+
+      # Returns true if the passed attribute is sortable.
+      def sortable?(attr)
+        attr.present? && (
+        model_class.column_names.include?(attr.to_s) ||
+        sort_mappings_with_indifferent_access.include?(attr))
+      end
+
     end
 
-    # Return the sort expression to be used in the list query.
-    def sort_expression
-      col = sort_mappings_with_indifferent_access[params[:sort]] ||
-            "#{model_class.table_name}.#{params[:sort]}"
-      "#{col} #{sort_dir}"
-    end
-
-    # The sort direction, either 'asc' or 'desc'.
-    def sort_dir
-      params[:sort_dir] == 'desc' ? 'DESC' : 'ASC'
-    end
-
-    # Returns true if the passed attribute is sortable.
-    def sortable?(attr)
-      attr.present? && (
-      model_class.column_names.include?(attr.to_s) ||
-      sort_mappings_with_indifferent_access.include?(attr))
-    end
   end
 end

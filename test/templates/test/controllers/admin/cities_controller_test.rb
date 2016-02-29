@@ -30,9 +30,7 @@ module Admin
       end
       assert_equal expected.to_a, entries.to_a
 
-      assert_equal @controller.send(:entries), assigns(:cities)
       assert_equal [:admin, test_entry.country], @controller.send(:parents)
-      assert_equal test_entry.country, assigns(:country)
       assert_equal test_entry.country, @controller.send(:parent)
       assert_equal test_entry.country.cities.to_a,
                    @controller.send(:model_scope).to_a
@@ -42,9 +40,7 @@ module Admin
 
     def test_show
       super
-      assert_equal @controller.send(:entry), assigns(:city)
       assert_equal [:admin, test_entry.country], @controller.send(:parents)
-      assert_equal test_entry.country, assigns(:country)
       assert_equal test_entry.country, @controller.send(:parent)
     end
 
@@ -57,7 +53,7 @@ module Admin
       ny = cities(:ny)
       assert_no_difference('City.count') do
         @request.env['HTTP_REFERER'] = admin_country_city_url(ny.country, ny)
-        delete :destroy, country_id: ny.country_id, id: ny.id
+        delete :destroy, params: { country_id: ny.country_id, id: ny.id }
       end
       assert_redirected_to [:admin, ny.country, ny]
       assert flash[:alert].present?

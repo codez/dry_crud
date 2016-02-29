@@ -22,7 +22,7 @@ class City < ActiveRecord::Base
   def protect_with_inhabitants
     if people.exists?
       errors.add(:base, :protect_with_inhabitants)
-      false
+      throw :abort
     end
   end
 

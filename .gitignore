@@ -9,3 +9,4 @@ tmp
 pkg
 rdoc
 *.gemfile.lock
+.byebug_history

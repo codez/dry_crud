@@ -7,29 +7,32 @@ module DryCrud
 
     included do
       extend ActiveModel::Callbacks
-
-      alias_method_chain :render, :callbacks
+      prepend Prepends
     end
 
-    # Helper method to run +before_render+ callbacks and render the action.
-    # If a callback renders or redirects, the action is not rendered.
-    def render_with_callbacks(*args, &block)
-      options = _normalize_render(*args, &block)
-      callback = "render_#{options[:template]}"
+    module Prepends
 
-      run_callbacks(callback) if respond_to?(:"_#{callback}_callbacks", true)
+      # Helper method to run +before_render+ callbacks and render the action.
+      # If a callback renders or redirects, the action is not rendered.
+      def render(*args, &block)
+        options = _normalize_render(*args, &block)
+        callback = "render_#{options[:template]}"
 
-      render_without_callbacks(*args, &block) unless performed?
-    end
+        run_callbacks(callback) if respond_to?(:"_#{callback}_callbacks", true)
 
-    private
+        super(*args, &block) unless performed?
+      end
 
-    # Helper method the run the given block in between the before and after
-    # callbacks of the given kinds.
-    def with_callbacks(*kinds, &block)
-      kinds.reverse.reduce(block) do |a, e|
-        -> { run_callbacks(e, &a) }
-      end.call
+      private
+
+      # Helper method the run the given block in between the before and after
+      # callbacks of the given kinds.
+      def with_callbacks(*kinds, &block)
+        kinds.reverse.reduce(block) do |a, e|
+          -> { run_callbacks(e, &a) }
+        end.call
+      end
+
     end
 
     # Class methods for callbacks.
@@ -37,9 +40,21 @@ module DryCrud
       # Defines before callbacks for the render actions.
       def define_render_callbacks(*actions)
         args = actions.map { |a| :"render_#{a}" }
-        terminator = ->(ctrl, result) { result == false || ctrl.performed? }
-        args << { only: :before, terminator: terminator }
+        args << { only: :before, terminator: render_callback_terminator }
         define_model_callbacks(*args)
+      end
+
+      private
+
+      def render_callback_terminator
+        Proc.new do |ctrl, result_lambda|
+          terminate = true
+          catch(:abort) do
+            result_lambda.call if result_lambda.is_a?(Proc)
+            terminate = !ctrl.response_body.nil?
+          end
+          terminate
+        end
       end
     end
   end

@@ -22,8 +22,6 @@ class CrudController < ListController
   # further down.
   define_render_callbacks :show, :new, :edit
 
-  hide_action :run_callbacks
-
   before_action :entry, only: [:show, :new, :edit, :update, :destroy]
 
   helper_method :entry, :full_entry_label

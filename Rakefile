@@ -225,4 +225,3 @@ def file_replace(file, expression, replacement)
   end
   File.open(file, 'w') { |f| f.puts replaced }
 end
-

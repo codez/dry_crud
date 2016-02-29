@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails'
+gem 'rails', '>= 5.0.0.beta1'
 
 gem 'rake'
 gem 'sdoc'
@@ -18,7 +18,16 @@ gem 'bootstrap-sass'
 gem 'turbolinks'
 gem 'jbuilder'
 
+group :development do
+  gem 'web-console'
+  gem 'listen'
+  gem 'spring'
+  gem 'spring-watcher-listen'
+end
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
 gem 'simplecov', require: false
+gem 'byebug'
 
 # platform specific gems
 

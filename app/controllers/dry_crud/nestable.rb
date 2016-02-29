@@ -9,17 +9,13 @@ module DryCrud
   # namespace, may define this attribute as follows:
   #   self.nesting = :admin, Country
   module Nestable
-    extend ActiveSupport::Concern
 
     # Adds the :nesting class attribute and parent helper methods
     # to the including controller.
-    included do
-      class_attribute :nesting
+    def self.prepended(klass)
+      klass.class_attribute :nesting
 
-      helper_method :parent, :parents
-
-      alias_method_chain :path_args, :nesting
-      alias_method_chain :model_scope, :nesting
+      klass.helper_method :parent, :parents
     end
 
     private
@@ -49,16 +45,16 @@ module DryCrud
     end
 
     # An array of objects used in url_for and related functions.
-    def path_args_with_nesting(last)
+    def path_args(last)
       parents + [last]
     end
 
     # Uses the parent entry (if any) to constrain the model scope.
-    def model_scope_with_nesting
+    def model_scope
       if parent.present?
         parent_scope
       else
-        model_scope_without_nesting
+        super
       end
     end
 

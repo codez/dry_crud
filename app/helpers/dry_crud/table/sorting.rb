@@ -32,7 +32,8 @@ module DryCrud
 
       # Request params for the sort link.
       def sort_params(attr)
-        params.merge(sort: attr, sort_dir: sort_dir(attr))
+        result = params.respond_to?(:to_unsafe_h) ? params.to_unsafe_h : params
+        result.merge(sort: attr, sort_dir: sort_dir(attr), only_path: true)
       end
 
       # The sort mark, if any, for the given attribute.
