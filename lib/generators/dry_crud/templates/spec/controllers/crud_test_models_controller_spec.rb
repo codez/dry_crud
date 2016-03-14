@@ -68,7 +68,6 @@ describe CrudTestModelsController do
         end
 
         it 'provides entries helper method' do
-          is_expected.to render_template('index')
           expect(entries).to be(controller.send(:entries))
         end
       end
@@ -175,7 +174,7 @@ describe CrudTestModelsController do
           session[:list_params] = {}
           session[:list_params]['/crud_test_models'] =
             { 'q' => 'DDD', 'sort' => 'chatty', 'sort_dir' => 'desc' }
-          get :index, returning: true
+          get :index, params: { returning: true }
         end
 
         it_is_expected_to_respond
@@ -194,7 +193,6 @@ describe CrudTestModelsController do
 
     context '.js', format: :js, combine: 'ijs' do
       it_is_expected_to_respond
-      it_is_expected_to_assign_entries
       it { expect(response.body).to eq('index js') }
     end
   end
@@ -202,7 +200,7 @@ describe CrudTestModelsController do
   describe_action :get, :new do
     context 'plain', combine: 'new' do
       it 'assigns companions' do
-        expect(assigns(:companions)).to be_present
+        expect(ivar(:companions)).to be_present
       end
 
       it 'calls two render callbacks' do
@@ -221,7 +219,7 @@ describe CrudTestModelsController do
       it { is_expected.to redirect_to(crud_test_models_path) }
 
       it 'does not set companions' do
-        expect(assigns(:companions)).to be_nil
+        expect(ivar(:companions)).to be_nil
       end
     end
   end
@@ -244,7 +242,6 @@ describe CrudTestModelsController do
 
       context 'plain', combine: 'chcp' do
         it_is_expected_to_respond
-        it_is_expected_to_render('new')
         it_is_expected_to_persist_entry(false)
         it_is_expected_to_have_flash(:alert)
 
@@ -253,7 +250,7 @@ describe CrudTestModelsController do
         end
 
         it 'assigns companions' do
-          expect(assigns(:companions)).to be_present
+          expect(ivar(:companions)).to be_present
         end
 
         it 'calls the correct callbacks' do
@@ -291,13 +288,12 @@ describe CrudTestModelsController do
 
         context 'plain', combine: 'chip' do
           it_is_expected_to_respond
-          it_is_expected_to_render('new')
           it_is_expected_to_persist_entry(false)
           it_is_expected_to_not_have_flash(:notice)
           it_is_expected_to_not_have_flash(:alert)
 
           it 'assigns companions' do
-            expect(assigns(:companions)).to be_present
+            expect(ivar(:companions)).to be_present
           end
 
           it 'calls the correct callbacks' do
@@ -321,7 +317,7 @@ describe CrudTestModelsController do
           it_is_expected_to_render_json
 
           it 'does not assign companions' do
-            expect(assigns(:companions)).to be_nil
+            expect(ivar(:companions)).to be_nil
           end
 
           it 'calls the correct callbacks' do
@@ -354,7 +350,6 @@ describe CrudTestModelsController do
 
       context '.html', combine: 'uhivp' do
         it_is_expected_to_respond
-        it_is_expected_to_render('edit')
         it_is_expected_to_not_have_flash(:notice)
 
         it 'changes entry' do

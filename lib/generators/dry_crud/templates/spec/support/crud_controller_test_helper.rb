@@ -9,13 +9,14 @@ module CrudControllerTestHelper
   def perform_request
     m = RSpec.current_example.metadata
     example_params = respond_to?(:params) ? send(:params) : {}
-    params = scope_params.merge(format: m[:format])
+    params = scope_params.dup
+    params.merge!(format: m[:format]) if m[:format]
     params.merge!(id: test_entry.id) if m[:id]
     params.merge!(example_params)
     if m[:method] == :get && m[:format] == :js
-      xhr(:get, m[:action], params)
+      get m[:action], params: params, xhr: true
     else
-      send(m[:method], m[:action], params)
+      send(m[:method], m[:action], params: params)
     end
   end
 
@@ -54,6 +55,10 @@ module CrudControllerTestHelper
     @_templates = @templates = @@current_templates
     @controller = @@current_controller
     @request = @@current_request
+  end
+
+  def ivar(name)
+    controller.instance_variable_get("@#{name}")
   end
 
   # The params defining the nesting of the test entry.
@@ -103,29 +108,6 @@ module CrudControllerTestHelper
       it { expect(response.status).to eq(status) }
     end
 
-    # Test that entries are assigned.
-    def it_is_expected_to_assign_entries
-      it 'assigns entries' do
-        expect(entries).to be_present
-      end
-    end
-
-    # Test that entry is assigned.
-    def it_is_expected_to_assign_entry
-      it 'assigns entry' do
-        expect(entry).to eq(test_entry)
-      end
-    end
-
-    # Test that the given template or the main template of the action under
-    # test is rendered.
-    def it_is_expected_to_render(template = nil)
-      it do
-        template ||= RSpec.current_example.metadata[:action]
-        is_expected.to render_template(template)
-      end
-    end
-
     # Test that a json response is rendered.
     def it_is_expected_to_render_json
       it { expect(response.body).to start_with('{') }
@@ -147,6 +129,7 @@ module CrudControllerTestHelper
     def it_is_expected_to_redirect_to_index
       it do
         is_expected.to redirect_to scope_params.merge(action: 'index',
+                                                      id: nil,
                                                       returning: true)
       end
     end

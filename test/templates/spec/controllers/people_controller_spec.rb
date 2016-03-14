@@ -54,7 +54,6 @@ describe PeopleController do
   describe_action :get, :show, id: true do
     context '.js', format: :js do
       it_is_expected_to_respond
-      it_is_expected_to_render
       it { expect(response.body).to match(/\$\('#content'\)/) }
     end
   end
@@ -62,7 +61,6 @@ describe PeopleController do
   describe_action :get, :edit, id: true do
     context '.js', format: :js do
       it_is_expected_to_respond
-      it_is_expected_to_render
       it { expect(response.body).to match(/\$\('#content'\)/) }
     end
   end
@@ -73,7 +71,6 @@ describe PeopleController do
         let(:params) { { person: { name: 'New Name' } } }
 
         it_is_expected_to_respond
-        it_is_expected_to_render
         it { expect(response.body).to match(/\$\('#content'\)/) }
       end
 
@@ -81,7 +78,6 @@ describe PeopleController do
         let(:params) { { person: { name: ' ' } } }
 
         it_is_expected_to_respond
-        it_is_expected_to_render
         it { expect(response.body).to match(/alert/) }
       end
     end

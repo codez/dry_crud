@@ -4,7 +4,7 @@ gem 'rails', '>= 5.0.0.beta1'
 
 gem 'rake'
 gem 'sdoc'
-gem 'rspec-rails'
+gem 'rspec-rails', '>= 3.5.0.beta2'
 
 gem 'haml'
 

@@ -27,8 +27,9 @@ shared_examples 'crud controller' do |options|
   let(:model_identifier) { controller.model_identifier }
   let(:test_params)      { scope_params }
   let(:sort_column)      { model_class.column_names.first }
-  let(:entry)            { assigns(controller.send(:ivar_name, model_class)) }
-  let(:entries) { assigns(controller.send(:ivar_name, model_class).pluralize) }
+  let(:ivar_name)        { controller.send(:ivar_name, model_class) }
+  let(:entry)            { ivar(ivar_name) }
+  let(:entries)          { ivar(ivar_name.pluralize) }
   let(:search_value) do
     field = controller.search_columns.first
     val = test_entry[field].to_s
@@ -53,8 +54,6 @@ shared_examples 'crud controller' do |options|
               unless: skip?(options, %w(index html plain)),
               combine: 'ihp' do
         it_is_expected_to_respond
-        it_is_expected_to_assign_entries
-        it_is_expected_to_render
       end
 
       context 'search',
@@ -106,7 +105,6 @@ shared_examples 'crud controller' do |options|
             unless: skip?(options, %w(index json)),
             combine: 'ij' do
       it_is_expected_to_respond
-      it_is_expected_to_assign_entries
       it { expect(response.body).to start_with('[{') }
     end
   end
@@ -123,8 +121,6 @@ shared_examples 'crud controller' do |options|
               unless: skip?(options, %w(show html plain)),
               combine: 'sh' do
         it_is_expected_to_respond
-        it_is_expected_to_assign_entry
-        it_is_expected_to_render
       end
 
       context 'with non-existing id',
@@ -144,7 +140,6 @@ shared_examples 'crud controller' do |options|
             unless: skip?(options, %w(show json)),
             combine: 'sj' do
       it_is_expected_to_respond
-      it_is_expected_to_assign_entry
       it_is_expected_to_render_json
     end
   end
@@ -155,7 +150,6 @@ shared_examples 'crud controller' do |options|
             unless: skip?(options, %w(new plain)),
             combine: 'new' do
       it_is_expected_to_respond
-      it_is_expected_to_render
       it_is_expected_to_persist_entry(false)
     end
 
@@ -191,7 +185,6 @@ shared_examples 'crud controller' do |options|
               failing: true,
               unless: skip?(options, %w(create html invalid)),
               combine: 'chi' do
-        it_is_expected_to_render('new')
         it_is_expected_to_persist_entry(false)
         it_is_expected_to_set_attrs(:new)
         it_is_expected_to_not_have_flash(:notice)
@@ -228,8 +221,6 @@ shared_examples 'crud controller' do |options|
                   unless: skip?(options, %w(edit)),
                   combine: 'edit' do
     it_is_expected_to_respond
-    it_is_expected_to_render
-    it_is_expected_to_assign_entry
   end
 
   describe_action :put, :update,
@@ -257,7 +248,6 @@ shared_examples 'crud controller' do |options|
               failing: true,
               unless: skip?(options, %w(update html invalid)),
               combine: 'uhi' do
-        it_is_expected_to_render('edit')
         it_is_expected_to_set_attrs(:edit)
         it_is_expected_to_not_have_flash(:notice)
       end

@@ -31,7 +31,7 @@ describe Admin::CitiesController do
     end
 
     it 'sets parent variable' do
-      expect(assigns(:country)).to eq(test_entry.country)
+      expect(ivar(:country)).to eq(test_entry.country)
     end
 
     it 'uses correct model_scope' do
@@ -50,7 +50,7 @@ describe Admin::CitiesController do
     end
 
     it 'sets parent variable' do
-      expect(assigns(:country)).to eq(test_entry.country)
+      expect(ivar(:country)).to eq(test_entry.country)
     end
   end
 
