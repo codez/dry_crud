@@ -80,7 +80,7 @@ shared_examples 'crud controller' do |options|
           it_is_expected_to_respond
 
           it 'has sorted entries' do
-            sorted = entries.sort_by(&(sort_column.to_sym))
+            sorted = entries.sort_by(&sort_column.to_sym)
             expect(entries).to eq(sorted)
           end
         end
@@ -93,7 +93,7 @@ shared_examples 'crud controller' do |options|
           it_is_expected_to_respond
 
           it 'has sorted entries' do
-            sorted = entries.sort_by(&(sort_column.to_sym))
+            sorted = entries.sort_by(&sort_column.to_sym)
             expect(entries).to eq(sorted.reverse)
           end
         end
@@ -130,7 +130,7 @@ shared_examples 'crud controller' do |options|
 
         it 'raises RecordNotFound', perform_request: false do
           expect { perform_request }
-          .to raise_error(ActiveRecord::RecordNotFound)
+            .to raise_error(ActiveRecord::RecordNotFound)
         end
       end
     end
@@ -281,7 +281,7 @@ shared_examples 'crud controller' do |options|
                   id: true,
                   unless: skip?(options, %w(destroy)) do
 
-    it 'removes entry from database', perform_request: false  do
+    it 'removes entry from database', perform_request: false do
       expect { perform_request }.to change { model_class.count }.by(-1)
     end
 

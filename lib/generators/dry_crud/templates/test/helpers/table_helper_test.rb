@@ -12,6 +12,8 @@ class TableHelperTest < ActionView::TestCase
   include CustomAssertions
   include CrudTestHelper
 
+  attr_accessor :params
+
   setup :reset_db, :setup_db, :create_test_data, :empty_params
   teardown :reset_db
 
@@ -26,9 +28,7 @@ class TableHelperTest < ActionView::TestCase
   end
 
   def empty_params
-    def params
-      {}
-    end
+    @params = {}
   end
 
   test 'empty table renders message' do
@@ -47,8 +47,8 @@ class TableHelperTest < ActionView::TestCase
 
   test 'table with attrs' do
     expected = DryCrud::Table::Builder.table(
-                 %w(foo bar), self,
-                 class: 'table table-striped table-hover') do |t|
+      %w(foo bar), self,
+      class: 'table table-striped table-hover') do |t|
       t.attrs :size, :upcase
     end
     actual = plain_table(%w(foo bar), :size, :upcase)
@@ -110,10 +110,7 @@ class TableHelperTest < ActionView::TestCase
   end
 
   test 'standard list table with ascending sort params' do
-    def params
-      { sort: 'children', sort_dir: 'asc' }
-    end
-
+    @params = { sort: 'children', sort_dir: 'asc' }
     @entries = CrudTestModel.all
 
     table = with_test_routing do
@@ -127,10 +124,7 @@ class TableHelperTest < ActionView::TestCase
   end
 
   test 'standard list table with descending sort params' do
-    def params
-      { sort: 'children', sort_dir: 'desc' }
-    end
-
+    @params = { sort: 'children', sort_dir: 'desc' }
     @entries = CrudTestModel.all
 
     table = with_test_routing do
@@ -144,10 +138,7 @@ class TableHelperTest < ActionView::TestCase
   end
 
   test 'list table with custom column sort params' do
-    def params
-      { sort: 'chatty', sort_dir: 'asc' }
-    end
-
+    @params = { sort: 'chatty', sort_dir: 'asc' }
     @entries = CrudTestModel.all
 
     table = with_test_routing do

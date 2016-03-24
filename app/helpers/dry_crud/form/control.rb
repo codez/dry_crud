@@ -14,15 +14,15 @@ module DryCrud
                to: :builder
 
       # Html displayed to mark an input as required.
-      REQUIRED_MARK = '*'
+      REQUIRED_MARK = '*'.freeze
 
       # Number of default input field span columns depending
       # on the #field_method.
       INPUT_SPANS = Hash.new(8)
       INPUT_SPANS[:number_field] =
         INPUT_SPANS[:integer_field] =
-        INPUT_SPANS[:float_field]   =
-        INPUT_SPANS[:decimal_field] = 2
+          INPUT_SPANS[:float_field] =
+            INPUT_SPANS[:decimal_field] = 2
       INPUT_SPANS[:date_field] =
         INPUT_SPANS[:time_field] = 3
 
@@ -76,7 +76,7 @@ module DryCrud
 
         content_tag(:div, class: "form-group#{errors}") do
           builder.label(attr, caption, class: 'col-md-2 control-label') +
-          content_tag(:div, content, class: "col-md-#{span}")
+            content_tag(:div, content, class: "col-md-#{span}")
         end
       end
 
@@ -136,7 +136,7 @@ module DryCrud
         # errors aint a Hash
         # rubocop:disable DeprecatedHashMethods
         object.errors.has_key?(attr_plain.to_sym) ||
-        object.errors.has_key?(attr_id.to_sym)
+          object.errors.has_key?(attr_id.to_sym)
         # rubocop:enable DeprecatedHashMethods
       end
 
@@ -178,6 +178,8 @@ module DryCrud
           false
         end
       end
+
     end
+
   end
 end

@@ -2,9 +2,7 @@
 
 # Crud controller responding to js as well
 class AjaxController < CrudController
-
   def ajax
-
   end
 
   def update
@@ -12,5 +10,4 @@ class AjaxController < CrudController
       format.js
     end
   end
-
 end

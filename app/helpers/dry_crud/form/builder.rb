@@ -97,9 +97,9 @@ module DryCrud
         super(attr, html_options)
       end
 
-      alias_method :integer_field, :number_field
-      alias_method :float_field, :number_field
-      alias_method :decimal_field, :number_field
+      alias integer_field number_field
+      alias float_field number_field
+      alias decimal_field number_field
 
       # Render a select element for a :belongs_to association defined by attr.
       # Use additional html_options for the select element.
@@ -208,8 +208,8 @@ module DryCrud
                      @object.class.validators_on(attr_id)
         validators.any? do |v|
           v.kind == :presence &&
-          !v.options.key?(:if) &&
-          !v.options.key?(:unless)
+            !v.options.key?(:if) &&
+            !v.options.key?(:unless)
         end
       end
 
@@ -278,8 +278,9 @@ module DryCrud
         list = options.delete(:list)
         unless list
           assoc = association(@object, attr)
-          list = @template.send(:instance_variable_get,
-                                :"@#{assoc.name.to_s.pluralize}")
+          ivar = :"@#{assoc.name.to_s.pluralize}"
+          list = @template.send(:instance_variable_defined?, ivar) &&
+                 @template.send(:instance_variable_get, ivar)
           list ||= load_association_entries(assoc)
         end
         list
@@ -304,9 +305,11 @@ module DryCrud
       # 1. Use :cancel_url_new or :cancel_url_edit option, if present
       # 2. Use :cancel_url option, if present
       def cancel_url
-        url = @object.new_record? ? options[:cancel_url_new] :
-                                    options[:cancel_url_edit]
-        url || options[:cancel_url]
+        if @object.new_record?
+          options[:cancel_url_new] || options[:cancel_url]
+        else
+          options[:cancel_url_edit] || options[:cancel_url]
+        end
       end
 
     end

@@ -4,7 +4,6 @@ require 'support/crud_controller_test_helper'
 
 # People Controller Test
 class PeopleControllerTest < ActionController::TestCase
-
   include CrudControllerTestHelper
 
   def test_setup
@@ -81,5 +80,4 @@ class PeopleControllerTest < ActionController::TestCase
       income: 120,
       city_id: cities(:rj).id }
   end
-
 end

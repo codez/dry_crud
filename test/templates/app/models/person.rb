@@ -2,7 +2,6 @@
 
 # Person model
 class Person < ActiveRecord::Base
-
   belongs_to :city
 
   validates :name, presence: true
@@ -12,5 +11,4 @@ class Person < ActiveRecord::Base
   def to_s
     name
   end
-
 end

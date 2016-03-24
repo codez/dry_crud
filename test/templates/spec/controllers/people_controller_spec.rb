@@ -2,7 +2,6 @@
 require 'rails_helper'
 
 describe PeopleController do
-
   fixtures :all
 
   render_views

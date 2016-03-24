@@ -1,10 +1,12 @@
 # encoding: UTF-8
 
 module DryCrud
+
   # The search functionality for the index table.
   # Define an array of searchable string columns in your subclassing
   # controllers using the class attribute +search_columns+.
   module Searchable
+
     extend ActiveSupport::Concern
 
     included do
@@ -16,6 +18,7 @@ module DryCrud
       prepend Prepends
     end
 
+    # Prepended methods for searching.
     module Prepends
 
       private
@@ -34,7 +37,8 @@ module DryCrud
         end
       end
 
-      # Split the search query in single words and create a list of word clauses.
+      # Split the search query in single words and create a list of word
+      # clauses.
       def search_word_conditions
         params[:q].split(/\s+/).map { |w| search_word_condition(w) }
       end
@@ -75,6 +79,7 @@ module DryCrud
           end
         end
       end
+
     end
 
   end

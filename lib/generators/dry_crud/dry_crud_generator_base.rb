@@ -3,18 +3,17 @@
 require 'rails/generators'
 
 class DryCrudGeneratorBase < Rails::Generators::Base
-  
   def self.template_root
-     File.join(File.dirname(__FILE__), 'templates')
+    File.join(File.dirname(__FILE__), 'templates')
   end
 
   def self.gem_root
-     File.join(File.dirname(__FILE__), '..', '..', '..')
+    File.join(File.dirname(__FILE__), '..', '..', '..')
   end
 
   def self.source_paths
-    [self.gem_root,
-     self.template_root]
+    [gem_root,
+     template_root]
   end
 
   private
@@ -42,7 +41,7 @@ class DryCrudGeneratorBase < Rails::Generators::Base
     end
   end
 
-  def should_copy?(file_source)
+  def should_copy?(_file_source)
     true
   end
 
@@ -53,5 +52,4 @@ class DryCrudGeneratorBase < Rails::Generators::Base
       template(file_source)
     end
   end
-  
 end

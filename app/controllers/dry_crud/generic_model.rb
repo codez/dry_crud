@@ -1,6 +1,7 @@
 # encoding: UTF-8
 
 module DryCrud
+
   # Connects the including controller to the model whose name corrsponds to
   # the controller's name.
   #
@@ -8,6 +9,7 @@ module DryCrud
   # Additional helper methods store and retrieve values in instance variables
   # named after their class.
   module GenericModel
+
     extend ActiveSupport::Concern
 
     included do
@@ -38,7 +40,8 @@ module DryCrud
     def model_ivar_get(plural = false)
       name = ivar_name(model_class)
       name = name.pluralize if plural
-      instance_variable_get(:"@#{name}")
+      name = :"@#{name}"
+      instance_variable_get(name) if instance_variable_defined?(name)
     end
 
     # Sets an instance variable with the underscored class name if the given
@@ -60,6 +63,7 @@ module DryCrud
 
     # Class methods from GenericModel.
     module ClassMethods
+
       # The ActiveRecord class of the model.
       def model_class
         @model_class ||= controller_name.classify.constantize
@@ -79,7 +83,7 @@ module DryCrud
 
         model_class.model_name.human(opts)
       end
-    end
 
+    end
   end
 end

@@ -5,7 +5,6 @@ module DryCrud
   module Table
     # Test DryCrud::Table::Builder
     class BuilderTest < ActionView::TestCase
-
       # set dummy helper class for ActionView::TestCase
       self.helper_class = UtilityHelper
 
@@ -140,7 +139,6 @@ module DryCrud
 
         assert_dom_equal dom, table.to_html
       end
-
     end
   end
 end

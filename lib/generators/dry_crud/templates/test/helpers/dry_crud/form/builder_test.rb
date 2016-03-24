@@ -6,7 +6,6 @@ module DryCrud
   module Form
     # Test DryCrud::Form::Builder
     class BuilderTest < ActionView::TestCase
-
       include FormatHelper
       include I18nHelper
       include CrudTestHelper
@@ -26,9 +25,9 @@ module DryCrud
 
       test 'input_field dispatches string attr to string_field' do
         assert_equal form.with_addon(
-                       form.string_field(:name,
-                                         required: 'required'),
-                       '*'),
+          form.string_field(:name,
+                            required: 'required'),
+          '*'),
                      form.input_field(:name)
         assert form.string_field(:name).html_safe?
       end

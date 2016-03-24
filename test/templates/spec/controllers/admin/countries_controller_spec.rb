@@ -2,7 +2,6 @@
 require 'rails_helper'
 
 describe Admin::CountriesController do
-
   fixtures :all
 
   include_examples 'crud controller', skip: %w(show html plain)
@@ -45,5 +44,4 @@ describe Admin::CountriesController do
     let(:params) { { id: test_entry.id } }
     it_is_expected_to_redirect_to_index
   end
-
 end

@@ -130,4 +130,5 @@ class FormHelperTest < ActionView::TestCase
   def entry
     @entry ||= CrudTestModel.first
   end
+
 end

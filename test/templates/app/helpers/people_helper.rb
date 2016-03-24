@@ -2,7 +2,6 @@
 
 # People Helper
 module PeopleHelper
-
   def format_person_income(person)
     income = person.income
     income.present? ? "#{f(income)} $" : UtilityHelper::EMPTY_STRING
@@ -10,9 +9,8 @@ module PeopleHelper
 
   def f(value)
     case value
-    when true   then 'iu'
+    when true then 'iu'
     else super(value)
     end
   end
-
 end

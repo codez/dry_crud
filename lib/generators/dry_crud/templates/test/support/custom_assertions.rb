@@ -28,7 +28,7 @@ module CustomAssertions
     msg = message(msg) do
       "Expected #{mu_pp(record)} to be valid, " \
       "but has the following errors:\n" +
-      mu_pp(record.errors.full_messages.join("\n"))
+        mu_pp(record.errors.full_messages.join("\n"))
     end
     assert record.valid?, msg
   end

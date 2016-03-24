@@ -1,4 +1,5 @@
 AllCops:
+  DisplayCopNames: true
   Exclude:
     - lib/**/*
     - test/templates/**/*
@@ -11,13 +12,16 @@ AllCops:
     - '**/seeds.rb'
     - '**/initializers/*.rb'
     - '**/environments/*.rb'
+    - '**/config/puma.rb'
+    - '**/config/routes.rb'
     - '**/db/migrate/*.rb'
-    - '**/bin/setup'
+    - '**/bin/*'
     - '**/boot.rb'
     - '**/environment.rb'
     - '**/application.rb'
     - '**/application_helper.rb'
     - '**/application_controller.rb'
+    - '**/channels/**/*.rb'
     - '**/rails'
     - '**/bundle'
     - '**/rake'
@@ -25,19 +29,38 @@ AllCops:
     - dry_crud.gemspec
     - '**/Gemfile'
 
-ClassLength:
+Rails:
+  Enabled: true
+
+Metrics/ClassLength:
   Max: 200
 
-MethodLength:
+Metrics/ModuleLength:
+  Max: 150
+
+Metrics/MethodLength:
   Max: 18
 
-CyclomaticComplexity:
+Metrics/CyclomaticComplexity:
   Max: 8
 
-Attr:
+Metrics/AbcSize:
+  Max: 20
+
+Style/EmptyLinesAroundClassBody:
   Enabled: false
 
-EmptyLinesAroundBody:
+Style/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+Style/EmptyLinesAroundBlockBody:
+  Exclude:
+    - '*_spec.rb'
+
+RegexpLiteral:
+  Enabled: false
+
+Attr:
   Enabled: false
 
 IfUnlessModifier:

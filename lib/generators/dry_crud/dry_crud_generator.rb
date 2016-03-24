@@ -8,7 +8,6 @@ end
 
 # Copies all dry_crud files to the rails application.
 class DryCrudGenerator < DryCrudGeneratorBase
-
   desc 'Copy all dry_crud files to the application.'
 
   class_options %w(templates -t) => 'erb'
@@ -29,8 +28,8 @@ class DryCrudGenerator < DryCrudGeneratorBase
 
   def should_copy?(file_source)
     !file_source.end_with?(exclude_template) &&
-    !file_source.start_with?(exclude_test_dir) &&
-    file_source != 'INSTALL'
+      !file_source.start_with?(exclude_test_dir) &&
+      file_source != 'INSTALL'
   end
 
   def copy_crud_test_model
@@ -45,7 +44,7 @@ class DryCrudGenerator < DryCrudGeneratorBase
   end
 
   def exclude_template
-    options[:templates].downcase == 'haml' ? '.erb' : '.haml'
+    options[:templates].casecmp('haml').zero? ? '.erb' : '.haml'
   end
 
   def exclude_test_dir

@@ -104,7 +104,7 @@ class FormatHelperTest < ActionView::TestCase
       m = crud_test_models(:AAAAA)
       assert_equal '1.100', format_type(m, :rating)
 
-      m.rating = 3.145001   # you never know with these floats..
+      m.rating = 3.145001 # you never know with these floats..
       assert_equal '3.145', format_type(m, :rating)
     end
 

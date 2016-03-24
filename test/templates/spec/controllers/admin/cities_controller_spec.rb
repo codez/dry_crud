@@ -2,7 +2,6 @@
 require 'rails_helper'
 
 describe Admin::CitiesController do
-
   fixtures :all
 
   include_examples 'crud controller', {}
@@ -19,7 +18,7 @@ describe Admin::CitiesController do
   describe_action :get, :index do
     it 'is ordered by default scope' do
       expected = test_entry.country.cities.includes(:country)
-                                          .order('countries.code, cities.name')
+                           .order('countries.code, cities.name')
       if expected.respond_to?(:references)
         expected = expected.references(:countries)
       end
@@ -72,7 +71,7 @@ describe Admin::CitiesController do
 
       it 'redirects to referer', perform_request: false do
         ref = @request.env['HTTP_REFERER'] =
-          admin_country_city_url(test_entry.country, test_entry)
+                admin_country_city_url(test_entry.country, test_entry)
         perform_request
         is_expected.to redirect_to(ref)
       end
@@ -80,5 +79,4 @@ describe Admin::CitiesController do
       it_is_expected_to_have_flash(:alert)
     end
   end
-
 end

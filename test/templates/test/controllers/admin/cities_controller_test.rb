@@ -5,7 +5,6 @@ require 'support/crud_controller_test_helper'
 module Admin
   # Cities Controller Test
   class CitiesControllerTest < ActionController::TestCase
-
     include CrudControllerTestHelper
 
     def test_setup
@@ -24,7 +23,7 @@ module Admin
     def test_index
       super
       expected = test_entry.country.cities.includes(:country)
-                                          .order('countries.code, cities.name')
+                           .order('countries.code, cities.name')
       if expected.respond_to?(:references)
         expected = expected.references(:countries)
       end
@@ -68,6 +67,5 @@ module Admin
     def test_entry_attrs
       { name: 'Rejkiavik' }
     end
-
   end
 end

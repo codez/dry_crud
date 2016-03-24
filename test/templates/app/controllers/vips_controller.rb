@@ -2,7 +2,6 @@
 
 # List Controller for VIP people
 class VipsController < ListController
-
   self.search_columns = [:name, :children, :rating, :remarks, 'cities.name']
 
   self.sort_mappings = { city_id: 'cities.name' }
@@ -24,5 +23,4 @@ class VipsController < ListController
     end
     list
   end
-
 end

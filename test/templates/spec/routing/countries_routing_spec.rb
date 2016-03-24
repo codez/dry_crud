@@ -4,7 +4,7 @@ require 'rails_helper'
 describe Admin::CountriesController do
   it 'routes index' do
     expect(get: 'admin/countries').to route_to(
-     controller: 'admin/countries', action: 'index')
+      controller: 'admin/countries', action: 'index')
   end
 
   it 'routes show' do

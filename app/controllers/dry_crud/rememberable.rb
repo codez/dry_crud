@@ -1,6 +1,7 @@
 # encoding: UTF-8
 
 module DryCrud
+
   # Remembers certain params of the index action in order to return
   # to the same list after an entry was viewed or edited.
   # If the index is called with a param :returning, the remembered params
@@ -12,6 +13,7 @@ module DryCrud
   # The params are stored separately for each different +remember_key+, which
   # defaults to the current request's path.
   module Rememberable
+
     extend ActiveSupport::Concern
 
     included do
@@ -61,5 +63,6 @@ module DryCrud
     def remember_key
       request.path
     end
+
   end
 end

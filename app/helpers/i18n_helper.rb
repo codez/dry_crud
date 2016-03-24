@@ -15,13 +15,13 @@ module I18nHelper
   #  - ...
   #  - global.{key}
   def translate_inheritable(key, variables = {})
-    partial = @virtual_path ? @virtual_path.gsub(/.*\/_?/, '') : nil
+    partial = defined?(@virtual_path) ? @virtual_path.gsub(/.*\/_?/, '') : nil
     defaults = inheritable_translation_defaults(key, partial)
     variables[:default] ||= defaults
     t(defaults.shift, variables)
   end
 
-  alias_method :ti, :translate_inheritable
+  alias ti translate_inheritable
 
   # Translates the passed key for an active record association. This helper is
   # used for rendering association dependent keys in forms like :no_entry,
@@ -40,7 +40,7 @@ module I18nHelper
     end
   end
 
-  alias_method :ta, :translate_association
+  alias ta translate_association
 
   private
 

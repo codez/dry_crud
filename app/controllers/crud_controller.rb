@@ -55,12 +55,12 @@ class CrudController < ListController
   # in the given block will take precedence over the one defined here.
   #
   # Specify a :location option if you wish to do a custom redirect.
-  def create(options = {}, &block)
+  def create(options = {}, &_block)
     assign_attributes
     created = with_callbacks(:create, :save) { entry.save }
 
     respond_to do |format|
-      block.call(format, created) if block_given?
+      yield(format, created) if block_given?
       if created
         format.html { redirect_on_success(options) }
         format.json { render :show, status: :created, location: show_path }
@@ -89,12 +89,12 @@ class CrudController < ListController
   # in the given block will take precedence over the one defined here.
   #
   # Specify a :location option if you wish to do a custom redirect.
-  def update(options = {}, &block)
+  def update(options = {}, &_block)
     assign_attributes
     updated = with_callbacks(:update, :save) { entry.save }
 
     respond_to do |format|
-      block.call(format, updated) if block_given?
+      yield(format, updated) if block_given?
       if updated
         format.html { redirect_on_success(options) }
         format.json { render :show, status: :ok, location: show_path }
@@ -117,11 +117,11 @@ class CrudController < ListController
   # in the given block will take precedence over the one defined here.
   #
   # Specify a :location option if you wish to do a custom redirect.
-  def destroy(options = {}, &block)
+  def destroy(options = {}, &_block)
     destroyed = run_callbacks(:destroy) { entry.destroy }
 
     respond_to do |format|
-      block.call(format, destroyed) if block_given?
+      yield(format, destroyed) if block_given?
       if destroyed
         format.html { redirect_on_success(options) }
         format.json { head :no_content }

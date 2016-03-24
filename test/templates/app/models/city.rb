@@ -2,7 +2,6 @@
 
 # City model
 class City < ActiveRecord::Base
-
   belongs_to :country
   has_many :people
 
@@ -25,5 +24,4 @@ class City < ActiveRecord::Base
       throw :abort
     end
   end
-
 end

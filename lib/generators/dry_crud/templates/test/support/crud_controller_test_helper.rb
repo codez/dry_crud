@@ -22,7 +22,7 @@ module CrudControllerTestHelper
   def test_index_search # :nodoc:
     field = @controller.search_columns.first
     val = field && test_entry[field].to_s
-    return if val.blank?   # does not support search or no value in this field
+    return if val.blank? # does not support search or no value in this field
 
     get :index, params: test_params(q: val[0..((val.size + 1) / 2)])
     assert_response :success
@@ -35,7 +35,7 @@ module CrudControllerTestHelper
     get :index, params: test_params(sort: col, sort_dir: 'asc')
     assert_response :success
     assert entries.present?
-    sorted = entries.sort_by(&(col.to_sym))
+    sorted = entries.sort_by(&col.to_sym)
     assert_equal sorted, entries.to_a
   end
 
@@ -44,7 +44,7 @@ module CrudControllerTestHelper
     get :index, params: test_params(sort: col, sort_dir: 'desc')
     assert_response :success
     assert entries.present?
-    sorted = entries.to_a.sort_by(&(col.to_sym))
+    sorted = entries.to_a.sort_by(&col.to_sym)
     assert_equal sorted.reverse, entries.to_a
   end
 
@@ -177,12 +177,12 @@ module CrudControllerTestHelper
 
   # Test object used in several tests.
   def test_entry
-    fail 'Implement this method in your test class'
+    raise 'Implement this method in your test class'
   end
 
   # Attribute hash used in several tests.
   def test_entry_attrs
-    fail 'Implement this method in your test class'
+    raise 'Implement this method in your test class'
   end
 
   # Attribute hash used in edit/update tests.

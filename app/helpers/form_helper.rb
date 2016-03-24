@@ -29,11 +29,11 @@ module FormHelper
     plain_form(object, attrs.extract_options!) do |form|
       content = form.error_messages
 
-      if block_given?
-        content << capture(form, &block)
-      else
-        content << form.labeled_input_fields(*attrs)
-      end
+      content << if block_given?
+                   capture(form, &block)
+                 else
+                   form.labeled_input_fields(*attrs)
+                 end
 
       content << form.standard_actions
       content.html_safe

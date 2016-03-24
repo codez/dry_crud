@@ -5,7 +5,6 @@ require 'support/crud_controller_test_helper'
 module Admin
   # Countries Controller Test
   class CountriesControllerTest < ActionController::TestCase
-
     include CrudControllerTestHelper
 
     def test_setup
@@ -42,6 +41,5 @@ module Admin
     def test_entry_attrs
       { name: 'United States of America', code: 'US' }
     end
-
   end
 end

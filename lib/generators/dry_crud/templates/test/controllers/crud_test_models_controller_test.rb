@@ -161,13 +161,14 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_equal [:before_destroy, :after_destroy],
                  @controller.called_callbacks
     assert_equal I18n.t('crud.destroy.flash.success',
-                         model: 'Crud Test Model <i>AAAAA</i>'),
+                        model: 'Crud Test Model <i>AAAAA</i>'),
                  flash[:notice]
   end
 
   def test_create_with_before_callback
     assert_no_difference('CrudTestModel.count') do
-      post :create, params: { crud_test_model: { name: 'illegal', children: 2 } }
+      post :create,
+           params: { crud_test_model: { name: 'illegal', children: 2 } }
     end
     assert_response :success
     assert entry.new_record?
@@ -180,7 +181,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   def test_create_with_before_callback_redirect
     @controller.should_redirect = true
     assert_no_difference('CrudTestModel.count') do
-      post :create, params: { crud_test_model: { name: 'illegal', children: 2 } }
+      post :create,
+           params: { crud_test_model: { name: 'illegal', children: 2 } }
     end
     assert_redirected_to action: 'index'
     assert_nil @controller.called_callbacks
@@ -301,4 +303,5 @@ class CrudTestModelsControllerTest < ActionController::TestCase
       human: true,
       remarks: "some custom\n\tremarks" }
   end
+
 end

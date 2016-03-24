@@ -36,10 +36,13 @@ end
 class OtherCrudTestModel < ActiveRecord::Base #:nodoc:
 
   has_and_belongs_to_many :others, class_name: 'CrudTestModel'
-  belongs_to :more, foreign_key: :more_id, class_name: 'CrudTestModel', optional: true
+  belongs_to :more,
+             foreign_key: :more_id,
+             class_name: 'CrudTestModel',
+             optional: true
 
   def to_s
     name
   end
-  
+
 end

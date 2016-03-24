@@ -2,10 +2,20 @@
 
 module DryCrud
   module Table
+
     # Helper class to store column information.
-    class Col < Struct.new(:header, :html_options, :template, :block) #:nodoc:
+    class Col #:nodoc:
 
       delegate :content_tag, :capture, to: :template
+
+      attr_reader :header, :html_options, :template, :block
+
+      def initialize(header, html_options, template, block)
+        @header = header
+        @html_options = html_options
+        @template = template
+        @block = block
+      end
 
       # Runs the Col block for the given entry.
       def content(entry)
@@ -21,6 +31,7 @@ module DryCrud
       def html_cell(entry)
         content_tag(:td, content(entry), html_options)
       end
+
     end
   end
 end

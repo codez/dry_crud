@@ -1,10 +1,10 @@
 # encoding: utf-8
 
 #:nodoc:
-REGEXP_ROWS = /<tr.+?<\/tr>/m  #:nodoc:
-REGEXP_HEADERS = /<th.+?<\/th>/m  #:nodoc:
-REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m  #:nodoc:
-REGEXP_ACTION_CELL = /<td class=\"action\"><a .*?href.+?<\/a><\/td>/m  #:nodoc:
+REGEXP_ROWS = /<tr.+?<\/tr>/m #:nodoc:
+REGEXP_HEADERS = /<th.+?<\/th>/m #:nodoc:
+REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m #:nodoc:
+REGEXP_ACTION_CELL = /<td class=\"action\"><a .*?href.+?<\/a><\/td>/m #:nodoc:
 
 # A simple test helper to prepare the test database with a CrudTestModel model.
 # This helper is used to test the CrudController and various helpers
@@ -47,13 +47,11 @@ module CrudTestHelper
   # Look at the source to view the column definition.
   def setup_db
     without_transaction do
-      #silence_stream(STDOUT) do
-        c = ActiveRecord::Base.connection
+      c = ActiveRecord::Base.connection
 
-        create_crud_test_models(c)
-        create_other_crud_test_models(c)
-        create_crud_test_models_other_crud_test_models(c)
-      #end
+      create_crud_test_models(c)
+      create_other_crud_test_models(c)
+      create_crud_test_models_other_crud_test_models(c)
 
       CrudTestModel.reset_column_information
     end

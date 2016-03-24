@@ -2,7 +2,8 @@
 
 # Controller for the dummy model.
 class CrudTestModelsController < CrudController #:nodoc:
-  HANDLE_PREFIX = 'handle_'
+
+  HANDLE_PREFIX = 'handle_'.freeze
 
   self.search_columns = [:name, :whatever, :remarks]
   self.sort_mappings = { chatty: 'length(remarks)' }
@@ -51,8 +52,6 @@ class CrudTestModelsController < CrudController #:nodoc:
     end
     entries
   end
-
-  private
 
   def build_entry
     entry = super

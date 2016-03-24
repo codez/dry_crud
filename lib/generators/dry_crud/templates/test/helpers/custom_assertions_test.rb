@@ -8,7 +8,6 @@ require 'support/crud_test_model'
 class CustomAssertionsTest < ActiveSupport::TestCase
 
   include CustomAssertions
-
   include CrudTestHelper
 
   setup :reset_db, :setup_db, :create_test_data

@@ -1,6 +1,7 @@
 # encoding: UTF-8
 
 module DryCrud
+
   # Provides functionality to nest controllers/resources.
   # If a controller is nested, the parent classes and namespaces
   # may be defined as an array in the +nesting+ class attribute.
@@ -22,7 +23,7 @@ module DryCrud
 
     # Returns the direct parent ActiveRecord of the current request, if any.
     def parent
-      parents.select { |p| p.is_a?(ActiveRecord::Base) }.last
+      parents.reverse.find { |p| p.is_a?(ActiveRecord::Base) }
     end
 
     # Returns the parent entries of the current request, if any.
@@ -62,5 +63,6 @@ module DryCrud
     def parent_scope
       parent.send(model_class.name.underscore.pluralize)
     end
+
   end
 end

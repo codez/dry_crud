@@ -1,8 +1,10 @@
 # encoding: UTF-8
 
 module DryCrud
+
   # Provide +before_render+ callbacks.
   module RenderCallbacks
+
     extend ActiveSupport::Concern
 
     included do
@@ -10,6 +12,7 @@ module DryCrud
       prepend Prepends
     end
 
+    # Prepended methods for callbacks.
     module Prepends
 
       # Helper method to run +before_render+ callbacks and render the action.
@@ -37,6 +40,7 @@ module DryCrud
 
     # Class methods for callbacks.
     module ClassMethods
+
       # Defines before callbacks for the render actions.
       def define_render_callbacks(*actions)
         args = actions.map { |a| :"render_#{a}" }
@@ -47,7 +51,7 @@ module DryCrud
       private
 
       def render_callback_terminator
-        Proc.new do |ctrl, result_lambda|
+        proc do |ctrl, result_lambda|
           terminate = true
           catch(:abort) do
             result_lambda.call if result_lambda.is_a?(Proc)
@@ -56,6 +60,8 @@ module DryCrud
           terminate
         end
       end
+
     end
+
   end
 end

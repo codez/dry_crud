@@ -2,7 +2,6 @@
 
 # People Controller
 class PeopleController < AjaxController
-
   self.search_columns = [:name, :email, :remarks, 'cities.name']
 
   self.default_sort = 'people.name, countries.code, cities.name'
@@ -22,5 +21,4 @@ class PeopleController < AjaxController
     end
     list
   end
-
 end

@@ -64,10 +64,10 @@ describe UtilityHelper do
 
   describe '#default_crud_attrs' do
     it 'do not contain id and password' do
-      expect(default_crud_attrs).to eq([
-        :name, :email, :whatever, :children, :companion_id, :rating, :income,
-        :birthdate, :gets_up_at, :last_seen, :human, :remarks,
-        :created_at, :updated_at])
+      expect(default_crud_attrs).to eq(
+        [:name, :email, :whatever, :children, :companion_id, :rating, :income,
+         :birthdate, :gets_up_at, :last_seen, :human, :remarks,
+         :created_at, :updated_at])
     end
   end
 

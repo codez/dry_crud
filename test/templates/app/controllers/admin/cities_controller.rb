@@ -3,7 +3,6 @@
 module Admin
   # Cities Controller nested under /admin and countries
   class CitiesController < AjaxController
-
     self.nesting = :admin, Country
 
     self.search_columns = :name, 'countries.name'
@@ -19,6 +18,5 @@ module Admin
       list = list.references(:countries) if list.respond_to?(:references)
       list
     end
-
   end
 end

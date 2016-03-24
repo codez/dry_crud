@@ -2,7 +2,6 @@
 
 # Country model
 class Country < ActiveRecord::Base
-
   has_many :cities, dependent: :destroy
 
   validates :name, :code, presence: true, uniqueness: true
@@ -10,5 +9,4 @@ class Country < ActiveRecord::Base
   def to_s
     name
   end
-
 end

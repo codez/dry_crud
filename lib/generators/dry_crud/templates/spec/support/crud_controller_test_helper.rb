@@ -10,8 +10,8 @@ module CrudControllerTestHelper
     m = RSpec.current_example.metadata
     example_params = respond_to?(:params) ? send(:params) : {}
     params = scope_params.dup
-    params.merge!(format: m[:format]) if m[:format]
-    params.merge!(id: test_entry.id) if m[:id]
+    params[:format] = m[:format] if m[:format]
+    params[:id] = test_entry.id if m[:id]
     params.merge!(example_params)
     if m[:method] == :get && m[:format] == :js
       get m[:action], params: params, xhr: true
@@ -84,7 +84,8 @@ module CrudControllerTestHelper
     # Tests whether this action is configured to be skipped.
     def describe_action(method, action, metadata = {}, &block)
       action_defined = described_class.instance_methods
-                         .map(&:to_s).include?(action.to_s)
+                                      .map(&:to_s)
+                                      .include?(action.to_s)
       describe("#{method.to_s.upcase} #{action}",
                { if: action_defined,
                  method: method,
@@ -100,7 +101,7 @@ module CrudControllerTestHelper
       skips = [skips] if skips.blank? || !skips.first.is_a?(Array)
 
       skips.flatten.present? &&
-      skips.any? { |skip| skip == contexts.take(skip.size) }
+        skips.any? { |skip| skip == contexts.take(skip.size) }
     end
 
     # Test the response status, default 200.

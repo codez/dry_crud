@@ -6,7 +6,6 @@ require 'rails_helper'
 # of CrudController.
 
 describe CrudTestModelsController do
-
   include CrudTestHelper
 
   before(:all) do
@@ -64,7 +63,7 @@ describe CrudTestModelsController do
         end
 
         it 'session has empty list_params' do
-          expect(session[:list_params]).to eq(Hash.new)
+          expect(session[:list_params]).to eq({})
         end
 
         it 'provides entries helper method' do
@@ -82,7 +81,7 @@ describe CrudTestModelsController do
 
           it 'session has query list param' do
             expect(session[:list_params]['/crud_test_models.html'])
-              .to eq('q' =>  'AAAA')
+              .to eq('q' => 'AAAA')
           end
         end
 
@@ -327,7 +326,6 @@ describe CrudTestModelsController do
         end
       end
     end
-
   end
 
   describe_action :get, :edit, id: true do
@@ -378,7 +376,6 @@ describe CrudTestModelsController do
         end
       end
     end
-
   end
 
   describe_action :delete, :destroy, id: true do
@@ -432,7 +429,5 @@ describe CrudTestModelsController do
         end
       end
     end
-
   end
-
 end
