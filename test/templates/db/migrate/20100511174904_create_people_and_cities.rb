@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 # initial migration
-class CreatePeopleAndCities < ActiveRecord::Migration
+class CreatePeopleAndCities < ActiveRecord::Migration[5.0]
   def change
     create_table :countries do |t|
       t.string :name, null: false

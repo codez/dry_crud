@@ -192,7 +192,7 @@ describe FormHelper do
     end
 
     it do
-      is_expected.to match(/input .*?type="datetime"
+      is_expected.to match(/input .*?type="datetime\-local"
                                   .*?name="crud_test_model\[last_seen\]"/x)
     end
 

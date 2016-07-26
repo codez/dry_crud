@@ -117,7 +117,7 @@ class FormHelperTest < ActionView::TestCase
                         .*?name="crud_test_model\[birthdate\]"/x, f)
     assert_match(/input .*?type="time"
                         .*?name="crud_test_model\[gets_up_at\]"/x, f)
-    assert_match(/input .*?type="datetime"
+    assert_match(/input .*?type="datetime-local"
                         .*?name="crud_test_model\[last_seen\]"/x, f)
     assert_match(/input .*?type="checkbox"
                         .*?name="crud_test_model\[human\]"/x, f)
