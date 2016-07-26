@@ -27,7 +27,7 @@ module FormHelper
   # if present. An options hash may be given as the last argument.
   def standard_form(object, *attrs, &block)
     plain_form(object, attrs.extract_options!) do |form|
-      content = form.error_messages
+      content = [form.error_messages]
 
       content << if block_given?
                    capture(form, &block)
@@ -36,7 +36,7 @@ module FormHelper
                  end
 
       content << form.standard_actions
-      content.html_safe
+      safe_join(content)
     end
   end
 

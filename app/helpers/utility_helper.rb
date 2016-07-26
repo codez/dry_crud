@@ -4,7 +4,9 @@ require 'English'
 # View helpers for basic functions used in various other helpers.
 module UtilityHelper
 
+  # rubocop:disable Rails/OutputSafety
   EMPTY_STRING = '&nbsp;'.html_safe # non-breaking space asserts better css.
+  # rubocop:enable Rails/OutputSafety
 
   # Render a content tag with the collected contents rendered
   # by &block for each item in collection.

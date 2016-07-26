@@ -133,11 +133,8 @@ module DryCrud
       # association.
       def errors?
         attr_plain, attr_id = builder.assoc_and_id_attr(attr)
-        # errors aint a Hash
-        # rubocop:disable DeprecatedHashMethods
-        object.errors.has_key?(attr_plain.to_sym) ||
-          object.errors.has_key?(attr_id.to_sym)
-        # rubocop:enable DeprecatedHashMethods
+        object.errors.key?(attr_plain.to_sym) ||
+          object.errors.key?(attr_id.to_sym)
       end
 
       # Defines the field method to use based on the attribute

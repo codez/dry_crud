@@ -63,7 +63,8 @@ module DryCrud
                               path,
                               html_options.merge(
                                 data: { confirm: ti(:confirm_delete),
-                                        method: :delete }))
+                                        method: :delete }
+                              ))
           end
         end
       end

@@ -41,7 +41,9 @@ module DryCrud
       # The sort mark, if any, for the given attribute.
       def current_mark(attr)
         if current_sort?(attr)
+          # rubocop:disable Rails/OutputSafety
           (sort_dir(attr) == 'asc' ? ' &uarr;' : ' &darr;').html_safe
+          # rubocop:enable Rails/OutputSafety
         else
           ''
         end

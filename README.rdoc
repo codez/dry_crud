@@ -33,7 +33,7 @@ To integrate dry_crud into your code, only a few additions are required:
 * Optionally define a +list+ scope in your models to be used in the +index+ action.
 * Optionally define a +options_list+ scope in your models to be used in select dropdowns.
 
-From version 3.0, only the latest released Rails version will be supported, which currently is 4.2. Version 2.0 and higher are compatible with Rails 4 and Rails 3.2. dry_crud is tested with Ruby 1.9.3, 2.1.5 and JRuby. If you are using Ruby 1.8.7, please refer to version 1.7.0.
+From version 5.0 onwards, the major and minor version numbers will be kept in sync with Rails, and only the matching Rails version is supported. Version 3.0 is compatible 4.2, Version 2.0 and higher are compatible with Rails 4 and Rails 3.2. dry_crud is tested with Ruby 2.2.5 and JRuby. If you are using Ruby 1.9.3, please refer to version 3.0.0.
 
 
 == Background

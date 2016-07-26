@@ -20,8 +20,6 @@ module DryCrud
       delegate :model_class, :models_label, :model_identifier, to: 'self.class'
     end
 
-    private
-
     # The scope where model entries will be listed and created.
     # This is mainly used for nested models to provide the
     # required context.

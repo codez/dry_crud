@@ -202,13 +202,17 @@ class CrudController < ListController
 
   # A label for the current entry, including the model name.
   def full_entry_label
+    # rubocop:disable Rails/OutputSafety
     "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
+    # rubocop:enable Rails/OutputSafety
   end
 
   # Html safe error messages of the current entry.
   def error_messages
+    # rubocop:disable Rails/OutputSafety
     escaped = entry.errors.full_messages.map { |m| ERB::Util.html_escape(m) }
     escaped.join('<br/>').html_safe
+    # rubocop:enable Rails/OutputSafety
   end
 
   # Class methods for CrudActions.
