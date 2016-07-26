@@ -27,7 +27,7 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'simplecov', require: false
-gem 'byebug'
+gem 'byebug', platforms: [:mri]
 
 # platform specific gems
 

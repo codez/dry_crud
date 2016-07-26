@@ -2,7 +2,7 @@ language: ruby
 
 rvm:
   - 2.2.5
-  - jruby-22mode
+  # - jruby-9.0.5.0
 
 env:
   - "HAML=1"
