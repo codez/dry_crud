@@ -70,7 +70,7 @@ Say you want to manage a +Person+ model. Overwrite the +to_s+ method of your mod
     end
   end
 
-Then create the following controller. The +permitted_attrs+ define the attribute parameters allowed when creating or updating a model entry (see {Strong Paramters}[http://api.rubyonrails.org/classes/ActionController/StrongParameters.html]).
+Then create the following controller. The +permitted_attrs+ define the attribute parameters allowed when creating or updating a model entry (see {Strong Parameters}[http://api.rubyonrails.org/classes/ActionController/StrongParameters.html]).
 
 <tt>app/controllers/people_controller.rb</tt>:
   class PeopleController < CrudController
