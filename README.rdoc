@@ -70,7 +70,7 @@ Say you want to manage a +Person+ model. Overwrite the +to_s+ method of your mod
     end
   end
 
-Then create the following controller. The +permitted_attrs+ define the attribute parameters allowed when creating or updating a model entry (see {Strong Paramters}[http://api.rubyonrails.org/classes/ActionController/StrongParameters.html]).
+Then create the following controller. The +permitted_attrs+ define the attribute parameters allowed when creating or updating a model entry (see {Strong Parameters}[http://api.rubyonrails.org/classes/ActionController/StrongParameters.html]).
 
 <tt>app/controllers/people_controller.rb</tt>:
   class PeopleController < CrudController
@@ -86,7 +86,7 @@ Well, maybe there are certain attributes you do not want to display in the peopl
 
   <%= crud_table :lastname, :firstname, :city, :sex %>
 
-This only displays these three attributes in the table. All other templates, as well as the main index view, fallback to the ones in <tt>app/views/crud</tt>.
+This only displays these four attributes in the table. All other templates, as well as the main index view, fallback to the ones in <tt>app/views/crud</tt>.
 
 
 ==== Adapt general behavior
