@@ -86,7 +86,7 @@ Well, maybe there are certain attributes you do not want to display in the peopl
 
   <%= crud_table :lastname, :firstname, :city, :sex %>
 
-This only displays these three attributes in the table. All other templates, as well as the main index view, fallback to the ones in <tt>app/views/crud</tt>.
+This only displays these four attributes in the table. All other templates, as well as the main index view, fallback to the ones in <tt>app/views/crud</tt>.
 
 
 ==== Adapt general behavior
