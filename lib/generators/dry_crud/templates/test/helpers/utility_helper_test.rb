@@ -6,6 +6,9 @@ require 'support/crud_test_model'
 class UtilityHelperTest < ActionView::TestCase
 
   include CrudTestHelper
+  
+  setup :reset_db, :setup_db, :create_test_data
+  teardown :reset_db
 
   test 'content_tag_nested escapes safe correctly' do
     html = content_tag_nested(:div, %w(a b)) { |e| content_tag(:span, e) }
@@ -33,20 +36,13 @@ class UtilityHelperTest < ActionView::TestCase
   end
 
   test 'default attributes do not include id and password' do
-    reset_db
-    setup_db
     assert_equal [:name, :email, :whatever, :children, :companion_id, :rating,
                   :income, :birthdate, :gets_up_at, :last_seen, :human,
                   :remarks, :created_at, :updated_at],
                  default_crud_attrs
-    reset_db
   end
 
   test 'column types' do
-    reset_db
-    setup_db
-    create_test_data
-
     m = crud_test_models(:AAAAA)
     assert_equal :string, column_type(m, :name)
     assert_equal :integer, column_type(m, :children)
@@ -59,8 +55,6 @@ class UtilityHelperTest < ActionView::TestCase
     assert_equal :datetime, column_type(m, :last_seen)
     assert_equal :boolean, column_type(m, :human)
     assert_equal :text, column_type(m, :remarks)
-
-    reset_db
   end
 
 end
