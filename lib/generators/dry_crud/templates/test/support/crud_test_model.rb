@@ -8,6 +8,8 @@ class CrudTestModel < ActiveRecord::Base #:nodoc:
   has_many :mores, class_name: 'OtherCrudTestModel',
                    foreign_key: :more_id
 
+  has_one :comrad, class_name: 'CrudTestModel', foreign_key: :companion_id
+
   before_destroy :protect_if_companion
 
   validates :name, presence: true
