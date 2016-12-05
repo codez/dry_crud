@@ -155,6 +155,16 @@ describe FormatHelper do
       expect(string).to eq('AAAAA')
     end
 
+    it 'formats empty has_one' do
+      expect(format_attr(crud_test_models(:FFFFF), :comrad)).to eq(
+        t('global.associations.no_entry'))
+    end
+
+    it 'formats existing has_one' do
+      string = format_attr(crud_test_models(:AAAAA), :comrad)
+      expect(string).to eq('BBBBB')
+    end
+
     it 'formats existing has_many' do
       string = format_attr(crud_test_models(:CCCCC), :others)
       expect(string).to be_html_safe

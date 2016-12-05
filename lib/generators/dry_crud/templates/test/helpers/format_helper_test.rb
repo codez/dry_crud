@@ -159,6 +159,17 @@ class FormatHelperTest < ActionView::TestCase
     assert_equal 'AAAAA', format_attr(m, :companion)
   end
 
+  test 'format has one without content' do
+    m = crud_test_models(:FFFFF)
+    assert_equal t('global.associations.no_entry'),
+                 format_attr(m, :comrad)
+  end
+
+  test 'format has one with content' do
+    m = crud_test_models(:AAAAA)
+    assert_equal 'BBBBB', format_attr(m, :comrad)
+  end
+
   test 'format has_many column with content' do
     m = crud_test_models(:CCCCC)
     assert_equal '<ul><li>AAAAA</li><li>BBBBB</li></ul>',
