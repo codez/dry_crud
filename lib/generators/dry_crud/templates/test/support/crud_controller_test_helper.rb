@@ -177,12 +177,12 @@ module CrudControllerTestHelper
 
   # Test object used in several tests.
   def test_entry
-    raise 'Implement this method in your test class'
+    raise 'Implement the method "test_entry" in your test class'
   end
 
   # Attribute hash used in several tests.
   def test_entry_attrs
-    raise 'Implement this method in your test class'
+    raise 'Implement the method "test_entry_attrs" in your test class'
   end
 
   # Attribute hash used in edit/update tests.
