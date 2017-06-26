@@ -32,8 +32,8 @@ module DryCrud
       # This includes an options hash as the last argument, that
       # may contain the following special options:
       #
-      # * <tt>:addon</tt> - Addon content displayd just after the input field.
-      # * <tt>:help</tt> - A help text displayd below the input field.
+      # * <tt>:addon</tt> - Addon content displayed just after the input field.
+      # * <tt>:help</tt> - A help text displayed below the input field.
       # * <tt>:span</tt> - Number of columns the input field should span.
       # * <tt>:caption</tt> - Different caption for the label.
       # * <tt>:field_method</tt> - Different method to create the input field.
