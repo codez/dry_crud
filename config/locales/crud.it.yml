@@ -1,0 +1,64 @@
+# Translations of all crud strings by mberlanda
+# See also StandardHelper#translate_inheritable and #translate_association.
+
+it:
+  # global scope
+  global:
+    "yes": "si"
+    "no": "no"
+    no_list_entries: Nessun elemento trovato.
+    confirm_delete: Vuoi davvero eliminare questo elemento?
+
+    associations:
+      # association keys may be customized per model with the prefix
+      # 'activerecord.associations.{model}.' or even per actual association with
+      # 'activerecord.associations.models.{holder_model}.{assoc_name}.'
+      no_entry: (nessuno)
+      none_available: (non disponibile)
+      please_select: Prego selezionare
+
+    button:
+      save: Salva
+      cancel: Annulla
+      search: Cerca
+
+    link:
+      show: Mostra
+      edit: Modifica
+      add: Aggiungi
+      delete: Elimina
+      list: Elenco
+
+    errors:
+      header:
+        one: "1 errore impedisce il salvataggio di questo elemento:"
+        other: "%{count} errori impediscono il salvataggio di questo elemento:"
+
+  # formats
+  time:
+    formats:
+      time: "%H:%M"
+
+  # list controller
+  list:
+    index:
+      title: Elenco %{models}
+
+  # crud controller
+  crud:
+    show:
+      title: "%{model}"
+    new:
+      title: "Nuovo %{model}"
+    edit:
+      title: "Modifica %{model}"
+    create:
+      flash:
+        success: "%{model} è stato creato con successo."
+    update:
+      flash:
+        success: "%{model} è stato aggiornato con successo."
+    destroy:
+      flash:
+        success: "%{model} è stato eliminato con successo."
+        failure: "Non è stato possibile eliminare %{model}."
