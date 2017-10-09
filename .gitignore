@@ -10,3 +10,6 @@ pkg
 rdoc
 *.gemfile.lock
 .byebug_history
+# RVM files
+.ruby-gemset
+.ruby-version
