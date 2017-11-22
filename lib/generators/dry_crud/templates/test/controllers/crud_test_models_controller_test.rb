@@ -229,6 +229,19 @@ class CrudTestModelsControllerTest < ActionController::TestCase
                  @controller.called_callbacks
   end
 
+  def test_update_with_failure_does_not_update_many_relations
+    put :update, params: { id: test_entry.id, crud_test_model: { rating: 20, other_ids: [OtherCrudTestModel.first.id] } }
+    assert_response :success
+    assert entry.changed?
+    assert flash[:notice].blank?
+    assert flash[:alert].blank?
+    assert_equal 20, entry.rating
+    assert_equal [:before_update, :before_save,
+                  :before_render_edit, :before_render_form],
+                 @controller.called_callbacks
+    assert_equal [], test_entry.reload.other_ids
+  end
+
   def test_update_with_failure_json
     put :update,
         params: { id: test_entry.id,

@@ -344,7 +344,7 @@ describe CrudTestModelsController do
     end
 
     context 'with invalid params' do
-      let(:params) { { crud_test_model: { rating: 20 } } }
+      let(:params) { { crud_test_model: { rating: 20, other_ids: [OtherCrudTestModel.first.id] } } }
 
       context '.html', combine: 'uhivp' do
         it_is_expected_to_respond
@@ -362,6 +362,10 @@ describe CrudTestModelsController do
           expect(controller.called_callbacks).to eq(
             [:before_update, :before_save,
              :before_render_edit, :before_render_form])
+        end
+
+        it 'does not update has_many ids' do
+          expect(test_entry.reload.other_ids).to eq([])
         end
       end
 

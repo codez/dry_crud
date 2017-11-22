@@ -56,18 +56,21 @@ class CrudController < ListController
   #
   # Specify a :location option if you wish to do a custom redirect.
   def create(options = {}, &_block)
-    assign_attributes
-    created = with_callbacks(:create, :save) { entry.save }
+    model_class.transaction do
+      assign_attributes
+      created = with_callbacks(:create, :save) { entry.save }
 
-    respond_to do |format|
-      yield(format, created) if block_given?
-      if created
-        format.html { redirect_on_success(options) }
-        format.json { render :show, status: :created, location: show_path }
-      else
-        format.html { render :new }
-        format.json { render json: entry.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        yield(format, created) if block_given?
+        if created
+          format.html { redirect_on_success(options) }
+          format.json { render :show, status: :created, location: show_path }
+        else
+          format.html { render :new }
+          format.json { render json: entry.errors, status: :unprocessable_entity }
+        end
       end
+      raise ActiveRecord::Rollback unless created
     end
   end
 
@@ -90,18 +93,21 @@ class CrudController < ListController
   #
   # Specify a :location option if you wish to do a custom redirect.
   def update(options = {}, &_block)
-    assign_attributes
-    updated = with_callbacks(:update, :save) { entry.save }
+    model_class.transaction do
+      assign_attributes
+      updated = with_callbacks(:update, :save) { entry.save }
 
-    respond_to do |format|
-      yield(format, updated) if block_given?
-      if updated
-        format.html { redirect_on_success(options) }
-        format.json { render :show, status: :ok, location: show_path }
-      else
-        format.html { render :edit }
-        format.json { render json: entry.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        yield(format, updated) if block_given?
+        if updated
+          format.html { redirect_on_success(options) }
+          format.json { render :show, status: :ok, location: show_path }
+        else
+          format.html { render :edit }
+          format.json { render json: entry.errors, status: :unprocessable_entity }
+        end
       end
+      raise ActiveRecord::Rollback unless updated
     end
   end
 
@@ -118,17 +124,20 @@ class CrudController < ListController
   #
   # Specify a :location option if you wish to do a custom redirect.
   def destroy(options = {}, &_block)
-    destroyed = run_callbacks(:destroy) { entry.destroy }
+    model_class.transaction do
+      destroyed = run_callbacks(:destroy) { entry.destroy }
 
-    respond_to do |format|
-      yield(format, destroyed) if block_given?
-      if destroyed
-        format.html { redirect_on_success(options) }
-        format.json { head :no_content }
-      else
-        format.html { redirect_on_failure(options) }
-        format.json { render json: entry.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        yield(format, destroyed) if block_given?
+        if destroyed
+          format.html { redirect_on_success(options) }
+          format.json { head :no_content }
+        else
+          format.html { redirect_on_failure(options) }
+          format.json { render json: entry.errors, status: :unprocessable_entity }
+        end
       end
+      raise ActiveRecord::Rollback unless destroyed
     end
   end
 

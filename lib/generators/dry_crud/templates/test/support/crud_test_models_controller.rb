@@ -10,7 +10,8 @@ class CrudTestModelsController < CrudController #:nodoc:
   self.default_sort = 'name'
   self.permitted_attrs = [:name, :email, :password, :whatever, :children,
                           :companion_id, :rating, :income, :birthdate,
-                          :gets_up_at, :last_seen, :human, :remarks]
+                          :gets_up_at, :last_seen, :human, :remarks,
+                          other_ids: []]
 
   before_create :possibly_redirect
   before_create :handle_name
