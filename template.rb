@@ -17,7 +17,7 @@ if templates.present? && 'haml'.start_with?(templates.downcase)
 end
 
 if tests.present? && 'rspec'.start_with?(tests.downcase)
-  use_gem 'rspec-rails', group: [:development, :test]
+  use_gem 'rspec-rails', group: %i[development test]
   options << ' --tests rspec'
 end
 

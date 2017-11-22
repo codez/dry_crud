@@ -84,8 +84,8 @@ module DryCrud
       end
 
       # Add form-control class to all input fields.
-      %w(text_field password_field email_field text_area
-         number_field date_field time_field datetime_field).each do |method|
+      %w[text_field password_field email_field text_area
+         number_field date_field time_field datetime_field].each do |method|
         define_method(method) do |attr, html_options = {}|
           add_css_class(html_options, 'form-control')
           super(attr, html_options)
@@ -244,13 +244,13 @@ module DryCrud
         if field_method
           build_labeled_field(field_method, *args)
         else
-          super(name, *args)
+          super
         end
       end
 
       # Overriden to fullfill contract with method_missing 'labeled_' methods.
-      def respond_to?(name, include_private = false)
-        labeled_field_method?(name).present? || super(name, include_private)
+      def respond_to_missing?(name, include_private = false)
+        labeled_field_method?(name).present? || super
       end
 
       private

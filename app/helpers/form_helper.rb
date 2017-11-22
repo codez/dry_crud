@@ -45,7 +45,7 @@ module FormHelper
   # If a block is given, a custom form may be rendered and attrs is ignored.
   def crud_form(*attrs, &block)
     options = attrs.extract_options!
-    attrs = default_crud_attrs - [:created_at, :updated_at] if attrs.blank?
+    attrs = default_crud_attrs - %i[created_at updated_at] if attrs.blank?
     attrs << options
     standard_form(path_args(entry), *attrs, &block)
   end

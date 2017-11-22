@@ -1,4 +1,5 @@
 # encoding: UTF-8
+
 require 'English'
 
 # View helpers for basic functions used in various other helpers.
@@ -43,7 +44,7 @@ module UtilityHelper
   # 'id' or 'position'.
   def default_crud_attrs
     attrs = model_class.column_names.map(&:to_sym)
-    attrs - [:id, :position, :password]
+    attrs - %i[id position password]
   end
 
   # Returns the ActiveRecord column type or nil.

@@ -16,6 +16,9 @@ Metrics/ModuleLength:
 Metrics/MethodLength:
   Max: 25
 
+Metrics/BlockLength:
+  Enabled: false
+
 Metrics/AbcSize:
   Max: 40
 
@@ -25,16 +28,16 @@ ClassVars:
 Void:
   Enabled: false
 
-Style/EmptyLinesAroundClassBody:
+Layout/EmptyLinesAroundClassBody:
   Enabled: false
 
-Style/EmptyLinesAroundModuleBody:
+Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
-Style/EmptyLinesAroundBlockBody:
+Layout/EmptyLinesAroundBlockBody:
   Enabled: false
-  
-Style/SpaceBeforeFirstArg:
+
+Layout/SpaceBeforeFirstArg:
   Enabled: false
 
 GuardClause:
