@@ -11,30 +11,11 @@
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-  <![endif]-->
-
-  <%= favicon_link_tag %>
-  <%= favicon_link_tag '/apple-touch-icon.png',
-                       rel: 'apple-touch-icon',
-                       type: 'image/png' %>
-  <%= favicon_link_tag '/apple-touch-icon-72x72.png',
-                       rel: 'apple-touch-icon',
-                       type: 'image/png',
-                       sizes: "72x72" %>
-  <%= favicon_link_tag '/apple-touch-icon-114x114.png',
-                       rel: 'apple-touch-icon',
-                       type: 'image/png',
-                       sizes: "114x114" %>
-
   <%= yield :head %>
 </head>
 <body>
 
-<nav class="navbar navbar-default" role="navigation">
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
   <%= render 'layouts/nav' %>
 </nav>
 
@@ -47,7 +28,7 @@
         <%= yield :tools %>
     </div>
     <div class="col-md-7">
-      <div class="btn-toolbar pull-right">
+      <div class="btn-toolbar float-right">
         <%= yield :actions %>
       </div>
     </div>
@@ -64,10 +45,9 @@
 </div>
 
 <footer>
-  <p>&copy; code!z <%= Time.zone.now.year %></p>
+  <p><small>&copy; code!z <%= Time.zone.now.year %></small></p>
 </footer>
 
-<!-- Javascript placed at the end of the document so the pages load faster -->
 <%= javascript_tag yield(:javascripts) if content_for?(:javascripts) %>
 
 </body>

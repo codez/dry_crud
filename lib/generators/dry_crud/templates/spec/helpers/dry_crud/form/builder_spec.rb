@@ -65,12 +65,12 @@ describe 'DryCrud::Form::Builder' do
   describe '#labeled_input_field' do
     context 'when required' do
       subject { form.labeled_input_field(:name) }
-      it { is_expected.to include('input-group-addon') }
+      it { is_expected.to include('input-group-append') }
     end
 
     context 'when not required' do
       subject { form.labeled_input_field(:remarks) }
-      it { is_expected.not_to include('input-group-addon') }
+      it { is_expected.not_to include('input-group-append') }
     end
 
     context 'with help text' do

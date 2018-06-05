@@ -1,5 +1,5 @@
 = link_to 'MyApp', root_path, class: 'navbar-brand'
-%ul.nav.navbar-nav
-  %li= link_to t(:'global.menu.people'), people_path
-  %li= link_to t(:'global.menu.countries'), admin_countries_path
-  %li= link_to t(:'global.menu.vips'), vips_path
+%ul.navbar-nav
+  %li.nav-item= link_to t(:'global.menu.people'), people_path, class: 'nav-link'
+  %li.nav-item= link_to t(:'global.menu.countries'), admin_countries_path, class: 'nav-link'
+  %li.nav-item= link_to t(:'global.menu.vips'), vips_path, class: 'nav-link'

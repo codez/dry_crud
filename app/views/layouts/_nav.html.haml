@@ -1,5 +1,5 @@
 = link_to 'MyApp', root_path, class: 'navbar-brand'
-%ul.nav.navbar-nav
-  %li= link_to "Link1", "/path1"
-  %li= link_to "Link2", "/path2"
-  %li= link_to "Link3", "/path3"
+%ul.navbar-nav
+  %li.nav-item= link_to "Link1", "/path1", class: 'nav-link'
+  %li.nav-item= link_to "Link2", "/path2", class: 'nav-link'
+  %li.nav-item= link_to "Link3", "/path3", class: 'nav-link'

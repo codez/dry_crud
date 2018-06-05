@@ -47,7 +47,7 @@ namespace :test do
     desc "Create a rails test application"
     task :create do
       unless File.exist?(TEST_APP_ROOT)
-        sh "rails new #{TEST_APP_ROOT} --skip-bundle"
+        sh "rails new #{TEST_APP_ROOT} --skip-bundle --skip-bootsnap"
         file_replace(File.join(TEST_APP_ROOT, 'Gemfile'),
                      /\z/,
                      File.read(File.join(File.dirname(__FILE__),
@@ -120,7 +120,7 @@ namespace :test do
 
     desc "Customize some of the functionality provided by dry_crud"
     task customize: ['test:app:add_pagination',
-                     #'test:app:use_bootstrap'
+                     # 'test:app:use_bootstrap'
                      ]
 
     desc "Adds pagination to the test app"
@@ -151,26 +151,20 @@ namespace :test do
          file_replace(css,
                       " *= require_self\n */",
                       " *= require_self\n */\n" \
-                      "@import \"bootstrap-sprockets\";\n" \
                       "@import \"bootstrap\";")
          FileUtils.mv(css,
                       File.join(TEST_APP_ROOT,
                                 'app', 'assets', 'stylesheets',
-                                'application.css.scss'))
+                                'application.scss'))
        end
        file_replace(File.join(TEST_APP_ROOT,
                               'app', 'assets', 'javascripts',
                               'application.js'),
                     "//= require_tree .",
-                    "//= require bootstrap-sprockets\n//= require_tree .")
-       file_replace(File.join(TEST_APP_ROOT,
-                              'app', 'helpers', 'actions_helper.rb'),
-                    "\"icon icon-",
-                    "\"glyphicon glyphicon-")
-       file_replace(File.join(TEST_APP_ROOT,
-                              'app', 'helpers', 'dry_crud', 'table', 'actions.rb'),
-                    "\"icon icon-",
-                    "\"glyphicon glyphicon-")
+                    "//= require jquery\n" \
+                    "//= require popper\n" \
+                    "//= require bootstrap-sprockets\n" \
+                    "//= require_tree .")
        FileUtils.rm_f(File.join(TEST_APP_ROOT,
                                 'app', 'assets', 'stylesheets', 'sample.scss'))
     end

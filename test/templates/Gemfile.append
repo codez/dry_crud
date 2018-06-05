@@ -15,6 +15,7 @@ gem 'kaminari'
 
 gem 'rspec-rails'
 
-gem 'bootstrap-sass'
+gem 'jquery-rails'
+gem 'bootstrap'
 
-gem 'therubyracer', require: RUBY_PLATFORM.include?('linux') && 'v8'
+gem 'mini_racer', require: RUBY_PLATFORM.include?('linux') && 'v8'

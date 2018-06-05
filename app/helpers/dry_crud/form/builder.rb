@@ -84,7 +84,7 @@ module DryCrud
       end
 
       # Add form-control class to all input fields.
-      %w[text_field password_field email_field text_area
+      %w[text_field password_field email_field
          number_field date_field time_field datetime_field].each do |method|
         define_method(method) do |attr, html_options = {}|
           add_css_class(html_options, 'form-control')
@@ -150,7 +150,7 @@ module DryCrud
       # Renders the given content with an addon.
       def with_addon(content, addon)
         content_tag(:div, class: 'input-group') do
-          content + content_tag(:span, addon, class: 'input-group-addon')
+          content + content_tag(:div, content_tag(:span, addon, class: 'input-group-text'), class: 'input-group-append')
         end
       end
 

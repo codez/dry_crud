@@ -1,8 +1,10 @@
 language: ruby
 
 rvm:
-  - 2.2.5
-  # - jruby-9.0.5.0
+  - 2.3.7
+  - 2.5.1
+  # activerecord-jdbc is no yet ready for rails 5.2
+  # - jruby-9.2.0.0
 
 env:
   - "HAML=1"

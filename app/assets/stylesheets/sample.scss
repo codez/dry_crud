@@ -51,20 +51,20 @@ a.navbar-brand:hover {
   color: #ddd;
 }
 
-.nav {
+.navbar-nav {
   list-style: none;
   margin: 0;
   float: left;
 }
 
-.nav li {
+.navbar-nav li.nav-item {
   float: left;
   font-size: 110%;
   margin: 0;
   padding: 0;
 }
 
-.nav a {
+.navbar-nav a.nav-link {
   color: #ddd !important;
   display: block;
   float: left;
@@ -74,7 +74,7 @@ a.navbar-brand:hover {
   height: 19px;
 }
 
-.nav a:hover {
+.navbar-nav a.nav-link:hover {
   background: $theme_color bottom center no-repeat;
   color: #fff !important;
   text-decoration: none;
@@ -261,10 +261,11 @@ textarea, select[multiple] {
   border-color: #D88;
 }
 
-.input-group-addon {
+.input-group-append {
   font-size: 80%;
   vertical-align: top;
   margin-left: 4px;
+  display: inline-block;
 }
 
 .help-block {
@@ -291,11 +292,11 @@ textarea, select[multiple] {
   float: right;
 }
 
-.pull-right {
+.float-right {
   float: right;
 }
 
-.pull-left {
+.float-left {
   float: left;
 }
 
@@ -304,10 +305,6 @@ footer {
   text-align: right;
   max-width: $container_width;
   min-width: $container_width - 200px;
-}
-
-footer * {
-  font-size: 80%;
 }
 
 .col-md-offset-2 {

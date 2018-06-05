@@ -97,15 +97,15 @@ module DryCrud
 
       test 'labeld_input_field adds required mark' do
         result = form.labeled_input_field(:name)
-        assert result.include?('input-group-addon')
+        assert result.include?('input-group-append')
         result = form.labeled_input_field(:remarks)
-        assert !result.include?('input-group-addon')
+        assert !result.include?('input-group-append')
       end
 
       test 'labeld_input_field adds help text' do
         result = form.labeled_input_field(:name, help: 'Some Help')
         assert result.include?(form.help_block('Some Help'))
-        assert result.include?('input-group-addon')
+        assert result.include?('input-group-append')
       end
 
       test 'belongs_to_field has all options by default' do

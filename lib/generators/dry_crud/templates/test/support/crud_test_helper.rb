@@ -114,6 +114,7 @@ module CrudTestHelper
   end
 
   def with_test_routing
+    @routes ||= nil
     with_routing do |set|
       set.draw { resources :crud_test_models }
       # used to define a controller in these tests

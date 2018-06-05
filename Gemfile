@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.0.0'
+gem 'rails', '~> 5.2.0'
 
 gem 'rake'
 gem 'sdoc'
@@ -13,7 +13,7 @@ gem 'sass-rails'
 gem 'coffee-rails'
 
 gem 'kaminari'
-gem 'bootstrap-sass'
+gem 'bootstrap'
 
 gem 'turbolinks'
 gem 'jbuilder'
@@ -33,7 +33,7 @@ gem 'byebug', platforms: [:mri]
 
 platforms :ruby do
   gem 'sqlite3'
-  gem 'therubyracer'
+  gem 'mini_racer'
 end
 
 platforms :jruby do
