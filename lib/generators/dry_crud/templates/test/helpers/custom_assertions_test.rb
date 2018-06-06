@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'test_helper'
 require 'support/custom_assertions'
 require 'support/crud_test_helper'

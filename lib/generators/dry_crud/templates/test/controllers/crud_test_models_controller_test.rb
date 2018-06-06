@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'test_helper'
 require 'support/crud_test_helper'
 require 'support/crud_test_model'
@@ -63,7 +62,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_response :success
     assert entries.present?
     assert_equal 1, entries.size
-    assert_equal [CrudTestModel.find_by_name('BBBBB')], entries
+    assert_equal [CrudTestModel.find_by(name: 'BBBBB')], entries
     assert_equal({ 'q' => 'DDD' }, session[:list_params]['/crud_test_models'])
   end
 
@@ -100,7 +99,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_response :success
     assert entries.present?
     assert_equal 3, entries.size
-    assert_equal %w(CCCCC DDDDD BBBBB), entries.map(&:name)
+    assert_equal %w[CCCCC DDDDD BBBBB], entries.map(&:name)
     assert_equal({ 'sort' => 'chatty', 'sort_dir' => 'asc', 'q' => 'DDD' },
                  session[:list_params]['/crud_test_models'])
   end
@@ -114,7 +113,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_response :success
     assert entries.present?
     assert_equal 3, entries.size
-    assert_equal %w(BBBBB DDDDD CCCCC), entries.map(&:name)
+    assert_equal %w[BBBBB DDDDD CCCCC], entries.map(&:name)
     assert_equal 'DDD', @controller.params[:q]
     assert_equal 'chatty', @controller.params[:sort]
     assert_equal 'desc', @controller.params[:sort_dir]
@@ -122,7 +121,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_new
     super
-    assert_equal [:before_render_new, :before_render_form],
+    assert_equal %i[before_render_new before_render_form],
                  @controller.called_callbacks
   end
 
@@ -136,13 +135,13 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     super
     assert_match(/model got created/, flash[:notice])
     assert flash[:alert].blank?
-    assert_equal [:before_create, :before_save, :after_save, :after_create],
+    assert_equal %i[before_create before_save after_save after_create],
                  @controller.called_callbacks
   end
 
   def test_edit
     super
-    assert_equal [:before_render_edit, :before_render_form],
+    assert_equal %i[before_render_edit before_render_form],
                  @controller.called_callbacks
   end
 
@@ -152,13 +151,13 @@ class CrudTestModelsControllerTest < ActionController::TestCase
                         model: 'Crud Test Model <i>foo</i>'),
                  flash[:notice]
     assert flash[:alert].blank?
-    assert_equal [:before_update, :before_save, :after_save, :after_update],
+    assert_equal %i[before_update before_save after_save after_update],
                  @controller.called_callbacks
   end
 
   def test_destroy
     super
-    assert_equal [:before_destroy, :after_destroy],
+    assert_equal %i[before_destroy after_destroy],
                  @controller.called_callbacks
     assert_equal I18n.t('crud.destroy.flash.success',
                         model: 'Crud Test Model <i>AAAAA</i>'),
@@ -174,7 +173,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert entry.new_record?
     assert flash[:alert].present?
     assert_equal 'illegal', entry.name
-    assert_equal [:before_render_new, :before_render_form],
+    assert_equal %i[before_render_new before_render_form],
                  @controller.called_callbacks
   end
 
@@ -203,8 +202,8 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert flash[:notice].blank?, flash[:notice].to_s
     assert flash[:alert].blank?, flash[:alert].to_s
     assert entry.name.blank?
-    assert_equal [:before_create, :before_save,
-                  :before_render_new, :before_render_form],
+    assert_equal %i[before_create before_save
+                    before_render_new before_render_form],
                  @controller.called_callbacks
   end
 
@@ -214,7 +213,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     end
     assert_response :unprocessable_entity
     assert entry.new_record?
-    assert_equal [:before_create, :before_save], @controller.called_callbacks
+    assert_equal %i[before_create before_save], @controller.called_callbacks
   end
 
   def test_update_with_failure
@@ -224,20 +223,27 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert flash[:notice].blank?
     assert flash[:alert].blank?
     assert_equal 20, entry.rating
-    assert_equal [:before_update, :before_save,
-                  :before_render_edit, :before_render_form],
+    assert_equal %i[before_update before_save
+                    before_render_edit before_render_form],
                  @controller.called_callbacks
   end
 
   def test_update_with_failure_does_not_update_many_relations
-    put :update, params: { id: test_entry.id, crud_test_model: { rating: 20, other_ids: [OtherCrudTestModel.first.id] } }
+    put :update,
+        params: {
+          id: test_entry.id,
+          crud_test_model: {
+            rating: 20,
+            other_ids: [OtherCrudTestModel.first.id]
+          }
+        }
     assert_response :success
     assert entry.changed?
     assert flash[:notice].blank?
     assert flash[:alert].blank?
     assert_equal 20, entry.rating
-    assert_equal [:before_update, :before_save,
-                  :before_render_edit, :before_render_form],
+    assert_equal %i[before_update before_save
+                    before_render_edit before_render_form],
                  @controller.called_callbacks
     assert_equal [], test_entry.reload.other_ids
   end
@@ -251,7 +257,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert entry.changed?
     assert flash[:notice].blank?
     assert_equal 20, entry.rating
-    assert_equal [:before_update, :before_save], @controller.called_callbacks
+    assert_equal %i[before_update before_save], @controller.called_callbacks
   end
 
   def test_destroy_failure
@@ -267,7 +273,9 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_destroy_failure_callback
     e = crud_test_models(:AAAAA)
-    e.update_attribute :name, 'illegal'
+    # rubocop:disable Rails/SkipsModelValidations
+    e.update_attribute(:name, 'illegal')
+    # rubocop:enable Rails/SkipsModelValidations
     assert_no_difference("#{model_class.name}.count") do
       delete :destroy, params: test_params(id: e.id)
     end

@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 module DryCrud
   module Table
 
@@ -57,10 +55,10 @@ module DryCrud
       # Define a column for the given attribute and an optional header.
       # If no header is given, the attribute name is used. The cell will
       # contain the formatted attribute value for the current entry.
-      def attr(a, header = nil, html_options = {}, &block)
-        header ||= attr_header(a)
-        block ||= ->(e) { format_attr(e, a) }
-        add_css_class(html_options, align_class(a))
+      def attr(attr, header = nil, html_options = {}, &block)
+        header ||= attr_header(attr)
+        block ||= ->(e) { format_attr(e, attr) }
+        add_css_class(html_options, align_class(attr))
         col(header, html_options, &block)
       end
 

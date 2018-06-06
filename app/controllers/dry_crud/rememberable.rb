@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 module DryCrud
 
   # Remembers certain params of the index action in order to return

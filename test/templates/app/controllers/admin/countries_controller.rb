@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 module Admin
   # Countries Controller nested under /admin
   class CountriesController < AjaxController
@@ -9,7 +7,7 @@ module Admin
 
     self.default_sort = 'countries.name'
 
-    self.permitted_attrs = [:name, :code]
+    self.permitted_attrs = %i[name code]
 
     def show
       redirect_to index_path if request.format.html?

@@ -1,7 +1,5 @@
-# encoding: UTF-8
-
 # Person model
-class Person < ActiveRecord::Base
+class Person < ApplicationRecord
   belongs_to :city
 
   validates :name, presence: true

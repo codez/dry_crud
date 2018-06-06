@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'test_helper'
 require 'support/custom_assertions'
 require 'support/crud_test_model'
@@ -38,7 +37,7 @@ class TableHelperTest < ActionView::TestCase
   end
 
   test 'non empty table renders table' do
-    result = plain_table_or_message(%w(foo bar)) do |t|
+    result = plain_table_or_message(%w[foo bar]) do |t|
       t.attrs :size, :upcase
     end
     assert result.html_safe?
@@ -47,11 +46,12 @@ class TableHelperTest < ActionView::TestCase
 
   test 'table with attrs' do
     expected = DryCrud::Table::Builder.table(
-      %w(foo bar), self,
-      class: 'table table-striped table-hover') do |t|
+      %w[foo bar], self,
+      class: 'table table-striped table-hover'
+    ) do |t|
       t.attrs :size, :upcase
     end
-    actual = plain_table(%w(foo bar), :size, :upcase)
+    actual = plain_table(%w[foo bar], :size, :upcase)
     assert actual.html_safe?
     assert_equal expected, actual
   end

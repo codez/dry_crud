@@ -1,11 +1,9 @@
-# encoding: utf-8
-
 # Controller for the dummy model.
 class CrudTestModelsController < CrudController #:nodoc:
 
   HANDLE_PREFIX = 'handle_'.freeze
 
-  self.search_columns = [:name, :whatever, :remarks]
+  self.search_columns = %i[name whatever remarks]
   self.sort_mappings = { chatty: 'length(remarks)' }
   self.default_sort = 'name'
   self.permitted_attrs = [:name, :email, :password, :whatever, :children,
@@ -80,7 +78,7 @@ class CrudTestModelsController < CrudController #:nodoc:
   end
 
   # create callback methods that record the before/after callbacks
-  [:create, :update, :save, :destroy].each do |a|
+  %i[create update save destroy].each do |a|
     callback = "before_#{a}"
     send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
     callback = "after_#{a}"
@@ -88,7 +86,7 @@ class CrudTestModelsController < CrudController #:nodoc:
   end
 
   # create callback methods that record the before_render callbacks
-  [:index, :show, :new, :edit, :form].each do |a|
+  %i[index show new edit form].each do |a|
     callback = "before_render_#{a}"
     send(callback.to_sym, :"#{HANDLE_PREFIX}#{callback}")
   end
@@ -97,7 +95,13 @@ class CrudTestModelsController < CrudController #:nodoc:
   def method_missing(sym, *_args)
     if sym.to_s.starts_with?(HANDLE_PREFIX)
       called_callback(sym.to_s[HANDLE_PREFIX.size..-1].to_sym)
+    else
+      super
     end
+  end
+
+  def respond_to_missing?(sym, include_private = false)
+    sym.to_s.starts_with?(HANDLE_PREFIX) || super
   end
 
   # records a callback

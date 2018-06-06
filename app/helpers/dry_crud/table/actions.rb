@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 module DryCrud
   module Table
 
@@ -20,8 +18,8 @@ module DryCrud
       # the current entry.
       # A block may be given to define the link path for the row entry.
       def attr_with_show_link(attr, &block)
-        sortable_attr(attr) do |e|
-          link_to(format_attr(e, attr), action_path(e, &block))
+        sortable_attr(attr) do |entry|
+          link_to(format_attr(entry, attr), action_path(entry, &block))
         end
       end
 
@@ -29,8 +27,8 @@ module DryCrud
       # A block may be given to define the link path for the row entry.
       # If the block returns nil, no link is rendered.
       def show_action_col(html_options = {}, &block)
-        action_col do |e|
-          path = action_path(e, &block)
+        action_col do |entry|
+          path = action_path(entry, &block)
           if path
             table_action_link('zoom-in',
                               path,
@@ -43,8 +41,8 @@ module DryCrud
       # A block may be given to define the link path for the row entry.
       # If the block returns nil, no link is rendered.
       def edit_action_col(html_options = {}, &block)
-        action_col do |e|
-          path = action_path(e, &block)
+        action_col do |entry|
+          path = action_path(entry, &block)
           if path
             path = path.is_a?(String) ? path : edit_polymorphic_path(path)
             table_action_link('pencil', path, html_options.clone)
@@ -56,8 +54,8 @@ module DryCrud
       # A block may be given to define the link path for the row entry.
       # If the block returns nil, no link is rendered.
       def destroy_action_col(html_options = {}, &block)
-        action_col do |e|
-          path = action_path(e, &block)
+        action_col do |entry|
+          path = action_path(entry, &block)
           if path
             table_action_link('remove',
                               path,
@@ -85,8 +83,8 @@ module DryCrud
 
       # If a block is given, call it to get the path for the current row entry.
       # Otherwise, return the standard path args.
-      def action_path(e)
-        block_given? ? yield(e) : path_args(e)
+      def action_path(entry)
+        block_given? ? yield(entry) : path_args(entry)
       end
 
     end

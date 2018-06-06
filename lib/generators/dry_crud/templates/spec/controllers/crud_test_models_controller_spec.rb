@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'rails_helper'
 
 # Tests all actions of the CrudController based on a dummy model
@@ -91,7 +90,7 @@ describe CrudTestModelsController do
           it_is_expected_to_respond
 
           it 'entries have one item' do
-            expect(entries).to eq([CrudTestModel.find_by_name('BBBBB')])
+            expect(entries).to eq([CrudTestModel.find_by(name: 'BBBBB')])
           end
 
           it 'session has query list param' do
@@ -113,7 +112,8 @@ describe CrudTestModelsController do
 
           it 'session has sort list param' do
             expect(session[:list_params]['/crud_test_models.html']).to eq(
-              'sort' => 'children', 'sort_dir' => 'asc')
+              'sort' => 'children', 'sort_dir' => 'asc'
+            )
           end
         end
 
@@ -134,7 +134,8 @@ describe CrudTestModelsController do
 
           it 'session has sort list param' do
             expect(session[:list_params]['/crud_test_models.html']).to eq(
-              'sort' => 'chatty', 'sort_dir' => 'desc')
+              'sort' => 'chatty', 'sort_dir' => 'desc'
+            )
           end
         end
 
@@ -146,12 +147,13 @@ describe CrudTestModelsController do
           it_is_expected_to_respond
 
           it 'entries are in correct order' do
-            expect(entries.map(&:name)).to eq(%w(CCCCC DDDDD BBBBB))
+            expect(entries.map(&:name)).to eq(%w[CCCCC DDDDD BBBBB])
           end
 
           it 'session has sort list param' do
             expect(session[:list_params]['/crud_test_models.html']).to eq(
-              'q' => 'DDD', 'sort' => 'chatty', 'sort_dir' => 'asc')
+              'q' => 'DDD', 'sort' => 'chatty', 'sort_dir' => 'asc'
+            )
           end
         end
       end
@@ -179,7 +181,7 @@ describe CrudTestModelsController do
         it_is_expected_to_respond
 
         it 'entries are in correct order' do
-          expect(entries.map(&:name)).to eq(%w(BBBBB DDDDD CCCCC))
+          expect(entries.map(&:name)).to eq(%w[BBBBB DDDDD CCCCC])
         end
 
         it 'params are set' do
@@ -204,7 +206,8 @@ describe CrudTestModelsController do
 
       it 'calls two render callbacks' do
         expect(controller.called_callbacks).to eq(
-          [:before_render_new, :before_render_form])
+          %i[before_render_new before_render_form]
+        )
       end
     end
 
@@ -228,7 +231,8 @@ describe CrudTestModelsController do
 
     it 'calls the correct callbacks' do
       expect(controller.called_callbacks).to eq(
-        [:before_create, :before_save, :after_save, :after_create])
+        %i[before_create before_save after_save after_create]
+      )
     end
 
     context 'with before callback' do
@@ -254,7 +258,8 @@ describe CrudTestModelsController do
 
         it 'calls the correct callbacks' do
           expect(controller.called_callbacks).to eq(
-            [:before_render_new, :before_render_form])
+            %i[before_render_new before_render_form]
+          )
         end
       end
 
@@ -297,8 +302,9 @@ describe CrudTestModelsController do
 
           it 'calls the correct callbacks' do
             expect(controller.called_callbacks).to eq(
-              [:before_create, :before_save,
-               :before_render_new, :before_render_form])
+              %i[before_create before_save
+                 before_render_new before_render_form]
+            )
           end
         end
       end
@@ -321,7 +327,8 @@ describe CrudTestModelsController do
 
           it 'calls the correct callbacks' do
             expect(controller.called_callbacks).to eq(
-              [:before_create, :before_save])
+              %i[before_create before_save]
+            )
           end
         end
       end
@@ -331,7 +338,8 @@ describe CrudTestModelsController do
   describe_action :get, :edit, id: true do
     it 'calls the correct callbacks' do
       expect(controller.called_callbacks).to eq(
-        [:before_render_edit, :before_render_form])
+        %i[before_render_edit before_render_form]
+      )
     end
   end
 
@@ -340,11 +348,19 @@ describe CrudTestModelsController do
 
     it 'calls the correct callbacks' do
       expect(controller.called_callbacks).to eq(
-        [:before_update, :before_save, :after_save, :after_update])
+        %i[before_update before_save after_save after_update]
+      )
     end
 
     context 'with invalid params' do
-      let(:params) { { crud_test_model: { rating: 20, other_ids: [OtherCrudTestModel.first.id] } } }
+      let(:params) do
+        {
+          crud_test_model: {
+            rating: 20,
+            other_ids: [OtherCrudTestModel.first.id]
+          }
+        }
+      end
 
       context '.html', combine: 'uhivp' do
         it_is_expected_to_respond
@@ -360,8 +376,9 @@ describe CrudTestModelsController do
 
         it 'calls the correct callbacks' do
           expect(controller.called_callbacks).to eq(
-            [:before_update, :before_save,
-             :before_render_edit, :before_render_form])
+            %i[before_update before_save
+               before_render_edit before_render_form]
+          )
         end
 
         it 'does not update has_many ids' do
@@ -376,7 +393,8 @@ describe CrudTestModelsController do
 
         it 'calls the correct callbacks' do
           expect(controller.called_callbacks).to eq(
-            [:before_update, :before_save])
+            %i[before_update before_save]
+          )
         end
       end
     end
@@ -385,7 +403,8 @@ describe CrudTestModelsController do
   describe_action :delete, :destroy, id: true do
     it 'calls the correct callbacks' do
       expect(controller.called_callbacks).to eq(
-        [:before_destroy, :after_destroy])
+        %i[before_destroy after_destroy]
+      )
     end
 
     context 'with failure' do
@@ -393,7 +412,7 @@ describe CrudTestModelsController do
       context '.html' do
         it 'does not delete entry from database',
            perform_request: false do
-          expect { perform_request }.not_to change { CrudTestModel.count }
+          expect { perform_request }.not_to(change { CrudTestModel.count })
         end
 
         it 'redirects to referer',
@@ -415,11 +434,13 @@ describe CrudTestModelsController do
 
       context 'callback', perform_request: false do
         before do
-          test_entry.update_attribute :name, 'illegal'
+          # rubocop:disable Rails/SkipsModelValidations
+          test_entry.update_attribute(:name, 'illegal')
+          # rubocop:enable Rails/SkipsModelValidations
         end
 
         it 'does not delete entry from database' do
-          expect { perform_request }.not_to change { CrudTestModel.count }
+          expect { perform_request }.not_to(change { CrudTestModel.count })
         end
 
         it 'redirects to index' do

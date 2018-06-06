@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 # People Helper
 module PeopleHelper
   def format_person_income(person)

@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 # Abstract controller providing basic CRUD actions.
 #
 # Some enhancements were made to ease extensibility.

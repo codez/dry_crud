@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'test_helper'
 
 module DryCrud
@@ -13,7 +12,7 @@ module DryCrud
       attr_reader :table, :entries
 
       def setup
-        @entries = %w(foo bahr)
+        @entries = %w[foo bahr]
         @table = DryCrud::Table::Builder.new(entries, self)
       end
 

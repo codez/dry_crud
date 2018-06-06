@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 module DryCrud
 
   # Connects the including controller to the model whose name corrsponds to

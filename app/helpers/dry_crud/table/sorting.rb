@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 module DryCrud
   module Table
 
@@ -22,11 +20,11 @@ module DryCrud
       end
 
       # Renders a sort link header, otherwise similar to :attr.
-      def sortable_attr(a, header = nil, &block)
-        if template.sortable?(a)
-          attr(a, sort_header(a, header), &block)
+      def sortable_attr(attr, header = nil, &block)
+        if template.sortable?(attr)
+          attr(attr, sort_header(attr, header), &block)
         else
-          attr(a, header, &block)
+          attr(attr, header, &block)
         end
       end
 

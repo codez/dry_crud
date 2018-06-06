@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'rails_helper'
 
 describe 'DryCrud::Form::Builder' do
@@ -41,9 +40,8 @@ describe 'DryCrud::Form::Builder' do
       last_seen: :datetime_field,
       companion_id: :belongs_to_field,
       other_ids: :has_many_field,
-      more_ids: :has_many_field
-    }.each do |attr, method|
-      it 'dispatches #{attr} attr to #{method}' do
+      more_ids: :has_many_field }.each do |attr, method|
+      it "dispatches #{attr} attr to #{method}" do
         expect(form).to receive(method).with(attr, {})
         form.input_field(attr)
       end
@@ -227,8 +225,8 @@ describe 'DryCrud::Form::Builder' do
     end
   end
 
-  def expect_n_options(f, n)
-    expect(f.scan('</option>').size).to eq(n)
+  def expect_n_options(form, count)
+    expect(form.scan('</option>').size).to eq(count)
   end
 
 end

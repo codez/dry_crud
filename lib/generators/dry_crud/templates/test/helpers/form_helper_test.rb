@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'test_helper'
 require 'support/crud_test_model'
 require 'support/crud_test_helper'
@@ -73,7 +72,7 @@ class FormHelperTest < ActionView::TestCase
   test 'standard form with errors' do
     e = crud_test_models('AAAAA')
     e.name = nil
-    assert !e.valid?
+    assert_not e.valid?
 
     f = with_test_routing do
       capture do

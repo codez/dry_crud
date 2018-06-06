@@ -1,7 +1,5 @@
-# encoding: UTF-8
-
 # Country model
-class Country < ActiveRecord::Base
+class Country < ApplicationRecord
   has_many :cities, dependent: :destroy
 
   validates :name, :code, presence: true, uniqueness: true

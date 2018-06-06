@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 # Cities Helper
 module CitiesHelper
   def format_city_id(entry)

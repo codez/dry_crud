@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'rails_helper'
 
 describe 'DryCrud::Table::Builder' do
@@ -6,7 +5,7 @@ describe 'DryCrud::Table::Builder' do
   include FormatHelper
   include UtilityHelper
 
-  let(:entries) { %w(foo bahr) }
+  let(:entries) { %w[foo bahr] }
   let(:table)   { DryCrud::Table::Builder.new(entries, self) }
 
   def format_size(obj) #:nodoc:

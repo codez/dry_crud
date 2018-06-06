@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 # Translation helpers extending the Rails +translate+ helper to support
 # translation inheritance over the controller class hierarchy.
 module I18nHelper

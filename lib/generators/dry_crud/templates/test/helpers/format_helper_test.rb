@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'test_helper'
 require 'support/crud_test_model'
 
@@ -63,7 +62,7 @@ class FormatHelperTest < ActionView::TestCase
   test 'format Strings' do
     assert_equal 'blah blah', f('blah blah')
     assert_equal '<injection>', f('<injection>')
-    assert !f('<injection>').html_safe?
+    assert_not f('<injection>').html_safe?
   end
 
   unless ENV['NON_LOCALIZED'] # localization dependent tests
@@ -180,7 +179,7 @@ class FormatHelperTest < ActionView::TestCase
     assert_equal 'Camel Case', captionize(:camel_case)
     assert_equal 'All Upper Case', captionize('all upper case')
     assert_equal 'With Object', captionize('With object', Object.new)
-    assert !captionize('bad <title>').html_safe?
+    assert_not captionize('bad <title>').html_safe?
   end
 
 end

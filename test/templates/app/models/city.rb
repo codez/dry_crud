@@ -1,7 +1,5 @@
-# encoding: UTF-8
-
 # City model
-class City < ActiveRecord::Base
+class City < ApplicationRecord
   belongs_to :country
   has_many :people
 

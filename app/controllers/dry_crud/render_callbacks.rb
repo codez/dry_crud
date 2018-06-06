@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 module DryCrud
 
   # Provide +before_render+ callbacks.

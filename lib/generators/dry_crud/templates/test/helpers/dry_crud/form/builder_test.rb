@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'test_helper'
 require 'support/crud_test_model'
 
@@ -27,7 +26,8 @@ module DryCrud
         assert_equal form.with_addon(
           form.string_field(:name,
                             required: 'required'),
-          '*'),
+          '*'
+        ),
                      form.input_field(:name)
         assert form.string_field(:name).html_safe?
       end
@@ -99,7 +99,7 @@ module DryCrud
         result = form.labeled_input_field(:name)
         assert result.include?('input-group-append')
         result = form.labeled_input_field(:remarks)
-        assert !result.include?('input-group-append')
+        assert_not result.include?('input-group-append')
       end
 
       test 'labeld_input_field adds help text' do
@@ -242,7 +242,7 @@ module DryCrud
       end
 
       test 'respond to still works' do
-        assert !form.respond_to?(:blalba)
+        assert_not form.respond_to?(:blalba)
         assert form.respond_to?(:text_field)
         assert form.respond_to?(:labeled_text_field)
       end

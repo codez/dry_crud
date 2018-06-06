@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 #:nodoc:
 REGEXP_ROWS = /<tr.+?<\/tr>/m #:nodoc:
 REGEXP_HEADERS = /<th.+?<\/th>/m #:nodoc:
@@ -57,8 +55,8 @@ module CrudTestHelper
     end
   end
 
-  def create_crud_test_models(c)
-    c.create_table :crud_test_models, force: true do |t|
+  def create_crud_test_models(connection)
+    connection.create_table :crud_test_models, force: true do |t|
       t.string   :name, null: false, limit: 50
       t.string   :email
       t.string   :password
@@ -77,16 +75,16 @@ module CrudTestHelper
     end
   end
 
-  def create_other_crud_test_models(c)
-    c.create_table :other_crud_test_models, force: true do |t|
+  def create_other_crud_test_models(connection)
+    connection.create_table :other_crud_test_models, force: true do |t|
       t.string  :name, null: false, limit: 50
       t.integer :more_id
     end
   end
 
-  def create_crud_test_models_other_crud_test_models(c)
-    c.create_table :crud_test_models_other_crud_test_models,
-                   force: true do |t|
+  def create_crud_test_models_other_crud_test_models(connection)
+    connection.create_table :crud_test_models_other_crud_test_models,
+                            force: true do |t|
       t.belongs_to :crud_test_model, index: { name: 'parent' }
       t.belongs_to :other_crud_test_model, index: { name: 'other' }
     end
@@ -95,9 +93,9 @@ module CrudTestHelper
   # Removes the crud_test_models table from the database.
   def reset_db
     c = ActiveRecord::Base.connection
-    [:crud_test_models,
-     :other_crud_test_models,
-     :crud_test_models_other_crud_test_models].each do |table|
+    %i[crud_test_models
+       other_crud_test_models
+       crud_test_models_other_crud_test_models].each do |table|
       c.drop_table(table) if c.data_source_exists?(table)
     end
   end
@@ -110,7 +108,7 @@ module CrudTestHelper
 
   # Fixture-style accessor method to get CrudTestModel instances by name
   def crud_test_models(name)
-    CrudTestModel.find_by_name(name.to_s)
+    CrudTestModel.find_by(name: name.to_s)
   end
 
   def with_test_routing
@@ -137,7 +135,7 @@ module CrudTestHelper
     @routes.draw { resources :crud_test_models }
   end
 
-  def create(index, companion)
+  def create(index, companion) # rubocop:disable Metrics/AbcSize
     c = str(index)
     m = CrudTestModel.new(
       name: c,
@@ -151,7 +149,8 @@ module CrudTestHelper
                  "1#{index}:2#{index}",
       human: index.even?,
       remarks: "#{c} #{str(index + 1)} #{str(index + 2)}\n" *
-                  (index % 3 + 1))
+                  (index % 3 + 1)
+    )
     m.companion = companion
     m.save!
     m
@@ -173,7 +172,8 @@ module CrudTestHelper
   def without_transaction
     c = ActiveRecord::Base.connection
     start_transaction = false
-    if c.adapter_name.downcase.include?('mysql') && c.open_transactions > 0
+    if c.adapter_name.downcase.include?('mysql') &&
+       c.open_transactions.positive?
       # in transactional tests, we may simply rollback
       c.execute('ROLLBACK')
       start_transaction = true

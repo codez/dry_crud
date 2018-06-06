@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 module DryCrud
   module Form
 
@@ -150,7 +148,8 @@ module DryCrud
       # Renders the given content with an addon.
       def with_addon(content, addon)
         content_tag(:div, class: 'input-group') do
-          content + content_tag(:div, content_tag(:span, addon, class: 'input-group-text'), class: 'input-group-append')
+          html = content_tag(:span, addon, class: 'input-group-text')
+          content + content_tag(:div, html, class: 'input-group-append')
         end
       end
 

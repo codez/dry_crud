@@ -1,10 +1,9 @@
-# encoding: UTF-8
 require 'rails_helper'
 
 describe Admin::CountriesController do
   fixtures :all
 
-  include_examples 'crud controller', skip: %w(show html plain)
+  include_examples 'crud controller', skip: %w[show html plain]
 
   let(:test_entry)       { countries(:br) }
   let(:test_entry_attrs) do

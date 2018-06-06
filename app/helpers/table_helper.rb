@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 # Defines tables to display a list of entries. The helper methods come in
 # different granularities:
 # * #plain_table - A basic table for the given entries and attributes using

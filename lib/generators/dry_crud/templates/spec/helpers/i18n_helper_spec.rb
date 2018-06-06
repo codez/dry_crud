@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'rails_helper'
 
 describe I18nHelper do
@@ -12,7 +11,9 @@ describe I18nHelper do
       I18n.backend.store_translations(
         I18n.locale,
         global: {
-          test_key: 'global' })
+          test_key: 'global'
+        }
+      )
     end
     subject { ti(:test_key) }
 
@@ -24,7 +25,10 @@ describe I18nHelper do
           I18n.locale,
           list: {
             global: {
-              test_key: 'list global' } })
+              test_key: 'list global'
+            }
+          }
+        )
       end
       it { is_expected.to eq('list global') }
 
@@ -34,7 +38,10 @@ describe I18nHelper do
             I18n.locale,
             list: {
               index: {
-                test_key: 'list index' } })
+                test_key: 'list index'
+              }
+            }
+          )
         end
         it { is_expected.to eq('list index') }
 
@@ -44,7 +51,10 @@ describe I18nHelper do
               I18n.locale,
               crud: {
                 global: {
-                  test_key: 'crud global' } })
+                  test_key: 'crud global'
+                }
+              }
+            )
           end
           it { is_expected.to eq('crud global') }
 
@@ -54,7 +64,10 @@ describe I18nHelper do
                 I18n.locale,
                 crud: {
                   index: {
-                    test_key: 'crud index' } })
+                    test_key: 'crud index'
+                  }
+                }
+              )
             end
             it { is_expected.to eq('crud index') }
 
@@ -64,7 +77,10 @@ describe I18nHelper do
                   I18n.locale,
                   crud_test_models: {
                     global: {
-                      test_key: 'test global' } })
+                      test_key: 'test global'
+                    }
+                  }
+                )
               end
               it { is_expected.to eq('test global') }
 
@@ -74,7 +90,10 @@ describe I18nHelper do
                     I18n.locale,
                     crud_test_models: {
                       index: {
-                        test_key: 'test index' } })
+                        test_key: 'test index'
+                      }
+                    }
+                  )
                 end
                 it { is_expected.to eq('test index') }
               end
@@ -94,7 +113,10 @@ describe I18nHelper do
         I18n.locale,
         global: {
           associations: {
-            test_key: 'global' } })
+            test_key: 'global'
+          }
+        }
+      )
     end
     it { is_expected.to eq('global') }
 
@@ -105,7 +127,11 @@ describe I18nHelper do
           activerecord: {
             associations: {
               crud_test_model: {
-                test_key: 'model' } } })
+                test_key: 'model'
+              }
+            }
+          }
+        )
       end
 
       it { is_expected.to eq('model') }
@@ -119,7 +145,13 @@ describe I18nHelper do
                 models: {
                   crud_test_model: {
                     companion: {
-                      test_key: 'companion' } } } } })
+                      test_key: 'companion'
+                    }
+                  }
+                }
+              }
+            }
+          )
         end
 
         it { is_expected.to eq('companion') }

@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 # Defines forms to edit models. The helper methods come in different
 # granularities:
 # * #plain_form - A form using Crud::FormBuilder.

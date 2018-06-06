@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 # A handful of convenient assertions. The aim of custom assertions is to
 # provide more specific error messages and to perform complex checks.
 #
@@ -41,7 +39,7 @@ module CustomAssertions
     msg = message do
       "Expected #{mu_pp(record)} to be invalid, but is valid."
     end
-    assert !record.valid?, msg
+    assert_not record.valid?, msg
 
     if invalid_attrs.present?
       assert_invalid_attrs_have_errors(record, *invalid_attrs)

@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 module Admin
   # Cities Controller nested under /admin and countries
   class CitiesController < AjaxController
@@ -9,7 +7,7 @@ module Admin
 
     self.default_sort = 'countries.code, cities.name'
 
-    self.permitted_attrs = [:name, :person_ids]
+    self.permitted_attrs = %i[name person_ids]
 
     private
 

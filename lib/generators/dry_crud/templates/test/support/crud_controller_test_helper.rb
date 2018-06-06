@@ -1,10 +1,8 @@
-# encoding: UTF-8
-
 # A module to include into your functional tests for your crud controller
 # subclasses. Simply implement the two methods #test_entry and
 # #test_entry_attrs to test the basic crud functionality. Override the test
 # methods if you changed the behaviour in your subclass controller.
-module CrudControllerTestHelper
+module CrudControllerTestHelper # rubocop:disable Metrics/ModuleLength
 
   def test_index # :nodoc:
     get :index, params: test_params
@@ -19,7 +17,7 @@ module CrudControllerTestHelper
     assert @response.body.starts_with?('[{'), @response.body
   end
 
-  def test_index_search # :nodoc:
+  def test_index_search # rubocop:disable Metrics/AbcSize :nodoc:
     field = @controller.search_columns.first
     val = field && test_entry[field].to_s
     return if val.blank? # does not support search or no value in this field
@@ -78,7 +76,7 @@ module CrudControllerTestHelper
       post :create, params: test_params(model_identifier => new_entry_attrs)
     end
     assert_redirected_to_show entry
-    assert !entry.new_record?
+    assert_not entry.new_record?
     assert_attrs_equal(new_entry_attrs)
   end
 

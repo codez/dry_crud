@@ -1,8 +1,6 @@
-# encoding: UTF-8
-
 begin
   require 'generators/dry_crud/dry_crud_generator_base'
-rescue LoadError => e
+rescue LoadError => _ # rubocop:disable Lint/HandleExceptions
   # ok, we are in the rake task
 end
 
@@ -10,8 +8,8 @@ end
 class DryCrudGenerator < DryCrudGeneratorBase
   desc 'Copy all dry_crud files to the application.'
 
-  class_options %w(templates -t) => 'erb'
-  class_options %w(tests) => 'testunit'
+  class_options %w[templates -t] => 'erb'
+  class_options %w[tests] => 'testunit'
 
   # copy everything to application
   def install_dry_crud

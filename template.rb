@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 def use_gem(name, options = {})
   gem name, options
   @used_gems ||= []

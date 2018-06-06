@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 require 'English'
 
 # View helpers for basic functions used in various other helpers.

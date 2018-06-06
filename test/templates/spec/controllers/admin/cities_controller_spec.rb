@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'rails_helper'
 
 describe Admin::CitiesController do
@@ -39,7 +38,8 @@ describe Admin::CitiesController do
 
     it 'has correct path args' do
       expect(controller.send(:path_args, 2)).to eq(
-        [:admin, test_entry.country, 2])
+        [:admin, test_entry.country, 2]
+      )
     end
   end
 

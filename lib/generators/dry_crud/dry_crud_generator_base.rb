@@ -1,7 +1,6 @@
-# encoding: UTF-8
-
 require 'rails/generators'
 
+# Generates all dry crud files
 class DryCrudGeneratorBase < Rails::Generators::Base
   def self.template_root
     File.join(File.dirname(__FILE__), 'templates')
@@ -19,8 +18,10 @@ class DryCrudGeneratorBase < Rails::Generators::Base
   private
 
   def all_template_files
-    { self.class.gem_root      => template_files(self.class.gem_root, 'app', 'config'),
-      self.class.template_root => template_files(self.class.template_root) }
+    { self.class.gem_root =>
+        template_files(self.class.gem_root, 'app', 'config'),
+      self.class.template_root =>
+        template_files(self.class.template_root) }
   end
 
   def template_files(root, *folders)

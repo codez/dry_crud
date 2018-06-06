@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 # People Controller
 class PeopleController < AjaxController
   self.search_columns = [:name, :email, :remarks, 'cities.name']
@@ -8,9 +6,9 @@ class PeopleController < AjaxController
 
   self.sort_mappings = { city_id: 'cities.name' }
 
-  self.permitted_attrs = [:name, :children, :city_id, :rating, :income,
-                          :birthdate, :gets_up_at, :last_seen, :remarks,
-                          :cool, :email, :password]
+  self.permitted_attrs = %i[name children city_id rating income
+                            birthdate gets_up_at last_seen remarks
+                            cool email password]
 
   private
 

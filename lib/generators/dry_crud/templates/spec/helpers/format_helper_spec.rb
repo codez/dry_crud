@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'rails_helper'
 
 describe FormatHelper do
@@ -32,7 +31,8 @@ describe FormatHelper do
       it do
         expect(subject.squish).to match(
           /^<dt>label<\/dt>
-           \ <dd\ class=['"]value['"]>value<\/dd>$/x)
+           \ <dd\ class=['"]value['"]>value<\/dd>$/x
+        )
       end
     end
 
@@ -45,7 +45,8 @@ describe FormatHelper do
           /<dt>label<\/dt>
            \ <dd\ class=['"]value['"]>
            #{UtilityHelper::EMPTY_STRING}
-           <\/dd>$/x)
+           <\/dd>$/x
+        )
       end
     end
 
@@ -58,7 +59,8 @@ describe FormatHelper do
           /<dt>label<\/dt>
            \ <dd\ class=['"]value['"]>
            value\ &lt;unsafe&gt;
-           <\/dd>$/x)
+           <\/dd>$/x
+        )
       end
     end
   end
@@ -70,7 +72,8 @@ describe FormatHelper do
     it do
       expect(subject.squish).to match(
         /<dt>Size<\/dt>
-         \ <dd\ class=['"]value['"]>3\ chars<\/dd>$/x)
+         \ <dd\ class=['"]value['"]>3\ chars<\/dd>$/x
+      )
     end
   end
 
@@ -147,7 +150,8 @@ describe FormatHelper do
 
     it 'formats empty belongs_to' do
       expect(format_attr(crud_test_models(:AAAAA), :companion)).to eq(
-        t('global.associations.no_entry'))
+        t('global.associations.no_entry')
+      )
     end
 
     it 'formats existing belongs_to' do
@@ -157,7 +161,8 @@ describe FormatHelper do
 
     it 'formats empty has_one' do
       expect(format_attr(crud_test_models(:FFFFF), :comrad)).to eq(
-        t('global.associations.no_entry'))
+        t('global.associations.no_entry')
+      )
     end
 
     it 'formats existing has_one' do
@@ -234,7 +239,8 @@ describe FormatHelper do
       string = format_type(model, :remarks)
       expect(string).to be_html_safe
       expect(string).to eq(
-        "<p>AAAAA BBBBB CCCCC\n<br />AAAAA BBBBB CCCCC\n</p>")
+        "<p>AAAAA BBBBB CCCCC\n<br />AAAAA BBBBB CCCCC\n</p>"
+      )
     end
 
     it 'escapes texts' do
