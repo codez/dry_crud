@@ -34,7 +34,6 @@ END
                FileList['lib/**/*'].to_a +
                readmes
 
-  spec.has_rdoc = true
   spec.extra_rdoc_files = readmes
   spec.rdoc_options << '--title' << '"Dry Crud"' <<
                        '--main' << 'README.rdoc' <<
