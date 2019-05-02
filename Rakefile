@@ -120,6 +120,7 @@ namespace :test do
 
     desc "Customize some of the functionality provided by dry_crud"
     task customize: ['test:app:add_pagination',
+                     'test:app:add_jquery'
                      # 'test:app:use_bootstrap'
                      ]
 
@@ -142,29 +143,37 @@ namespace :test do
                    "= paginate entries\n\n= render 'list'")
     end
 
+    desc "Adds jQuery to webpack"
+    task :add_jquery do
+      sh "cd #{TEST_APP_ROOT}; yarn add jquery"
+
+      file_replace(File.join(TEST_APP_ROOT, 'app', 'javascripts', 'packs', 'application.js'),
+                   /\n\z/,
+                   "\n\nimport $ from \"jquery\"\n" \
+                   "window.$ = $;\n")
+    end
+
     desc "Use Boostrap in the test app"
     task :use_bootstrap do
+      sh "cd #{TEST_APP_ROOT}; yarn add bootstrap popper.js"
+
        css = File.join(TEST_APP_ROOT,
                        'app', 'assets', 'stylesheets', 'application.css')
 
        if File.exists?(css)
          file_replace(css,
-                      " *= require_self\n */",
-                      " *= require_self\n */\n" \
-                      "@import \"bootstrap\";")
+                      /\n\z/,
+                      "\n\n@import 'bootstrap/scss/bootstrap';\n")
          FileUtils.mv(css,
                       File.join(TEST_APP_ROOT,
                                 'app', 'assets', 'stylesheets',
                                 'application.scss'))
        end
        file_replace(File.join(TEST_APP_ROOT,
-                              'app', 'assets', 'javascripts',
+                              'app', 'javascripts', 'packs',
                               'application.js'),
-                    "//= require_tree .",
-                    "//= require jquery\n" \
-                    "//= require popper\n" \
-                    "//= require bootstrap-sprockets\n" \
-                    "//= require_tree .")
+                    /\n\z/,
+                    "\n\nrequire('bootstrap/dist/js/bootstrap');\n")
        FileUtils.rm_f(File.join(TEST_APP_ROOT,
                                 'app', 'assets', 'stylesheets', 'sample.scss'))
     end

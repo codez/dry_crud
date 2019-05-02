@@ -1,8 +1,8 @@
 #:nodoc:
-REGEXP_ROWS = /<tr.+?<\/tr>/m #:nodoc:
-REGEXP_HEADERS = /<th.+?<\/th>/m #:nodoc:
-REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m #:nodoc:
-REGEXP_ACTION_CELL = /<td class=\"action\"><a .*?href.+?<\/a><\/td>/m #:nodoc:
+REGEXP_ROWS = /<tr.+?<\/tr>/m.freeze
+REGEXP_HEADERS = /<th.+?<\/th>/m.freeze
+REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m.freeze
+REGEXP_ACTION_CELL = /<td class=\"action\"><a .*?href.+?<\/a><\/td>/m.freeze
 
 # A simple test helper to prepare the test database with a CrudTestModel model.
 # This helper is used to test the CrudController and various helpers
@@ -128,8 +128,17 @@ module CrudTestHelper
     routes = @routes
 
     controller.singleton_class.send(:include, routes.url_helpers)
-    controller.view_context_class = Class.new(controller.view_context_class) do
-      include routes.url_helpers
+
+    if controller.respond_to?(:view_context_class)
+      view_context_class = Class.new(controller.view_context_class) do
+        include routes.url_helpers
+      end
+      custom_view_context = Module.new do
+        define_method(:view_context_class) do
+          view_context_class
+        end
+      end
+      controller.extend(custom_view_context)
     end
 
     @routes.draw { resources :crud_test_models }

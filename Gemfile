@@ -1,22 +1,26 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 6.0.0.rc1'
+
+gem 'puma'
 
 gem 'rake'
 gem 'sdoc'
 gem 'rspec-rails'
 
 gem 'haml'
+gem 'jbuilder'
 
-gem 'jquery-rails'
-gem 'sass-rails'
-gem 'coffee-rails'
+gem 'webpacker', '>= 4.0.0.rc.3'
 
 gem 'kaminari'
-gem 'bootstrap'
 
+gem 'sass-rails'
 gem 'turbolinks'
-gem 'jbuilder'
+
+gem 'bootsnap', '>= 1.4.1', require: false
+
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 group :development do
   gem 'web-console'

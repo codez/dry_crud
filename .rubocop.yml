@@ -13,6 +13,7 @@ AllCops:
     - '**/environments/*.rb'
     - '**/config/puma.rb'
     - '**/config/routes.rb'
+    - '**/config/spring.rb'
     - '**/db/migrate/*.rb'
     - '**/bin/*'
     - '**/boot.rb'
@@ -20,6 +21,7 @@ AllCops:
     - '**/application.rb'
     - '**/application_helper.rb'
     - '**/application_controller.rb'
+    - '**/application_job.rb'
     - '**/application_system_test_case.rb'
     - '**/channels/**/*.rb'
     - '**/rails'
@@ -28,6 +30,7 @@ AllCops:
     - '**/Rakefile'
     - dry_crud.gemspec
     - '**/Gemfile'
+    - '**/node_modules/**/*'
 
 Rails:
   Enabled: true

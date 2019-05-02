@@ -73,9 +73,7 @@ module DryCrud
       def boolean_field(attr, html_options = {})
         content_tag(:div, class: 'checkbox') do
           content_tag(:label) do
-            # rubocop:disable Rails/OutputSafety
             detail = html_options.delete(:detail) || '&nbsp;'.html_safe
-            # rubocop:enable Rails/OutputSafety
             safe_join([check_box(attr, html_options), ' ', detail])
           end
         end

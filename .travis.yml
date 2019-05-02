@@ -3,7 +3,6 @@ language: ruby
 cache: bundler
 
 rvm:
-  - 2.3.7
   - 2.5.1
   # activerecord-jdbc is no yet ready for rails 5.2
   # - jruby-9.2.0.0
