@@ -82,6 +82,10 @@ Style/ClassVars:
   Exclude:
     - '**/spec/**/*'
 
+# Rails does not, we do not
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
 RegexpLiteral:
   Enabled: false
 

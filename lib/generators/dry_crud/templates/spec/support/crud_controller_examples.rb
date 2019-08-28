@@ -43,11 +43,9 @@ shared_examples 'crud controller' do |options|
 
   describe_action :get, :index,
                   unless: skip?(options, 'index') do
-
     context '.html',
             format: :html,
             unless: skip?(options, %w[index html]) do
-
       context 'plain',
               unless: skip?(options, %w[index html plain]),
               combine: 'ihp' do
@@ -110,11 +108,9 @@ shared_examples 'crud controller' do |options|
   describe_action :get, :show,
                   id: true,
                   unless: skip?(options, 'show') do
-
     context '.html',
             format: :html,
             unless: skip?(options, %w[show html]) do
-
       context 'plain',
               unless: skip?(options, %w[show html plain]),
               combine: 'sh' do
@@ -254,7 +250,6 @@ shared_examples 'crud controller' do |options|
     context '.json',
             format: :json,
             unless: skip?(options, %w[update json]) do
-
       context 'with valid params',
               unless: skip?(options, %w[update json valid]),
               combine: 'ujv' do
@@ -278,7 +273,6 @@ shared_examples 'crud controller' do |options|
   describe_action :delete, :destroy,
                   id: true,
                   unless: skip?(options, %w[destroy]) do
-
     it 'removes entry from database', perform_request: false do
       expect { perform_request }.to change { model_class.count }.by(-1)
     end
@@ -286,7 +280,6 @@ shared_examples 'crud controller' do |options|
     context '.html',
             format: :html,
             unless: skip?(options, %w[destroy html]) do
-
       context 'successfull', combine: 'dhs' do
         it_is_expected_to_redirect_to_index
         it_is_expected_to_have_flash(:notice)
@@ -301,7 +294,6 @@ shared_examples 'crud controller' do |options|
     context '.json',
             format: :json,
             unless: skip?(options, %w[destroy json]) do
-
       context 'successfull', combine: 'djs' do
         it_is_expected_to_respond(204)
         it { expect(response.body).to be_blank }

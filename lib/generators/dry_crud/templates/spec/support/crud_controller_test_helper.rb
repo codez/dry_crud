@@ -45,7 +45,7 @@ module CrudControllerTestHelper
 
     # treat in-memory entry as committed in order to
     # avoid rollback of internal state.
-    entry.committed! if entry
+    entry&.committed!
   end
 
   def restore_request
