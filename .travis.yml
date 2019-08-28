@@ -4,8 +4,8 @@ cache: bundler
 
 rvm:
   - 2.5.1
-  # activerecord-jdbc is no yet ready for rails 5.2
-  # - jruby-9.2.0.0
+  # jruby config pending
+  # - jruby-9.2.6.0
 
 env:
   - "HAML=1"

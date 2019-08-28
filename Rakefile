@@ -147,10 +147,13 @@ namespace :test do
     task :add_jquery do
       sh "cd #{TEST_APP_ROOT}; yarn add jquery"
 
-      file_replace(File.join(TEST_APP_ROOT, 'app', 'javascripts', 'packs', 'application.js'),
-                   /\n\z/,
-                   "\n\nimport $ from \"jquery\"\n" \
-                   "window.$ = $;\n")
+      app_js = File.join(TEST_APP_ROOT, 'app', 'javascript', 'packs', 'application.js')
+      if File.exist?(app_js) && File.read(app_js) !~ /jquery/
+        file_replace(app_js,
+                    /\n\z/,
+                    "\n\nimport $ from \"jquery\"\n" \
+                    "window.$ = $;\n")
+        end
     end
 
     desc "Use Boostrap in the test app"
@@ -170,7 +173,7 @@ namespace :test do
                                 'application.scss'))
        end
        file_replace(File.join(TEST_APP_ROOT,
-                              'app', 'javascripts', 'packs',
+                              'app', 'javascript', 'packs',
                               'application.js'),
                     /\n\z/,
                     "\n\nrequire('bootstrap/dist/js/bootstrap');\n")

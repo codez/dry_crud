@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 6.0.0.rc1'
+gem 'rails', '~> 6.0.0'
 
 gem 'puma'
 
@@ -11,14 +11,14 @@ gem 'rspec-rails'
 gem 'haml'
 gem 'jbuilder'
 
-gem 'webpacker', '>= 4.0.0.rc.3'
+gem 'webpacker', '~> 4.0'
 
 gem 'kaminari'
 
 gem 'sass-rails'
 gem 'turbolinks'
 
-gem 'bootsnap', '>= 1.4.1', require: false
+gem 'bootsnap', '>= 1.4.2', require: false
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
@@ -28,7 +28,6 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen'
 end
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'simplecov', require: false
 gem 'byebug', platforms: [:mri]

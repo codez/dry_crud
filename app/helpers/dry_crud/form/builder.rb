@@ -88,16 +88,27 @@ module DryCrud
         end
       end
 
+      def integer_field(attr, html_options = {})
+        html_options[:step] ||= 1
+        number_field(attr, html_options)
+      end
+
+      def float_field(attr, html_options = {})
+        html_options[:step] ||= 'any'
+        number_field(attr, html_options)
+      end
+
+      def decimal_field(attr, html_options = {})
+        html_options[:step] ||= (10**-column_property(object, attr, :scale)).to_f
+        number_field(attr, html_options)
+      end
+
       # Customize the standard text area to have 5 rows by default.
       def text_area(attr, html_options = {})
         add_css_class(html_options, 'form-control')
         html_options[:rows] ||= 5
         super(attr, html_options)
       end
-
-      alias integer_field number_field
-      alias float_field number_field
-      alias decimal_field number_field
 
       # Render a select element for a :belongs_to association defined by attr.
       # Use additional html_options for the select element.
