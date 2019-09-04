@@ -1,6 +1,6 @@
 = DRY CRUD
 
-{<img src="https://secure.travis-ci.org/codez/dry_crud.png" />}[http://travis-ci.org/codez/dry_crud]
+{<img src="https://travis-ci.org/codez/dry_crud.svg?branch=master" />}[http://travis-ci.org/codez/dry_crud]
 
 dry_crud generates simple and extendable controllers, views and helpers that support you to DRY up the CRUD code in your Rails projects. List, search, sort, show, create, edit and destroy any model entries in just 5 minutes. Start with these artifacts and build a clean base to efficiently develop your application upon.
 
@@ -33,12 +33,12 @@ To integrate dry_crud into your code, only a few additions are required:
 * Optionally define a +list+ scope in your models to be used in the +index+ action.
 * Optionally define a +options_list+ scope in your models to be used in select dropdowns.
 
-From version 5.0 onwards, the major and minor version numbers will be kept in sync with Rails, and only the matching Rails version is supported. Version 3.0 is compatible 4.2, Version 2.0 and higher are compatible with Rails 4 and Rails 3.2. dry_crud is tested with Ruby 2.2.5 and JRuby. If you are using Ruby 1.9.3, please refer to version 3.0.0.
+From version 5.0 onwards, the major and minor version numbers will be kept in sync with Rails, and only the matching Rails version is supported. Version 3.0 is compatible 4.2, Version 2.0 and higher are compatible with Rails 4 and Rails 3.2. dry_crud is tested with Ruby 2.5. If you are using Ruby 1.9.3, please refer to version 3.0.0.
 
 
 == Background
 
-In most Rails applications, you have some models that require basic CRUD (create, read, update, delete) functionality. There are various possibilities like Rails scaffolding, {Inherited Resources}[https://github.com/josevalim/inherited_resources] or {Rails Admin}[https://github.com/sferik/rails_admin]. Still, various parts in your application remain duplicated. While you might pull up common methods into a common superclass controller, most views still contain very similar code. And then you also have to remember the entire API of these frameworks.
+In most Rails applications, you have some models that require basic CRUD (create, read, update, delete) functionality. There are various possibilities like Rails scaffolding, {Inherited Resources}[https://github.com/activeadmin/inherited_resources] or {Rails Admin}[https://github.com/sferik/rails_admin]. Still, various parts in your application remain duplicated. While you might pull up common methods into a common superclass controller, most views still contain very similar code. And then you also have to remember the entire API of these frameworks.
 
 Enter dry_crud.
 
@@ -50,7 +50,7 @@ dry_crud is a Rails generator. All code resides in your application and is open 
 
 dry_crud does not depend on any other plugins, but easily allows you to integrate them in order to unify the behavior of your CRUD controllers. You might even use the plugins mentioned above to adapt your generated CrudController base class. All classes come with thorough tests that provide you with a solid foundation for implementing your own adaptions.
 
-A basic CSS gets you started with your application's layout. For advanced needs, dry_crud supports the styles and classes used in {Bootstrap 3}[http://getbootstrap.com]. A great design never was so close.
+A basic CSS gets you started with your application's layout. For advanced needs, dry_crud supports the styles and classes used in {Bootstrap 4}[http://getbootstrap.com]. A great design never was so close.
 
 If you find yourself adapting the same parts of dry_crud for your applications over and over, please feel free to {fork me on Github}[http://github.com/codez/dry_crud].
 
@@ -91,7 +91,7 @@ This only displays these four attributes in the table. All other templates, as w
 
 ==== Adapt general behavior
 
-Next, let's adapt a part of the general behavior used in all CRUD controllers. As an example, we include pagination with kaminari[https://github.com/amatsuda/kaminari] in all our overview tables:
+Next, let's adapt a part of the general behavior used in all CRUD controllers. As an example, we include pagination with kaminari[https://github.com/kaminari/kaminari] in all our overview tables:
 
 In <tt>app/controllers/list_controller.rb</tt>, change the list_entries method to
   def list_entries
@@ -193,7 +193,7 @@ Optionally, +has_and_belongs_to_many+ and +has_many+ associations can be rendere
 
 And yes again, the same advice for where to put finder logic applies here as well.
 
-<b>Note:</b> +has_and_belongs_to_many+ and +has_many+ associations are not automatically rendered in a form, you have to explicitly include these attributes. You might also want to stylize the multi-select widget, for example with a {jQuery UI Multiselect}[http://www.quasipartikel.at/multiselect/].
+<b>Note:</b> +has_and_belongs_to_many+ and +has_many+ associations are not automatically rendered in a form, you have to explicitly include these attributes. You might also want to stylize the multi-select widget with a JavaScript library of your choice.
 
 
 === Nested Resources
@@ -269,49 +269,49 @@ All generated files are supposed to provide a reasonable foundation for the CRUD
 
 === Controller
 
-{controller/crud_controller.rb}[http://codez.ch/dry_crud?q=CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and JSON requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on ListController.
+{controller/crud_controller.rb}[https://rubydoc.info/github/codez/dry_crud/master/CrudController]:: Abstract controller providing basic CRUD actions. This implementation mainly follows the one of the Rails scaffolding controller and responses to HTML and JSON requests. Some enhancements were made to ease extendability. Several protected helper methods are there to be (optionally) overriden by subclasses. With the help of additional callbacks, it is possible to hook into the action procedures without overriding the entire method. This class is based on ListController.
 
-{controller/list_controller.rb}[http://codez.ch/dry_crud?q=ListController]:: Abstract controller providing a basic list action. Use this controller if you require read-only functionality. It includes the following modules.
+{controller/list_controller.rb}[https://rubydoc.info/github/codez/dry_crud/master/ListController]:: Abstract controller providing a basic list action. Use this controller if you require read-only functionality. It includes the following modules.
 
-{controller/dry_crud/generic_model.rb}[http://codez.ch/dry_crud?q=DryCrud::GenericModel]:: Work with the model whose name corrsponds to the controller's name.
+{controller/dry_crud/generic_model.rb}[https://rubydoc.info/github/codez/dry_crud/master/DryCrud/GenericModel]:: Work with the model whose name corrsponds to the controller's name.
 
-{controller/dry_crud/nestable.rb}[http://codez.ch/dry_crud?q=DryCrud::Nestable]:: Provides functionality to easily nest controllers/resources.
+{controller/dry_crud/nestable.rb}[https://rubydoc.info/github/codez/dry_crud/master/DryCrud/Nestable]:: Provides functionality to easily nest controllers/resources.
 
-{controller/dry_crud/rememberable.rb}[http://codez.ch/dry_crud?q=DryCrud::Rememberable]:: Remembers certain params of the index action in order to return to the same list after an entry was viewed or edited.
+{controller/dry_crud/rememberable.rb}[https://rubydoc.info/github/codez/dry_crud/master/DryCrud/Rememberable]:: Remembers certain params of the index action in order to return to the same list after an entry was viewed or edited.
 
-{controller/dry_crud/searchable.rb}[http://codez.ch/dry_crud?q=DryCrud::Searchable]:: Search functionality for the index table.
+{controller/dry_crud/searchable.rb}[https://rubydoc.info/github/codez/dry_crud/master/DryCrud/Searchable]:: Search functionality for the index table.
 
-{controller/dry_crud/sortable.rb}[http://codez.ch/dry_crud?q=DryCrud::Sortable]:: Sort functionality for the index table.
+{controller/dry_crud/sortable.rb}[https://rubydoc.info/github/codez/dry_crud/master/DryCrud/Sortable]:: Sort functionality for the index table.
 
-{controller/dry_crud/render_callbacks.rb}[http://codez.ch/dry_crud?q=DryCrud::RenderCallbacks]:: Provide +before_render+ callbacks to controllers.
+{controller/dry_crud/render_callbacks.rb}[https://rubydoc.info/github/codez/dry_crud/master/DryCrud/RenderCallbacks]:: Provide +before_render+ callbacks to controllers.
 
-{controller/dry_crud/responder.rb}[http://codez.ch/dry_crud?q=DryCrud::Responder]:: Responder used by the CrudController to handle the +path_args+.
+{controller/dry_crud/responder.rb}[https://rubydoc.info/github/codez/dry_crud/master/DryCrud/Responder]:: Responder used by the CrudController to handle the +path_args+.
 
 === Helpers
 
-{helpers/dry_crud/form/builder.rb}[http://codez.ch/dry_crud?q=DryCrud::Form::Builder]:: A form builder that automatically selects the corresponding input type for ActiveRecord columns. Input elements are rendered together with a label by default.
+{helpers/dry_crud/form/builder.rb}[https://rubydoc.info/github/codez/dry_crud/master/DryCrud/Form/Builder]:: A form builder that automatically selects the corresponding input type for ActiveRecord columns. Input elements are rendered together with a label by default.
 
-{helpers/dry_crud/form/control.rb}[http://codez.ch/dry_crud?q=DryCrud::Form::Control]:: Representation of a single form control consisting of a label, input field, addon or help text.
+{helpers/dry_crud/form/control.rb}[https://rubydoc.info/github/codez/dry_crud/master/DryCrud/Form/Control]:: Representation of a single form control consisting of a label, input field, addon or help text.
 
-{helpers/dry_crud/table/builder.rb}[http://codez.ch/dry_crud?q=DryCrud::Table::Builder]:: A helper object to easily define tables listing several rows of the same data type.
+{helpers/dry_crud/table/builder.rb}[https://rubydoc.info/github/codez/dry_crud/master/DryCrud/Table/Builder]:: A helper object to easily define tables listing several rows of the same data type.
 
-{helpers/dry_crud/table/col.rb}[http://codez.ch/dry_crud?q=DryCrud::Table::Col]:: Helper class representing a single table column.
+{helpers/dry_crud/table/col.rb}[https://rubydoc.info/github/codez/dry_crud/master/DryCrud/Table/Col]:: Helper class representing a single table column.
 
-{helpers/dry_crud/table/actions.rb}[http://codez.ch/dry_crud?q=DryCrud::Table::Actions]:: Module to add support for uniform CRUD actions in tables.
+{helpers/dry_crud/table/actions.rb}[https://rubydoc.info/github/codez/dry_crud/master/DryCrud/Table/Actions]:: Module to add support for uniform CRUD actions in tables.
 
-{helpers/dry_crud/table/sorting.rb}[http://codez.ch/dry_crud?q=DryCrud::Table::Sorting]:: Module to add support for sort links in table headers.
+{helpers/dry_crud/table/sorting.rb}[https://rubydoc.info/github/codez/dry_crud/master/DryCrud/Table/Sorting]:: Module to add support for sort links in table headers.
 
-{helpers/form_helper.rb}[http://codez.ch/dry_crud?q=FormHelper]:: Create forms to edit models with Crud::FormBuilder. Contains a standardized and a custom definable form.
+{helpers/form_helper.rb}[https://rubydoc.info/github/codez/dry_crud/master/FormHelper]:: Create forms to edit models with Crud::FormBuilder. Contains a standardized and a custom definable form.
 
-{helpers/table_helper.rb}[http://codez.ch/dry_crud?q=TableHelper]:: Create tables to list multiple models with Crud::TableBuilder. Contains a standardized and a custom definable table.
+{helpers/table_helper.rb}[https://rubydoc.info/github/codez/dry_crud/master/TableHelper]:: Create tables to list multiple models with Crud::TableBuilder. Contains a standardized and a custom definable table.
 
-{helpers/format_helper.rb}[http://codez.ch/dry_crud?q=FormatHelper]:: Format attribute and basic values according to their database or Ruby type.
+{helpers/format_helper.rb}[https://rubydoc.info/github/codez/dry_crud/master/FormatHelper]:: Format attribute and basic values according to their database or Ruby type.
 
-{helpers/actions_helper.rb}[http://codez.ch/dry_crud?q=ActionsHelper]:: Uniform action links for the most common crud actions.
+{helpers/actions_helper.rb}[https://rubydoc.info/github/codez/dry_crud/master/ActionsHelper]:: Uniform action links for the most common crud actions.
 
-{helpers/i18n_helper.rb}[http://codez.ch/dry_crud?q=I18nHelper]:: Translation helpers extending Rails' +translate+ helper to support translation inheritance over the controller class hierarchy.
+{helpers/i18n_helper.rb}[https://rubydoc.info/github/codez/dry_crud/master/I18nHelper]:: Translation helpers extending Rails' +translate+ helper to support translation inheritance over the controller class hierarchy.
 
-{helpers/utility_helper.rb}[http://codez.ch/dry_crud?q=UtilityHelper]:: View helpers for basic functions used in various other helpers.
+{helpers/utility_helper.rb}[https://rubydoc.info/github/codez/dry_crud/master/UtilityHelper]:: View helpers for basic functions used in various other helpers.
 
 
 
@@ -372,9 +372,9 @@ app/assets/images/action/*.png:: Some sample action icons from the {Open Icon Li
 
 test/support/crud_test_model.rb:: A dummy model to run CRUD tests against.
 
-{test/support/custom_assertions.rb}[http://codez.ch/dry_crud?q=CustomAssertions]:: A handful of convenient assertions. Include this module into your <tt>test_helper.rb</tt> file.
+{test/support/custom_assertions.rb}[https://rubydoc.info/github/codez/dry_crud/master/CustomAssertions]:: A handful of convenient assertions. Include this module into your <tt>test_helper.rb</tt> file.
 
-{test/support/crud_controller_test_helper.rb}[http://codez.ch/dry_crud?q=CrudControllerTestHelper]:: A module to include into the functional tests for your CrudController subclasses. Contains a handful of CRUD functionality tests for the provided implementation. So for each new CRUD controller, you get 20 tests for free.
+{test/support/crud_controller_test_helper.rb}[https://rubydoc.info/github/codez/dry_crud/master/CrudControllerTestHelper]:: A module to include into the functional tests for your CrudController subclasses. Contains a handful of CRUD functionality tests for the provided implementation. So for each new CRUD controller, you get 20 tests for free.
 
 test/controllers/crud_test_models_controller_test.rb:: Functional tests for the basic CrudController functionality.
 
@@ -385,7 +385,7 @@ test/helpers/*_test.rb:: Tests for the provided helper implementations and a gre
 
 spec/support/crud_controller_examples.rb:: A whole set of shared exampled to include into your controller specs. See <tt>spec/controllers/crud_test_models_controller_spec.rb</tt> for usage. So for each new CRUD controller, you get all the basic specs for free.
 
-{spec/support/crud_controller_test_helper.rb}[http://codez.ch/dry_crud?q=CrudControllerTestHelper::ClassMethods]:: Convenience methods used by the crud controller examples.
+{spec/support/crud_controller_test_helper.rb}[https://rubydoc.info/github/codez/dry_crud/master/CrudControllerTestHelper/ClassMethods]:: Convenience methods used by the crud controller examples.
 
 spec/support/crud_test_model.rb:: A dummy model to run CRUD tests against.
 
