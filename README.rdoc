@@ -21,7 +21,7 @@ We recommend to use dry_crud as a generator as described above for the best unde
 
   rails generate dry_crud:file list/index.html.erb
 
-If a dry_crud file exists in your application, it will be used, if not, the one from the engine is used. This holds for controllers, helpers and view templates.
+If a dry_crud file exists in your application, it will be used, if not, the one from the engine is used. This holds for controllers, helper methods and view templates.
 
 
 == Integration
@@ -46,9 +46,9 @@ Enter dry_crud.
 The main idea of dry_crud is to concentrate basic functionality of your application, like CRUD actions, uniform formatting, forms and tables into specifically extendable units. dry_crud generates various foundation classes that you may browse easily and adapt freely to your application's needs. For each model, you may transparently customize arbitrary parts or just fallback to the general behavior. This applies not only for controllers, but also for view templates and helpers. There is no black box your code depends on. You lay the foundation that fits your application best.
 </b>
 
-dry_crud is a Rails generator. All code resides in your application and is open for you to inspect and to extend. You may pick whatever you consider useful or adapt what is not sufficient. Even if you do not require any CRUD functionality, you might find some helpers simplifying your work. There are no runtime dependencies to the dry_crud gem. Having said this, dry_crud does not want to provide a maximum of functionality that requires a lot of configuration, but rather a clean and lightweight foundation to build your application's requirements upon. This is why dry_crud comes as a generator and not as a Rails plugin.
+dry_crud is a Rails generator. All code resides in your application and is open for you to inspect and to extend. You may pick whatever you consider useful or adapt what is not sufficient. Even if you do not require any CRUD functionality, you might find some helpers simplifying your work. There are no runtime dependencies to the dry_crud gem. Having said this, dry_crud does not want to provide a maximum of functionality that requires a lot of configuration, but rather a clean and lightweight foundation to build your application's requirements upon. This is why dry_crud comes as a generator and not as a Rails extension.
 
-dry_crud does not depend on any other plugins, but easily allows you to integrate them in order to unify the behavior of your CRUD controllers. You might even use the plugins mentioned above to adapt your generated CrudController base class. All classes come with thorough tests that provide you with a solid foundation for implementing your own adaptions.
+dry_crud does not depend on any other gems, but easily allows you to integrate them in order to unify the behavior of your CRUD controllers. You might even use the gems mentioned above to adapt your generated CrudController base class. All classes come with thorough tests that provide you with a solid foundation for implementing your own adaptions.
 
 A basic CSS gets you started with your application's layout. For advanced needs, dry_crud supports the styles and classes used in {Bootstrap 4}[http://getbootstrap.com]. A great design never was so close.
 
@@ -66,7 +66,7 @@ Say you want to manage a +Person+ model. Overwrite the +to_s+ method of your mod
 <tt>app/models/person.rb</tt>:
   class Person
     def to_s
-      "#{lastname} #{firstname}"
+      [lastname, firstname].compact.join(' ')
     end
   end
 
@@ -74,7 +74,7 @@ Then create the following controller. The +permitted_attrs+ define the attribute
 
 <tt>app/controllers/people_controller.rb</tt>:
   class PeopleController < CrudController
-    self.permitted_attrs = [:firstname, :lastname, :birthday, :sex, :city_id]
+    self.permitted_attrs = [:firstname, :lastname, :birthday, :gender, :city_id]
   end
 
 That's it. You have a sortable overview of all people, detail pages and forms to edit and create people. Of course, you may delete people as well. By default, all attributes are displayed and formatted according to their column type wherever they appear. This applies for the input fields as well.
@@ -84,7 +84,7 @@ That's it. You have a sortable overview of all people, detail pages and forms to
 
 Well, maybe there are certain attributes you do not want to display in the people list, or others that are not editable in the form. No problem, simply create a <tt> _list</tt> partial in <tt>app/views/people/_list.html.erb</tt> to customize this:
 
-  <%= crud_table :lastname, :firstname, :city, :sex %>
+  <%= crud_table :lastname, :firstname, :city, :gender %>
 
 This only displays these four attributes in the table. All other templates, as well as the main index view, fallback to the ones in <tt>app/views/crud</tt>.
 
@@ -106,11 +106,11 @@ And we are done. All our controllers inheriting from ListController, including a
 
 ==== Special formatting for selected attributes
 
-Sometimes, the default formatting provided by +format_attr+ will not be sufficient. We have a boolean column +sex+ in our model, but would like to display 'male' or 'female' for it (instead of 'no' or 'yes', which is a bit cryptic). Just define a method in your view helper starting with <tt>format_</tt>, followed by the class and attribute name:
+Sometimes, the default formatting provided by +format_attr+ will not be sufficient. We have a boolean column +female+ in our model (which is quite a legacy nowadays!), but we would like to display 'male' or 'female' for it (instead of 'no' or 'yes', which is a bit cryptic). Just define a method in your view helper starting with <tt>format_</tt>, followed by the class and attribute name:
 
 In <tt>app/helpers/people.rb</tt>:
-  def format_person_sex(person)
-    person.sex ? 'female' : 'male'
+  def format_person_female(person)
+    person.female ? 'female' : 'male'
   end
 
 Should you have attributes with the same name for multiple models that you want to be formatted the same way, you may define a helper method <tt>format_{attr}</tt> for these attributes.
@@ -133,7 +133,7 @@ In <tt>app/controllers/people_controller.rb</tt>:
 When you display computed values in your list table, you may define sort mappings to enable sorting of these columns:
 
 In <tt>app/controllers/people_controller.rb</tt>:
-  self.sort_mappings = {age: 'birthday', city_id: 'cities.name'}
+  self.sort_mappings = { age: 'birthday', city_id: 'cities.name' }
 
 There is also a simple search functionality (based on SQL LIKE queries) implemented in Crud::Searchable. Define an array of columns in your controller's +search_columns+ class variable to make the entries searchable by these fields:
 
@@ -151,17 +151,17 @@ dry_crud provides two builder classes for update/create forms and tables for dis
 
 The following code defines a table with some attribute columns for a list of same-type entries. Columns get a header corresponding to the attribute name:
   <%= plain_table(@people) do |t|
-        t.sortable_attrs :lastname, :firstname
+        t.sortable_attrs(:lastname, :firstname)
       end %>
 
 If entries is empty, a basic 'No entries found' message is rendered instead of the table.
 
 To render custom columns, use the +col+ method with an appropriate block:
   <%= plain_table(@people) do |t|
-        t.sortable_attrs :lastname, :firstname
-        t.col('', class: 'center') {|entry| image_tag(entry.picture) }
-        t.attr :street
-        t.col('Map') {|entry| link_to(entry.city, "http://maps.google.com/?q=#{entry.city}" }
+        t.sortable_attrs(:lastname, :firstname)
+        t.col('', class: 'center') { |entry| image_tag(entry.picture) }
+        t.attr(:street)
+        t.col('Map') { |entry| link_to(entry.city, "http://maps.google.com/?q=#{entry.city}" }
       end %>
 
 For views of subclasses of ListController, you can directly use the +crud_table+ helper method, where you do not have to pass the <tt>@people</tt> list explicitly and actions are added automatically.
@@ -175,9 +175,9 @@ Forms work very similar. In the most simple case, you just have to specify which
 Of course, custom input fields may be defined as well:
   <%= standard_form(@person, url: custom_update_person_path(@person.id)) do |f| %>
     <%= f.labeled_input_fields :firstname, :lastname %>
-    <%= f.labeled(:sex) do %>
-      <%= f.radio_button :sex, true %> female
-      <%= f.radio_button :sex, false %> male
+    <%= f.labeled(:female) do %>
+      <%= f.radio_button :female, true %> female
+      <%= f.radio_button :female, false %> male
     <% end %>
     <%= f.labeled_integer_field :age %>
     <%= f.labeled_file_field :picture %>
@@ -221,8 +221,8 @@ In <tt>app/controllers/people_controller.rb</tt>:
 
   def delete_picture
     if !perform_delete_picture(entry.picture)
-      flash.alert = 'Could not delete picture'
-      false
+      flash[:alert] = 'Could not delete picture'
+      throw :abort
     end
   end
 

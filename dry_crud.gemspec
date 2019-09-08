@@ -10,7 +10,7 @@ DRY_CRUD_GEMSPEC = Gem::Specification.new do |spec|
 
   spec.author   = 'Pascal Zumkehr'
   spec.email    = 'spam@codez.ch'
-  spec.homepage = 'http://codez.ch/dry_crud'
+  spec.homepage = 'http://github.com/codez/dry_crud'
 
   spec.summary = <<-END
 Generates DRY and specifically extendable CRUD controller, views and helpers
