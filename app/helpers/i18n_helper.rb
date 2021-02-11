@@ -16,7 +16,7 @@ module I18nHelper
     partial = defined?(@virtual_path) ? @virtual_path.gsub(/.*\/_?/, '') : nil
     defaults = inheritable_translation_defaults(key, partial)
     variables[:default] ||= defaults
-    t(defaults.shift, variables)
+    t(defaults.shift, **variables)
   end
 
   alias ti translate_inheritable
@@ -34,7 +34,7 @@ module I18nHelper
                                :"global.associations.#{key}"]
       t(association_owner_key(assoc, key), variables)
     else
-      t("global.associations.#{key}", variables)
+      t("global.associations.#{key}", **variables)
     end
   end
 
