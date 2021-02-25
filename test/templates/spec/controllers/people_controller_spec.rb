@@ -26,9 +26,7 @@ describe PeopleController do
     it 'is ordered by default scope' do
       expected = Person.includes(city: :country)
                        .order('people.name, countries.code, cities.name')
-      if expected.respond_to?(:references)
-        expected = expected.references(:cities, :countries)
-      end
+      expected = expected.references(:cities, :countries) if expected.respond_to?(:references)
       entries == expected
     end
 

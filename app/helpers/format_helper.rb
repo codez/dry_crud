@@ -10,10 +10,10 @@ module FormatHelper
   # Formats a basic value based on its Ruby class.
   def f(value)
     case value
-    when Float, BigDecimal then
+    when Float, BigDecimal
       number_with_precision(value, precision: t('number.format.precision'),
                                    delimiter: t('number.format.delimiter'))
-    when Integer then
+    when Integer
       number_with_delimiter(value, delimiter: t('number.format.delimiter'))
     when Date   then l(value)
     when Time   then "#{l(value.to_date)} #{l(value, format: :time)}"
@@ -40,7 +40,7 @@ module FormatHelper
   # to your block.
   def simple_list(items, ul_options = {})
     content_tag_nested(:ul, items, ul_options) do |item|
-      content_tag(:li, block_given? ? yield(item) : f(item))
+      tag.li(block_given? ? yield(item) : f(item))
     end
   end
 
@@ -119,8 +119,8 @@ module FormatHelper
     when :time    then l(val, format: :time)
     when :date    then f(val.to_date)
     when :datetime, :timestamp then f(val.time)
-    when :text    then simple_format(h(val))
-    when :decimal then
+    when :text then simple_format(h(val))
+    when :decimal
       number_with_precision(val.to_s.to_f,
                             precision: column_property(obj, attr, :scale),
                             delimiter: t('number.format.delimiter'))

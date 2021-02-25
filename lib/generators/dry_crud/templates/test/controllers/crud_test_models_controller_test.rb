@@ -295,7 +295,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   def test_models_label
     assert_equal 'Crud Test Models', @controller.models_label
-    assert_equal 'Crud Test Model', @controller.models_label(false)
+    assert_equal 'Crud Test Model', @controller.models_label(plural: false)
   end
 
   private

@@ -57,16 +57,16 @@ class FormHelperTest < ActionView::TestCase
     assert_match(/input .*?type="date"
                         .*?name="crud_test_model\[birthdate\]"/x, f)
     assert_match(/input .*?type="number"
-                        .*?value=\"9\"
+                        .*?value="9"
                         .*?name="crud_test_model\[children\]"/x, f)
     assert_match(/input .*?type="checkbox"
                         .*?name="crud_test_model\[human\]"/x, f)
-    assert_match(/button\ .*?type="submit".*\>
+    assert_match(/button\ .*?type="submit".*>
                   #{t('global.button.save')}
-                  \<\/button\>/x, f)
-    assert_match(/\<a\ .*href="\/somewhere".*\>
+                  <\/button>/x, f)
+    assert_match(/<a\ .*href="\/somewhere".*>
                   #{t('global.button.cancel')}
-                  \<\/a\>/x, f)
+                  <\/a>/x, f)
   end
 
   test 'standard form with errors' do
@@ -88,8 +88,8 @@ class FormHelperTest < ActionView::TestCase
                         .*?name="_method"
                         .*?value="(patch|put)"/x, f)
     assert_match(/div[^>]* id='error_explanation'/, f)
-    assert_match(/div\ class="form-group\ has-error"\>.*?
-                  \<input .*?type="text"
+    assert_match(/div\ class="form-group\ has-error">.*?
+                  <input .*?type="text"
                           .*?name="crud_test_model\[name\]"/x, f)
     assert_match(/input .*?value="1910-01-01"
                         .*?type="date"

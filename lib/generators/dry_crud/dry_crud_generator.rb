@@ -1,6 +1,6 @@
 begin
   require 'generators/dry_crud/dry_crud_generator_base'
-rescue LoadError => _e # rubocop:disable Lint/HandleExceptions
+rescue LoadError => _e
   # ok, we are in the rake task
 end
 

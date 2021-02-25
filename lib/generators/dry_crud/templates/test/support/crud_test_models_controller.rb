@@ -9,7 +9,7 @@ class CrudTestModelsController < CrudController #:nodoc:
   self.permitted_attrs = [:name, :email, :password, :whatever, :children,
                           :companion_id, :rating, :income, :birthdate,
                           :gets_up_at, :last_seen, :human, :remarks,
-                          other_ids: []]
+                          { other_ids: [] }]
 
   before_create :possibly_redirect
   before_create :handle_name
@@ -54,9 +54,7 @@ class CrudTestModelsController < CrudController #:nodoc:
 
   def build_entry
     entry = super
-    if params[model_identifier]
-      entry.companion_id = model_params.delete(:companion_id)
-    end
+    entry.companion_id = model_params.delete(:companion_id) if params[model_identifier]
     entry
   end
 
@@ -100,7 +98,7 @@ class CrudTestModelsController < CrudController #:nodoc:
     end
   end
 
-  def respond_to_missing?(sym, include_private = false)
+  def respond_to_missing?(sym, include_private = false) # rubocop:disable Style/OptionalBooleanParameter
     sym.to_s.starts_with?(HANDLE_PREFIX) || super
   end
 

@@ -23,9 +23,7 @@ module Admin
       super
       expected = test_entry.country.cities.includes(:country)
                            .order('countries.code, cities.name')
-      if expected.respond_to?(:references)
-        expected = expected.references(:countries)
-      end
+      expected = expected.references(:countries) if expected.respond_to?(:references)
       assert_equal expected.to_a, entries.to_a
 
       assert_equal [:admin, test_entry.country], @controller.send(:parents)

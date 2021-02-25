@@ -14,7 +14,7 @@ module ActionsHelper
 
   # Outputs an icon for an action with an optional label.
   def action_icon(icon, label = nil)
-    html = content_tag(:span, '', class: "icon icon-#{icon}")
+    html = tag.span('', class: "icon icon-#{icon}")
     html << ' ' << label if label
     html
   end

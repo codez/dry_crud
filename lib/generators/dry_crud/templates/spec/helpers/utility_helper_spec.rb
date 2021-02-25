@@ -33,7 +33,7 @@ describe UtilityHelper do
   describe '#content_tag_nested' do
 
     it 'escapes safe content' do
-      html = content_tag_nested(:div, %w[a b]) { |e| content_tag(:span, e) }
+      html = content_tag_nested(:div, %w[a b]) { |e| tag.span(e) }
       expect(html).to be_html_safe
       expect(html).to eq('<div><span>a</span><span>b</span></div>')
     end
@@ -56,7 +56,7 @@ describe UtilityHelper do
     end
 
     it 'collects contents for array' do
-      html = safe_join(%w[a b]) { |e| content_tag(:span, e) }
+      html = safe_join(%w[a b]) { |e| tag.span(e) }
       expect(html).to eq('<span>a</span><span>b</span>')
     end
   end

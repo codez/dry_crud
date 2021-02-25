@@ -21,9 +21,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_equal 2, entries.size
     expected = Person.includes(city: :country)
                      .order('people.name, countries.code, cities.name')
-    if expected.respond_to?(:references)
-      expected = expected.references(:cities, :countries)
-    end
+    expected = expected.references(:cities, :countries) if expected.respond_to?(:references)
     assert_equal expected.to_a, entries
 
     assert_equal [], @controller.send(:parents)

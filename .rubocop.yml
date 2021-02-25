@@ -3,6 +3,7 @@ require:
 
 AllCops:
   DisplayCopNames: true
+  NewCops: enable
   Exclude:
     # - test/test_app/**/*
     - rdoc/**/*
@@ -20,6 +21,7 @@ AllCops:
     - '**/db/migrate/*.rb'
     - '**/bin/*'
     - '**/boot.rb'
+    - '**/config.ru'
     - '**/environment.rb'
     - '**/application.rb'
     - '**/application_helper.rb'
@@ -70,6 +72,9 @@ Layout/EmptyLinesAroundBlockBody:
   Exclude:
     - '**/*_spec.rb'
 
+Rails/HelperInstanceVariable:
+  Enabled: false
+
 Rails/LexicallyScopedActionFilter:
   Enabled: false
 
@@ -86,14 +91,14 @@ Style/ClassVars:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-RegexpLiteral:
+Style/RegexpLiteral:
   Enabled: false
 
-Attr:
+Style/Attr:
   Enabled: false
 
-IfUnlessModifier:
+Style/IfUnlessModifier:
   Enabled: false
 
-GuardClause:
+Style/GuardClause:
   Enabled: false

@@ -34,7 +34,7 @@ describe TableHelper do
       it { is_expected.to be_html_safe }
 
       it 'handles empty data' do
-        is_expected.to match(/div class=.table.\>.+\<\/div\>/)
+        is_expected.to match(/div class=.table.>.+<\/div>/)
       end
     end
 
@@ -46,7 +46,7 @@ describe TableHelper do
       it { is_expected.to be_html_safe }
 
       it 'renders table' do
-        is_expected.to match(/^\<table.*\<\/table\>$/)
+        is_expected.to match(/^<table.*<\/table>$/)
       end
     end
   end
@@ -87,7 +87,7 @@ describe TableHelper do
         with_test_routing do
           list_table do |t|
             t.attrs :name, :children, :companion_id
-            t.col('head') { |e| content_tag(:span, e.income.to_s) }
+            t.col('head') { |e| tag.span(e.income.to_s) }
           end
         end
       end
@@ -113,7 +113,7 @@ describe TableHelper do
       subject do
         with_test_routing do
           list_table(:name, :children, :companion_id) do |t|
-            t.col('head') { |e| content_tag(:span, e.income.to_s) }
+            t.col('head') { |e| tag.span(e.income.to_s) }
           end
         end
       end
@@ -223,7 +223,7 @@ describe TableHelper do
         with_test_routing do
           crud_table do |t|
             t.attrs :name, :children, :companion_id
-            t.col('head') { |e| content_tag(:span, e.income.to_s) }
+            t.col('head') { |e| tag.span(e.income.to_s) }
           end
         end
       end
@@ -245,7 +245,7 @@ describe TableHelper do
       subject do
         with_test_routing do
           crud_table(:name, :children, :companion_id) do |t|
-            t.col('head') { |e| content_tag(:span, e.income.to_s) }
+            t.col('head') { |e| tag.span(e.income.to_s) }
           end
         end
       end

@@ -8,7 +8,7 @@ module DryCrud
 
       attr_reader :builder, :attr, :args, :options, :addon, :help
 
-      delegate :content_tag, :object,
+      delegate :tag, :object,
                to: :builder
 
       # Html displayed to mark an input as required.
@@ -72,9 +72,9 @@ module DryCrud
       def labeled
         errors = errors? ? ' has-error' : ''
 
-        content_tag(:div, class: "form-group#{errors}") do
+        tag.div(class: "form-group#{errors}") do
           builder.label(attr, caption, class: 'col-md-2 control-label') +
-            content_tag(:div, content, class: "col-md-#{span}")
+            tag.div(content, class: "col-md-#{span}")
         end
       end
 
@@ -137,7 +137,6 @@ module DryCrud
 
       # Defines the field method to use based on the attribute
       # type, association or name.
-      # rubocop:disable PerceivedComplexity
       def detect_field_method
         if type == :text
           :text_area
@@ -155,7 +154,6 @@ module DryCrud
           :text_field
         end
       end
-      # rubocop:enable PerceivedComplexity
 
       # The column type of the attribute.
       def type

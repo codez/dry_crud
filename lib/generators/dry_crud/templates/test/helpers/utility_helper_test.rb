@@ -10,7 +10,7 @@ class UtilityHelperTest < ActionView::TestCase
   teardown :reset_db
 
   test 'content_tag_nested escapes safe correctly' do
-    html = content_tag_nested(:div, %w[a b]) { |e| content_tag(:span, e) }
+    html = content_tag_nested(:div, %w[a b]) { |e| tag.span(e) }
     assert_equal '<div><span>a</span><span>b</span></div>', html
   end
 
@@ -30,7 +30,7 @@ class UtilityHelperTest < ActionView::TestCase
   end
 
   test 'safe_join with block' do
-    html = safe_join(%w[a b]) { |e| content_tag(:span, e) }
+    html = safe_join(%w[a b]) { |e| tag.span(e) }
     assert_equal '<span>a</span><span>b</span>', html
   end
 

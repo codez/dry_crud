@@ -18,9 +18,7 @@ describe Admin::CitiesController do
     it 'is ordered by default scope' do
       expected = test_entry.country.cities.includes(:country)
                            .order('countries.code, cities.name')
-      if expected.respond_to?(:references)
-        expected = expected.references(:countries)
-      end
+      expected = expected.references(:countries) if expected.respond_to?(:references)
       entries == expected
     end
 
@@ -71,7 +69,7 @@ describe Admin::CitiesController do
 
       it 'redirects to referer', perform_request: false do
         ref = @request.env['HTTP_REFERER'] =
-                admin_country_city_url(test_entry.country, test_entry)
+          admin_country_city_url(test_entry.country, test_entry)
         perform_request
         is_expected.to redirect_to(ref)
       end

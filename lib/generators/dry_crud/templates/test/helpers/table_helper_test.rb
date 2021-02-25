@@ -33,7 +33,7 @@ class TableHelperTest < ActionView::TestCase
   test 'empty table renders message' do
     result = plain_table_or_message([]) {}
     assert result.html_safe?
-    assert_match(/\<div class=["']table["']\>.*\<\/div\>/, result)
+    assert_match(/<div class=["']table["']>.*<\/div>/, result)
   end
 
   test 'non empty table renders table' do
@@ -41,7 +41,7 @@ class TableHelperTest < ActionView::TestCase
       t.attrs :size, :upcase
     end
     assert result.html_safe?
-    assert_match(/^\<table.*\<\/table\>$/, result)
+    assert_match(/^<table.*<\/table>$/, result)
   end
 
   test 'table with attrs' do
@@ -84,7 +84,7 @@ class TableHelperTest < ActionView::TestCase
     table = with_test_routing do
       list_table do |t|
         t.attrs :name, :children, :companion_id
-        t.col('head') { |e| content_tag :span, e.income.to_s }
+        t.col('head') { |e| tag.span(e.income.to_s) }
       end
     end
 
@@ -99,7 +99,7 @@ class TableHelperTest < ActionView::TestCase
 
     table = with_test_routing do
       list_table :name, :children, :companion_id do |t|
-        t.col('head') { |e| content_tag :span, e.income.to_s }
+        t.col('head') { |e| tag.span(e.income.to_s) }
       end
     end
 
@@ -181,7 +181,7 @@ class TableHelperTest < ActionView::TestCase
     table = with_test_routing do
       crud_table do |t|
         t.attrs :name, :children, :companion_id
-        t.col('head') { |e| content_tag :span, e.income.to_s }
+        t.col('head') { |e| tag.span(e.income.to_s) }
       end
     end
 
@@ -196,7 +196,7 @@ class TableHelperTest < ActionView::TestCase
 
     table = with_test_routing do
       crud_table :name, :children, :companion_id do |t|
-        t.col('head') { |e| content_tag :span, e.income.to_s }
+        t.col('head') { |e| tag.span(e.income.to_s) }
       end
     end
 

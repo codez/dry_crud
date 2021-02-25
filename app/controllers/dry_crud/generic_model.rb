@@ -33,7 +33,7 @@ module DryCrud
 
     # Get the instance variable named after the +model_class+.
     # If the collection variable is required, pass true as the second argument.
-    def model_ivar_get(plural = false)
+    def model_ivar_get(plural: false)
       name = ivar_name(model_class)
       name = name.pluralize if plural
       name = :"@#{name}"
@@ -72,7 +72,7 @@ module DryCrud
       end
 
       # A human readable plural name of the model.
-      def models_label(plural = true)
+      def models_label(plural: true)
         opts = { count: (plural ? 3 : 1) }
         opts[:default] = model_class.model_name.human.titleize
         opts[:default] = opts[:default].pluralize if plural

@@ -16,7 +16,7 @@ module DryCrud
 
       attr_reader :entries, :cols, :options, :template
 
-      delegate :content_tag, :format_attr, :column_type, :association, :dom_id,
+      delegate :tag, :format_attr, :column_type, :association, :dom_id,
                :captionize, :add_css_class, :content_tag_nested,
                to: :template
 
@@ -64,8 +64,8 @@ module DryCrud
 
       # Renders the table as HTML.
       def to_html
-        content_tag :table, options do
-          content_tag(:thead, html_header) +
+        tag.table(options) do
+          tag.thead(html_header) +
             content_tag_nested(:tbody, entries) { |e| html_row(e) }
         end
       end

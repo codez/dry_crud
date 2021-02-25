@@ -4,7 +4,7 @@ module DryCrud
     # Helper class to store column information.
     class Col #:nodoc:
 
-      delegate :content_tag, :capture, to: :template
+      delegate :tag, :capture, to: :template
 
       attr_reader :header, :html_options, :template, :block
 

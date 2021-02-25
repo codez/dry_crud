@@ -21,7 +21,7 @@ module DryCrud
       attr_reader :template
 
       delegate :association, :column_type, :column_property, :captionize,
-               :ti, :ta, :link_to, :content_tag, :safe_join, :capture,
+               :ti, :ta, :link_to, :tag, :safe_join, :capture,
                :add_css_class, :assoc_and_id_attr,
                to: :template
 
@@ -71,8 +71,8 @@ module DryCrud
 
       # Render a boolean field.
       def boolean_field(attr, html_options = {})
-        content_tag(:div, class: 'checkbox') do
-          content_tag(:label) do
+        tag.div(class: 'checkbox') do
+          tag.label do
             detail = html_options.delete(:detail) || '&nbsp;'.html_safe
             safe_join([check_box(attr, html_options), ' ', detail])
           end
@@ -131,7 +131,7 @@ module DryCrud
         end
       end
 
-      # rubocop:disable PredicateName
+      # rubocop:disable Naming/PredicateName
 
       # Render a multi select element for a :has_many or
       # :has_and_belongs_to_many association defined by attr.
@@ -144,7 +144,7 @@ module DryCrud
         add_css_class(html_options, 'multiselect')
         belongs_to_field(attr, html_options)
       end
-      # rubocop:enable PredicateName
+      # rubocop:enable Naming/PredicateName
 
       ### VARIOUS FORM ELEMENTS
 
@@ -157,25 +157,25 @@ module DryCrud
 
       # Renders the given content with an addon.
       def with_addon(content, addon)
-        content_tag(:div, class: 'input-group') do
-          html = content_tag(:span, addon, class: 'input-group-text')
-          content + content_tag(:div, html, class: 'input-group-append')
+        tag.div(class: 'input-group') do
+          html = tag.span(addon, class: 'input-group-text')
+          content + tag.div(html, class: 'input-group-append')
         end
       end
 
       # Renders a static text where otherwise form inputs appear.
       def static_text(text)
-        content_tag(:p, text, class: 'form-control-static')
+        tag.p(text, class: 'form-control-static')
       end
 
       # Generates a help block for fields
       def help_block(text)
-        content_tag(:p, text, class: 'help-block')
+        tag.p(text, class: 'help-block')
       end
 
       # Render a submit button and a cancel link for this form.
       def standard_actions(submit_label = ti('button.save'), cancel_url = nil)
-        content_tag(:div, class: 'col-md-offset-2 col-md-8') do
+        tag.div(class: 'col-md-offset-2 col-md-8') do
           safe_join([submit_button(submit_label),
                      cancel_link(cancel_url)],
                     ' ')
@@ -258,7 +258,7 @@ module DryCrud
       end
 
       # Overriden to fullfill contract with method_missing 'labeled_' methods.
-      def respond_to_missing?(name, include_private = false)
+      def respond_to_missing?(name, include_private = false) # rubocop:disable Style/OptionalBooleanParameter
         labeled_field_method?(name).present? || super
       end
 

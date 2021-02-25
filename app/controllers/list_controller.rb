@@ -32,7 +32,7 @@ class ListController < ApplicationController
   # Helper method to access the entries to be displayed in the current index
   # page in an uniform way.
   def entries
-    model_ivar_get(true) || model_ivar_set(list_entries)
+    model_ivar_get(plural: true) || model_ivar_set(list_entries)
   end
 
   # The base relation used to filter the entries.

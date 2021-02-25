@@ -36,9 +36,7 @@ shared_examples 'crud controller' do |options|
 
   before do
     m = RSpec.current_example.metadata
-    if m[:perform_request] != false && m[:action] && m[:method]
-      perform_combined_request
-    end
+    perform_combined_request if m[:perform_request] != false && m[:action] && m[:method]
   end
 
   describe_action :get, :index,
@@ -144,7 +142,7 @@ shared_examples 'crud controller' do |options|
             unless: skip?(options, %w[new plain]),
             combine: 'new' do
       it_is_expected_to_respond
-      it_is_expected_to_persist_entry(false)
+      it_is_expected_to_persist_entry(persist: false)
     end
 
     context 'with params',
@@ -179,7 +177,7 @@ shared_examples 'crud controller' do |options|
               failing: true,
               unless: skip?(options, %w[create html invalid]),
               combine: 'chi' do
-        it_is_expected_to_persist_entry(false)
+        it_is_expected_to_persist_entry(persist: false)
         it_is_expected_to_set_attrs(:new)
         it_is_expected_to_not_have_flash(:notice)
       end
@@ -205,7 +203,7 @@ shared_examples 'crud controller' do |options|
         it_is_expected_to_respond(422)
         it_is_expected_to_set_attrs(:new)
         it_is_expected_to_render_json
-        it_is_expected_to_persist_entry(false)
+        it_is_expected_to_persist_entry(persist: false)
       end
     end
   end

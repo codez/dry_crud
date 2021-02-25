@@ -2,7 +2,7 @@
 REGEXP_ROWS = /<tr.+?<\/tr>/m.freeze
 REGEXP_HEADERS = /<th.+?<\/th>/m.freeze
 REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m.freeze
-REGEXP_ACTION_CELL = /<td class=\"action\"><a .*?href.+?<\/a><\/td>/m.freeze
+REGEXP_ACTION_CELL = /<td class="action"><a .*?href.+?<\/a><\/td>/m.freeze
 
 # A simple test helper to prepare the test database with a CrudTestModel model.
 # This helper is used to test the CrudController and various helpers

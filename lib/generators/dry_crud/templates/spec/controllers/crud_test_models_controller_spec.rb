@@ -50,7 +50,7 @@ describe CrudTestModelsController do
     end
 
     it 'has models_label singular' do
-      expect(controller.models_label(false)).to eq('Crud Test Model')
+      expect(controller.models_label(plural: false)).to eq('Crud Test Model')
     end
   end
 
@@ -245,7 +245,7 @@ describe CrudTestModelsController do
 
       context 'plain', combine: 'chcp' do
         it_is_expected_to_respond
-        it_is_expected_to_persist_entry(false)
+        it_is_expected_to_persist_entry(persist: false)
         it_is_expected_to_have_flash(:alert)
 
         it 'sets entry name' do
@@ -292,7 +292,7 @@ describe CrudTestModelsController do
 
         context 'plain', combine: 'chip' do
           it_is_expected_to_respond
-          it_is_expected_to_persist_entry(false)
+          it_is_expected_to_persist_entry(persist: false)
           it_is_expected_to_not_have_flash(:notice)
           it_is_expected_to_not_have_flash(:alert)
 
@@ -316,7 +316,7 @@ describe CrudTestModelsController do
 
         context 'plain', combine: 'cjcb' do
           it_is_expected_to_respond(422)
-          it_is_expected_to_persist_entry(false)
+          it_is_expected_to_persist_entry(persist: false)
           it_is_expected_to_not_have_flash(:notice)
           it_is_expected_to_not_have_flash(:alert)
           it_is_expected_to_render_json

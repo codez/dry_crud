@@ -97,7 +97,7 @@ describe FormHelper do
 
       it do
         is_expected.to match(/input .*?type="number"
-                                    .*?value=\"9\"
+                                    .*?value="9"
                                     .*?name="crud_test_model\[children\]"/x)
       end
 
@@ -132,8 +132,8 @@ describe FormHelper do
       end
 
       it do
-        is_expected.to match(/div\ class="form-group\ has-error"\>.*?
-                              \<input .*?type="text"
+        is_expected.to match(/div\ class="form-group\ has-error">.*?
+                              <input .*?type="text"
                                       .*?name="crud_test_model\[name\]"/x)
       end
 
@@ -191,7 +191,7 @@ describe FormHelper do
     end
 
     it do
-      is_expected.to match(/input .*?type="datetime\-local"
+      is_expected.to match(/input .*?type="datetime-local"
                                   .*?name="crud_test_model\[last_seen\]"/x)
     end
 

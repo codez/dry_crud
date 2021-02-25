@@ -221,7 +221,7 @@ class CrudController < ListController
   # A label for the current entry, including the model name.
   def full_entry_label
     # rubocop:disable Rails/OutputSafety
-    "#{models_label(false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
+    "#{models_label(plural: false)} <i>#{ERB::Util.h(entry)}</i>".html_safe
     # rubocop:enable Rails/OutputSafety
   end
 

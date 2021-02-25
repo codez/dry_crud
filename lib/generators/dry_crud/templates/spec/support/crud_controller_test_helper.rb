@@ -117,7 +117,7 @@ module CrudControllerTestHelper
       it 'sets params as entry attributes' do
         attrs = send("#{action}_entry_attrs")
         actual = {}
-        attrs.keys.each do |key|
+        attrs.each_key do |key|
           actual[key] = entry.attributes[key.to_s]
         end
         expect(actual).to eq(attrs)
@@ -156,11 +156,11 @@ module CrudControllerTestHelper
     end
 
     # Test that the current entry is persistend and valid, or not.
-    def it_is_expected_to_persist_entry(bool = true)
+    def it_is_expected_to_persist_entry(persist: true)
       context 'entry' do
         subject { entry }
 
-        if bool
+        if persist
           it { is_expected.not_to be_new_record }
           it { is_expected.to be_valid }
         else
