@@ -1,3 +1,6 @@
+require:
+  - rubocop-rails
+
 AllCops:
   DisplayCopNames: true
   Exclude:
@@ -31,9 +34,6 @@ AllCops:
     - dry_crud.gemspec
     - '**/Gemfile'
     - '**/node_modules/**/*'
-
-Rails:
-  Enabled: true
 
 Metrics/ClassLength:
   Max: 200

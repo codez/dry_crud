@@ -47,12 +47,13 @@ namespace :test do
     desc "Create a rails test application"
     task :create do
       unless File.exist?(TEST_APP_ROOT)
-        sh "rails new #{TEST_APP_ROOT} --skip-bundle --skip-bootsnap"
+        sh "rails new #{TEST_APP_ROOT} --skip-bundle --skip-spring"
         file_replace(File.join(TEST_APP_ROOT, 'Gemfile'),
                      /\z/,
                      File.read(File.join(File.dirname(__FILE__),
                                'test', 'templates', 'Gemfile.append')))
         sh "cd #{TEST_APP_ROOT}; bundle install --local" # update Gemfile.lock
+        sh "cd #{TEST_APP_ROOT}; rails webpacker:install"
         sh "cd #{TEST_APP_ROOT}; rails g rspec:install"
         FileUtils.rm_f(File.join(TEST_APP_ROOT,
                                  'test', 'performance', 'browsing_test.rb'))

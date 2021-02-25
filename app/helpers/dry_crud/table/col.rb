@@ -22,12 +22,12 @@ module DryCrud
 
       # Renders the header cell of the Col.
       def html_header
-        content_tag(:th, header, html_options)
+        tag.th(header, **html_options)
       end
 
       # Renders a table cell for the given entry.
       def html_cell(entry)
-        content_tag(:td, content(entry), html_options)
+        tag.td(content(entry), **html_options)
       end
 
     end

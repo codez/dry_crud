@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 6.0.0'
+gem 'rails', '~> 6.1.0'
 
 gem 'puma'
 
@@ -36,7 +36,6 @@ gem 'byebug', platforms: [:mri]
 
 platforms :ruby do
   gem 'sqlite3'
-  gem 'mini_racer'
 end
 
 platforms :jruby do
