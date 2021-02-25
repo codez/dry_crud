@@ -1,11 +1,19 @@
 language: ruby
 
+dist: focal
+
+services:
+  - postgresql
+
 cache: bundler
 
 rvm:
-  - 2.5.1
+  - 2.5
+  - 2.6
+  - 2.7
+  - 3.0
   # jruby config pending
-  # - jruby-9.2.6.0
+  # - jruby
 
 env:
   - "HAML=1"

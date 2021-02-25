@@ -26,7 +26,7 @@ namespace :test do
   desc "Run Test::Unit tests"
   Rake::TestTask.new(unit: 'test:app:init') do |test|
     test.libs << "test/test_app/test"
-    test.test_files = Dir["test/test_app/test/**/*_test.rb"]
+    test.test_files = FileList["test/test_app/test/**/*_test.rb"]
     test.verbose = true
   end
 
@@ -65,8 +65,8 @@ namespace :test do
                      "require 'simplecov'\nSimpleCov.start do\n" +
                      "  coverage_dir 'coverage/spec'\nend\n")
         file_replace(File.join(TEST_APP_ROOT, 'spec', 'rails_helper.rb'),
-          "# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }",
-          "Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }")
+          "# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }",
+          "Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }")
       end
     end
 
