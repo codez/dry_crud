@@ -78,7 +78,7 @@ namespace :test do
 
       DryCrudGenerator.new([],
                            { force: true,
-                             templates: ENV['HAML'] ? 'haml' : 'erb',
+                             templates: %w[1 yes true].include?(ENV['HAML']) ? 'haml' : 'erb',
                              tests: 'all' },
                            destination_root: TEST_APP_ROOT).invoke_all
     end
@@ -99,7 +99,7 @@ namespace :test do
       FileUtils.rm_f(File.join(TEST_APP_ROOT, 'public', 'index.html'))
 
       # remove unused template type, erb or haml
-      exclude = ENV['HAML'] ? 'erb' : 'haml'
+      exclude = %w[1 yes true].include?(ENV['HAML']) ? 'erb' : 'haml'
       Dir.glob(File.join(TEST_APP_ROOT,
                          'app', 'views', '**', "*.#{exclude}")).each do |f|
         FileUtils.rm(f)

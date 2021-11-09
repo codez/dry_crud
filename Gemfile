@@ -25,6 +25,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 group :development do
   gem 'web-console'
   gem 'listen'
+  gem 'rubocop'
+  gem 'rubocop-rails'
   gem 'spring'
   gem 'spring-watcher-listen'
 end

@@ -1,4 +1,4 @@
-#:nodoc:
+# :nodoc:
 REGEXP_ROWS = /<tr.+?<\/tr>/m.freeze
 REGEXP_HEADERS = /<th.+?<\/th>/m.freeze
 REGEXP_SORT_HEADERS = /<th.*?><a .*?sort_dir=asc.*?>.*?<\/a><\/th>/m.freeze
@@ -150,15 +150,15 @@ module CrudTestHelper
       name: c,
       children: 10 - index,
       rating: "#{index}.#{index}".to_f,
-      income: 10_000_000 * index + 0.1111 * index,
-      birthdate: "#{1900 + 10 * index}-#{index}-#{index}",
+      income: (10_000_000 * index) + (0.1111 * index),
+      birthdate: "#{1900 + (10 * index)}-#{index}-#{index}",
       # store entire date to avoid time zone issues
       gets_up_at: Time.zone.local(2000, 1, 1, index, index),
-      last_seen: "#{2000 + 10 * index}-#{index}-#{index} " \
+      last_seen: "#{2000 + (10 * index)}-#{index}-#{index} " \
                  "1#{index}:2#{index}",
       human: index.even?,
       remarks: "#{c} #{str(index + 1)} #{str(index + 2)}\n" *
-                  (index % 3 + 1)
+                  ((index % 3) + 1)
     )
     m.companion = companion
     m.save!

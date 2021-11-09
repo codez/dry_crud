@@ -1,5 +1,5 @@
 # Controller for the dummy model.
-class CrudTestModelsController < CrudController #:nodoc:
+class CrudTestModelsController < CrudController # :nodoc:
 
   HANDLE_PREFIX = 'handle_'.freeze
 
@@ -98,7 +98,7 @@ class CrudTestModelsController < CrudController #:nodoc:
     end
   end
 
-  def respond_to_missing?(sym, include_private = false) # rubocop:disable Style/OptionalBooleanParameter
+  def respond_to_missing?(sym, include_private = false)
     sym.to_s.starts_with?(HANDLE_PREFIX) || super
   end
 

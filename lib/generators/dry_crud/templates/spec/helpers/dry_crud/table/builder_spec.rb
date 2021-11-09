@@ -8,7 +8,7 @@ describe 'DryCrud::Table::Builder' do
   let(:entries) { %w[foo bahr] }
   let(:table)   { DryCrud::Table::Builder.new(entries, self) }
 
-  def format_size(obj) #:nodoc:
+  def format_size(obj) # :nodoc:
     "#{obj.size} chars"
   end
 

@@ -1,5 +1,5 @@
 # A dummy model used for general testing.
-class CrudTestModel < ApplicationRecord #:nodoc:
+class CrudTestModel < ApplicationRecord # :nodoc:
 
   belongs_to :companion, class_name: 'CrudTestModel', optional: true
   has_and_belongs_to_many :others, class_name: 'OtherCrudTestModel'
@@ -33,7 +33,7 @@ class CrudTestModel < ApplicationRecord #:nodoc:
 end
 
 # Second dummy model to test associations.
-class OtherCrudTestModel < ApplicationRecord #:nodoc:
+class OtherCrudTestModel < ApplicationRecord # :nodoc:
 
   has_and_belongs_to_many :others, class_name: 'CrudTestModel'
   belongs_to :more,

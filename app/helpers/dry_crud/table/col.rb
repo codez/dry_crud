@@ -2,7 +2,7 @@ module DryCrud
   module Table
 
     # Helper class to store column information.
-    class Col #:nodoc:
+    class Col # :nodoc:
 
       delegate :tag, :capture, to: :template
 

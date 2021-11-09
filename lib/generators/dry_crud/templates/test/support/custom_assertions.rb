@@ -14,7 +14,7 @@ module CustomAssertions
     actual = string.scan(regexp).size
     msg = message(msg) do
       "Expected #{mu_pp(regexp)} to occur #{expected} time(s), " \
-      "but occured #{actual} time(s) in \n#{mu_pp(string)}"
+        "but occured #{actual} time(s) in \n#{mu_pp(string)}"
     end
     assert expected == actual, msg
   end
@@ -50,7 +50,7 @@ module CustomAssertions
   # The method used to by Test::Unit to format arguments.
   # Prints ActiveRecord objects in a simpler format.
   def mu_pp(obj)
-    if obj.is_a?(ActiveRecord::Base) #:nodoc:
+    if obj.is_a?(ActiveRecord::Base) # :nodoc:
       obj.to_s
     else
       super
@@ -72,7 +72,7 @@ module CustomAssertions
     record.errors.each do |error|
       msg = message do
         "Attribute #{mu_pp(error.attribute)} not declared as invalid attribute, " \
-        "but has the following error(s):\n#{mu_pp(error.message)}"
+          "but has the following error(s):\n#{mu_pp(error.message)}"
       end
       assert invalid_attrs.include?(error.attribute), msg
     end

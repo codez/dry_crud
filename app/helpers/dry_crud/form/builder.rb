@@ -258,7 +258,7 @@ module DryCrud
       end
 
       # Overriden to fullfill contract with method_missing 'labeled_' methods.
-      def respond_to_missing?(name, include_private = false) # rubocop:disable Style/OptionalBooleanParameter
+      def respond_to_missing?(name, include_private = false)
         labeled_field_method?(name).present? || super
       end
 
