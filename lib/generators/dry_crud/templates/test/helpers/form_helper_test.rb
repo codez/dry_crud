@@ -88,9 +88,9 @@ class FormHelperTest < ActionView::TestCase
                         .*?name="_method"
                         .*?value="(patch|put)"/x, f)
     assert_match(/div[^>]* id='error_explanation'/, f)
-    assert_match(/div\ class="form-group\ has-error">.*?
-                  <input .*?type="text"
-                          .*?name="crud_test_model\[name\]"/x, f)
+    assert_match(/input .*?class="is-invalid\ form-control"
+                         .*?type="text"
+                         .*?name="crud_test_model\[name\]"/x, f)
     assert_match(/input .*?value="1910-01-01"
                         .*?type="date"
                         .*?name="crud_test_model\[birthdate\]"/x, f)

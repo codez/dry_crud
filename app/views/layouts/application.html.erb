@@ -5,31 +5,33 @@
   <meta charset="utf-8" />
   <title><%= strip_tags(@title) %> - MyApp</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <%= csrf_meta_tag %>
   <%= csp_meta_tag %>
 
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-  <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag 'application', 'data-turbo-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbo-track': 'reload', defer: true %>
 
   <%= yield :head %>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-  <%= render 'layouts/nav' %>
+  <div class="container-fluid">
+    <%= render 'layouts/nav' %>
+  </div>
 </nav>
 
 <div class="container">
 
   <h1><%= @title %></h1>
 
-  <div class="row actions">
+  <div class="row actions mb-3">
     <div class="col-md-5">
         <%= yield :tools %>
     </div>
     <div class="col-md-7">
-      <div class="btn-toolbar float-right">
+      <div class="btn-toolbar float-end">
         <%= yield :actions %>
       </div>
     </div>

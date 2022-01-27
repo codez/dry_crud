@@ -64,7 +64,7 @@ module DryCrud
 
       # Renders the table as HTML.
       def to_html
-        tag.table(options) do
+        tag.table(**options) do
           tag.thead(html_header) +
             content_tag_nested(:tbody, entries) { |e| html_row(e) }
         end

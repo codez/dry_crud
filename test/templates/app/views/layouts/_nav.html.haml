@@ -1,5 +1,10 @@
 = link_to 'MyApp', root_path, class: 'navbar-brand'
-%ul.navbar-nav
-  %li.nav-item= link_to t(:'global.menu.people'), people_path, class: 'nav-link'
-  %li.nav-item= link_to t(:'global.menu.countries'), admin_countries_path, class: 'nav-link'
-  %li.nav-item= link_to t(:'global.menu.vips'), vips_path, class: 'nav-link'
+
+%button.navbar-toggler{type: 'button', 'data-bs-toggle': 'collapse', 'data-bs-target': '#navbarNav', 'aria-controls': 'navbarNav', 'aria-expanded': 'false', 'aria-label': 'Toggle navigation'}
+  %span.navbar-toggler-icon
+
+.collapse.navbar-collapse#navbarNav
+  %ul.navbar-nav
+    %li.nav-item= link_to t(:'global.menu.people'), people_path, class: 'nav-link'
+    %li.nav-item= link_to t(:'global.menu.countries'), admin_countries_path, class: 'nav-link'
+    %li.nav-item= link_to t(:'global.menu.vips'), vips_path, class: 'nav-link'

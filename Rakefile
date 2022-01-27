@@ -47,13 +47,17 @@ namespace :test do
     desc "Create a rails test application"
     task :create do
       unless File.exist?(TEST_APP_ROOT)
-        sh "rails new #{TEST_APP_ROOT} --skip-bundle --skip-spring"
+        sh "rails new #{TEST_APP_ROOT} --css=bootstrap"
         file_replace(File.join(TEST_APP_ROOT, 'Gemfile'),
                      /\z/,
                      File.read(File.join(File.dirname(__FILE__),
                                'test', 'templates', 'Gemfile.append')))
         sh "cd #{TEST_APP_ROOT}; bundle install --local" # update Gemfile.lock
-        sh "cd #{TEST_APP_ROOT}; rails webpacker:install"
+        #sh "cd #{TEST_APP_ROOT}; bundle binstubs bundler"
+        #sh "cd #{TEST_APP_ROOT}; rails javascript:install:esbuild"
+        #sh "cd #{TEST_APP_ROOT}; yarn add esbuild from \".\""
+        #sh "cd #{TEST_APP_ROOT}; gem install foreman from \".\""
+
         sh "cd #{TEST_APP_ROOT}; rails g rspec:install"
         FileUtils.rm_f(File.join(TEST_APP_ROOT,
                                  'test', 'performance', 'browsing_test.rb'))
@@ -95,9 +99,6 @@ namespace :test do
                                'test', 'templates', 'test', 'fixtures'),
                      File.join(TEST_APP_ROOT, 'spec'))
 
-      # replace some unused files
-      FileUtils.rm_f(File.join(TEST_APP_ROOT, 'public', 'index.html'))
-
       # remove unused template type, erb or haml
       exclude = %w[1 yes true].include?(ENV['HAML']) ? 'erb' : 'haml'
       Dir.glob(File.join(TEST_APP_ROOT,
@@ -121,8 +122,8 @@ namespace :test do
 
     desc "Customize some of the functionality provided by dry_crud"
     task customize: ['test:app:add_pagination',
-                     'test:app:add_jquery'
-                     # 'test:app:use_bootstrap'
+                     'test:app:add_ujs',
+                     'test:app:use_bootstrap'
                      ]
 
     desc "Adds pagination to the test app"
@@ -144,42 +145,37 @@ namespace :test do
                    "= paginate entries\n\n= render 'list'")
     end
 
-    desc "Adds jQuery to webpack"
-    task :add_jquery do
-      sh "cd #{TEST_APP_ROOT}; yarn add jquery"
-
-      app_js = File.join(TEST_APP_ROOT, 'app', 'javascript', 'packs', 'application.js')
-      if File.exist?(app_js) && File.read(app_js) !~ /jquery/
+    desc "Adds Rails UJS to the test app"
+    task :add_ujs do
+      sh "cd #{TEST_APP_ROOT}; yarn add @rails/ujs"
+      app_js = File.join(TEST_APP_ROOT, 'app', 'javascript', 'application.js')
+      if File.exist?(app_js) && File.read(app_js) !~ /ujs/
         file_replace(app_js,
-                    /\n\z/,
-                    "\n\nimport $ from \"jquery\"\n" \
-                    "window.$ = $;\n")
-        end
+                      /\n\z/,
+                      "\nimport Rails from '@rails/ujs'\nRails.start()\n")
+      end
     end
 
-    desc "Use Boostrap in the test app"
+    desc "Use Boostrap Icons in the test app"
     task :use_bootstrap do
-      sh "cd #{TEST_APP_ROOT}; yarn add bootstrap popper.js"
+      sh "cd #{TEST_APP_ROOT}; yarn add bootstrap-icons"
 
-       css = File.join(TEST_APP_ROOT,
-                       'app', 'assets', 'stylesheets', 'application.css')
-
-       if File.exists?(css)
-         file_replace(css,
+      app_css = File.join(TEST_APP_ROOT, 'app', 'assets', 'stylesheets', 'application.bootstrap.scss')
+      if File.exist?(app_css) && File.read(app_css) !~ /bootstrap-icons/
+        file_replace(app_css,
                       /\n\z/,
-                      "\n\n@import 'bootstrap/scss/bootstrap';\n")
-         FileUtils.mv(css,
-                      File.join(TEST_APP_ROOT,
-                                'app', 'assets', 'stylesheets',
-                                'application.scss'))
-       end
-       file_replace(File.join(TEST_APP_ROOT,
-                              'app', 'javascript', 'packs',
-                              'application.js'),
-                    /\n\z/,
-                    "\n\nrequire('bootstrap/dist/js/bootstrap');\n")
-       FileUtils.rm_f(File.join(TEST_APP_ROOT,
-                                'app', 'assets', 'stylesheets', 'sample.scss'))
+                      "\n@import 'bootstrap-icons/font/bootstrap-icons';\n@import 'crud';\n")
+      end
+
+      assets = File.join(TEST_APP_ROOT, 'config', 'initializers', 'assets.rb')
+      if File.exist?(assets) && File.read(assets) !~ /bootstrap-icons/
+        file_replace(assets,
+                      /\n\z/,
+                      "\nRails.application.config.assets.paths << Rails.root.join('node_modules/bootstrap-icons/font')\n")
+      end
+
+      FileUtils.rm_f(File.join(TEST_APP_ROOT,
+                               'app', 'assets', 'stylesheets', 'sample.scss'))
     end
 
   end

@@ -4,7 +4,6 @@ class City < ApplicationRecord
   has_many :people
 
   validates :name, presence: true
-  validates :country, presence: true
 
   before_destroy :protect_with_inhabitants
 

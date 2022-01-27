@@ -158,8 +158,7 @@ module DryCrud
       # Renders the given content with an addon.
       def with_addon(content, addon)
         tag.div(class: 'input-group') do
-          html = tag.span(addon, class: 'input-group-text')
-          content + tag.div(html, class: 'input-group-append')
+          content + tag.span(addon, class: 'input-group-text')
         end
       end
 

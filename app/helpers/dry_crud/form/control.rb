@@ -8,7 +8,7 @@ module DryCrud
 
       attr_reader :builder, :attr, :args, :options, :addon, :help
 
-      delegate :tag, :object,
+      delegate :tag, :object, :add_css_class,
                to: :builder
 
       # Html displayed to mark an input as required.
@@ -70,10 +70,8 @@ module DryCrud
 
       # Create the HTML markup for any labeled content.
       def labeled
-        errors = errors? ? ' has-error' : ''
-
-        tag.div(class: "form-group#{errors}") do
-          builder.label(attr, caption, class: 'col-md-2 control-label') +
+        tag.div(class: 'row mb-3') do
+          builder.label(attr, caption, class: 'col-md-2 col-form-label') +
             tag.div(content, class: "col-md-#{span}")
         end
       end
@@ -101,6 +99,7 @@ module DryCrud
       def input
         @input ||= begin
           options[:required] = 'required' if required
+          add_css_class(options, 'is-invalid') if errors?
           builder.send(field_method, attr, *(args << options))
         end
       end

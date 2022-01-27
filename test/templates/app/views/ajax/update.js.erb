@@ -1,5 +1,5 @@
 <% if entry.errors.present? %>
   alert('<%= escape_javascript(entry.errors.full_messages.join("\n")) %>');
 <% else %>
-  $('#content').html('<%= escape_javascript(render 'attrs') %>')
+  document.getElementById('content').innerHTML = "<%= escape_javascript(render 'attrs') %>";
 <% end %>

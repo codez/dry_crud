@@ -9,7 +9,7 @@ DRY_CRUD_GEMSPEC = Gem::Specification.new do |spec|
   spec.date    = Date.today.to_s
 
   spec.author   = 'Pascal Zumkehr'
-  spec.email    = 'spam@codez.ch'
+  spec.email    = 'pascal+github@codez.ch'
   spec.homepage = 'http://github.com/codez/dry_crud'
 
   spec.summary = <<-END
@@ -22,7 +22,7 @@ to DRY up the CRUD code in your Rails project. Start with these elements and
 build a clean base to efficiently develop your application upon.
 END
 
-  spec.add_dependency 'rails', '>= 6.0'
+  spec.add_dependency 'rails', '>= 7.0'
 
   readmes = FileList.new('*') do |list|
     list.exclude(/(^|[^.a-z])[a-z]+/)

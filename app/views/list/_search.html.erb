@@ -3,8 +3,6 @@
   <%= hidden_field_tag :page, 1 %>
   <div class="input-group">
     <%= search_field_tag :q, params[:q], class: 'form-control' %>
-    <span class="input-group-append">
-      <%= submit_tag ti(:"button.search"), class: 'btn btn-outline-secondary' %>
-    </span>
+    <%= submit_tag ti(:"button.search"), class: 'btn btn-outline-secondary' %>
   </div>
 <% end %>

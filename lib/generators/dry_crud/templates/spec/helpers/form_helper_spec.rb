@@ -132,9 +132,10 @@ describe FormHelper do
       end
 
       it do
-        is_expected.to match(/div\ class="form-group\ has-error">.*?
-                              <input .*?type="text"
-                                      .*?name="crud_test_model\[name\]"/x)
+        is_expected.to match(/div\ class="row\ mb-3">.*?
+                              <input .*?class="is-invalid\ form-control"
+                                     .*?type="text"
+                                     .*?name="crud_test_model\[name\]"/x)
       end
 
       it do

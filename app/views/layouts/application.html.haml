@@ -11,23 +11,24 @@
     = csrf_meta_tag
     = csp_meta_tag
 
-    = stylesheet_link_tag 'application', :media => 'all', 'data-turbolinks-track': 'reload'
-    = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
+    = stylesheet_link_tag 'application', :media => 'all', 'data-turbo-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbo-track': 'reload', defer: true
 
     = yield :head
 
   %body
     %nav.navbar.navbar-expand-lg.navbar-light.bg-light.mb-4
-      = render 'layouts/nav'
+      .container-fluid
+        = render 'layouts/nav'
 
     .container
       %h1= @title
 
-      .row.actions
+      .row.actions.mb-3
         .col-md-5
           = yield :tools
         .col-md-7
-          .btn-toolbar.float-right
+          .btn-toolbar.float-end
             = yield :actions
 
       #flash= render partial: 'layouts/flash', collection: [:notice, :alert], as: :level

@@ -50,14 +50,14 @@ describe PeopleController do
   describe_action :get, :show, id: true do
     context '.js', format: :js do
       it_is_expected_to_respond
-      it { expect(response.body).to match(/\$\('#content'\)/) }
+      it { expect(response.body).to match(/document.getElementById\('content'\)/) }
     end
   end
 
   describe_action :get, :edit, id: true do
     context '.js', format: :js do
       it_is_expected_to_respond
-      it { expect(response.body).to match(/\$\('#content'\)/) }
+      it { expect(response.body).to match(/document.getElementById\('content'\)/) }
     end
   end
 
@@ -67,7 +67,7 @@ describe PeopleController do
         let(:params) { { person: { name: 'New Name' } } }
 
         it_is_expected_to_respond
-        it { expect(response.body).to match(/\$\('#content'\)/) }
+        it { expect(response.body).to match(/document.getElementById\('content'\)/) }
       end
 
       context 'with invalid params' do

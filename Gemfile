@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 6.1.0'
+gem 'rails', '~> 7.0.0'
 
 gem 'puma'
 
@@ -11,24 +11,24 @@ gem 'rspec-rails'
 gem 'haml'
 gem 'jbuilder'
 
-gem 'webpacker', '~> 4.0'
-
 gem 'kaminari'
 
-gem 'sass-rails'
-gem 'turbolinks'
+gem "sprockets-rails"
+gem "jsbundling-rails"
+gem "cssbundling-rails"
+gem "turbo-rails"
 
-gem 'bootsnap', '>= 1.4.2', require: false
+gem 'sassc-rails'
+
+gem 'bootsnap', require: false
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 group :development do
   gem 'web-console'
-  gem 'listen'
   gem 'rubocop'
   gem 'rubocop-rails'
   gem 'spring'
-  gem 'spring-watcher-listen'
 end
 
 gem 'simplecov', require: false
