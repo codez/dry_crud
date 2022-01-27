@@ -12,7 +12,7 @@ module I18nHelper
   #  - {parent_controller}.global.{key}
   #  - ...
   #  - global.{key}
-  def translate_inheritable(key, variables = {})
+  def translate_inheritable(key, **variables)
     partial = defined?(@virtual_path) ? @virtual_path.gsub(/.*\/_?/, '') : nil
     defaults = inheritable_translation_defaults(key, partial)
     variables[:default] ||= defaults
@@ -28,7 +28,7 @@ module I18nHelper
   #  - activerecord.associations.models.{model_name}.{association_name}.{key}
   #  - activerecord.associations.{association_model_name}.{key}
   #  - global.associations.{key}
-  def translate_association(key, assoc = nil, variables = {})
+  def translate_association(key, assoc = nil, **variables)
     if assoc && assoc.options[:polymorphic].nil?
       variables[:default] ||= [association_klass_key(assoc, key).to_sym,
                                :"global.associations.#{key}"]

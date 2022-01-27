@@ -29,9 +29,8 @@ module DryCrud
 
       # Render multiple input controls together with a label for the given
       # attributes.
-      def labeled_input_fields(*attrs)
-        options = attrs.extract_options!
-        safe_join(attrs) { |a| labeled_input_field(a, options.dup) }
+      def labeled_input_fields(*attrs, **options)
+        safe_join(attrs) { |a| labeled_input_field(a, **options.dup) }
       end
 
       # Render a corresponding input control and label for the given attribute.
@@ -45,8 +44,8 @@ module DryCrud
       # * <tt>:field_method</tt> - Different method to create the input field.
       #
       # Use additional html_options for the input element.
-      def labeled_input_field(attr, html_options = {})
-        control_class.new(self, attr, html_options).render_labeled
+      def labeled_input_field(attr, **html_options)
+        control_class.new(self, attr, **html_options).render_labeled
       end
 
       # Render a corresponding input control for the given attribute.
@@ -59,18 +58,18 @@ module DryCrud
       # * <tt>:field_method</tt> - Different method to create the input field.
       #
       # Use additional html_options for the input element.
-      def input_field(attr, html_options = {})
-        control_class.new(self, attr, html_options).render_content
+      def input_field(attr, **html_options)
+        control_class.new(self, attr, **html_options).render_content
       end
 
       # Render a standard string field with column contraints.
-      def string_field(attr, html_options = {})
+      def string_field(attr, **html_options)
         html_options[:maxlength] ||= column_property(@object, attr, :limit)
-        text_field(attr, html_options)
+        text_field(attr, **html_options)
       end
 
       # Render a boolean field.
-      def boolean_field(attr, html_options = {})
+      def boolean_field(attr, **html_options)
         tag.div(class: 'checkbox') do
           tag.label do
             detail = html_options.delete(:detail) || '&nbsp;'.html_safe
@@ -82,33 +81,33 @@ module DryCrud
       # Add form-control class to all input fields.
       %w[text_field password_field email_field
          number_field date_field time_field datetime_field].each do |method|
-        define_method(method) do |attr, html_options = {}|
+        define_method(method) do |attr, **html_options|
           add_css_class(html_options, 'form-control')
           super(attr, html_options)
         end
       end
 
-      def integer_field(attr, html_options = {})
+      def integer_field(attr, **html_options)
         html_options[:step] ||= 1
-        number_field(attr, html_options)
+        number_field(attr, **html_options)
       end
 
-      def float_field(attr, html_options = {})
+      def float_field(attr, **html_options)
         html_options[:step] ||= 'any'
-        number_field(attr, html_options)
+        number_field(attr, **html_options)
       end
 
-      def decimal_field(attr, html_options = {})
+      def decimal_field(attr, **html_options)
         html_options[:step] ||=
           (10**-column_property(object, attr, :scale)).to_f
-        number_field(attr, html_options)
+        number_field(attr, **html_options)
       end
 
       # Customize the standard text area to have 5 rows by default.
-      def text_area(attr, html_options = {})
+      def text_area(attr, **html_options)
         add_css_class(html_options, 'form-control')
         html_options[:rows] ||= 5
-        super(attr, html_options)
+        super(attr, **html_options)
       end
 
       # Render a select element for a :belongs_to association defined by attr.
@@ -116,13 +115,13 @@ module DryCrud
       # To pass a custom element list, specify the list with the :list key or
       # define an instance variable with the pluralized name of the
       # association.
-      def belongs_to_field(attr, html_options = {})
-        list = association_entries(attr, html_options).to_a
+      def belongs_to_field(attr, **html_options)
+        list = association_entries(attr, **html_options).to_a
         if list.present?
           add_css_class(html_options, 'form-control')
           collection_select(attr, list, :id, :to_s,
-                            select_options(attr, html_options),
-                            html_options)
+                            select_options(attr, **html_options),
+                            **html_options)
         else
           # rubocop:disable Rails/OutputSafety
           none = ta(:none_available, association(@object, attr)).html_safe
@@ -139,10 +138,10 @@ module DryCrud
       # To pass a custom element list, specify the list with the :list key or
       # define an instance variable with the pluralized name of the
       # association.
-      def has_many_field(attr, html_options = {})
+      def has_many_field(attr, **html_options)
         html_options[:multiple] = true
         add_css_class(html_options, 'multiselect')
-        belongs_to_field(attr, html_options)
+        belongs_to_field(attr, **html_options)
       end
       # rubocop:enable Naming/PredicateName
 
@@ -194,7 +193,7 @@ module DryCrud
 
       # Depending if the given attribute must be present, return
       # only an initial selection prompt or a blank option, respectively.
-      def select_options(attr, options = {})
+      def select_options(attr, **options)
         prompt = options.delete(:prompt)
         blank = options.delete(:include_blank)
         if options[:multiple]
@@ -238,7 +237,7 @@ module DryCrud
           options = content
           content = capture(&block)
         end
-        control = control_class.new(self, attr, options)
+        control = control_class.new(self, attr, **options)
         control.render_labeled(content)
       end
 
@@ -275,10 +274,9 @@ module DryCrud
 
       # Renders the corresponding field together with a label, required mark
       # and an optional help block.
-      def build_labeled_field(field_method, *args)
-        options = args.extract_options!
+      def build_labeled_field(field_method, *args, **options)
         options[:field_method] = field_method
-        control_class.new(self, *(args << options)).render_labeled
+        control_class.new(self, *args, **options).render_labeled
       end
 
       # Returns the list of association entries, either from options[:list] or
@@ -286,7 +284,7 @@ module DryCrud
       # Otherwise, if the association defines a #options_list or #list scope,
       # this is used to load the entries.
       # As a last resort, all entries from the association class are returned.
-      def association_entries(attr, options)
+      def association_entries(attr, **options)
         list = options.delete(:list)
         unless list
           assoc = association(@object, attr)

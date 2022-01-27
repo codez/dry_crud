@@ -26,13 +26,13 @@ module DryCrud
       # Action column to show the row entry.
       # A block may be given to define the link path for the row entry.
       # If the block returns nil, no link is rendered.
-      def show_action_col(html_options = {}, &block)
+      def show_action_col(**html_options, &block)
         action_col do |entry|
           path = action_path(entry, &block)
           if path
             table_action_link('zoom-in',
                               path,
-                              html_options.clone)
+                              **html_options.clone)
           end
         end
       end
@@ -40,12 +40,12 @@ module DryCrud
       # Action column to edit the row entry.
       # A block may be given to define the link path for the row entry.
       # If the block returns nil, no link is rendered.
-      def edit_action_col(html_options = {}, &block)
+      def edit_action_col(**html_options, &block)
         action_col do |entry|
           path = action_path(entry, &block)
           if path
             path = path.is_a?(String) ? path : edit_polymorphic_path(path)
-            table_action_link('pencil', path, html_options.clone)
+            table_action_link('pencil', path, **html_options.clone)
           end
         end
       end
@@ -53,13 +53,13 @@ module DryCrud
       # Action column to destroy the row entry.
       # A block may be given to define the link path for the row entry.
       # If the block returns nil, no link is rendered.
-      def destroy_action_col(html_options = {}, &block)
+      def destroy_action_col(**html_options, &block)
         action_col do |entry|
           path = action_path(entry, &block)
           if path
             table_action_link('remove',
                               path,
-                              html_options.merge(
+                              **html_options.merge(
                                 data: { confirm: ti(:confirm_delete),
                                         method: :delete }
                               ))
@@ -74,8 +74,8 @@ module DryCrud
       end
 
       # Generic action link inside a table.
-      def table_action_link(icon, url, html_options = {})
-        add_css_class(html_options, "icon icon-#{icon}")
+      def table_action_link(icon, url, **html_options)
+        add_css_class(html_options, "bi-#{icon}")
         link_to('', url, html_options)
       end
 

@@ -52,12 +52,12 @@ class CrudController < ListController
   # in the given block will take precedence over the one defined here.
   #
   # Specify a :location option if you wish to do a custom redirect.
-  def create(options = {}, &block)
+  def create(**options, &block)
     model_class.transaction do
       assign_attributes
       created = with_callbacks(:create, :save) { entry.save }
       respond(created,
-              options.merge(status: :created, render_on_failure: :new),
+              **options.merge(status: :created, render_on_failure: :new),
               &block)
       raise ActiveRecord::Rollback unless created
     end
@@ -80,12 +80,12 @@ class CrudController < ListController
   # in the given block will take precedence over the one defined here.
   #
   # Specify a :location option if you wish to do a custom redirect.
-  def update(options = {}, &block)
+  def update(**options, &block)
     model_class.transaction do
       assign_attributes
       updated = with_callbacks(:update, :save) { entry.save }
       respond(updated,
-              options.merge(status: :ok, render_on_failure: :edit),
+              **options.merge(status: :ok, render_on_failure: :edit),
               &block)
       raise ActiveRecord::Rollback unless updated
     end
@@ -103,11 +103,11 @@ class CrudController < ListController
   # in the given block will take precedence over the one defined here.
   #
   # Specify a :location option if you wish to do a custom redirect.
-  def destroy(options = {}, &block)
+  def destroy(**options, &block)
     model_class.transaction do
       destroyed = run_callbacks(:destroy) { entry.destroy }
       respond(destroyed,
-              options.merge(status: :no_content),
+              **options.merge(status: :no_content),
               &block)
       raise ActiveRecord::Rollback unless destroyed
     end
@@ -152,14 +152,14 @@ class CrudController < ListController
     path_args(entry)
   end
 
-  def respond(success, options)
+  def respond(success, **options)
     respond_to do |format|
       yield(format, success) if block_given?
       if success
-        format.html { redirect_on_success(options) }
+        format.html { redirect_on_success(**options) }
         format.json { render_success_json(options[:status]) }
       else
-        format.html { render_or_redirect_on_failure(options) }
+        format.html { render_or_redirect_on_failure(**options) }
         format.json { render_failure_json }
       end
     end
@@ -167,16 +167,16 @@ class CrudController < ListController
 
   # If the option :render_on_failure is given, render the corresponding
   # template, otherwise redirect.
-  def render_or_redirect_on_failure(options)
+  def render_or_redirect_on_failure(**options)
     if options[:render_on_failure]
       render options[:render_on_failure]
     else
-      redirect_on_failure(options)
+      redirect_on_failure(**options)
     end
   end
 
   # Perform a redirect after a successfull operation and set a flash notice.
-  def redirect_on_success(options = {})
+  def redirect_on_success(**options)
     location = options[:location] ||
                (entry.destroyed? ? index_path : show_path)
     flash[:notice] ||= flash_message(:success)
@@ -184,7 +184,7 @@ class CrudController < ListController
   end
 
   # Perform a redirect after a failed operation and set a flash alert.
-  def redirect_on_failure(options = {})
+  def redirect_on_failure(**options)
     location = options[:location] ||
                request.env['HTTP_REFERER'].presence ||
                index_path

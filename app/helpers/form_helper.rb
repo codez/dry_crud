@@ -8,14 +8,14 @@
 module FormHelper
 
   # Renders a form using Crud::FormBuilder.
-  def plain_form(object, options = {}, &block)
+  def plain_form(object, **options, &block)
     options[:html] ||= {}
     add_css_class(options[:html], 'form-horizontal')
     options[:html][:role] ||= 'form'
     options[:builder] ||= DryCrud::Form::Builder
     options[:cancel_url] ||= polymorphic_path(object, returning: true)
 
-    form_for(object, options, &block)
+    form_for(object, **options, &block)
   end
 
   # Renders a standard form for the given entry and attributes.
@@ -23,8 +23,8 @@ module FormHelper
   # If a block is given, custom input fields may be rendered and attrs is
   # ignored. Before the input fields, the error messages are rendered,
   # if present. An options hash may be given as the last argument.
-  def standard_form(object, *attrs, &block)
-    plain_form(object, attrs.extract_options!) do |form|
+  def standard_form(object, *attrs, **options, &block)
+    plain_form(object, **options) do |form|
       content = [form.error_messages]
 
       content << if block_given?
@@ -41,11 +41,9 @@ module FormHelper
   # Renders a crud form for the current entry with default_crud_attrs or the
   # given attribute array. An options hash may be given as the last argument.
   # If a block is given, a custom form may be rendered and attrs is ignored.
-  def crud_form(*attrs, &block)
-    options = attrs.extract_options!
+  def crud_form(*attrs, **options, &block)
     attrs = default_crud_attrs - %i[created_at updated_at] if attrs.blank?
-    attrs << options
-    standard_form(path_args(entry), *attrs, &block)
+    standard_form(path_args(entry), *attrs, **options, &block)
   end
 
 end

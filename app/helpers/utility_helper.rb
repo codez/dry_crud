@@ -8,8 +8,8 @@ module UtilityHelper
 
   # Render a content tag with the collected contents rendered
   # by &block for each item in collection.
-  def content_tag_nested(tag, collection, options = {}, &block)
-    content_tag(tag, safe_join(collection, &block), options)
+  def content_tag_nested(tag, collection, **options, &block)
+    content_tag(tag, safe_join(collection, &block), **options)
   end
 
   # Overridden method that takes a block that is executed for each item in

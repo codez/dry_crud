@@ -39,10 +39,10 @@ module DryCrud
       #   (The value for this option usually is 'required').
       #
       # All the other options will go to the field_method.
-      def initialize(builder, attr, *args)
+      def initialize(builder, attr, *args, **options)
         @builder = builder
         @attr = attr
-        @options = args.extract_options!
+        @options = options
         @args = args
 
         @addon = options.delete(:addon)
@@ -100,7 +100,7 @@ module DryCrud
         @input ||= begin
           options[:required] = 'required' if required
           add_css_class(options, 'is-invalid') if errors?
-          builder.send(field_method, attr, *(args << options))
+          builder.send(field_method, attr, *args, **options)
         end
       end
 

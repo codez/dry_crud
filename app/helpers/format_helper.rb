@@ -38,8 +38,8 @@ module FormatHelper
   # Renders a simple unordered list, which will
   # simply render all passed items or yield them
   # to your block.
-  def simple_list(items, ul_options = {})
-    content_tag_nested(:ul, items, ul_options) do |item|
+  def simple_list(items, **ul_options)
+    content_tag_nested(:ul, items, **ul_options) do |item|
       tag.li(block_given? ? yield(item) : f(item))
     end
   end
