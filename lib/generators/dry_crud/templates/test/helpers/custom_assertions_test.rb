@@ -25,7 +25,7 @@ class CustomAssertionsTest < ActiveSupport::TestCase
   end
 
   test 'assert count fails if count does not match' do
-    assert_raise(MiniTest::Assertion) do
+    assert_raise(Minitest::Assertion) do
       assert_count 2, 'ba', 'barbabapa'
     end
   end
@@ -37,7 +37,7 @@ class CustomAssertionsTest < ActiveSupport::TestCase
   end
 
   test 'assert valid record fails for invalid' do
-    assert_raise(MiniTest::Assertion) do
+    assert_raise(Minitest::Assertion) do
       assert_valid invalid_record
     end
   end
@@ -55,19 +55,19 @@ class CustomAssertionsTest < ActiveSupport::TestCase
   end
 
   test 'assert not valid fails if record valid' do
-    assert_raise(MiniTest::Assertion) do
+    assert_raise(Minitest::Assertion) do
       assert_not_valid crud_test_models('AAAAA')
     end
   end
 
   test 'assert not valid fails if record invalid and valid attrs given' do
-    assert_raise(MiniTest::Assertion) do
+    assert_raise(Minitest::Assertion) do
       assert_not_valid invalid_record, :name, :rating, :children
     end
   end
 
   test 'assert not valid fails if not all invalid attrs given' do
-    assert_raise(MiniTest::Assertion) do
+    assert_raise(Minitest::Assertion) do
       assert_not_valid invalid_record, :name
     end
   end

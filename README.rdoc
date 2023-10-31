@@ -1,8 +1,8 @@
 = DRY CRUD
 
-{<img src="https://github.com/codez/dry_crud/actions/workflows/build.yml/badge.svg" />}[https://github.com/codez/dry_crud/actions/workflows/build.yml]
-{<img src="https://api.codeclimate.com/v1/badges/ef7488764a0d9805b37d/maintainability" />}[https://codeclimate.com/github/codez/dry_crud/maintainability]
-{<img src="https://api.codeclimate.com/v1/badges/ef7488764a0d9805b37d/test_coverage" />}[https://codeclimate.com/github/codez/dry_crud/test_coverage]
+{rdoc-image:https://github.com/codez/dry_crud/actions/workflows/build.yml/badge.svg}[https://github.com/codez/dry_crud/actions/workflows/build.yml]
+{rdoc-image:https://api.codeclimate.com/v1/badges/ef7488764a0d9805b37d/maintainability}[https://codeclimate.com/github/codez/dry_crud/maintainability]
+{rdoc-image:https://api.codeclimate.com/v1/badges/ef7488764a0d9805b37d/test_coverage}[https://codeclimate.com/github/codez/dry_crud/test_coverage]
 
 dry_crud generates simple and extendable controllers, views and helpers that support you to DRY up the CRUD code in your Rails projects. List, search, sort, show, create, edit and destroy any model entries in just 5 minutes. Start with these artifacts and build a clean base to efficiently develop your application upon.
 
