@@ -30,7 +30,7 @@ module ActionsHelper
   # Uses the current +entry+ if no path is given.
   def edit_action_link(path = nil)
     path ||= path_args(entry)
-    path = path.is_a?(String) ? path : edit_polymorphic_path(path)
+    path = edit_polymorphic_path(path) unless path.is_a?(String)
     action_link(ti('link.edit'), 'pencil', path)
   end
 
@@ -47,7 +47,7 @@ module ActionsHelper
   # Uses the current +model_class+ if no path is given.
   def index_action_link(path = nil, url_options = { returning: true })
     path ||= path_args(model_class)
-    path = path.is_a?(String) ? path : polymorphic_path(path, url_options)
+    path = polymorphic_path(path, url_options) unless path.is_a?(String)
     action_link(ti('link.list'), 'list', path)
   end
 
@@ -55,7 +55,7 @@ module ActionsHelper
   # Uses the current +model_class+ if no path is given.
   def add_action_link(path = nil, url_options = {})
     path ||= path_args(model_class)
-    path = path.is_a?(String) ? path : new_polymorphic_path(path, url_options)
+    path = new_polymorphic_path(path, url_options) unless path.is_a?(String)
     action_link(ti('link.add'), 'plus', path)
   end
 

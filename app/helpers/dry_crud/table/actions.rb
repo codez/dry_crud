@@ -44,7 +44,7 @@ module DryCrud
         action_col do |entry|
           path = action_path(entry, &block)
           if path
-            path = path.is_a?(String) ? path : edit_polymorphic_path(path)
+            path = edit_polymorphic_path(path) unless path.is_a?(String)
             table_action_link('pencil', path, **html_options.clone)
           end
         end

@@ -13,8 +13,6 @@ module DryCrud
     included do
       helper_method :model_class, :models_label, :path_args
 
-      private
-
       delegate :model_class, :models_label, :model_identifier, to: 'self.class'
     end
 

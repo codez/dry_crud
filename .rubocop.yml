@@ -73,6 +73,13 @@ Layout/EmptyLinesAroundBlockBody:
   Exclude:
     - '**/*_spec.rb'
 
+Rails/ActionControllerTestCase:
+  Enabled: false
+
+Rails/I18nLocaleTexts:
+  Exclude:
+    - '**/test/support/*.rb'
+
 Rails/HelperInstanceVariable:
   Enabled: false
 

@@ -37,6 +37,9 @@ Layout/ParameterAlignment:
 Layout/SpaceBeforeFirstArg:
   Enabled: false
 
+Rails/ActionControllerTestCase:
+  Enabled: false
+
 Rails/OutputSafety:
   Enabled: false
 

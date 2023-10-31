@@ -92,7 +92,7 @@ class CrudTestModelsController < CrudController # :nodoc:
   # handle the called callbacks
   def method_missing(sym, *_args)
     if sym.to_s.starts_with?(HANDLE_PREFIX)
-      called_callback(sym.to_s[HANDLE_PREFIX.size..-1].to_sym)
+      called_callback(sym.to_s[HANDLE_PREFIX.size..].to_sym)
     else
       super
     end

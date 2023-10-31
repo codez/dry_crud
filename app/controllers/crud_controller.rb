@@ -40,6 +40,11 @@ class CrudController < ListController
     assign_attributes if params[model_identifier]
   end
 
+  #   GET /entries/1/edit
+  #
+  # Display a form to edit an exisiting entry of this model.
+  def edit; end
+
   #   POST /entries
   #   POST /entries.json
   #
@@ -62,11 +67,6 @@ class CrudController < ListController
       raise ActiveRecord::Rollback unless created
     end
   end
-
-  #   GET /entries/1/edit
-  #
-  # Display a form to edit an exisiting entry of this model.
-  def edit; end
 
   #   PUT /entries/1
   #   PUT /entries/1.json

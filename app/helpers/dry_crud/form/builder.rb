@@ -267,7 +267,7 @@ module DryCrud
       def labeled_field_method?(name)
         prefix = 'labeled_'
         if name.to_s.start_with?(prefix)
-          field_method = name.to_s[prefix.size..-1]
+          field_method = name.to_s[prefix.size..]
           field_method if respond_to?(field_method)
         end
       end
