@@ -4,7 +4,7 @@ TestApp::Application.routes.draw do
 
   resources :people do
     collection do
-      get :ajax
+      get :turbo
     end
   end
 
@@ -13,12 +13,12 @@ TestApp::Application.routes.draw do
   namespace :admin do
     resources :countries do
       collection do
-        get :ajax
+        get :turbo
       end
 
       resources :cities do
         collection do
-          get :ajax
+          get :turbo
         end
       end
     end

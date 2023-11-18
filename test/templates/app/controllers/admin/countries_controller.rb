@@ -1,6 +1,6 @@
 module Admin
   # Countries Controller nested under /admin
-  class CountriesController < AjaxController
+  class CountriesController < TurboController
     self.nesting = :admin
 
     self.search_columns = :name, :code

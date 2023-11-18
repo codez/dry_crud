@@ -6,10 +6,10 @@ en:
       vips: VIPs
     link:
       maps: Maps
-  ajax:
+  turbo:
     global:
       link:
-        ajax: Ajahx
+        turbo: Turbo
   # cities controller
   admin/cities:
     global:
@@ -26,7 +26,7 @@ en:
     update:
       flash:
         success: The %{model} got an update
-        
+
   # people controller
   people:
     global:
@@ -35,13 +35,13 @@ en:
       i_think_its: I think it's
       nice: Nice
       check_google: Check Google
-  
+
   # vips controller
   vips:
     index:
       title: Listing VIPs
       no_list_entries: No VIPs found
-      
+
   # model associations
   activerecord:
     errors:

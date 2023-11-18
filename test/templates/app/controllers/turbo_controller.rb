@@ -1,10 +1,10 @@
 # Crud controller responding to js as well
-class AjaxController < CrudController
-  def ajax; end
+class TurboController < CrudController
+  def turbo; end
 
   def update
     super do |format, _success|
-      format.js
+      format.turbo_stream
     end
   end
 end

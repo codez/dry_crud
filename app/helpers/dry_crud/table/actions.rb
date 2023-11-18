@@ -57,11 +57,11 @@ module DryCrud
         action_col do |entry|
           path = action_path(entry, &block)
           if path
-            table_action_link('remove',
+            table_action_link('trash',
                               path,
                               **html_options.merge(
-                                data: { confirm: ti(:confirm_delete),
-                                        method: :delete }
+                                data: { 'turbo-confirm': ti(:confirm_delete),
+                                        'turbo-method': :delete }
                               ))
           end
         end

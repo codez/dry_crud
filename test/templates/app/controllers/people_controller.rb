@@ -1,5 +1,5 @@
 # People Controller
-class PeopleController < AjaxController
+class PeopleController < TurboController
   self.search_columns = [:name, :email, :remarks, 'cities.name']
 
   self.default_sort = 'people.name, countries.code, cities.name'

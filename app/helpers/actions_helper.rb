@@ -38,9 +38,9 @@ module ActionsHelper
   # Uses the current +entry+ if no path is given.
   def destroy_action_link(path = nil)
     path ||= path_args(entry)
-    action_link(ti('link.delete'), 'remove', path,
-                data: { confirm: ti(:confirm_delete),
-                        method: :delete })
+    action_link(ti('link.delete'), 'trash', path,
+                data: { 'turbo-confirm': ti(:confirm_delete),
+                        'turbo-method': :delete })
   end
 
   # Standard list action to the given path.

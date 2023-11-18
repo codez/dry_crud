@@ -1,9 +1,9 @@
 = render 'crud/actions_index'
 
-= action_link(ti(:'link.ajax'),
+= action_link(ti(:'link.turbo'),
               nil,
-              { action: 'ajax' },
-              method: :get, remote: true)
+              { action: 'turbo' },
+              data: { 'turbo-stream': true })
 
 #response
 

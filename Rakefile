@@ -37,12 +37,15 @@ namespace :test do
   end
 
   namespace :app do
-    task :environment do
-      ENV['RAILS_ROOT'] = TEST_APP_ROOT
-      ENV['RAILS_ENV'] = 'test'
 
-      require(File.join(TEST_APP_ROOT, 'config', 'environment'))
-    end
+    desc "Initializes the test application with a couple of classes"
+    task init: [:seed, :customize]
+
+    desc "Customize some of the functionality provided by dry_crud"
+    task customize: ['test:app:add_pagination',
+                     'test:app:use_bootstrap',
+                     'test:app:build_assets'
+                     ]
 
     desc "Create a rails test application"
     task :create do
@@ -53,10 +56,6 @@ namespace :test do
                      File.read(File.join(File.dirname(__FILE__),
                                'test', 'templates', 'Gemfile.append')))
         sh "cd #{TEST_APP_ROOT}; bundle install --local" # update Gemfile.lock
-        #sh "cd #{TEST_APP_ROOT}; bundle binstubs bundler"
-        #sh "cd #{TEST_APP_ROOT}; rails javascript:install:esbuild"
-        #sh "cd #{TEST_APP_ROOT}; yarn add esbuild from \".\""
-        #sh "cd #{TEST_APP_ROOT}; gem install foreman from \".\""
 
         sh "cd #{TEST_APP_ROOT}; rails g rspec:install"
         FileUtils.rm_f(File.join(TEST_APP_ROOT,
@@ -85,6 +84,13 @@ namespace :test do
                              templates: %w[1 yes true].include?(ENV['HAML']) ? 'haml' : 'erb',
                              tests: 'all' },
                            destination_root: TEST_APP_ROOT).invoke_all
+    end
+
+    task :environment do
+      ENV['RAILS_ROOT'] = TEST_APP_ROOT
+      ENV['RAILS_ENV'] = 'test'
+
+      require(File.join(TEST_APP_ROOT, 'config', 'environment'))
     end
 
     desc "Populates the test application with some models and controllers"
@@ -117,15 +123,6 @@ namespace :test do
       end
     end
 
-    desc "Initializes the test application with a couple of classes"
-    task init: [:seed, :customize]
-
-    desc "Customize some of the functionality provided by dry_crud"
-    task customize: ['test:app:add_pagination',
-                     'test:app:add_ujs',
-                     'test:app:use_bootstrap'
-                     ]
-
     desc "Adds pagination to the test app"
     task :add_pagination do
       list_ctrl = File.join(TEST_APP_ROOT,
@@ -143,17 +140,6 @@ namespace :test do
                              'app', 'views', 'list', 'index.html.haml'),
                    "= render 'list'",
                    "= paginate entries\n\n= render 'list'")
-    end
-
-    desc "Adds Rails UJS to the test app"
-    task :add_ujs do
-      sh "cd #{TEST_APP_ROOT}; yarn add @rails/ujs"
-      app_js = File.join(TEST_APP_ROOT, 'app', 'javascript', 'application.js')
-      if File.exist?(app_js) && File.read(app_js) !~ /ujs/
-        file_replace(app_js,
-                      /\n\z/,
-                      "\nimport Rails from '@rails/ujs'\nRails.start()\n")
-      end
     end
 
     desc "Use Boostrap Icons in the test app"
@@ -178,6 +164,10 @@ namespace :test do
                                'app', 'assets', 'stylesheets', 'sample.scss'))
     end
 
+    desc "Build javascript and css in the test app"
+    task :build_assets do
+      sh "cd #{TEST_APP_ROOT}; rails javascript:build css:build"
+    end
   end
 end
 

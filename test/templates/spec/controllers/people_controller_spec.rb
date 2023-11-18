@@ -48,33 +48,33 @@ describe PeopleController do
   end
 
   describe_action :get, :show, id: true do
-    context '.js', format: :js do
+    context 'turbo', format: :turbo_stream do
       it_is_expected_to_respond
-      it { expect(response.body).to match(/document.getElementById\('content'\)/) }
+      it { expect(response.body).to match(/<turbo-stream action="update" target="content">/) }
     end
   end
 
   describe_action :get, :edit, id: true do
-    context '.js', format: :js do
+    context 'turbo', format: :turbo_stream do
       it_is_expected_to_respond
-      it { expect(response.body).to match(/document.getElementById\('content'\)/) }
+      it { expect(response.body).to match(/<turbo-stream action="update" target="content">/) }
     end
   end
 
   describe_action :put, :update, id: true do
-    context '.js', format: :js do
+    context 'turbo', format: :turbo_stream do
       context 'with valid params' do
         let(:params) { { person: { name: 'New Name' } } }
 
         it_is_expected_to_respond
-        it { expect(response.body).to match(/document.getElementById\('content'\)/) }
+        it { expect(response.body).to match(/<turbo-stream action="update" target="content">/) }
       end
 
       context 'with invalid params' do
         let(:params) { { person: { name: ' ' } } }
 
         it_is_expected_to_respond
-        it { expect(response.body).to match(/alert/) }
+        it { expect(response.body).to match(/<turbo-stream action="update" target="content">/) }
       end
     end
   end

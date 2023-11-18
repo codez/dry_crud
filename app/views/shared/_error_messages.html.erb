@@ -1,8 +1,8 @@
 <% if errors.any? %>
   <div id='error_explanation' class='alert alert-danger'>
-      <h2>
+      <p>
       <%= ti(:"errors.header", count: errors.count, model: object.to_s) %>
-      </h2>
+      </p>
       <ul>
           <% errors.full_messages.each do |msg| %>
             <li><%= msg %></li>

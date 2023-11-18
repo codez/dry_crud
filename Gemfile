@@ -17,6 +17,7 @@ gem "sprockets-rails"
 gem "jsbundling-rails"
 gem "cssbundling-rails"
 gem "turbo-rails"
+gem "stimulus-rails"
 
 gem 'sassc-rails'
 

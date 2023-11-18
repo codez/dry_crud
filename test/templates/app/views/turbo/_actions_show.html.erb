@@ -1,0 +1,7 @@
+<%= index_action_link %>
+<%= edit_action_link %>
+<%= action_link(ti(:"link.edit") + ' Turbo',
+                'pencil',
+                edit_polymorphic_path(path_args(entry)),
+                data: { 'turbo-stream': true }) %>
+<%= destroy_action_link %>
