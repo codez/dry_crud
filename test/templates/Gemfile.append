@@ -14,5 +14,3 @@ gem 'haml'
 gem 'kaminari'
 
 gem 'rspec-rails'
-
-gem 'sassc-rails'

@@ -35,12 +35,11 @@ To integrate dry_crud into your code, only a few additions are required:
 * Optionally define a +list+ scope in your models to be used in the +index+ action.
 * Optionally define a +options_list+ scope in your models to be used in select dropdowns.
 
-From version 5.0 onwards, the major and minor version numbers will be kept in sync with Rails, and only the matching Rails version is supported. Version 3.0 is compatible 4.2, Version 2.0 and higher are compatible with Rails 4 and Rails 3.2. dry_crud is tested with Ruby 2.5. If you are using Ruby 1.9.3, please refer to version 3.0.0.
-
+From version 5.0 onwards, the major and minor version numbers will be kept in sync with Rails, and only the matching Rails version is supported.
 
 == Background
 
-In most Rails applications, you have some models that require basic CRUD (create, read, update, delete) functionality. There are various possibilities like Rails scaffolding, {Inherited Resources}[https://github.com/activeadmin/inherited_resources] or {Rails Admin}[https://github.com/sferik/rails_admin]. Still, various parts in your application remain duplicated. While you might pull up common methods into a common superclass controller, most views still contain very similar code. And then you also have to remember the entire API of these frameworks.
+In most Rails applications, you have some models that require basic CRUD (create, read, update, delete) functionality. There are various possibilities like Rails scaffolding, {Inherited Resources}[https://github.com/activeadmin/inherited_resources] or {Rails Admin}[https://github.com/railsadminteam/rails_admin]. Still, various parts in your application remain duplicated. While you might pull up common methods into a common superclass controller, most views still contain very similar code. And then you also have to remember the entire API of these frameworks.
 
 Enter dry_crud.
 
@@ -52,7 +51,7 @@ dry_crud is a Rails generator. All code resides in your application and is open 
 
 dry_crud does not depend on any other gems, but easily allows you to integrate them in order to unify the behavior of your CRUD controllers. You might even use the gems mentioned above to adapt your generated CrudController base class. All classes come with thorough tests that provide you with a solid foundation for implementing your own adaptions.
 
-A basic CSS gets you started with your application's layout. For advanced needs, dry_crud supports the styles and classes used in {Bootstrap 4}[http://getbootstrap.com]. A great design never was so close.
+A basic CSS gets you started with your application's layout. For advanced needs, dry_crud supports the styles and classes used in {Bootstrap}[http://getbootstrap.com]. As the views are generated into your application code, you are free to change the styling to your needs.
 
 If you find yourself adapting the same parts of dry_crud for your applications over and over, please feel free to {fork me on Github}[http://github.com/codez/dry_crud].
 
@@ -163,7 +162,7 @@ To render custom columns, use the +col+ method with an appropriate block:
         t.sortable_attrs(:lastname, :firstname)
         t.col('', class: 'center') { |entry| image_tag(entry.picture) }
         t.attr(:street)
-        t.col('Map') { |entry| link_to(entry.city, "http://maps.google.com/?q=#{entry.city}" }
+        t.col('Map') { |entry| link_to(entry.city, "http://maps.google.com/?q=#{entry.city}") }
       end %>
 
 For views of subclasses of ListController, you can directly use the +crud_table+ helper method, where you do not have to pass the <tt>@people</tt> list explicitly and actions are added automatically.

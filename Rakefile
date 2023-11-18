@@ -50,7 +50,7 @@ namespace :test do
     desc "Create a rails test application"
     task :create do
       unless File.exist?(TEST_APP_ROOT)
-        sh "rails new #{TEST_APP_ROOT} --css=bootstrap"
+        sh "rails new #{TEST_APP_ROOT} --css=bootstrap --js esbuild"
         file_replace(File.join(TEST_APP_ROOT, 'Gemfile'),
                      /\z/,
                      File.read(File.join(File.dirname(__FILE__),
@@ -142,24 +142,8 @@ namespace :test do
                    "= paginate entries\n\n= render 'list'")
     end
 
-    desc "Use Boostrap Icons in the test app"
+    desc "Remove sample scss in the test app"
     task :use_bootstrap do
-      sh "cd #{TEST_APP_ROOT}; yarn add bootstrap-icons"
-
-      app_css = File.join(TEST_APP_ROOT, 'app', 'assets', 'stylesheets', 'application.bootstrap.scss')
-      if File.exist?(app_css) && File.read(app_css) !~ /bootstrap-icons/
-        file_replace(app_css,
-                      /\n\z/,
-                      "\n@import 'bootstrap-icons/font/bootstrap-icons';\n@import 'crud';\n")
-      end
-
-      assets = File.join(TEST_APP_ROOT, 'config', 'initializers', 'assets.rb')
-      if File.exist?(assets) && File.read(assets) !~ /bootstrap-icons/
-        file_replace(assets,
-                      /\n\z/,
-                      "\nRails.application.config.assets.paths << Rails.root.join('node_modules/bootstrap-icons/font')\n")
-      end
-
       FileUtils.rm_f(File.join(TEST_APP_ROOT,
                                'app', 'assets', 'stylesheets', 'sample.scss'))
     end

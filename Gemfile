@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 7.0.0'
+gem 'rails', '~> 7.1.0'
 
 gem 'puma'
 
@@ -19,11 +19,9 @@ gem "cssbundling-rails"
 gem "turbo-rails"
 gem "stimulus-rails"
 
-gem 'sassc-rails'
-
 gem 'bootsnap', require: false
 
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: [:windows, :jruby]
 
 group :development do
   gem 'web-console'
@@ -33,7 +31,7 @@ group :development do
 end
 
 gem 'simplecov', require: false
-gem 'byebug', platforms: [:mri]
+gem 'debug', platforms: [:mri, :windows]
 
 # platform specific gems
 
