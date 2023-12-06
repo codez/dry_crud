@@ -159,7 +159,7 @@ module FormatHelper
   # Returns true if no link should be created when formatting the given
   # association.
   def assoc_link?(_assoc, val)
-    respond_to?("#{val.class.model_name.singular_route_key}_path".to_sym)
+    respond_to?(:"#{val.class.model_name.singular_route_key}_path")
   end
 
 end
