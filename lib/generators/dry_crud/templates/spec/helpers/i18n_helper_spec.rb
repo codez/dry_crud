@@ -1,101 +1,100 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe I18nHelper do
-
   include CrudTestHelper
 
-  describe '#translate_inheritable' do
+  describe "#translate_inheritable" do
     before { @controller = CrudTestModelsController.new }
 
     before do
       I18n.backend.store_translations(
         I18n.locale,
         global: {
-          test_key: 'global'
+          test_key: "global"
         }
       )
     end
     subject { ti(:test_key) }
 
-    it { is_expected.to eq('global') }
+    it { is_expected.to eq("global") }
 
-    context 'with list key' do
+    context "with list key" do
       before do
         I18n.backend.store_translations(
           I18n.locale,
           list: {
             global: {
-              test_key: 'list global'
+              test_key: "list global"
             }
           }
         )
       end
-      it { is_expected.to eq('list global') }
+      it { is_expected.to eq("list global") }
 
-      context 'and list action key' do
+      context "and list action key" do
         before do
           I18n.backend.store_translations(
             I18n.locale,
             list: {
               index: {
-                test_key: 'list index'
+                test_key: "list index"
               }
             }
           )
         end
-        it { is_expected.to eq('list index') }
+        it { is_expected.to eq("list index") }
 
-        context 'and crud global key' do
+        context "and crud global key" do
           before do
             I18n.backend.store_translations(
               I18n.locale,
               crud: {
                 global: {
-                  test_key: 'crud global'
+                  test_key: "crud global"
                 }
               }
             )
           end
-          it { is_expected.to eq('crud global') }
+          it { is_expected.to eq("crud global") }
 
-          context 'and crud action key' do
+          context "and crud action key" do
             before do
               I18n.backend.store_translations(
                 I18n.locale,
                 crud: {
                   index: {
-                    test_key: 'crud index'
+                    test_key: "crud index"
                   }
                 }
               )
             end
-            it { is_expected.to eq('crud index') }
+            it { is_expected.to eq("crud index") }
 
-            context 'and controller global key' do
+            context "and controller global key" do
               before do
                 I18n.backend.store_translations(
                   I18n.locale,
                   crud_test_models: {
                     global: {
-                      test_key: 'test global'
+                      test_key: "test global"
                     }
                   }
                 )
               end
-              it { is_expected.to eq('test global') }
+              it { is_expected.to eq("test global") }
 
-              context 'and controller action key' do
+              context "and controller action key" do
                 before do
                   I18n.backend.store_translations(
                     I18n.locale,
                     crud_test_models: {
                       index: {
-                        test_key: 'test index'
+                        test_key: "test index"
                       }
                     }
                   )
                 end
-                it { is_expected.to eq('test index') }
+                it { is_expected.to eq("test index") }
               end
             end
           end
@@ -104,7 +103,7 @@ describe I18nHelper do
     end
   end
 
-  describe '#translate_association' do
+  describe "#translate_association" do
     let(:assoc) { CrudTestModel.reflect_on_association(:companion) }
     subject { ta(:test_key, assoc) }
 
@@ -113,30 +112,30 @@ describe I18nHelper do
         I18n.locale,
         global: {
           associations: {
-            test_key: 'global'
+            test_key: "global"
           }
         }
       )
     end
-    it { is_expected.to eq('global') }
+    it { is_expected.to eq("global") }
 
-    context 'with model key' do
+    context "with model key" do
       before do
         I18n.backend.store_translations(
           I18n.locale,
           activerecord: {
             associations: {
               crud_test_model: {
-                test_key: 'model'
+                test_key: "model"
               }
             }
           }
         )
       end
 
-      it { is_expected.to eq('model') }
+      it { is_expected.to eq("model") }
 
-      context 'and assoc key' do
+      context "and assoc key" do
         before do
           I18n.backend.store_translations(
             I18n.locale,
@@ -145,7 +144,7 @@ describe I18nHelper do
                 models: {
                   crud_test_model: {
                     companion: {
-                      test_key: 'companion'
+                      test_key: "companion"
                     }
                   }
                 }
@@ -154,9 +153,9 @@ describe I18nHelper do
           )
         end
 
-        it { is_expected.to eq('companion') }
-        it 'uses global without assoc' do
-          expect(ta(:test_key)).to eq('global')
+        it { is_expected.to eq("companion") }
+        it "uses global without assoc" do
+          expect(ta(:test_key)).to eq("global")
         end
       end
     end

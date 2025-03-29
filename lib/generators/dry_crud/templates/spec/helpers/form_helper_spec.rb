@@ -1,7 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe FormHelper do
-
   include UtilityHelper
   include FormatHelper
   include I18nHelper
@@ -15,18 +14,18 @@ describe FormHelper do
 
   after(:all) { reset_db }
 
-  describe '#plain_form' do
+  describe "#plain_form" do
     subject do
       with_test_routing do
         capture do
-          plain_form(entry, html: { class: 'special' }) do |f|
+          plain_form(entry, html: { class: "special" }) do |f|
             f.labeled_input_fields :name, :birthdate
           end
         end
       end
     end
 
-    context 'for existing entry' do
+    context "for existing entry" do
       let(:entry) { crud_test_models(:AAAAA) }
 
       it do
@@ -55,20 +54,19 @@ describe FormHelper do
     end
   end
 
-  describe '#standard_form' do
-
+  describe "#standard_form" do
     subject do
       with_test_routing do
         capture do
           standard_form(entry,
                         :name, :children, :birthdate, :human,
-                        cancel_url: '/somewhere',
-                        html: { class: 'special' })
+                        cancel_url: "/somewhere",
+                        html: { class: "special" })
         end
       end
     end
 
-    context 'for existing entry' do
+    context "for existing entry" do
       let(:entry) { crud_test_models(:AAAAA) }
 
       it do
@@ -119,7 +117,7 @@ describe FormHelper do
       end
     end
 
-    context 'for invalid entry' do
+    context "for invalid entry" do
       let(:entry) do
         e = crud_test_models(:AAAAA)
         e.name = nil
@@ -146,7 +144,7 @@ describe FormHelper do
     end
   end
 
-  describe '#crud_form' do
+  describe "#crud_form" do
     let(:entry) { CrudTestModel.first }
     subject do
       with_test_routing { crud_form }
@@ -215,5 +213,4 @@ describe FormHelper do
                             #{t('global.button.cancel')}<\/a>/x)
     end
   end
-
 end

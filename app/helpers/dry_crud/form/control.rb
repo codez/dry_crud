@@ -1,18 +1,16 @@
 module DryCrud
   module Form
-
     # Internal class to handle the rendering of a single form control,
     # consisting of a label, input field, addon, help text or
     # required mark.
     class Control
-
       attr_reader :builder, :attr, :args, :options, :addon, :help
 
       delegate :tag, :object, :add_css_class,
                to: :builder
 
       # Html displayed to mark an input as required.
-      REQUIRED_MARK = '*'.freeze
+      REQUIRED_MARK = "*".freeze
 
       # Number of default input field span columns depending
       # on the #field_method.
@@ -70,8 +68,8 @@ module DryCrud
 
       # Create the HTML markup for any labeled content.
       def labeled
-        tag.div(class: 'row mb-3') do
-          builder.label(attr, caption, class: 'col-md-2 col-form-label') +
+        tag.div(class: "row mb-3") do
+          builder.label(attr, caption, class: "col-md-2 col-form-label") +
             tag.div(content, class: "col-md-#{span}")
         end
       end
@@ -98,8 +96,8 @@ module DryCrud
       # depending on the attribute.
       def input
         @input ||= begin
-          options[:required] = 'required' if required
-          add_css_class(options, 'is-invalid') if errors?
+          options[:required] = "required" if required
+          add_css_class(options, "is-invalid") if errors?
           builder.send(field_method, attr, *args, **options)
         end
       end
@@ -143,9 +141,9 @@ module DryCrud
           :belongs_to_field
         elsif association_kind?(:has_and_belongs_to_many, :has_many)
           :has_many_field
-        elsif attr.to_s.include?('password')
+        elsif attr.to_s.include?("password")
           :password_field
-        elsif attr.to_s.include?('email')
+        elsif attr.to_s.include?("email")
           :email_field
         elsif builder.respond_to?(:"#{type}_field")
           :"#{type}_field"
@@ -170,8 +168,6 @@ module DryCrud
           false
         end
       end
-
     end
-
   end
 end

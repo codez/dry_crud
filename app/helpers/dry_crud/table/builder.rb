@@ -1,6 +1,5 @@
 module DryCrud
   module Table
-
     # A simple helper to easily define tables listing several rows of the same
     # data type.
     #
@@ -10,7 +9,6 @@ module DryCrud
     #     t.attrs :name, :city
     #   end
     class Builder
-
       include Sorting
       include Actions
 
@@ -39,7 +37,7 @@ module DryCrud
       # Define a column for the table with the given header, the html_options
       # used for each td and a block rendering the contents of a cell for the
       # current entry. The columns appear in the order they are defined.
-      def col(header = '', **html_options, &block)
+      def col(header = "", **html_options, &block)
         @cols << Col.new(header, html_options, @template, block)
       end
 
@@ -76,9 +74,9 @@ module DryCrud
         entry = entries.present? ? entry_class.new : nil
         case column_type(entry, attr)
         when :integer, :float, :decimal
-          'right' unless association(entry, attr, :belongs_to)
+          "right" unless association(entry, attr, :belongs_to)
         when :boolean
-          'center'
+          "center"
         end
       end
 
@@ -110,7 +108,6 @@ module DryCrud
           entries.first.class
         end
       end
-
     end
   end
 end

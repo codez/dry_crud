@@ -8,7 +8,6 @@
 # With the help of additional callbacks, it is possible to hook into the
 # action procedures without overriding the entire method.
 class CrudController < ListController
-
   class_attribute :permitted_attrs
 
   # Defines before and after callback hooks for create, update, save and
@@ -139,7 +138,7 @@ class CrudController < ListController
 
   # The form params for this model.
   def model_params
-    params.require(model_identifier).permit(permitted_attrs)
+    params.expect(model_identifier => permitted_attrs)
   end
 
   # Path of the index page to return to.
@@ -186,7 +185,7 @@ class CrudController < ListController
   # Perform a redirect after a failed operation and set a flash alert.
   def redirect_on_failure(**options)
     location = options[:location] ||
-               request.env['HTTP_REFERER'].presence ||
+               request.env["HTTP_REFERER"].presence ||
                index_path
     flash[:alert] ||= error_messages.presence || flash_message(:failure)
     redirect_to location
@@ -211,10 +210,10 @@ class CrudController < ListController
   # or crud.{action_name}.flash.{state} as fallback.
   def flash_message(state)
     scope = "#{action_name}.flash.#{state}"
-    keys = [:"#{controller_name}.#{scope}_html",
+    keys = [ :"#{controller_name}.#{scope}_html",
             :"#{controller_name}.#{scope}",
             :"crud.#{scope}_html",
-            :"crud.#{scope}"]
+            :"crud.#{scope}" ]
     I18n.t(keys.shift, model: full_entry_label, default: keys)
   end
 
@@ -229,7 +228,7 @@ class CrudController < ListController
   def error_messages
     # rubocop:disable Rails/OutputSafety
     escaped = entry.errors.full_messages.map { |m| ERB::Util.html_escape(m) }
-    escaped.join('<br/>').html_safe
+    escaped.join("<br/>").html_safe
     # rubocop:enable Rails/OutputSafety
   end
 
@@ -242,5 +241,4 @@ class CrudController < ListController
       before_render_edit(*methods)
     end
   end
-
 end

@@ -1,10 +1,8 @@
 module DryCrud
-
   # Sort functionality for the index table.
   # Define a default sort expression that is always appended to the
   # current sort params with the class attribute +default_sort+.
   module Sortable
-
     extend ActiveSupport::Concern
 
     included do
@@ -20,7 +18,6 @@ module DryCrud
 
     # Class methods for sorting.
     module ClassMethods
-
       # Define a map of (virtual) attributes to SQL order expressions.
       # May be used for sorting table columns that do not appear directly
       # in the database table. E.g., map city_id: 'cities.name' to
@@ -29,20 +26,18 @@ module DryCrud
         self.sort_mappings_with_indifferent_access =
           hash.with_indifferent_access
       end
-
     end
 
     # Prepended methods for sorting.
     module Prepends
-
       private
 
       # Enhance the list entries with an optional sort order.
       def list_entries
         sortable = sortable?(params[:sort])
         if sortable || default_sort
-          clause = [sortable ? sort_expression : nil, default_sort]
-          super.reorder(Arel.sql(clause.compact.join(', ')))
+          clause = [ sortable ? sort_expression : nil, default_sort ]
+          super.reorder(Arel.sql(clause.compact.join(", ")))
         else
           super
         end
@@ -57,7 +52,7 @@ module DryCrud
 
       # The sort direction, either 'asc' or 'desc'.
       def sort_dir
-        params[:sort_dir] == 'desc' ? 'DESC' : 'ASC'
+        params[:sort_dir] == "desc" ? "DESC" : "ASC"
       end
 
       # Returns true if the passed attribute is sortable.
@@ -66,8 +61,6 @@ module DryCrud
         model_class.column_names.include?(attr.to_s) ||
         sort_mappings_with_indifferent_access.include?(attr))
       end
-
     end
-
   end
 end

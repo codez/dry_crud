@@ -1,10 +1,10 @@
 # People Controller
 class PeopleController < TurboController
-  self.search_columns = [:name, :email, :remarks, 'cities.name']
+  self.search_columns = [ :name, :email, :remarks, "cities.name" ]
 
-  self.default_sort = 'people.name, countries.code, cities.name'
+  self.default_sort = "people.name, countries.code, cities.name"
 
-  self.sort_mappings = { city_id: 'cities.name' }
+  self.sort_mappings = { city_id: "cities.name" }
 
   self.permitted_attrs = %i[name children city_id rating income
                             birthdate gets_up_at last_seen remarks

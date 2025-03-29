@@ -1,10 +1,9 @@
-require 'English'
+require "English"
 
 # View helpers for basic functions used in various other helpers.
 module UtilityHelper
-
   # non-breaking space asserts better css.
-  EMPTY_STRING = '&nbsp;'.html_safe.freeze
+  EMPTY_STRING = "&nbsp;".html_safe.freeze
 
   # Render a content tag with the collected contents rendered
   # by &block for each item in collection.
@@ -21,8 +20,8 @@ module UtilityHelper
   # Returns the css class for the given flash level.
   def flash_class(level)
     case level
-    when :notice then 'success'
-    when :alert then 'error'
+    when :notice then "success"
+    when :alert then "error"
     else level.to_s
     end
   end
@@ -72,13 +71,12 @@ module UtilityHelper
   # Returns the name of the attr and it's corresponding field
   def assoc_and_id_attr(attr)
     attr = attr.to_s
-    if attr.end_with?('_id')
-      [attr[0..-4], attr]
-    elsif attr.end_with?('_ids')
-      [attr[0..-5].pluralize, attr]
+    if attr.end_with?("_id")
+      [ attr[0..-4], attr ]
+    elsif attr.end_with?("_ids")
+      [ attr[0..-5].pluralize, attr ]
     else
-      [attr, "#{attr}_id"]
+      [ attr, "#{attr}_id" ]
     end
   end
-
 end

@@ -3,7 +3,6 @@
 # #test_entry_attrs to test the basic crud functionality. Override the test
 # methods if you changed the behaviour in your subclass controller.
 module CrudControllerTestHelper # rubocop:disable Metrics/ModuleLength
-
   def test_index # :nodoc:
     get :index, params: test_params
     assert_response :success
@@ -11,13 +10,13 @@ module CrudControllerTestHelper # rubocop:disable Metrics/ModuleLength
   end
 
   def test_index_json # :nodoc:
-    get :index, params: test_params(format: 'json')
+    get :index, params: test_params(format: "json")
     assert_response :success
     assert entries.present?
-    assert @response.body.starts_with?('[{'), @response.body
+    assert @response.body.starts_with?("[{"), @response.body
   end
 
-  def test_index_search # rubocop:disable Metrics/AbcSize :nodoc:
+  def test_index_search # rubocop:disable Metrics/AbcSize -- :nodoc:
     field = @controller.search_columns.first
     val = field && test_entry[field].to_s
     return if val.blank? # does not support search or no value in this field
@@ -30,7 +29,7 @@ module CrudControllerTestHelper # rubocop:disable Metrics/ModuleLength
 
   def test_index_sort_asc # :nodoc:
     col = model_class.column_names.first
-    get :index, params: test_params(sort: col, sort_dir: 'asc')
+    get :index, params: test_params(sort: col, sort_dir: "asc")
     assert_response :success
     assert entries.present?
     sorted = entries.sort_by(&col.to_sym)
@@ -39,7 +38,7 @@ module CrudControllerTestHelper # rubocop:disable Metrics/ModuleLength
 
   def test_index_sort_desc # :nodoc:
     col = model_class.column_names.first
-    get :index, params: test_params(sort: col, sort_dir: 'desc')
+    get :index, params: test_params(sort: col, sort_dir: "desc")
     assert_response :success
     assert entries.present?
     sorted = entries.to_a.sort_by(&col.to_sym)
@@ -53,10 +52,10 @@ module CrudControllerTestHelper # rubocop:disable Metrics/ModuleLength
   end
 
   def test_show_json # :nodoc:
-    get :show, params: test_params(id: test_entry.id, format: 'json')
+    get :show, params: test_params(id: test_entry.id, format: "json")
     assert_response :success
     assert_equal test_entry, entry
-    assert @response.body.starts_with?('{')
+    assert @response.body.starts_with?("{")
   end
 
   def test_show_with_non_existing_id_raises_record_not_found # :nodoc:
@@ -83,7 +82,7 @@ module CrudControllerTestHelper # rubocop:disable Metrics/ModuleLength
   def test_create_json # :nodoc:
     assert_difference("#{model_class.name}.count") do
       post :create, params: test_params(model_identifier => new_entry_attrs,
-                                        format: 'json')
+                                        format: "json")
     end
     assert_response :success
     assert @response.body.starts_with?('{"id":')
@@ -108,7 +107,7 @@ module CrudControllerTestHelper # rubocop:disable Metrics/ModuleLength
     assert_no_difference("#{model_class.name}.count") do
       put :update, params: test_params(id: test_entry.id,
                                        model_identifier => edit_entry_attrs,
-                                       format: 'json')
+                                       format: "json")
     end
     assert_response :success
     assert @response.body.starts_with?('{"id":')
@@ -124,22 +123,22 @@ module CrudControllerTestHelper # rubocop:disable Metrics/ModuleLength
   def test_destroy_json # :nodoc:
     assert_difference("#{model_class.name}.count", -1) do
       delete :destroy, params: test_params(id: test_entry.id,
-                                           format: 'json')
+                                           format: "json")
     end
     assert_response :success
-    assert_equal '', @response.body.strip
+    assert_equal "", @response.body.strip
   end
 
   private
 
   def assert_redirected_to_index # :nodoc:
-    assert_redirected_to test_params(action: 'index',
+    assert_redirected_to test_params(action: "index",
                                      id: nil,
                                      returning: true)
   end
 
   def assert_redirected_to_show(entry) # :nodoc:
-    assert_redirected_to test_params(action: 'show',
+    assert_redirected_to test_params(action: "show",
                                      id: entry.id)
   end
 
@@ -212,5 +211,4 @@ module CrudControllerTestHelper # rubocop:disable Metrics/ModuleLength
     end
     params
   end
-
 end

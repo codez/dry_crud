@@ -1,15 +1,14 @@
 # Controller for the dummy model.
 class CrudTestModelsController < CrudController # :nodoc:
-
-  HANDLE_PREFIX = 'handle_'.freeze
+  HANDLE_PREFIX = "handle_".freeze
 
   self.search_columns = %i[name whatever remarks]
-  self.sort_mappings = { chatty: 'length(remarks)' }
-  self.default_sort = 'name'
-  self.permitted_attrs = [:name, :email, :password, :whatever, :children,
+  self.sort_mappings = { chatty: "length(remarks)" }
+  self.default_sort = "name"
+  self.permitted_attrs = [ :name, :email, :password, :whatever, :children,
                           :companion_id, :rating, :income, :birthdate,
                           :gets_up_at, :last_seen, :human, :remarks,
-                          { other_ids: [] }]
+                          { other_ids: [] } ]
 
   before_create :possibly_redirect
   before_create :handle_name
@@ -27,16 +26,16 @@ class CrudTestModelsController < CrudController # :nodoc:
 
   def index
     entries
-    render plain: 'index js' if request.format.js?
+    render plain: "index js" if request.format.js?
   end
 
   def show
-    render html: 'custom html' if entry.name == 'BBBBB'
+    render html: "custom html" if entry.name == "BBBBB"
   end
 
   def create
     super do |_format, success|
-      flash[:notice] = 'model got created' if success
+      flash[:notice] = "model got created" if success
     end
   end
 
@@ -45,9 +44,9 @@ class CrudTestModelsController < CrudController # :nodoc:
   def list_entries
     entries = super
     if params[:filter]
-      entries = entries.where(['rating < ?', 3])
+      entries = entries.where(rating: ...3)
                        .except(:order)
-                       .order('children DESC')
+                       .order("children DESC")
     end
     entries
   end
@@ -60,15 +59,15 @@ class CrudTestModelsController < CrudController # :nodoc:
 
   # custom callback
   def handle_name
-    if entry.name == 'illegal'
-      flash[:alert] = 'illegal name'
+    if entry.name == "illegal"
+      flash[:alert] = "illegal name"
       throw :abort
     end
   end
 
   # callback to redirect if @should_redirect is set
   def possibly_redirect
-    redirect_to action: 'index' if should_redirect && !performed?
+    redirect_to action: "index" if should_redirect && !performed?
   end
 
   def set_companions
@@ -107,5 +106,4 @@ class CrudTestModelsController < CrudController # :nodoc:
     @called_callbacks ||= []
     @called_callbacks << callback
   end
-
 end

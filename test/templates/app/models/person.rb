@@ -4,7 +4,7 @@ class Person < ApplicationRecord
 
   validates :name, presence: true
 
-  scope :list, -> { order('people.name') }
+  scope :list, -> { order("people.name") }
 
   def to_s
     name

@@ -1,16 +1,16 @@
-require 'generators/dry_crud/dry_crud_generator_base'
+require "generators/dry_crud/dry_crud_generator_base"
 
 module DryCrud
   # Copies one file of dry_crud to the rails application.
   class FileGenerator < ::DryCrudGeneratorBase
     desc "Copy one file from dry_crud to the application.\n" \
-         'FILENAME is a part of the name of the file to copy. ' \
-         'Must match exactly one file.'
+         "FILENAME is a part of the name of the file to copy. " \
+         "Must match exactly one file."
 
     argument :filename,
              type: :string,
-             desc: 'Name or part of the filename to copy. ' \
-                   'Must match exactly one file.'
+             desc: "Name or part of the filename to copy. " \
+                   "Must match exactly one file."
 
     # rubocop:disable Rails/Output
     def copy_matching_file
@@ -21,7 +21,7 @@ module DryCrud
       when 0
         puts "No file containing '#{filename}' found in dry_crud."
       else
-        puts 'Please be more specific. ' \
+        puts "Please be more specific. " \
              "All the following files match '#{filename}':"
         files.each do |f|
           puts " * #{f}"

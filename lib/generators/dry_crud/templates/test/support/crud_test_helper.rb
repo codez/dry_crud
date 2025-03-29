@@ -8,7 +8,6 @@ REGEXP_ACTION_CELL = /<td class="action"><a .*?href.+?<\/a><\/td>/m.freeze
 # This helper is used to test the CrudController and various helpers
 # without the need for an application based model.
 module CrudTestHelper
-
   # Controller helper methods for the tests
 
   def model_class
@@ -16,11 +15,11 @@ module CrudTestHelper
   end
 
   def controller_name
-    'crud_test_models'
+    "crud_test_models"
   end
 
   def action_name
-    'index'
+    "index"
   end
 
   def params
@@ -35,9 +34,7 @@ module CrudTestHelper
     true
   end
 
-  def h(text)
-    ERB::Util.h(text)
-  end
+  delegate :h, to: :'ERB::Util'
 
   private
 
@@ -85,8 +82,8 @@ module CrudTestHelper
   def create_crud_test_models_other_crud_test_models(connection)
     connection.create_table :crud_test_models_other_crud_test_models,
                             force: true do |t|
-      t.belongs_to :crud_test_model, index: { name: 'parent' }
-      t.belongs_to :other_crud_test_model, index: { name: 'other' }
+      t.belongs_to :crud_test_model, index: { name: "parent" }
+      t.belongs_to :other_crud_test_model, index: { name: "other" }
     end
   end
 
@@ -116,7 +113,7 @@ module CrudTestHelper
     with_routing do |set|
       set.draw { resources :crud_test_models }
       # used to define a controller in these tests
-      set.default_url_options = { controller: 'crud_test_models' }
+      set.default_url_options = { controller: "crud_test_models" }
       yield
     end
   end
@@ -181,16 +178,15 @@ module CrudTestHelper
   def without_transaction
     c = ActiveRecord::Base.connection
     start_transaction = false
-    if c.adapter_name.downcase.include?('mysql') &&
+    if c.adapter_name.downcase.include?("mysql") &&
        c.open_transactions.positive?
       # in transactional tests, we may simply rollback
-      c.execute('ROLLBACK')
+      c.execute("ROLLBACK")
       start_transaction = true
     end
 
     yield
 
-    c.execute('BEGIN') if start_transaction
+    c.execute("BEGIN") if start_transaction
   end
-
 end

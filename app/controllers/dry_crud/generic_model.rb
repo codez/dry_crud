@@ -1,5 +1,4 @@
 module DryCrud
-
   # Connects the including controller to the model whose name corrsponds to
   # the controller's name.
   #
@@ -7,13 +6,12 @@ module DryCrud
   # Additional helper methods store and retrieve values in instance variables
   # named after their class.
   module GenericModel
-
     extend ActiveSupport::Concern
 
     included do
       helper_method :model_class, :models_label, :path_args
 
-      delegate :model_class, :models_label, :model_identifier, to: 'self.class'
+      delegate :model_class, :models_label, :model_identifier, to: "self.class"
     end
 
     # The scope where model entries will be listed and created.
@@ -43,11 +41,11 @@ module DryCrud
     def model_ivar_set(value)
       name = if value.respond_to?(:klass) # ActiveRecord::Relation
                ivar_name(value.klass).pluralize
-             elsif value.respond_to?(:each) # Array
+      elsif value.respond_to?(:each) # Array
                ivar_name(value.first.class).pluralize
-             else
+      else
                ivar_name(value.class)
-             end
+      end
       instance_variable_set(:"@#{name}", value)
     end
 
@@ -57,7 +55,6 @@ module DryCrud
 
     # Class methods from GenericModel.
     module ClassMethods
-
       # The ActiveRecord class of the model.
       def model_class
         @model_class ||= controller_name.classify.constantize
@@ -77,7 +74,6 @@ module DryCrud
 
         model_class.model_name.human(opts)
       end
-
     end
   end
 end

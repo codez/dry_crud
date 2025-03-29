@@ -1,7 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe UtilityHelper do
-
   include CrudTestHelper
 
   before(:all) do
@@ -12,10 +11,10 @@ describe UtilityHelper do
 
   after(:all) { reset_db }
 
-  describe '#column_type' do
+  describe "#column_type" do
     let(:model) { crud_test_models(:AAAAA) }
 
-    it 'recognizes types' do
+    it "recognizes types" do
       expect(column_type(model, :name)).to eq(:string)
       expect(column_type(model, :children)).to eq(:integer)
       expect(column_type(model, :companion_id)).to eq(:integer)
@@ -30,39 +29,38 @@ describe UtilityHelper do
     end
   end
 
-  describe '#content_tag_nested' do
-
-    it 'escapes safe content' do
+  describe "#content_tag_nested" do
+    it "escapes safe content" do
       html = content_tag_nested(:div, %w[a b]) { |e| tag.span(e) }
       expect(html).to be_html_safe
-      expect(html).to eq('<div><span>a</span><span>b</span></div>')
+      expect(html).to eq("<div><span>a</span><span>b</span></div>")
     end
 
-    it 'escapes unsafe content' do
+    it "escapes unsafe content" do
       html = content_tag_nested(:div, %w[a b]) { |e| "<#{e}>" }
-      expect(html).to eq('<div>&lt;a&gt;&lt;b&gt;</div>')
+      expect(html).to eq("<div>&lt;a&gt;&lt;b&gt;</div>")
     end
 
-    it 'simplys join without block' do
+    it "simplys join without block" do
       html = content_tag_nested(:div, %w[a b])
-      expect(html).to eq('<div>ab</div>')
+      expect(html).to eq("<div>ab</div>")
     end
   end
 
-  describe '#safe_join' do
-    it 'works as super without block' do
-      html = safe_join(['<a>', '<b>'.html_safe])
-      expect(html).to eq('&lt;a&gt;<b>')
+  describe "#safe_join" do
+    it "works as super without block" do
+      html = safe_join([ "<a>", "<b>".html_safe ])
+      expect(html).to eq("&lt;a&gt;<b>")
     end
 
-    it 'collects contents for array' do
+    it "collects contents for array" do
       html = safe_join(%w[a b]) { |e| tag.span(e) }
-      expect(html).to eq('<span>a</span><span>b</span>')
+      expect(html).to eq("<span>a</span><span>b</span>")
     end
   end
 
-  describe '#default_crud_attrs' do
-    it 'do not contain id and password' do
+  describe "#default_crud_attrs" do
+    it "do not contain id and password" do
       expect(default_crud_attrs).to eq(
         %i[name email whatever children companion_id rating income
            birthdate gets_up_at last_seen human remarks
@@ -70,5 +68,4 @@ describe UtilityHelper do
       )
     end
   end
-
 end

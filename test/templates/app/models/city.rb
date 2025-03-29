@@ -7,7 +7,7 @@ class City < ApplicationRecord
 
   before_destroy :protect_with_inhabitants
 
-  scope :options_list, -> { includes(:country).order('cities.name') }
+  scope :options_list, -> { includes(:country).order("cities.name") }
 
   def to_s
     "#{name} (#{country.code})"
