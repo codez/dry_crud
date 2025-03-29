@@ -5,7 +5,7 @@ module Admin
 
     self.search_columns = :name, :code
 
-    self.default_sort = 'countries.name'
+    self.default_sort = "countries.name"
 
     self.permitted_attrs = %i[name code]
 

@@ -1,10 +1,9 @@
 module DryCrud
   # Dry Crud Rails engine
   class Engine < Rails::Engine
-
     # Fields with errors are directly styled in DryCrud::FormBuilder.
     # Rails should just output the plain html tag.
-    initializer 'dry_crud.field_error_proc' do |_app|
+    initializer "dry_crud.field_error_proc" do |_app|
       ActionView::Base.field_error_proc =
         proc { |html_tag, _instance| html_tag }
     end
@@ -21,6 +20,5 @@ module DryCrud
         paths.prepend(dry_crud_helpers)
       end
     end
-
   end
 end

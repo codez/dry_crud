@@ -1,10 +1,9 @@
-require 'test_helper'
-require 'support/custom_assertions'
-require 'support/crud_test_model'
+require "test_helper"
+require "support/custom_assertions"
+require "support/crud_test_model"
 
 # Test TableHelper
 class TableHelperTest < ActionView::TestCase
-
   include UtilityHelper
   include FormatHelper
   include I18nHelper
@@ -30,13 +29,13 @@ class TableHelperTest < ActionView::TestCase
     @params = {}
   end
 
-  test 'empty table renders message' do
+  test "empty table renders message" do
     result = plain_table_or_message([])
     assert result.html_safe?
     assert_match(/<div class=["']table["']>.*<\/div>/, result)
   end
 
-  test 'non empty table renders table' do
+  test "non empty table renders table" do
     result = plain_table_or_message(%w[foo bar]) do |t|
       t.attrs :size, :upcase
     end
@@ -44,10 +43,10 @@ class TableHelperTest < ActionView::TestCase
     assert_match(/^<table.*<\/table>$/, result)
   end
 
-  test 'table with attrs' do
+  test "table with attrs" do
     expected = DryCrud::Table::Builder.table(
       %w[foo bar], self,
-      class: 'table table-striped table-hover'
+      class: "table table-striped table-hover"
     ) do |t|
       t.attrs :size, :upcase
     end
@@ -56,7 +55,7 @@ class TableHelperTest < ActionView::TestCase
     assert_equal expected, actual
   end
 
-  test 'standard list table' do
+  test "standard list table" do
     @entries = CrudTestModel.all
 
     table = with_test_routing do
@@ -67,7 +66,7 @@ class TableHelperTest < ActionView::TestCase
     assert_count 14, REGEXP_SORT_HEADERS, table
   end
 
-  test 'custom list table with attributes' do
+  test "custom list table with attributes" do
     @entries = CrudTestModel.all
 
     table = with_test_routing do
@@ -78,13 +77,13 @@ class TableHelperTest < ActionView::TestCase
     assert_count 3, REGEXP_SORT_HEADERS, table
   end
 
-  test 'custom list table with block' do
+  test "custom list table with block" do
     @entries = CrudTestModel.all
 
     table = with_test_routing do
       list_table do |t|
         t.attrs :name, :children, :companion_id
-        t.col('head') { |e| tag.span(e.income.to_s) }
+        t.col("head") { |e| tag.span(e.income.to_s) }
       end
     end
 
@@ -94,12 +93,12 @@ class TableHelperTest < ActionView::TestCase
     assert_count 6, /<span>.+?<\/span>/, table
   end
 
-  test 'custom list table with attributes and block' do
+  test "custom list table with attributes and block" do
     @entries = CrudTestModel.all
 
     table = with_test_routing do
       list_table :name, :children, :companion_id do |t|
-        t.col('head') { |e| tag.span(e.income.to_s) }
+        t.col("head") { |e| tag.span(e.income.to_s) }
       end
     end
 
@@ -109,8 +108,8 @@ class TableHelperTest < ActionView::TestCase
     assert_count 6, /<span>.+?<\/span>/, table
   end
 
-  test 'standard list table with ascending sort params' do
-    @params = { sort: 'children', sort_dir: 'asc' }
+  test "standard list table with ascending sort params" do
+    @params = { sort: "children", sort_dir: "asc" }
     @entries = CrudTestModel.all
 
     table = with_test_routing do
@@ -123,8 +122,8 @@ class TableHelperTest < ActionView::TestCase
     assert_count 1, sort_header_desc, table
   end
 
-  test 'standard list table with descending sort params' do
-    @params = { sort: 'children', sort_dir: 'desc' }
+  test "standard list table with descending sort params" do
+    @params = { sort: "children", sort_dir: "desc" }
     @entries = CrudTestModel.all
 
     table = with_test_routing do
@@ -137,8 +136,8 @@ class TableHelperTest < ActionView::TestCase
     assert_count 1, sort_header_asc, table
   end
 
-  test 'list table with custom column sort params' do
-    @params = { sort: 'chatty', sort_dir: 'asc' }
+  test "list table with custom column sort params" do
+    @params = { sort: "chatty", sort_dir: "asc" }
     @entries = CrudTestModel.all
 
     table = with_test_routing do
@@ -151,7 +150,7 @@ class TableHelperTest < ActionView::TestCase
     assert_count 1, sort_header_desc, table
   end
 
-  test 'standard crud table' do
+  test "standard crud table" do
     @entries = CrudTestModel.all
 
     table = with_test_routing do
@@ -163,7 +162,7 @@ class TableHelperTest < ActionView::TestCase
     assert_count 12, REGEXP_ACTION_CELL, table      # edit, delete links
   end
 
-  test 'custom crud table with attributes' do
+  test "custom crud table with attributes" do
     @entries = CrudTestModel.all
 
     table = with_test_routing do
@@ -175,13 +174,13 @@ class TableHelperTest < ActionView::TestCase
     assert_count 12, REGEXP_ACTION_CELL, table      # edit, delete links
   end
 
-  test 'custom crud table with block' do
+  test "custom crud table with block" do
     @entries = CrudTestModel.all
 
     table = with_test_routing do
       crud_table do |t|
         t.attrs :name, :children, :companion_id
-        t.col('head') { |e| tag.span(e.income.to_s) }
+        t.col("head") { |e| tag.span(e.income.to_s) }
       end
     end
 
@@ -191,12 +190,12 @@ class TableHelperTest < ActionView::TestCase
     assert_count 12, REGEXP_ACTION_CELL, table      # edit, delete links
   end
 
-  test 'custom crud table with attributes and block' do
+  test "custom crud table with attributes and block" do
     @entries = CrudTestModel.all
 
     table = with_test_routing do
       crud_table :name, :children, :companion_id do |t|
-        t.col('head') { |e| tag.span(e.income.to_s) }
+        t.col("head") { |e| tag.span(e.income.to_s) }
       end
     end
 
@@ -210,5 +209,4 @@ class TableHelperTest < ActionView::TestCase
   def entry
     @entry ||= CrudTestModel.first
   end
-
 end

@@ -1,6 +1,5 @@
 module DryCrud
   module Form
-
     # A form builder that automatically selects the corresponding input field
     # for ActiveRecord column types. Convenience methods for each column type
     # allow one to customize the different fields.
@@ -14,7 +13,6 @@ module DryCrud
     # See the Control class for how to customize the html rendered for a
     # single input field.
     class Builder < ActionView::Helpers::FormBuilder
-
       class_attribute :control_class
       self.control_class = Control
 
@@ -70,10 +68,10 @@ module DryCrud
 
       # Render a boolean field.
       def boolean_field(attr, **html_options)
-        tag.div(class: 'checkbox') do
+        tag.div(class: "checkbox") do
           tag.label do
-            detail = html_options.delete(:detail) || '&nbsp;'.html_safe
-            safe_join([check_box(attr, html_options), ' ', detail])
+            detail = html_options.delete(:detail) || "&nbsp;".html_safe
+            safe_join([ check_box(attr, html_options), " ", detail ])
           end
         end
       end
@@ -82,7 +80,7 @@ module DryCrud
       %w[text_field password_field email_field
          number_field date_field time_field datetime_field].each do |method|
         define_method(method) do |attr, **html_options|
-          add_css_class(html_options, 'form-control')
+          add_css_class(html_options, "form-control")
           super(attr, html_options)
         end
       end
@@ -93,7 +91,7 @@ module DryCrud
       end
 
       def float_field(attr, **html_options)
-        html_options[:step] ||= 'any'
+        html_options[:step] ||= "any"
         number_field(attr, **html_options)
       end
 
@@ -105,9 +103,9 @@ module DryCrud
 
       # Customize the standard text area to have 5 rows by default.
       def text_area(attr, **html_options)
-        add_css_class(html_options, 'form-control')
+        add_css_class(html_options, "form-control")
         html_options[:rows] ||= 5
-        super(attr, **html_options)
+        super
       end
 
       # Render a select element for a :belongs_to association defined by attr.
@@ -118,7 +116,7 @@ module DryCrud
       def belongs_to_field(attr, **html_options)
         list = association_entries(attr, **html_options).to_a
         if list.present?
-          add_css_class(html_options, 'form-control')
+          add_css_class(html_options, "form-control")
           collection_select(attr, list, :id, :to_s,
                             select_options(attr, **html_options),
                             **html_options)
@@ -140,7 +138,7 @@ module DryCrud
       # association.
       def has_many_field(attr, **html_options)
         html_options[:multiple] = true
-        add_css_class(html_options, 'multiselect')
+        add_css_class(html_options, "multiselect")
         belongs_to_field(attr, **html_options)
       end
       # rubocop:enable Naming/PredicateName
@@ -149,46 +147,46 @@ module DryCrud
 
       # Render the error messages for the current form.
       def error_messages
-        @template.render('shared/error_messages',
+        @template.render("shared/error_messages",
                          errors: @object.errors,
                          object: @object)
       end
 
       # Renders the given content with an addon.
       def with_addon(content, addon)
-        tag.div(class: 'input-group') do
-          content + tag.span(addon, class: 'input-group-text')
+        tag.div(class: "input-group") do
+          content + tag.span(addon, class: "input-group-text")
         end
       end
 
       # Renders a static text where otherwise form inputs appear.
       def static_text(text)
-        tag.p(text, class: 'form-control-static')
+        tag.p(text, class: "form-control-static")
       end
 
       # Generates a help block for fields
       def help_block(text)
-        tag.p(text, class: 'help-block')
+        tag.p(text, class: "help-block")
       end
 
       # Render a submit button and a cancel link for this form.
-      def standard_actions(submit_label = ti('button.save'), cancel_url = nil)
-        tag.div(class: 'col-md-offset-2 col-md-8') do
-          safe_join([submit_button(submit_label),
-                     cancel_link(cancel_url)],
-                    ' ')
+      def standard_actions(submit_label = ti("button.save"), cancel_url = nil)
+        tag.div(class: "col-md-offset-2 col-md-8") do
+          safe_join([ submit_button(submit_label),
+                     cancel_link(cancel_url) ],
+                    " ")
         end
       end
 
       # Render a standard submit button with the given label.
-      def submit_button(label = ti('button.save'))
-        button(label, class: 'btn btn-primary', data: { disable_with: label })
+      def submit_button(label = ti("button.save"))
+        button(label, class: "btn btn-primary", data: { disable_with: label })
       end
 
       # Render a cancel link pointing to the given url.
       def cancel_link(url = nil)
         url ||= cancel_url
-        link_to(ti('button.cancel'), url, class: 'cancel')
+        link_to(ti("button.cancel"), url, class: "cancel")
       end
 
       # Depending if the given attribute must be present, return
@@ -265,7 +263,7 @@ module DryCrud
       # Checks if the passed name corresponds to a field method with a
       # 'labeled_' prefix.
       def labeled_field_method?(name)
-        prefix = 'labeled_'
+        prefix = "labeled_"
         if name.to_s.start_with?(prefix)
           field_method = name.to_s[prefix.size..]
           field_method if respond_to?(field_method)
@@ -321,7 +319,6 @@ module DryCrud
           options[:cancel_url_edit] || options[:cancel_url]
         end
       end
-
     end
   end
 end

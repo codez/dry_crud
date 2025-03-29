@@ -1,10 +1,9 @@
-require 'test_helper'
-require 'support/crud_test_model'
-require 'support/crud_test_helper'
+require "test_helper"
+require "support/crud_test_model"
+require "support/crud_test_helper"
 
 # Test FormHelper
 class FormHelperTest < ActionView::TestCase
-
   include UtilityHelper
   include FormatHelper
   include I18nHelper
@@ -13,11 +12,11 @@ class FormHelperTest < ActionView::TestCase
   setup :reset_db, :setup_db, :create_test_data
   teardown :reset_db
 
-  test 'plain form for existing entry' do
-    e = crud_test_models('AAAAA')
+  test "plain form for existing entry" do
+    e = crud_test_models("AAAAA")
     f = with_test_routing do
       capture do
-        plain_form(e, html: { class: 'special' }) do |form|
+        plain_form(e, html: { class: "special" }) do |form|
           form.labeled_input_fields :name, :birthdate
         end
       end
@@ -34,14 +33,14 @@ class FormHelperTest < ActionView::TestCase
                         .*?name="crud_test_model\[name\]"/x, f)
   end
 
-  test 'standard form' do
-    e = crud_test_models('AAAAA')
+  test "standard form" do
+    e = crud_test_models("AAAAA")
     f = with_test_routing do
       capture do
         standard_form(e,
                       :name, :children, :birthdate, :human,
-                      cancel_url: '/somewhere',
-                      html: { class: 'special' })
+                      cancel_url: "/somewhere",
+                      html: { class: "special" })
       end
     end
 
@@ -69,8 +68,8 @@ class FormHelperTest < ActionView::TestCase
                   <\/a>/x, f)
   end
 
-  test 'standard form with errors' do
-    e = crud_test_models('AAAAA')
+  test "standard form with errors" do
+    e = crud_test_models("AAAAA")
     e.name = nil
     assert_not e.valid?
 
@@ -96,7 +95,7 @@ class FormHelperTest < ActionView::TestCase
                         .*?name="crud_test_model\[birthdate\]"/x, f)
   end
 
-  test 'crud form' do
+  test "crud form" do
     f = with_test_routing do
       capture { crud_form }
     end
@@ -129,5 +128,4 @@ class FormHelperTest < ActionView::TestCase
   def entry
     @entry ||= CrudTestModel.first
   end
-
 end

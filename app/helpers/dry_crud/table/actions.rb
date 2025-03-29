@@ -1,12 +1,10 @@
 module DryCrud
   module Table
-
     # Adds action columns to the table builder.
     # Predefined actions are available for show, edit and destroy.
     # Additionally, a special col type to define cells linked to the show page
     # of the row entry is provided.
     module Actions
-
       extend ActiveSupport::Concern
 
       included do
@@ -30,7 +28,7 @@ module DryCrud
         action_col do |entry|
           path = action_path(entry, &block)
           if path
-            table_action_link('zoom-in',
+            table_action_link("zoom-in",
                               path,
                               **html_options.clone)
           end
@@ -45,7 +43,7 @@ module DryCrud
           path = action_path(entry, &block)
           if path
             path = edit_polymorphic_path(path) unless path.is_a?(String)
-            table_action_link('pencil', path, **html_options.clone)
+            table_action_link("pencil", path, **html_options.clone)
           end
         end
       end
@@ -57,12 +55,11 @@ module DryCrud
         action_col do |entry|
           path = action_path(entry, &block)
           if path
-            table_action_link('trash',
+            table_action_link("trash",
                               path,
-                              **html_options.merge(
-                                data: { 'turbo-confirm': ti(:confirm_delete),
-                                        'turbo-method': :delete }
-                              ))
+                              **html_options,
+                              data: { 'turbo-confirm': ti(:confirm_delete),
+                                      'turbo-method': :delete })
           end
         end
       end
@@ -70,13 +67,13 @@ module DryCrud
       # Action column inside a table. No header.
       # The cell content should be defined in the passed block.
       def action_col(&block)
-        col('', class: 'action', &block)
+        col("", class: "action", &block)
       end
 
       # Generic action link inside a table.
       def table_action_link(icon, url, **html_options)
         add_css_class(html_options, "bi-#{icon}")
-        link_to('', url, html_options)
+        link_to("", url, html_options)
       end
 
       private
@@ -86,8 +83,6 @@ module DryCrud
       def action_path(entry)
         block_given? ? yield(entry) : path_args(entry)
       end
-
     end
-
   end
 end

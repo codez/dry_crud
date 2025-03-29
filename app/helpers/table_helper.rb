@@ -7,14 +7,13 @@
 # * #crud_table - A sortable #plain_table for the current +entries+, with the
 #   given attributes or default and the standard crud action links.
 module TableHelper
-
   # Renders a table for the given entries. One column is rendered for each
   # attribute passed. If a block is given, the columns defined therein are
   # appended to the attribute columns.
   # If entries is empty, an appropriate message is rendered.
   # An options hash may be given as the last argument.
   def plain_table(entries, *attrs, **options)
-    add_css_class(options, 'table table-striped table-hover')
+    add_css_class(options, "table table-striped table-hover")
     builder = options.delete(:builder) || DryCrud::Table::Builder
     builder.table(entries, self, **options) do |t|
       t.attrs(*attrs)
@@ -29,7 +28,7 @@ module TableHelper
     if entries.present?
       plain_table(entries, *attrs, **options, &block)
     else
-      tag.div(ti(:no_list_entries), class: 'table')
+      tag.div(ti(:no_list_entries), class: "table")
     end
   end
 
@@ -77,5 +76,4 @@ module TableHelper
       attrs
     end
   end
-
 end

@@ -7,8 +7,8 @@ module PeopleHelper
 
   def f(value)
     case value
-    when true then 'iu'
-    else super(value)
+    when true then "iu"
+    else super
     end
   end
 end

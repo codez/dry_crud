@@ -56,7 +56,7 @@ module CrudControllerTestHelper
   end
 
   def ivar(name)
-    controller.instance_variable_get("@#{name}")
+    controller.instance_variable_get(:"@#{name}")
   end
 
   # The params defining the nesting of the test entry.
@@ -77,7 +77,6 @@ module CrudControllerTestHelper
 
   # Helper methods to describe contexts.
   module ClassMethods
-
     # Describe a certain action and provide some usefull metadata.
     # Tests whether this action is configured to be skipped.
     def describe_action(method, action, metadata = {}, &block)
@@ -96,7 +95,7 @@ module CrudControllerTestHelper
       options ||= {}
       contexts = Array(contexts).flatten
       skips = Array(options[:skip])
-      skips = [skips] if skips.blank? || !skips.first.is_a?(Array)
+      skips = [ skips ] if skips.blank? || !skips.first.is_a?(Array)
 
       skips.flatten.present? &&
         skips.any? { |skip| skip == contexts.take(skip.size) }
@@ -109,13 +108,13 @@ module CrudControllerTestHelper
 
     # Test that a json response is rendered.
     def it_is_expected_to_render_json
-      it { expect(response.body).to start_with('{') }
+      it { expect(response.body).to start_with("{") }
     end
 
     # Test that test_entry_attrs are set on entry.
     def it_is_expected_to_set_attrs(action = nil)
-      it 'sets params as entry attributes' do
-        attrs = send("#{action}_entry_attrs")
+      it "sets params as entry attributes" do
+        attrs = send(:"#{action}_entry_attrs")
         actual = {}
         attrs.each_key do |key|
           actual[key] = entry.attributes[key.to_s]
@@ -127,7 +126,7 @@ module CrudControllerTestHelper
     # Test that the response redirects to the index action.
     def it_is_expected_to_redirect_to_index
       it do
-        is_expected.to redirect_to scope_params.merge(action: 'index',
+        is_expected.to redirect_to scope_params.merge(action: "index",
                                                       id: nil,
                                                       returning: true)
       end
@@ -136,7 +135,7 @@ module CrudControllerTestHelper
     # Test that the response redirects to the show action of the current entry.
     def it_is_expected_to_redirect_to_show
       it do
-        is_expected.to redirect_to scope_params.merge(action: 'show',
+        is_expected.to redirect_to scope_params.merge(action: "show",
                                                       id: entry.id)
       end
     end
@@ -157,7 +156,7 @@ module CrudControllerTestHelper
 
     # Test that the current entry is persistend and valid, or not.
     def it_is_expected_to_persist_entry(persist: true)
-      context 'entry' do
+      context "entry" do
         subject { entry }
 
         if persist
@@ -169,5 +168,4 @@ module CrudControllerTestHelper
       end
     end
   end
-
 end

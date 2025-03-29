@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'support/crud_controller_test_helper'
+require "test_helper"
+require "support/crud_controller_test_helper"
 
 module Admin
   # Countries Controller Test
@@ -8,22 +8,22 @@ module Admin
 
     def test_setup
       assert_equal 3, Country.count
-      assert_recognizes({ controller: 'admin/countries',
-                          action: 'index' },
-                        'admin/countries')
-      assert_recognizes({ controller: 'admin/countries',
-                          action: 'show',
-                          id: '1' },
-                        'admin/countries/1')
+      assert_recognizes({ controller: "admin/countries",
+                          action: "index" },
+                        "admin/countries")
+      assert_recognizes({ controller: "admin/countries",
+                          action: "show",
+                          id: "1" },
+                        "admin/countries/1")
     end
 
     def test_index
       super
-      assert_equal Country.order('name').to_a, entries
-      assert_equal [:admin], @controller.send(:parents)
+      assert_equal Country.order("name").to_a, entries
+      assert_equal [ :admin ], @controller.send(:parents)
       assert_nil @controller.send(:parent)
       assert_equal Country.all, @controller.send(:model_scope)
-      assert_equal [:admin, 2], @controller.send(:path_args, 2)
+      assert_equal [ :admin, 2 ], @controller.send(:path_args, 2)
     end
 
     def test_show
@@ -38,7 +38,7 @@ module Admin
     end
 
     def test_entry_attrs
-      { name: 'United States of America', code: 'US' }
+      { name: "United States of America", code: "US" }
     end
   end
 end

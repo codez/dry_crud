@@ -1,14 +1,13 @@
 # encoding: UTF-8
 
 TestApp::Application.routes.draw do
-
   resources :people do
     collection do
       get :turbo
     end
   end
 
-  get 'vips' => 'vips#index', :as => :vips
+  get "vips" => "vips#index", :as => :vips
 
   namespace :admin do
     resources :countries do
@@ -24,7 +23,7 @@ TestApp::Application.routes.draw do
     end
   end
 
-  root to: 'people#index'
+  root to: "people#index"
 
   # Install the default routes as the lowest priority.
   # Note: These default routes make all actions in every controller accessible

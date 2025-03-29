@@ -6,12 +6,11 @@
 # * #crud_form - A #standard_form for the current +entry+, with the given
 #   attributes or default.
 module FormHelper
-
   # Renders a form using Crud::FormBuilder.
   def plain_form(object, **options, &block)
     options[:html] ||= {}
-    add_css_class(options[:html], 'form-horizontal')
-    options[:html][:role] ||= 'form'
+    add_css_class(options[:html], "form-horizontal")
+    options[:html][:role] ||= "form"
     options[:builder] ||= DryCrud::Form::Builder
     options[:cancel_url] ||= polymorphic_path(object, returning: true)
 
@@ -25,13 +24,13 @@ module FormHelper
   # if present. An options hash may be given as the last argument.
   def standard_form(object, *attrs, **options, &block)
     plain_form(object, **options) do |form|
-      content = [form.error_messages]
+      content = [ form.error_messages ]
 
       content << if block_given?
                    capture(form, &block)
-                 else
+      else
                    form.labeled_input_fields(*attrs)
-                 end
+      end
 
       content << form.standard_actions
       safe_join(content)
@@ -45,5 +44,4 @@ module FormHelper
     attrs = default_crud_attrs - %i[created_at updated_at] if attrs.blank?
     standard_form(path_args(entry), *attrs, **options, &block)
   end
-
 end

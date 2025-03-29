@@ -6,19 +6,18 @@
 # Futher helpers standartize the layout of multiple attributes (#render_attrs),
 # values with labels (#labeled) and simple lists.
 module FormatHelper
-
   # Formats a basic value based on its Ruby class.
   def f(value)
     case value
     when Float, BigDecimal
-      number_with_precision(value, precision: t('number.format.precision'),
-                                   delimiter: t('number.format.delimiter'))
+      number_with_precision(value, precision: t("number.format.precision"),
+                                   delimiter: t("number.format.delimiter"))
     when Integer
-      number_with_delimiter(value, delimiter: t('number.format.delimiter'))
+      number_with_delimiter(value, delimiter: t("number.format.delimiter"))
     when Date   then l(value)
     when Time   then "#{l(value.to_date)} #{l(value, format: :time)}"
-    when true   then t('global.yes')
-    when false  then t('global.no')
+    when true   then t("global.yes")
+    when false  then t("global.no")
     when nil    then UtilityHelper::EMPTY_STRING
     else value.to_s
     end
@@ -47,7 +46,7 @@ module FormatHelper
   # Renders a list of attributes with label and value for a given object.
   # Optionally surrounded with a div.
   def render_attrs(obj, *attrs)
-    content_tag_nested(:dl, attrs, class: 'dl-horizontal') do |a|
+    content_tag_nested(:dl, attrs, class: "dl-horizontal") do |a|
       labeled_attr(obj, a)
     end
   end
@@ -61,14 +60,14 @@ module FormatHelper
   # presentation.
   def labeled(label, content = nil, &block)
     content = capture(&block) if block_given?
-    render('shared/labeled', label: label, content: content)
+    render("shared/labeled", label: label, content: content)
   end
 
   # Transform the given text into a form as used by labels or table headers.
   def captionize(text, clazz = nil)
     text = text.to_s
     if clazz.respond_to?(:human_attribute_name)
-      text_without_id = text.end_with?('_ids') ? text[0..-5].pluralize : text
+      text_without_id = text.end_with?("_ids") ? text[0..-5].pluralize : text
       clazz.human_attribute_name(text_without_id)
     else
       text.humanize.titleize
@@ -80,7 +79,7 @@ module FormatHelper
   # Checks whether a format_{class}_{attr} or format_{attr} helper method is
   # defined and calls it if is.
   def format_with_helper(obj, attr)
-    class_name = obj.class.name.underscore.tr('/', '_')
+    class_name = obj.class.name.underscore.tr("/", "_")
     format_type_attr_method = :"format_#{class_name}_#{attr}"
     format_attr_method = :"format_#{attr}"
 
@@ -123,7 +122,7 @@ module FormatHelper
     when :decimal
       number_with_precision(val.to_s.to_f,
                             precision: column_property(obj, attr, :scale),
-                            delimiter: t('number.format.delimiter'))
+                            delimiter: t("number.format.delimiter"))
     else f(val)
     end
   end
@@ -161,5 +160,4 @@ module FormatHelper
   def assoc_link?(_assoc, val)
     respond_to?(:"#{val.class.model_name.singular_route_key}_path")
   end
-
 end

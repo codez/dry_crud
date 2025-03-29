@@ -1,9 +1,7 @@
 module DryCrud
   module Table
-
     # Helper class to store column information.
     class Col # :nodoc:
-
       delegate :tag, :capture, to: :template
 
       attr_reader :header, :html_options, :template, :block
@@ -17,7 +15,7 @@ module DryCrud
 
       # Runs the Col block for the given entry.
       def content(entry)
-        entry.nil? ? '' : capture(entry, &block)
+        entry.nil? ? "" : capture(entry, &block)
       end
 
       # Renders the header cell of the Col.
@@ -29,7 +27,6 @@ module DryCrud
       def html_cell(entry)
         tag.td(content(entry), **html_options)
       end
-
     end
   end
 end

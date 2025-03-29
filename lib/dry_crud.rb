@@ -1,4 +1,4 @@
-require 'dry_crud/engine'
+require "dry_crud/engine"
 
 # Base namespace
 module DryCrud

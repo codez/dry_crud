@@ -8,9 +8,8 @@
 #  # inside the class definition:
 #  include CustomAssertions
 module CustomAssertions
-
   # Asserts that regexp occurs exactly expected times in string.
-  def assert_count(expected, regexp, string, msg = '')
+  def assert_count(expected, regexp, string, msg = "")
     actual = string.scan(regexp).size
     msg = message(msg) do
       "Expected #{mu_pp(regexp)} to occur #{expected} time(s), " \
@@ -21,7 +20,7 @@ module CustomAssertions
 
   # Asserts that the given active model record is valid.
   # This method used to be part of Rails but was deprecated, no idea why.
-  def assert_valid(record, msg = '')
+  def assert_valid(record, msg = "")
     record.valid?
     msg = message(msg) do
       "Expected #{mu_pp(record)} to be valid, " \
@@ -77,5 +76,4 @@ module CustomAssertions
       assert invalid_attrs.include?(error.attribute), msg
     end
   end
-
 end

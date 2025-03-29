@@ -3,9 +3,9 @@ module Admin
   class CitiesController < TurboController
     self.nesting = :admin, Country
 
-    self.search_columns = :name, 'countries.name'
+    self.search_columns = :name, "countries.name"
 
-    self.default_sort = 'countries.code, cities.name'
+    self.default_sort = "countries.code, cities.name"
 
     self.permitted_attrs = %i[name person_ids]
 

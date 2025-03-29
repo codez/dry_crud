@@ -1,7 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'DryCrud::Table::Builder' do
-
+describe "DryCrud::Table::Builder" do
   include FormatHelper
   include UtilityHelper
 
@@ -12,43 +11,43 @@ describe 'DryCrud::Table::Builder' do
     "#{obj.size} chars"
   end
 
-  specify '#html_header' do
+  specify "#html_header" do
     table.attrs :upcase, :size
-    dom = '<tr><th>Upcase</th><th>Size</th></tr>'
+    dom = "<tr><th>Upcase</th><th>Size</th></tr>"
     assert_dom_equal dom, table.send(:html_header)
   end
 
-  specify 'single attr row' do
+  specify "single attr row" do
     table.attrs :upcase, :size
-    dom = '<tr><td>FOO</td><td>3 chars</td></tr>'
+    dom = "<tr><td>FOO</td><td>3 chars</td></tr>"
     assert_dom_equal dom, table.send(:html_row, entries.first)
   end
 
-  specify 'custom row' do
-    table.col('Header', class: 'hula') { |e| "Weights #{e.size} kg" }
+  specify "custom row" do
+    table.col("Header", class: "hula") { |e| "Weights #{e.size} kg" }
     dom = '<tr><td class="hula">Weights 3 kg</td></tr>'
     assert_dom_equal dom, table.send(:html_row, entries.first)
   end
 
-  context 'attr col' do
+  context "attr col" do
     let(:col) { table.cols.first }
 
-    context 'output' do
+    context "output" do
       before { table.attrs :upcase }
 
-      it { expect(col.html_header).to eq('<th>Upcase</th>') }
-      it { expect(col.content('foo')).to eq('FOO') }
-      it { expect(col.html_cell('foo')).to eq('<td>FOO</td>') }
+      it { expect(col.html_header).to eq("<th>Upcase</th>") }
+      it { expect(col.content("foo")).to eq("FOO") }
+      it { expect(col.html_cell("foo")).to eq("<td>FOO</td>") }
     end
 
-    context 'content with custom format_size method' do
+    context "content with custom format_size method" do
       before { table.attrs :size }
 
-      it { expect(col.content('abcd')).to eq('4 chars') }
+      it { expect(col.content("abcd")).to eq("4 chars") }
     end
   end
 
-  specify 'two x two table' do
+  specify "two x two table" do
     dom = <<-FIN
       <table>
       <thead>
@@ -60,14 +59,14 @@ describe 'DryCrud::Table::Builder' do
       </tbody>
       </table>
     FIN
-    dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
+    dom.gsub!(/[\n\t]/, "").gsub!(/\s{2,}/, "")
 
     table.attrs :upcase, :size
 
     assert_dom_equal dom, table.to_html
   end
 
-  specify 'table with before and after cells' do
+  specify "table with before and after cells" do
     dom = <<-FIN
       <table>
       <thead>
@@ -89,16 +88,16 @@ describe 'DryCrud::Table::Builder' do
       </tbody>
       </table>
     FIN
-    dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
+    dom.gsub!(/[\n\t]/, "").gsub!(/\s{2,}/, "")
 
-    table.col('head', class: 'left') { |e| link_to e, '/' }
+    table.col("head", class: "left") { |e| link_to e, "/" }
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }
 
     assert_dom_equal dom, table.to_html
   end
 
-  specify 'empty entries collection renders empty table' do
+  specify "empty entries collection renders empty table" do
     dom = <<-FIN
       <table>
       <thead>
@@ -108,14 +107,13 @@ describe 'DryCrud::Table::Builder' do
       </tbody>
       </table>
     FIN
-    dom.gsub!(/[\n\t]/, '').gsub!(/\s{2,}/, '')
+    dom.gsub!(/[\n\t]/, "").gsub!(/\s{2,}/, "")
 
     table = DryCrud::Table::Builder.new([], self)
-    table.col('head', class: 'left') { |e| link_to e, '/' }
+    table.col("head", class: "left") { |e| link_to e, "/" }
     table.attrs :upcase, :size
     table.col { |e| "Never #{e}" }
 
     assert_dom_equal dom, table.to_html
   end
-
 end

@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'support/crud_controller_test_helper'
+require "test_helper"
+require "support/crud_controller_test_helper"
 
 # People Controller Test
 class PeopleControllerTest < ActionController::TestCase
@@ -7,27 +7,27 @@ class PeopleControllerTest < ActionController::TestCase
 
   def test_setup
     assert_equal 2, Person.count
-    assert_recognizes({ controller: 'people',
-                        action: 'index' },
-                      '/people')
-    assert_recognizes({ controller: 'people',
-                        action: 'show',
-                        id: '1' },
-                      '/people/1')
+    assert_recognizes({ controller: "people",
+                        action: "index" },
+                      "/people")
+    assert_recognizes({ controller: "people",
+                        action: "show",
+                        id: "1" },
+                      "/people/1")
   end
 
   def test_index
     super
     assert_equal 2, entries.size
     expected = Person.includes(city: :country)
-                     .order('people.name, countries.code, cities.name')
+                     .order("people.name, countries.code, cities.name")
     expected = expected.references(:cities, :countries) if expected.respond_to?(:references)
     assert_equal expected.to_a, entries
 
     assert_equal [], @controller.send(:parents)
     assert_nil @controller.send(:parent)
     assert_equal Person.all, @controller.send(:model_scope)
-    assert_equal [2], @controller.send(:path_args, 2)
+    assert_equal [ 2 ], @controller.send(:path_args, 2)
   end
 
   def test_index_search
@@ -51,7 +51,7 @@ class PeopleControllerTest < ActionController::TestCase
     put :update,
         as: :turbo_stream,
         params: { id: test_entry.id,
-                  person: { name: 'New Name' } }
+                  person: { name: "New Name" } }
     assert_response :success
     assert_match(/<turbo-stream action="update" target="content">/, response.body)
   end
@@ -60,7 +60,7 @@ class PeopleControllerTest < ActionController::TestCase
     put :update,
         as: :turbo_stream,
         params: { id: test_entry.id,
-                  person: { name: ' ' } }
+                  person: { name: " " } }
     assert_response :success
     assert_match(/alert/, response.body)
   end
@@ -72,7 +72,7 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   def test_entry_attrs
-    { name: 'Fischers Fritz',
+    { name: "Fischers Fritz",
       children: 2,
       income: 120,
       city_id: cities(:rj).id }

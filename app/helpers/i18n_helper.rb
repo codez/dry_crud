@@ -1,7 +1,6 @@
 # Translation helpers extending the Rails +translate+ helper to support
 # translation inheritance over the controller class hierarchy.
 module I18nHelper
-
   # Translates the passed key by looking it up over the controller hierarchy.
   # The key is searched in the following order:
   #  - {controller}.{current_partial}.{key}
@@ -13,7 +12,7 @@ module I18nHelper
   #  - ...
   #  - global.{key}
   def translate_inheritable(key, **variables)
-    partial = defined?(@virtual_path) ? @virtual_path.gsub(/.*\/_?/, '') : nil
+    partial = defined?(@virtual_path) ? @virtual_path.gsub(/.*\/_?/, "") : nil
     defaults = inheritable_translation_defaults(key, partial)
     variables[:default] ||= defaults
     t(defaults.shift, **variables)
@@ -30,8 +29,8 @@ module I18nHelper
   #  - global.associations.{key}
   def translate_association(key, assoc = nil, **variables)
     if assoc && assoc.options[:polymorphic].nil?
-      variables[:default] ||= [association_klass_key(assoc, key).to_sym,
-                               :"global.associations.#{key}"]
+      variables[:default] ||= [ association_klass_key(assoc, key).to_sym,
+                               :"global.associations.#{key}" ]
       t(association_owner_key(assoc, key), **variables)
     else
       t("global.associations.#{key}", **variables)
@@ -44,20 +43,20 @@ module I18nHelper
 
   # General translation key based on the klass of the association.
   def association_klass_key(assoc, key)
-    k = 'activerecord.associations.'
+    k = "activerecord.associations."
     k << assoc.klass.model_name.singular
-    k << '.'
+    k << "."
     k << key.to_s
   end
 
   # Specific translation key based on the owner model and the name
   # of the association.
   def association_owner_key(assoc, key)
-    k = 'activerecord.associations.models.'
+    k = "activerecord.associations.models."
     k << assoc.active_record.model_name.singular
-    k << '.'
+    k << "."
     k << assoc.name.to_s
-    k << '.'
+    k << "."
     k << key.to_s
   end
 
@@ -79,5 +78,4 @@ module I18nHelper
     defaults << :"#{folder}.#{action_name}.#{key}"
     defaults << :"#{folder}.global.#{key}"
   end
-
 end
