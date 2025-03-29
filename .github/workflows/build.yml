@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: ['3.1', '3.2']
+        ruby-version: ['3.3', '3.4']
         haml: [true, false]
     steps:
     - uses: actions/checkout@v4
@@ -34,7 +34,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.1
+        ruby-version: 3.3
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
     - name: Run rubocop
       run: bundle exec rubocop
@@ -47,7 +47,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.1
+        ruby-version: 3.3
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
     - uses: paambaati/codeclimate-action@v5.0.0
       env:
