@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 7.1.0'
+gem 'rails', '~> 8.0.0'
 
 gem 'puma'
 
 gem 'rake'
-gem 'sdoc'
+
 gem 'rspec-rails'
 
 gem 'haml'
@@ -13,7 +13,7 @@ gem 'jbuilder'
 
 gem 'kaminari'
 
-gem "sprockets-rails"
+gem "propshaft"
 gem "jsbundling-rails"
 gem "cssbundling-rails"
 gem "turbo-rails"
@@ -27,11 +27,12 @@ group :development do
   gem 'web-console'
   gem 'rubocop'
   gem 'rubocop-rails'
+  gem 'sdoc'
   gem 'spring'
 end
 
 gem 'simplecov', require: false
-gem 'debug', platforms: [:mri, :windows]
+gem 'debug', platforms: [:mri, :windows], require: "debug/prelude"
 
 # platform specific gems
 

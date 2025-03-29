@@ -64,13 +64,21 @@ namespace :test do
                      /\A/,
                      "require 'simplecov'\nSimpleCov.start do\n" +
                      "  coverage_dir 'coverage/test'\nend\n")
+        file_replace(File.join(TEST_APP_ROOT, 'test', 'test_helper.rb'),
+                    /module ActiveSupport/,
+                    "Rails.root.glob('test/support/**/*.rb').sort_by(&:to_s).each { |f| require f }\n\n" +
+                    "module ActiveSupport")
         file_replace(File.join(TEST_APP_ROOT, 'spec', 'spec_helper.rb'),
                      /\A/,
                      "require 'simplecov'\nSimpleCov.start do\n" +
                      "  coverage_dir 'coverage/spec'\nend\n")
         file_replace(File.join(TEST_APP_ROOT, 'spec', 'rails_helper.rb'),
-          "# Rails.root.glob('spec/support/**/*.rb').sort.each { |f| require f }",
-          "Rails.root.glob('spec/support/**/*.rb').sort.each { |f| require f }")
+          "# Rails.root.glob('spec/support/**/*.rb').sort_by(&:to_s).each { |f| require f }",
+          "Rails.root.glob('spec/support/**/*.rb').sort_by(&:to_s).each { |f| require f }")
+
+        file_replace(File.join(TEST_APP_ROOT, 'spec', 'rails_helper.rb'),
+          "# config.infer_spec_type_from_file_location!",
+          "config.infer_spec_type_from_file_location!")
       end
     end
 

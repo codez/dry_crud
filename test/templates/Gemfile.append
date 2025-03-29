@@ -2,8 +2,6 @@ gem 'dry_crud', path: '../..'
 
 gem 'simplecov', require: false, group: :test
 
-gem 'sqlite3', '~> 1.4', platforms: :ruby
-
 platforms :jruby do
   gem 'jdbc-sqlite3'
   gem 'activerecord-jdbcsqlite3-adapter'
