@@ -23,7 +23,7 @@ to DRY up the CRUD code in your Rails project. Start with these elements and
 build a clean base to efficiently develop your application upon.
 END
 
-  spec.add_dependency 'rails', '>= 7.1'
+  spec.add_dependency 'rails', '>= 8.0'
 
   readmes = FileList.new('*') do |list|
     list.exclude(/(^|[^.a-z])[a-z]+/)
